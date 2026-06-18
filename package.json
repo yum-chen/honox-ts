@@ -22,14 +22,14 @@
 		"typescript": "^5.9.3"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.4.5",
-		"@types/bun": "latest",
-		"@cloudflare/workers-types": "^4.20260420.1",
+		"@biomejs/biome": "^2.5.0",
+		"@cloudflare/workers-types": "^4.20260617.1",
 		"@hono/vite-build": "^1.11.1",
-		"@hono/vite-dev-server": "^0.25.2",
-		"@tailwindcss/vite": "^4.2.2",
-		"tailwindcss": "^4.2.2",
-		"vite": "^8.0.9",
-		"wrangler": "^4.83.0"
+		"@hono/vite-dev-server": "^0.25.3",
+		"@tailwindcss/vite": "^4.3.1",
+		"@types/bun": "latest",
+		"tailwindcss": "^4.3.1",
+		"vite": "^8.0.16",
+		"wrangler": "^4.101.0"
 	}
 }
