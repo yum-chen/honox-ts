@@ -1,21 +1,15 @@
 import { useState } from 'hono/jsx'
-import { css } from '../../styled-system/css'
+import { vstack } from '../../styled-system/patterns'
+import { button, text } from '../../styled-system/recipes'
 
 export default function Counter() {
   const [count, setCount] = useState(0)
   return (
-    <div>
-      <p class={css({ py: '2', fontSize: '2xl' })}>{count}</p>
+    <div className={vstack({ gap: '4' })}>
+      <p className={text({ textStyle: '2xl', fontWeight: 'bold' })}>{count}</p>
       <button
         type="button"
-        class={css({
-          px: '4',
-          py: '2',
-          bg: 'orange.400',
-          color: 'white',
-          borderRadius: 'md',
-          cursor: 'pointer',
-        })}
+        className={button({ variant: 'solid', size: 'md' })}
         onClick={() => setCount(count + 1)}
       >
         Increment
