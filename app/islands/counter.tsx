@@ -1,25 +1,29 @@
 import { useState } from 'hono/jsx'
-import { css } from '../../styled-system/css'
+import { Button, Group, Text } from '../components/ui'
 
 export default function Counter() {
   const [count, setCount] = useState(0)
   return (
-    <div>
-      <p class={css({ py: '2', fontSize: '2xl' })}>{count}</p>
-      <button
-        type="button"
-        class={css({
-          px: '4',
-          py: '2',
-          bg: 'orange.400',
-          color: 'white',
-          borderRadius: 'md',
-          cursor: 'pointer',
-        })}
-        onClick={() => setCount(count + 1)}
-      >
-        Increment
-      </button>
-    </div>
+    <Group direction="vertical" gap="4">
+      <Text size="2xl" class="cp">{count}</Text>
+      <Group gap="2">
+        <Button
+          variant="solid"
+          size="md"
+          colorPalette="blue"
+          onClick={() => setCount(count + 1)}
+        >
+          Increment
+        </Button>
+        <Button
+          variant="outline"
+          size="md"
+          colorPalette="gray"
+          onClick={() => setCount(0)}
+        >
+          Reset
+        </Button>
+      </Group>
+    </Group>
   )
 }
