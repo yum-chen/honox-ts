@@ -1,11 +1,13 @@
 {
 	"compilerOptions": {
 		// Environment setup & latest features
-		"lib": ["ESNext"],
+		"lib": ["ESNext", "DOM"],
 		"target": "ESNext",
-		"module": "Preserve",
+		"module": "ESNext",
+		"types": ["vite/client", "@cloudflare/workers-types/2023-07-01"],
 		"moduleDetection": "force",
 		"jsx": "react-jsx",
+		"jsxImportSource": "hono/jsx",
 		"allowJs": true,
 
 		// Bundler mode
@@ -31,5 +33,6 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"noPropertyAccessFromIndexSignature": true
-	}
+	},
+	"include": ["**/*.ts", "**/*.tsx"]
 }
