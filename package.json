@@ -5,7 +5,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite",
-		"build": "vite build --mode client && vite build",
+		"build": "vite build --mode client && vite build --emptyOutDir false",
 		"preview": "wrangler dev",
 		"deploy": "bun run build && wrangler deploy",
 		"fix": "bun run check",
@@ -14,7 +14,6 @@
 		"lint": "bun x @biomejs/biome lint --fix .",
 		"start": "bun run src/main.ts"
 	},
-	"private": true,
 	"dependencies": {
 		"hono": "^4.12.26",
 		"honox": "0.1.56"
