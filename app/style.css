@@ -1,1 +1,15 @@
 @layer reset, base, tokens, recipes, utilities;
+
+@layer base {
+  :root {
+    --font-body: system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    background-color: var(--colors-bg-canvas);
+    color: var(--colors-fg-default);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
