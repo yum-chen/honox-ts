@@ -18,7 +18,9 @@ jobs:
         with:
           bun-version: latest
       - run: bun install
+      - run: bun run prepare
       - run: bun run build
+      - run: ls -R dist
       - run: touch dist/.nojekyll
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
