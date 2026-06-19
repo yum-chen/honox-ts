@@ -17,7 +17,9 @@
 	},
 	"dependencies": {
 		"hono": "^4.12.26",
-		"honox": "0.1.56"
+		"honox": "0.1.56",
+		"js-yaml": "^4.2.0",
+		"marked": "^18.0.5"
 	},
 	"peerDependencies": {
 		"typescript": "^5.9.3"
@@ -29,6 +31,8 @@
 		"@hono/vite-ssg": "^0.3.3",
 		"@pandacss/dev": "^1.11.3",
 		"@types/bun": "latest",
+		"@types/js-yaml": "^4.0.9",
+		"@types/marked": "^6.0.0",
 		"autoprefixer": "^10.5.0",
 		"postcss": "^8.5.15",
 		"vite": "^8.0.16",
