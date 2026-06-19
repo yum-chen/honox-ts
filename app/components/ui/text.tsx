@@ -8,9 +8,18 @@ export interface TextProps extends HTMLAttributes, TextVariantProps {
 
 export const Text = (props: TextProps) => {
   const [variantProps, localProps] = text.splitVariantProps(props)
-  const { as: Component = 'span', class: className, ...rest } = localProps
+  const { as: Component = 'span', class: className, children, ...rest } = localProps
 
-  return <Component class={cx(text(variantProps), css(rest as any), className)} {...rest} />
+  const { fontWeight, color, textTransform, fontFamily, ...htmlProps } = rest as any
+
+  return (
+    <Component
+      class={cx(text(variantProps), css({ fontWeight, color, textTransform, fontFamily }), className)}
+      {...htmlProps}
+    >
+      {children}
+    </Component>
+  )
 }
 
 export const Heading = (props: TextProps) => {

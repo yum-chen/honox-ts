@@ -6,7 +6,13 @@ export interface ButtonProps extends HTMLAttributes, ButtonVariantProps {}
 
 export const Button = (props: ButtonProps) => {
   const [variantProps, localProps] = button.splitVariantProps(props)
-  const { class: className, ...rest } = localProps
+  const { class: className, children, ...rest } = localProps
 
-  return <button class={cx(button(variantProps), css(rest as any), className)} {...rest} />
+  // We omit style props from 'rest' for now to be safe, or we could use a whitelist.
+  // For buttons, we usually don't pass many custom style props directly.
+  return (
+    <button class={cx(button(variantProps), className)} {...rest}>
+      {children}
+    </button>
+  )
 }
