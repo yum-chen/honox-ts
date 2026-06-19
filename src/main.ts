@@ -1,1 +1,3 @@
-console.log("Hello World!");
+import { $ } from "bun";
+
+console.log(await $`vite`);
