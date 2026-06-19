@@ -1,71 +1,33 @@
 import { useState } from 'hono/jsx'
-import { css, cx } from '../../styled-system/css'
-
-const buttonBase = css({
-  alignItems: 'center',
-  appearance: 'none',
-  borderRadius: 'l2',
-  cursor: 'pointer',
-  display: 'inline-flex',
-  flexShrink: '0',
-  fontWeight: 'semibold',
-  gap: '2',
-  isolation: 'isolate',
-  justifyContent: 'center',
-  outline: '0',
-  position: 'relative',
-  transition: 'colors',
-  transitionProperty: 'background-color, border-color, color, box-shadow',
-  userSelect: 'none',
-  verticalAlign: 'middle',
-  whiteSpace: 'nowrap',
-  h: '10',
-  minW: '10',
-  textStyle: 'sm',
-  px: '3.5',
-  _disabled: {
-    opacity: 0.5,
-    cursor: 'not-allowed',
-  },
-})
-
-const solidBlue = css({
-  bg: 'colorPalette.solid.bg',
-  color: 'colorPalette.solid.fg',
-  _hover: { bg: 'colorPalette.solid.bg.hover' },
-})
-
-const outlineGray = css({
-  borderWidth: '1px',
-  borderColor: 'colorPalette.outline.border',
-  color: 'colorPalette.outline.fg',
-  _hover: { bg: 'colorPalette.outline.bg.hover' },
-  _active: { bg: 'colorPalette.outline.bg.active' },
-})
+import { css } from '../../styled-system/css'
+import { Button } from '../components/ui/button'
+import { Card, CardBody, CardFooter, CardHeader, CardTitle, CardDescription } from '../components/ui/card'
+import { Text, Heading } from '../components/ui/text'
 
 export default function Counter() {
   const [count, setCount] = useState(0)
   return (
-    <div class={css({ display: 'flex', flexDirection: 'column', gap: '4' })}>
-      <p class={css({ textStyle: '2xl', fontWeight: 'bold' })}>{count}</p>
-      <div class={css({ display: 'flex', gap: '2' })}>
-        <button
-          type="button"
-          class={cx(buttonBase, solidBlue)}
-          style={{ colorPalette: 'blue' }}
-          onClick={() => setCount(count + 1)}
-        >
-          Increment
-        </button>
-        <button
-          type="button"
-          class={cx(buttonBase, outlineGray)}
-          style={{ colorPalette: 'gray' }}
-          onClick={() => setCount(0)}
-        >
+    <Card maxW="sm" mx="auto">
+      <CardHeader>
+        <CardTitle>Counter Island</CardTitle>
+        <CardDescription>A simple counter built with Park UI components.</CardDescription>
+      </CardHeader>
+      <CardBody>
+        <div class={css({ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2' })}>
+          <Text size="sm" fontWeight="medium" color="fg.muted" textTransform="uppercase">
+            Current Count
+          </Text>
+          <Heading size="5xl" fontFamily="mono">
+            {count}
+          </Heading>
+        </div>
+      </CardBody>
+      <CardFooter gap="3" justifyContent="center">
+        <Button onClick={() => setCount(count + 1)}>Increment</Button>
+        <Button variant="outline" onClick={() => setCount(0)}>
           Reset
-        </button>
-      </div>
-    </div>
+        </Button>
+      </CardFooter>
+    </Card>
   )
 }
