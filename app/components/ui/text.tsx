@@ -1,5 +1,5 @@
 import { type HTMLAttributes } from 'hono/jsx'
-import { css, cx } from '../../../styled-system/css'
+import { cx } from '../../../styled-system/css'
 import { text, type TextVariantProps } from '../../../styled-system/recipes'
 
 export interface TextProps extends HTMLAttributes, TextVariantProps {
@@ -10,7 +10,7 @@ export const Text = (props: TextProps) => {
   const [variantProps, localProps] = text.splitVariantProps(props)
   const { as: Component = 'span', class: className, ...rest } = localProps
 
-  return <Component class={cx(text(variantProps), css(rest as any), className)} {...rest} />
+  return <Component class={cx(text(variantProps), className)} {...rest} />
 }
 
 export const Heading = (props: TextProps) => {
