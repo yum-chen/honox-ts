@@ -8,6 +8,8 @@
 		"build": "vite build --mode client && vite build --emptyOutDir false",
 		"preview": "wrangler dev",
 		"deploy": "bun run build && wrangler deploy",
+		"deploy:gh": "bun run prepare && bun run build && touch dist/.nojekyll && gh-pages -d dist",
+		"deploy:cf": "bun run prepare && bun run build && wrangler pages deploy ./dist",
 		"fix": "bun run check",
 		"check": "bun x @biomejs/biome check --fix .",
 		"format": "bun x @biomejs/biome format --fix .",
@@ -30,6 +32,7 @@
 		"@pandacss/dev": "^1.11.3",
 		"@types/bun": "latest",
 		"autoprefixer": "^10.5.0",
+		"gh-pages": "^6.3.0",
 		"postcss": "^8.5.15",
 		"vite": "^8.0.16",
 		"wrangler": "^4.101.0"
