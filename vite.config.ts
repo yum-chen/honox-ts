@@ -1,4 +1,4 @@
-import adapter from "@hono/vite-dev-server/cloudflare";
+import adapter from "@hono/vite-dev-server/node";
 import ssg from "@hono/vite-ssg";
 import honox from "honox/vite";
 import { defineConfig } from "vite";
