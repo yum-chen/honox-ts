@@ -4,6 +4,7 @@
 	"type": "module",
 	"private": true,
 	"scripts": {
+		"prepare": "panda codegen",
 		"dev": "vite",
 		"build": "vite build --mode client && vite build",
 		"preview": "wrangler dev",
@@ -27,9 +28,10 @@
 		"@hono/vite-build": "^1.11.1",
 		"@hono/vite-dev-server": "^0.25.3",
 		"@hono/vite-ssg": "^0.3.3",
-		"@tailwindcss/vite": "^4.3.1",
+		"@pandacss/dev": "^1.11.3",
 		"@types/bun": "latest",
-		"tailwindcss": "^4.3.1",
+		"autoprefixer": "^10.5.0",
+		"postcss": "^8.5.15",
 		"vite": "^8.0.16",
 		"wrangler": "^4.101.0"
 	}
