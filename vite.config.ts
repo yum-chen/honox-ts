@@ -1,16 +1,32 @@
-import build from "@hono/vite-build/cloudflare-workers";
 import adapter from "@hono/vite-dev-server/cloudflare";
+import ssg from "@hono/vite-ssg";
 import tailwindcss from "@tailwindcss/vite";
 import honox from "honox/vite";
 import { defineConfig } from "vite";
 
-export default defineConfig({
+const config = {
+	build: {
+		emptyOutDir: false,
+	},
 	plugins: [
 		honox({
 			devServer: { adapter },
 			client: { input: ["/app/client.ts", "/app/style.css"] },
 		}),
 		tailwindcss(),
-		build(),
+		ssg({ entry: "app/server.ts" }),
 	],
-});
+};
+
+const clientConfig = {
+	plugins: [
+		honox({
+			client: { input: ["/app/client.ts", "/app/style.css"] },
+		}),
+		tailwindcss(),
+	],
+};
+
+export default defineConfig(
+	({ mode }) => (mode === "client" && clientConfig) || config,
+);
