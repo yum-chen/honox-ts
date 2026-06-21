@@ -1,1 +1,8 @@
 @layer reset, base, tokens, recipes, utilities;
+
+@layer base {
+	body {
+		background-color: var(--colors-bg-canvas);
+		color: var(--colors-fg-default);
+	}
+}

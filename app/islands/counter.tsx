@@ -1,25 +1,18 @@
 import { useState } from "hono/jsx";
-import { css } from "../../styled-system/css";
+import { stack } from "../../styled-system/patterns";
+import { Button } from "../components/ui/button";
+import { Text } from "../components/ui/text";
 
 export default function Counter() {
 	const [count, setCount] = useState(0);
 	return (
-		<div>
-			<p class={css({ py: "2", fontSize: "2xl" })}>{count}</p>
-			<button
-				type="button"
-				onClick={() => setCount(count + 1)}
-				class={css({
-					px: "4",
-					py: "2",
-					bg: "orange.400",
-					color: "white",
-					rounded: "md",
-					cursor: "pointer",
-				})}
-			>
+		<div class={stack({ align: "center", gap: "4" })}>
+			<Text size="5xl" fontWeight="bold">
+				{count}
+			</Text>
+			<Button type="button" onClick={() => setCount(count + 1)} size="xl">
 				Increment
-			</button>
+			</Button>
 		</div>
 	);
 }
