@@ -12,6 +12,7 @@ import {
 } from "../components/ui/card";
 import { Text } from "../components/ui/text";
 import Counter from "../islands/counter";
+import Navigation from "../islands/navigation";
 
 export default createRoute((c) => {
 	const name = c.req.query("name") ?? "Hono";
@@ -56,6 +57,10 @@ export default createRoute((c) => {
 					<Button variant="ghost" size="lg">
 						Documentation
 					</Button>
+				</div>
+
+				<div class={center()}>
+					<Navigation />
 				</div>
 			</div>
 		</div>,
