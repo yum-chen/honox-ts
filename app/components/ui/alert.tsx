@@ -1,6 +1,6 @@
 import type { ComponentProps } from "hono/jsx";
-import { alert } from "../../../styled-system/recipes";
 import { cx } from "../../../styled-system/css";
+import { alert } from "../../../styled-system/recipes";
 
 type AlertVariantProps = Parameters<typeof alert>[0];
 
@@ -11,9 +11,7 @@ export const Alert = (props: AlertProps) => {
 	const { class: className, ...rest } = localProps;
 	const styles = alert(variantProps);
 
-	return (
-		<div role="alert" class={cx(styles.root, className)} {...rest} />
-	);
+	return <div role="alert" class={cx(styles.root, className)} {...rest} />;
 };
 
 export const AlertContent = (props: ComponentProps<"div">) => {

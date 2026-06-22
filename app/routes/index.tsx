@@ -1,25 +1,26 @@
 import { createRoute } from "honox/factory";
+import Counter from "../islands/counter";
 import { css } from "../../styled-system/css";
-import { container, stack } from "../../styled-system/patterns";
-import {
-	Alert,
-	AlertDescription,
-	AlertIcon,
-	AlertTitle,
-} from "../components/ui/alert";
-import { Badge } from "../components/ui/badge";
+import { stack, container, center } from "../../styled-system/patterns";
 import { Button } from "../components/ui/button";
-import {
-	Card,
-	CardBody,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "../components/ui/card";
 import { Heading } from "../components/ui/heading";
 import { Text } from "../components/ui/text";
-import Counter from "../islands/counter";
+import { Badge } from "../components/ui/badge";
+import {
+	Card,
+	CardHeader,
+	CardBody,
+	CardFooter,
+	CardTitle,
+	CardDescription,
+} from "../components/ui/card";
+import { Alert, AlertTitle, AlertDescription, AlertIcon } from "../components/ui/alert";
+import {
+	FileUpload,
+	FileUploadDropzone,
+	FileUploadLabel,
+	FileUploadTrigger,
+} from "../components/ui/file-upload";
 
 export default createRoute((c) => {
 	const name = c.req.query("name") ?? "Hono";
@@ -27,19 +28,14 @@ export default createRoute((c) => {
 		<div class={container({ py: "12", maxW: "3xl" })}>
 			<div class={stack({ gap: "8" })}>
 				<header class={stack({ gap: "4" })}>
-					<Badge
-						variant="outline"
-						size="lg"
-						class={css({ alignSelf: "start" })}
-					>
+					<Badge variant="outline" size="lg" class={css({ alignSelf: "start" })}>
 						Welcome to HonoX
 					</Badge>
 					<Heading as="h1" size="4xl" fontWeight="bold">
 						Hello, {name}!
 					</Heading>
 					<Text size="lg" color="fg.muted">
-						Experience the speed of Hono with the power of Panda CSS and Park
-						UI.
+						Experience the speed of Hono with the power of Panda CSS and Park UI.
 					</Text>
 				</header>
 
@@ -65,11 +61,45 @@ export default createRoute((c) => {
 					<div class={stack({ gap: "1" })}>
 						<AlertTitle>New version available!</AlertTitle>
 						<AlertDescription>
-							A new version of HonoX has been released. Check out the latest
-							features.
+							A new version of HonoX has been released. Check out the latest features.
 						</AlertDescription>
 					</div>
 				</Alert>
+
+				<FileUpload>
+					<FileUploadLabel>Upload Assets</FileUploadLabel>
+					<FileUploadDropzone>
+						<div class={stack({ gap: "4", align: "center" })}>
+							<div class={center({ color: "fg.muted" })}>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="40"
+									height="40"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+									<polyline points="17 8 12 3 7 8" />
+									<line x1="12" y1="3" x2="12" y2="15" />
+								</svg>
+							</div>
+							<div class={stack({ gap: "1", align: "center" })}>
+								<Text size="sm" fontWeight="medium">
+									Click or drag file to this area to upload
+								</Text>
+								<Text size="xs" color="fg.muted">
+									Support for single or bulk upload.
+								</Text>
+							</div>
+							<FileUploadTrigger>Select Files</FileUploadTrigger>
+						</div>
+					</FileUploadDropzone>
+				</FileUpload>
 
 				<Card>
 					<CardHeader>
