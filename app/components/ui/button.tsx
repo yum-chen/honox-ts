@@ -1,6 +1,6 @@
 import type { ComponentProps } from "hono/jsx";
-import { button } from "../../../styled-system/recipes";
 import { cx } from "../../../styled-system/css";
+import { button } from "../../../styled-system/recipes";
 
 type ButtonVariantProps = Parameters<typeof button>[0];
 

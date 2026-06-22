@@ -1,6 +1,6 @@
 import type { ComponentProps } from "hono/jsx";
-import { badge } from "../../../styled-system/recipes";
 import { cx } from "../../../styled-system/css";
+import { badge } from "../../../styled-system/recipes";
 
 type BadgeVariantProps = Parameters<typeof badge>[0];
 

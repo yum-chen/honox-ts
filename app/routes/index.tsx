@@ -1,6 +1,12 @@
 import { createRoute } from "honox/factory";
 import { css } from "../../styled-system/css";
 import { container, stack } from "../../styled-system/patterns";
+import {
+	Alert,
+	AlertDescription,
+	AlertIcon,
+	AlertTitle,
+} from "../components/ui/alert";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import {
@@ -36,6 +42,34 @@ export default createRoute((c) => {
 						UI.
 					</Text>
 				</header>
+
+				<Alert>
+					<AlertIcon>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							aria-hidden="true"
+						>
+							<circle cx="12" cy="12" r="10" />
+							<line x1="12" y1="16" x2="12" y2="12" />
+							<line x1="12" y1="8" x2="12.01" y2="8" />
+						</svg>
+					</AlertIcon>
+					<div class={stack({ gap: "1" })}>
+						<AlertTitle>New version available!</AlertTitle>
+						<AlertDescription>
+							A new version of HonoX has been released. Check out the latest
+							features.
+						</AlertDescription>
+					</div>
+				</Alert>
 
 				<Card>
 					<CardHeader>

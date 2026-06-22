@@ -1,6 +1,6 @@
 import type { ComponentProps } from "hono/jsx";
-import { text } from "../../../styled-system/recipes";
 import { cx } from "../../../styled-system/css";
+import { text } from "../../../styled-system/recipes";
 
 type TextVariantProps = Parameters<typeof text>[0];
 
@@ -13,7 +13,5 @@ export const Text = (props: TextProps) => {
 	const { as: Component = "p", ...rest } = props;
 	const [variantProps, localProps] = text.splitVariantProps(rest);
 	const { class: className, ...others } = localProps;
-	return (
-		<Component class={cx(text(variantProps), className)} {...others} />
-	);
+	return <Component class={cx(text(variantProps), className)} {...others} />;
 };
