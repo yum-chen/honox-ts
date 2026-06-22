@@ -1,20 +1,33 @@
 import { defineConfig } from "@pandacss/dev";
+import { createPreset } from "@park-ui/panda-preset";
+import amber from "@park-ui/panda-preset/colors/amber";
+import slate from "@park-ui/panda-preset/colors/slate";
 
 export default defineConfig({
-  // Whether to use css reset
-  preflight: true,
+	// Whether to use css reset
+	preflight: true,
 
-  // Where to look for your css declarations
-  include: ["./app/**/*.{js,jsx,ts,tsx}"],
+	presets: [
+		createPreset({
+			accentColor: amber,
+			grayColor: slate,
+			radius: "sm",
+		}),
+	],
 
-  // Files to exclude
-  exclude: [],
+	// Where to look for your css declarations
+	include: ["./app/**/*.{js,jsx,ts,tsx}"],
 
-  // Useful for theme customization
-  theme: {
-    extend: {},
-  },
+	// Files to exclude
+	exclude: [],
 
-  // The output directory for your css system
-  outdir: "styled-system",
+	// Useful for theme customization
+	theme: {
+		extend: {},
+	},
+
+	jsxFramework: "hono",
+
+	// The output directory for your css system
+	outdir: "styled-system",
 });

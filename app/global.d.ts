@@ -1,8 +1,8 @@
-import type {} from "hono";
+import "@honox/types";
 
 declare module "hono" {
 	interface Env {
-		Variables: {};
-		Bindings: {};
+		Variables: Record<string, unknown>;
+		Bindings: Record<string, unknown>;
 	}
 }

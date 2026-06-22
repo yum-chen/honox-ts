@@ -29,6 +29,7 @@
 		"@hono/vite-dev-server": "^0.25.3",
 		"@hono/vite-ssg": "^0.3.3",
 		"@pandacss/dev": "^1.11.3",
+		"@park-ui/panda-preset": "^0.43.1",
 		"@types/bun": "latest",
 		"autoprefixer": "^10.5.0",
 		"postcss": "^8.5.15",
