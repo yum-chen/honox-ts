@@ -1,1 +1,19 @@
 @layer reset, base, tokens, recipes, utilities;
+
+@layer base {
+	:root {
+		--font-body: var(--font-sans);
+	}
+
+	body {
+		background-color: var(--colors-bg-canvas);
+		color: var(--colors-fg-default);
+		font-family: var(--font-body);
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	* {
+		border-color: var(--colors-border-default);
+	}
+}
