@@ -1,26 +1,31 @@
 import { createRoute } from "honox/factory";
-import Counter from "../islands/counter";
 import { css } from "../../styled-system/css";
-import { stack, container, center } from "../../styled-system/patterns";
-import { Button } from "../components/ui/button";
-import { Heading } from "../components/ui/heading";
-import { Text } from "../components/ui/text";
+import { center, container, stack } from "../../styled-system/patterns";
+import {
+	Alert,
+	AlertDescription,
+	AlertIcon,
+	AlertTitle,
+} from "../components/ui/alert";
 import { Badge } from "../components/ui/badge";
+import { Button } from "../components/ui/button";
 import {
 	Card,
-	CardHeader,
 	CardBody,
-	CardFooter,
-	CardTitle,
 	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
 } from "../components/ui/card";
-import { Alert, AlertTitle, AlertDescription, AlertIcon } from "../components/ui/alert";
+import { Heading } from "../components/ui/heading";
+import { Text } from "../components/ui/text";
+import Counter from "../islands/counter";
 import {
 	FileUpload,
 	FileUploadDropzone,
 	FileUploadLabel,
 	FileUploadTrigger,
-} from "../components/ui/file-upload";
+} from "../islands/file-upload";
 
 export default createRoute((c) => {
 	const name = c.req.query("name") ?? "Hono";
@@ -28,14 +33,19 @@ export default createRoute((c) => {
 		<div class={container({ py: "12", maxW: "3xl" })}>
 			<div class={stack({ gap: "8" })}>
 				<header class={stack({ gap: "4" })}>
-					<Badge variant="outline" size="lg" class={css({ alignSelf: "start" })}>
+					<Badge
+						variant="outline"
+						size="lg"
+						class={css({ alignSelf: "start" })}
+					>
 						Welcome to HonoX
 					</Badge>
 					<Heading as="h1" size="4xl" fontWeight="bold">
 						Hello, {name}!
 					</Heading>
 					<Text size="lg" color="fg.muted">
-						Experience the speed of Hono with the power of Panda CSS and Park UI.
+						Experience the speed of Hono with the power of Panda CSS and Park
+						UI.
 					</Text>
 				</header>
 
@@ -61,7 +71,8 @@ export default createRoute((c) => {
 					<div class={stack({ gap: "1" })}>
 						<AlertTitle>New version available!</AlertTitle>
 						<AlertDescription>
-							A new version of HonoX has been released. Check out the latest features.
+							A new version of HonoX has been released. Check out the latest
+							features.
 						</AlertDescription>
 					</div>
 				</Alert>
