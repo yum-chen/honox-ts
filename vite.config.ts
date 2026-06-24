@@ -1,8 +1,8 @@
 import adapter from "@hono/vite-dev-server/node";
 import ssg from "@hono/vite-ssg";
-import tailwindcss from "@tailwindcss/vite";
-import honox from "honox/vite";
+import honox, { devServerDefaultOptions } from "honox/vite";
 import { defineConfig } from "vite";
+import pandaConfig from "./panda.config";
 
 const config = defineConfig(({ mode }) =>
 	mode === "client" ? clientConfig : mainConfig,
@@ -14,9 +14,14 @@ const mainConfig = {
 	},
 	plugins: [
 		honox({
-			devServer: { adapter },
+			devServer: {
+				adapter,
+				exclude: [
+					...devServerDefaultOptions.exclude,
+					new RegExp(`^/${pandaConfig.outdir || "styled-system"}/.*`),
+				],
+			},
 		}),
-		tailwindcss(),
 		ssg({ entry: "app/server.ts" }),
 	],
 };
@@ -26,7 +31,6 @@ const clientConfig = {
 		honox({
 			client: { input: ["/app/client.ts", "/app/style.css"] },
 		}),
-		tailwindcss(),
 	],
 };
 
