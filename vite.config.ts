@@ -1,6 +1,5 @@
 import adapter from "@hono/vite-dev-server/node";
 import ssg from "@hono/vite-ssg";
-import tailwindcss from "@tailwindcss/vite";
 import honox from "honox/vite";
 import { defineConfig } from "vite";
 
@@ -13,7 +12,6 @@ const config = {
 			devServer: { adapter },
 			client: { input: ["/app/client.ts", "/app/style.css"] },
 		}),
-		tailwindcss(),
 		ssg({ entry: "app/server.ts" }),
 	],
 };
@@ -23,7 +21,6 @@ const clientConfig = {
 		honox({
 			client: { input: ["/app/client.ts", "/app/style.css"] },
 		}),
-		tailwindcss(),
 	],
 };
 
