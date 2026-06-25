@@ -7,6 +7,8 @@ export default defineConfig({
 
 	presets: ["@pandacss/preset-base", "@park-ui/panda-preset"],
 
+	jsxFramework: "hono",
+
 	// Where to look for your css declarations
 	include: ["./app/**/*.{js,jsx,ts,tsx}"],
 
