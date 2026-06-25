@@ -1,5 +1,5 @@
 import { badge } from "./badge";
 export const recipes = {
-  badge
+	badge,
 };
 export const slotRecipes = {};
