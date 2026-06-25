@@ -2,14 +2,15 @@ import adapter from "@hono/vite-dev-server/node";
 import ssg from "@hono/vite-ssg";
 import honox from "honox/vite";
 import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 const config = {
 	build: {
 		emptyOutDir: false,
 	},
+	resolve: {
+		tsconfigPaths: true,
+	},
 	plugins: [
-		tsconfigPaths(),
 		honox({
 			devServer: { adapter },
 			client: { input: ["/app/client.ts", "/app/style.css"] },
@@ -27,8 +28,10 @@ const config = {
 };
 
 const clientConfig = {
+	resolve: {
+		tsconfigPaths: true,
+	},
 	plugins: [
-		tsconfigPaths(),
 		honox({
 			client: { input: ["/app/client.ts", "/app/style.css"] },
 		}),
