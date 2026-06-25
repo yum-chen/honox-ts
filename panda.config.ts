@@ -5,6 +5,8 @@ export default defineConfig({
 	// Whether to use css reset
 	preflight: true,
 
+	presets: ["@pandacss/preset-base", "@park-ui/panda-preset"],
+
 	// Where to look for your css declarations
 	include: ["./app/**/*.{js,jsx,ts,tsx}"],
 
@@ -16,21 +18,6 @@ export default defineConfig({
 
 	// The output directory for your css system
 	outdir: "styled-system",
-
-	plugins: [
-		{
-			name: "Remove Panda Preset Colors",
-			hooks: {
-				"preset:resolved": ({ utils, preset, name }) =>
-					name === "@pandacss/preset-panda"
-						? utils.omit(preset, [
-								"theme.tokens.colors",
-								"theme.semanticTokens.colors",
-							])
-						: preset,
-			},
-		},
-	],
 
 	globalCss: theme.globalCss,
 	conditions: theme.conditions,
