@@ -1,5 +1,6 @@
 # prod
 dist/
+styled-system/
 
 # dev
 .hono/
