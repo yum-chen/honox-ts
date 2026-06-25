@@ -8,9 +8,9 @@ export default createRoute((c) => {
 	return c.render(
 		<div class={css({ py: "8", textAlign: "center" })}>
 			<title>{name}</title>
-			<h1 class={css({ fontSize: "3xl", fontWeight: "bold" })}>
+			<Heading as="h1" class={css({ fontSize: "3xl", fontWeight: "bold" })}>
 				Hello, {name}!
-			</h1>
+			</Heading>
 
 			<div
 				class={css({
@@ -21,9 +21,9 @@ export default createRoute((c) => {
 					justifyContent: "center",
 				})}
 			>
-				<h2 class={css({ fontSize: "xl", mb: "4", width: "100%" })}>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4", width: "100%" })}>
 					Badge Component Examples
-				</h2>
+				</Heading>
 
 				{/* Variant examples */}
 				<Badge variant="solid" colorPalette="blue">
