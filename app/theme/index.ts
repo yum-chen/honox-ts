@@ -1,4 +1,5 @@
 import { animationStyles } from "./animation-styles";
+import { blue } from "./colors/blue";
 import { cyan } from "./colors/cyan";
 import { green } from "./colors/green";
 import { red } from "./colors/red";
@@ -68,6 +69,7 @@ const config = {
 			},
 
 			cyan,
+			blue,
 			gray: slate,
 			red,
 			green,
