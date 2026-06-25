@@ -1,9 +1,14 @@
 import { createRoute } from "honox/factory";
+import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { IconButton } from "../components/ui/icon-button";
 import { LucideChevronDown } from "../components/ui/icons";
+import { Accordion } from "../islands/accordion";
 import { Dialog } from "../islands/dialog";
+import { Drawer } from "../islands/drawer";
 import { Menu } from "../islands/menu";
+import { Popover } from "../islands/popover";
+import { ToastDemo } from "../islands/toast";
 import { Tooltip } from "../islands/tooltip";
 
 export default createRoute((c) => {
@@ -17,6 +22,25 @@ export default createRoute((c) => {
 			}}
 		>
 			<section>
+				<h2>Badges</h2>
+				<div style={{ display: "flex", gap: "1rem" }}>
+					<Badge>Default</Badge>
+					<Badge variant="solid">Solid</Badge>
+					<Badge variant="outline">Outline</Badge>
+				</div>
+			</section>
+
+			<section>
+				<h2>Accordion</h2>
+				<Accordion
+					items={[
+						{ value: "1", trigger: "Section 1", content: "Content 1" },
+						{ value: "2", trigger: "Section 2", content: "Content 2" },
+					]}
+				/>
+			</section>
+
+			<section>
 				<h2>Buttons</h2>
 				<div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
 					<Button>Default</Button>
@@ -29,15 +53,29 @@ export default createRoute((c) => {
 			</section>
 
 			<section>
-				<h2>Icon Buttons</h2>
-				<div style={{ display: "flex", gap: "1rem" }}>
-					<IconButton>
-						<LucideChevronDown />
-					</IconButton>
-					<IconButton variant="outline">
-						<LucideChevronDown />
-					</IconButton>
-				</div>
+				<h2>Drawer</h2>
+				<Drawer
+					trigger={<Button>Open Drawer</Button>}
+					title="Drawer Title"
+					description="Drawer description"
+				>
+					<p>Drawer content goes here.</p>
+				</Drawer>
+			</section>
+
+			<section>
+				<h2>Popover</h2>
+				<Popover
+					trigger={<Button variant="outline">Open Popover</Button>}
+					title="Popover Title"
+				>
+					<p>Popover content.</p>
+				</Popover>
+			</section>
+
+			<section>
+				<h2>Toast</h2>
+				<ToastDemo />
 			</section>
 
 			<section>
