@@ -1,6 +1,6 @@
 import { css, cx } from "../../../styled-system/css";
-import { badge } from "../../../styled-system/recipes";
 import type { BadgeVariantProps } from "../../../styled-system/recipes";
+import { badge } from "../../../styled-system/recipes";
 
 export interface BadgeProps extends BadgeVariantProps {
 	children?: any;
