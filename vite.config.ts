@@ -1,6 +1,5 @@
-import adapter from "@hono/vite-dev-server/cloudflare";
+import adapter from "@hono/vite-dev-server/node";
 import ssg from "@hono/vite-ssg";
-import tailwindcss from "@tailwindcss/vite";
 import honox from "honox/vite";
 import { defineConfig } from "vite";
 
@@ -8,22 +7,34 @@ const config = {
 	build: {
 		emptyOutDir: false,
 	},
+	resolve: {
+		tsconfigPaths: true,
+	},
 	plugins: [
 		honox({
 			devServer: { adapter },
 			client: { input: ["/app/client.ts", "/app/style.css"] },
+			islandComponents: {
+				resolve: (name) => {
+					if (name.startsWith("@/")) {
+						return name.replace("@/", "/app/");
+					}
+					return name;
+				},
+			},
 		}),
-		tailwindcss(),
 		ssg({ entry: "app/server.ts" }),
 	],
 };
 
 const clientConfig = {
+	resolve: {
+		tsconfigPaths: true,
+	},
 	plugins: [
 		honox({
 			client: { input: ["/app/client.ts", "/app/style.css"] },
 		}),
-		tailwindcss(),
 	],
 };
 
