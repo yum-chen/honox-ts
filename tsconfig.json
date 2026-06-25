@@ -19,7 +19,8 @@
 		// Path aliases
 		"baseUrl": ".",
 		"paths": {
-			"@/*": ["app/*"]
+			"@/*": ["app/*"],
+			"styled-system/*": ["app/styled-system/*"]
 		},
 
 		// Best practices

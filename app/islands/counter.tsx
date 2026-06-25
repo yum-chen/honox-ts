@@ -1,5 +1,5 @@
 import { useState } from "hono/jsx";
-import { css } from "../../styled-system/css";
+import { css } from "styled-system/css";
 
 export default function Counter() {
 	const [count, setCount] = useState(0);
