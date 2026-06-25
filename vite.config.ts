@@ -24,6 +24,11 @@ const mainConfig = {
 		}),
 		ssg({ entry: "app/server.ts" }),
 	],
+	resolve: {
+		alias: {
+			"@": "/app",
+		},
+	},
 };
 
 const clientConfig = {
@@ -32,6 +37,11 @@ const clientConfig = {
 			client: { input: ["/app/client.ts", "/app/style.css"] },
 		}),
 	],
+	resolve: {
+		alias: {
+			"@": "/app",
+		},
+	},
 };
 
 export default config;

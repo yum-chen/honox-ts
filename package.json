@@ -16,6 +16,7 @@
 		"start": "bun run src/main.ts"
 	},
 	"dependencies": {
+		"@park-ui/panda-preset": "^0.43.1",
 		"hono": "^4.12.26",
 		"honox": "0.1.56"
 	},
