@@ -1,6 +1,15 @@
 import { createRoute } from "honox/factory";
 import { css } from "../../styled-system/css";
-import { Badge, Heading, Text } from "../components/ui";
+import {
+	Alert,
+	AlertContent,
+	AlertDescription,
+	AlertIndicator,
+	AlertTitle,
+	Badge,
+	Heading,
+	Text,
+} from "../components/ui";
 import Counter from "../islands/counter";
 
 export default createRoute((c) => {
@@ -113,6 +122,48 @@ export default createRoute((c) => {
 				<Heading as="h3" size="xl">
 					Heading 3 (size="xl")
 				</Heading>
+			</div>
+
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<h2 class={css({ fontSize: "xl", mb: "4" })}>
+					Alert Component Examples
+				</h2>
+
+				<Alert status="info">
+					<AlertIndicator />
+					<AlertContent>
+						<AlertTitle>Info Alert</AlertTitle>
+						<AlertDescription>This is an informational alert.</AlertDescription>
+					</AlertContent>
+				</Alert>
+
+				<Alert status="success" variant="solid">
+					<AlertIndicator />
+					<AlertContent>
+						<AlertTitle>Success Alert</AlertTitle>
+						<AlertDescription>
+							Operation completed successfully!
+						</AlertDescription>
+					</AlertContent>
+				</Alert>
+
+				<Alert status="error" variant="outline">
+					<AlertIndicator />
+					<AlertContent>
+						<AlertTitle>Error Alert</AlertTitle>
+						<AlertDescription>Something went wrong.</AlertDescription>
+					</AlertContent>
+				</Alert>
 			</div>
 
 			<div class={css({ mt: "8" })}>

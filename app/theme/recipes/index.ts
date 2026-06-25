@@ -1,9 +1,14 @@
+import { alert } from "./alert";
 import { badge } from "./badge";
 import { heading } from "./heading";
 import { text } from "./text";
+
 export const recipes = {
 	badge,
-	text,
 	heading,
+	text,
 };
-export const slotRecipes = {};
+
+export const slotRecipes = {
+	alert,
+};
