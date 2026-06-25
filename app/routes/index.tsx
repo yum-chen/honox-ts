@@ -7,6 +7,11 @@ import {
 	AlertIndicator,
 	AlertTitle,
 	Badge,
+	Field,
+	FieldErrorText,
+	FieldHelperText,
+	FieldLabel,
+	FieldRequiredIndicator,
 	Heading,
 	Text,
 } from "../components/ui";
@@ -164,6 +169,56 @@ export default createRoute((c) => {
 						<AlertDescription>Something went wrong.</AlertDescription>
 					</AlertContent>
 				</Alert>
+			</div>
+
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "8",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<h2 class={css({ fontSize: "xl", mb: "4" })}>
+					Field Component Examples
+				</h2>
+
+				<Field>
+					<FieldLabel>
+						Username <FieldRequiredIndicator />
+					</FieldLabel>
+					<input
+						type="text"
+						placeholder="Enter your username"
+						class={css({
+							borderWidth: "1px",
+							borderColor: "border",
+							borderRadius: "md",
+							px: "3",
+							py: "2",
+						})}
+					/>
+					<FieldHelperText>Keep it unique.</FieldHelperText>
+				</Field>
+
+				<Field>
+					<FieldLabel>Email</FieldLabel>
+					<input
+						type="email"
+						placeholder="Enter your email"
+						class={css({
+							borderWidth: "1px",
+							borderColor: "error",
+							borderRadius: "md",
+							px: "3",
+							py: "2",
+						})}
+					/>
+					<FieldErrorText>Invalid email address.</FieldErrorText>
+				</Field>
 			</div>
 
 			<div class={css({ mt: "8" })}>
