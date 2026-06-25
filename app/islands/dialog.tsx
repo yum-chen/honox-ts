@@ -1,8 +1,8 @@
 import { type Child, useState } from "hono/jsx";
 import { dialog } from "@/../styled-system/recipes";
-import { cx } from "@/lib/utils";
-import { LucideX } from "@/components/ui/icons";
 import { IconButton } from "@/components/ui/icon-button";
+import { LucideX } from "@/components/ui/icons";
+import { cx } from "@/lib/utils";
 
 export const Dialog = ({
 	trigger,
