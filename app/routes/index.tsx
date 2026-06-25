@@ -2,7 +2,7 @@ import { createRoute } from "honox/factory";
 import type { Child } from "hono/jsx";
 import { css } from "../../styled-system/css";
 import { container, hstack, stack, wrap } from "../../styled-system/patterns";
-import { Button, IconButton, MenuItem, MenuSeparator } from "../components/ui";
+import { Badge, Button, IconButton, MenuItem, MenuSeparator } from "../components/ui";
 import { MenuItemGroup, MenuItemGroupLabel } from "../components/ui/menu";
 import {
 	ChevronDownIcon,
@@ -14,14 +14,22 @@ import {
 	TrashIcon,
 	UserIcon,
 } from "../components/icons";
+import Accordion from "../islands/accordion";
 import Dialog from "../islands/dialog";
 import Menu from "../islands/menu";
+import Popover from "../islands/popover";
 import ThemeToggle from "../islands/theme-toggle";
+import Toaster from "../islands/toaster";
+import ToastDemo from "../islands/toast-demo";
 import Tooltip from "../islands/tooltip";
 
 const variants = ["solid", "outline", "subtle", "ghost", "link"] as const;
 
 const sizes = ["xs", "sm", "md", "lg", "xl", "2xl"] as const;
+
+const badgeVariants = ["solid", "subtle", "outline"] as const;
+
+const badgeSizes = ["sm", "md", "lg"] as const;
 
 const Section = ({ title, children }: { title: string; children: Child }) => (
 	<section class={stack({ gap: "4" })}>
@@ -147,9 +155,67 @@ export default createRoute((c) => {
 								<HeartIcon />
 							</IconButton>
 						</Tooltip>
+
+						<Popover
+							trigger={<Button variant="outline">Open popover</Button>}
+							title="Notifications"
+							description="You are subscribed to product updates and security alerts."
+						>
+							<div class={hstack({ gap: "3", justify: "flex-end", mt: "2" })}>
+								<Button size="sm" variant="subtle" data-popover-close>
+									Dismiss
+								</Button>
+							</div>
+						</Popover>
 					</div>
 				</Section>
+
+				<Section title="Badges">
+					<div class={wrap({ gap: "3", alignItems: "center" })}>
+						{badgeVariants.map((variant) => (
+							<Badge key={variant} variant={variant}>
+								{variant}
+							</Badge>
+						))}
+						{badgeSizes.map((size) => (
+							<Badge key={size} size={size} variant="solid">
+								{size}
+							</Badge>
+						))}
+					</div>
+				</Section>
+
+				<Section title="Accordion">
+					<Accordion
+						defaultValue="what"
+						items={[
+							{
+								value: "what",
+								title: "What is Park UI?",
+								content:
+									"A design system built on top of Panda CSS and Ark UI, here ported to native Hono/JSX.",
+							},
+							{
+								value: "deps",
+								title: "Does it use React?",
+								content:
+									"No — these components are framework-agnostic and render with zero React or SolidJS dependencies.",
+							},
+							{
+								value: "theming",
+								title: "Can I theme it?",
+								content:
+									"Yes. All tokens come from Park UI's Panda preset, so the accent, gray, and radius scales are swappable.",
+							},
+						]}
+					/>
+				</Section>
+
+				<Section title="Toast">
+					<ToastDemo />
+				</Section>
 			</div>
+			<Toaster />
 		</main>,
 	);
 });
