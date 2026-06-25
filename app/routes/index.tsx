@@ -1,6 +1,6 @@
 import { createRoute } from "honox/factory";
 import { css } from "../../styled-system/css";
-import { Badge, Text } from "../components/ui";
+import { Badge, Heading, Text } from "../components/ui";
 import Counter from "../islands/counter";
 
 export default createRoute((c) => {
@@ -87,6 +87,32 @@ export default createRoute((c) => {
 				</Text>
 
 				<Text variant="label">Label variant text (Text variant="label")</Text>
+			</div>
+
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+				})}
+			>
+				<h2 class={css({ fontSize: "xl", mb: "4" })}>
+					Heading Component Examples
+				</h2>
+
+				<Heading as="h1" size="5xl">
+					Heading 1 (size="5xl")
+				</Heading>
+
+				<Heading as="h2" size="3xl">
+					Heading 2 (size="3xl")
+				</Heading>
+
+				<Heading as="h3" size="xl">
+					Heading 3 (size="xl")
+				</Heading>
 			</div>
 
 			<div class={css({ mt: "8" })}>
