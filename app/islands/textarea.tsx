@@ -50,7 +50,9 @@ export default function Textarea(props: TextareaIslandProps) {
 		}
 
 		if (minLength !== undefined && val.length < minLength) {
-			setLocalErrorText(errorText || `Must be at least ${minLength} characters`);
+			setLocalErrorText(
+				errorText || `Must be at least ${minLength} characters`,
+			);
 			return;
 		}
 
