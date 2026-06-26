@@ -19,9 +19,9 @@ import {
 	FieldsetLegend,
 	Heading,
 	Text,
+	Textarea,
 } from "../components/ui";
 import Counter from "../islands/counter";
-import TextareaIsland from "../islands/textarea";
 
 export default createRoute((c) => {
 	const name = c.req.query("name") ?? "Hono";
@@ -268,13 +268,13 @@ export default createRoute((c) => {
 								})}
 							/>
 						</Field>
-						<TextareaIsland
+						<Textarea
 							id="bio"
 							label="Bio"
 							placeholder="A short bio"
 							rows={4}
 							defaultValue="Short"
-							minLength={10}
+							validator={(val) => val.length >= 10}
 							helperText="At least 10 characters."
 							errorText="Bio must be at least 10 characters."
 						/>
