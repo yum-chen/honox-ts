@@ -12,6 +12,11 @@ import {
 	FieldHelperText,
 	FieldLabel,
 	FieldRequiredIndicator,
+	Fieldset,
+	FieldsetContent,
+	FieldsetControl,
+	FieldsetHelperText,
+	FieldsetLegend,
 	Heading,
 	Text,
 } from "../components/ui";
@@ -219,6 +224,61 @@ export default createRoute((c) => {
 					/>
 					<FieldErrorText>Invalid email address.</FieldErrorText>
 				</Field>
+			</div>
+
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "8",
+					alignItems: "center",
+					maxWidth: "3xl",
+					mx: "auto",
+					px: "4",
+				})}
+			>
+				<h2 class={css({ fontSize: "xl", mb: "4" })}>
+					Fieldset Component Examples
+				</h2>
+
+				<Fieldset>
+					<FieldsetControl>
+						<FieldsetLegend>Profile Info</FieldsetLegend>
+						<FieldsetHelperText>
+							Provide your personal details here.
+						</FieldsetHelperText>
+					</FieldsetControl>
+					<FieldsetContent>
+						<Field>
+							<FieldLabel>Name</FieldLabel>
+							<input
+								type="text"
+								placeholder="John Doe"
+								class={css({
+									borderWidth: "1px",
+									borderColor: "border",
+									borderRadius: "md",
+									px: "3",
+									py: "2",
+								})}
+							/>
+						</Field>
+						<Field>
+							<FieldLabel>Bio</FieldLabel>
+							<textarea
+								placeholder="Tell us about yourself"
+								class={css({
+									borderWidth: "1px",
+									borderColor: "border",
+									borderRadius: "md",
+									px: "3",
+									py: "2",
+								})}
+							/>
+						</Field>
+					</FieldsetContent>
+				</Fieldset>
 			</div>
 
 			<div class={css({ mt: "8" })}>
