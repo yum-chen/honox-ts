@@ -1,3 +1,4 @@
+import { amber } from "app/theme/colors/amber";
 import { defineConfig } from "@pandacss/dev";
 import * as theme from "./app/theme";
 
@@ -16,6 +17,8 @@ export default defineConfig({
 
 	// The output directory for your css system
 	outdir: "styled-system",
+
+	jsxFramework: "hono",
 
 	plugins: [
 		{
