@@ -22,6 +22,7 @@ import {
 	Textarea,
 } from "../components/ui";
 import Counter from "../islands/counter";
+import Switch from "../islands/switch";
 
 export default createRoute((c) => {
 	const name = c.req.query("name") ?? "Hono";
@@ -228,6 +229,11 @@ export default createRoute((c) => {
 					/>
 					<FieldErrorText>Invalid email address.</FieldErrorText>
 				</Field>
+
+				<Field>
+					<FieldLabel>Notifications</FieldLabel>
+					<Switch defaultChecked>Enable email notifications</Switch>
+				</Field>
 			</div>
 
 			<div
@@ -271,6 +277,9 @@ export default createRoute((c) => {
 						<Field>
 							<FieldLabel>Bio</FieldLabel>
 							<Textarea placeholder="A short bio" rows={4} />
+						</Field>
+						<Field>
+							<Switch>Public Profile</Switch>
 						</Field>
 					</FieldsetContent>
 				</Fieldset>
