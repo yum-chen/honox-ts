@@ -214,17 +214,18 @@ export default createRoute((c) => {
 					<FieldHelperText>Keep it unique.</FieldHelperText>
 				</Field>
 
-				<Field>
+				<Field invalid>
 					<FieldLabel>Email</FieldLabel>
 					<input
 						type="email"
 						placeholder="Enter your email"
 						class={css({
 							borderWidth: "1px",
-							borderColor: "error",
+							borderColor: "border.error",
 							borderRadius: "md",
 							px: "3",
 							py: "2",
+							outline: "none",
 						})}
 					/>
 					<FieldErrorText>Invalid email address.</FieldErrorText>
@@ -274,9 +275,10 @@ export default createRoute((c) => {
 								})}
 							/>
 						</Field>
-						<Field>
+						<Field invalid>
 							<FieldLabel>Bio</FieldLabel>
 							<Textarea placeholder="A short bio" rows={4} />
+							<FieldErrorText>Bio is too short.</FieldErrorText>
 						</Field>
 						<Field>
 							<Switch>Public Profile</Switch>

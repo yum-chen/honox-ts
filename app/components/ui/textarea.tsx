@@ -12,25 +12,33 @@ export interface TextareaProps extends TextareaVariantProps {
 export function Textarea(props: TextareaProps) {
 	const field = useFieldContext();
 	const [variantProps, localProps] = textarea.splitVariantProps(props);
-	const { class: classProp, ...restProps } = localProps;
+	const {
+		class: classProp,
+		id = field?.id,
+		disabled = field?.disabled,
+		invalid = field?.invalid,
+		required = field?.required,
+		readOnly = field?.readOnly,
+		...restProps
+	} = localProps;
 	const styles = textarea(variantProps);
 
 	const describedBy = [];
 	if (field?.hasHelperText) describedBy.push(field.helperTextId);
-	if (field?.invalid && field?.hasErrorText)
-		describedBy.push(field.errorTextId);
+	if (invalid && field?.hasErrorText) describedBy.push(field.errorTextId);
 
 	return (
 		<textarea
-			id={field?.id}
+			id={id}
 			aria-describedby={
 				describedBy.length > 0 ? describedBy.join(" ") : undefined
 			}
-			aria-invalid={field?.invalid ? "true" : undefined}
-			aria-required={field?.required ? "true" : undefined}
-			disabled={field?.disabled}
-			readOnly={field?.readOnly}
+			aria-invalid={invalid ? "true" : undefined}
+			aria-required={required ? "true" : undefined}
+			disabled={disabled}
+			readOnly={readOnly}
 			class={cx(styles, classProp)}
+			data-invalid={invalid ? "" : undefined}
 			{...(restProps as any)}
 		/>
 	);

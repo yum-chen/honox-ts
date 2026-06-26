@@ -23,7 +23,7 @@ export const textarea = defineRecipe({
 		variant: {
 			outline: {
 				borderWidth: "1px",
-				borderColor: "gray.outline.border",
+				borderColor: "border",
 				focusVisibleRing: "inside",
 				_invalid: {
 					borderColor: "error",
@@ -33,7 +33,7 @@ export const textarea = defineRecipe({
 			surface: {
 				bg: "gray.surface.bg",
 				borderWidth: "1px",
-				borderColor: "gray.surface.border",
+				borderColor: "border",
 				focusVisibleRing: "inside",
 				_invalid: {
 					borderColor: "error",
@@ -53,7 +53,7 @@ export const textarea = defineRecipe({
 			},
 			flushed: {
 				borderBottomWidth: "1px",
-				borderBottomColor: "gray.outline.border",
+				borderBottomColor: "border",
 				borderRadius: "0",
 				color: "fg.default",
 				px: "0",

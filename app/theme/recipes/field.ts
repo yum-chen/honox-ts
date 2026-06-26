@@ -8,6 +8,7 @@ export const field = defineSlotRecipe({
 			display: "flex",
 			flexDirection: "column",
 			gap: "1.5",
+			width: "full",
 		},
 		label: {
 			alignItems: "center",
