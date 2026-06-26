@@ -26,3 +26,4 @@ export {
 } from "./fieldset";
 export { Heading, type HeadingProps } from "./heading";
 export { Text, type TextProps } from "./text";
+export { Textarea, type TextareaProps } from "./textarea";

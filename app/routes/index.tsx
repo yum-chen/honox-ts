@@ -19,6 +19,7 @@ import {
 	FieldsetLegend,
 	Heading,
 	Text,
+	Textarea,
 } from "../components/ui";
 import Counter from "../islands/counter";
 
@@ -269,17 +270,7 @@ export default createRoute((c) => {
 						</Field>
 						<Field>
 							<FieldLabel>Bio</FieldLabel>
-							<textarea
-								placeholder="A short bio"
-								class={css({
-									borderWidth: "1px",
-									borderColor: "border",
-									borderRadius: "md",
-									px: "3",
-									py: "2",
-									minHeight: "24",
-								})}
-							/>
+							<Textarea placeholder="A short bio" rows={4} />
 						</Field>
 					</FieldsetContent>
 				</Fieldset>
