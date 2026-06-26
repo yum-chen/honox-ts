@@ -9,6 +9,7 @@ export interface FieldsetProps extends FieldsetVariantProps {
 	id?: string;
 	disabled?: boolean;
 	invalid?: boolean;
+	interactive?: boolean;
 	[key: string]: any;
 }
 

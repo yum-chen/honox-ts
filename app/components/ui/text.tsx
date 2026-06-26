@@ -6,6 +6,7 @@ export interface TextProps extends TextVariantProps {
 	as?: any;
 	children?: any;
 	class?: string;
+	interactive?: boolean;
 	[key: string]: any;
 }
 

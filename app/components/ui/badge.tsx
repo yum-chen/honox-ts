@@ -5,6 +5,7 @@ import { badge } from "../../../styled-system/recipes";
 export interface BadgeProps extends BadgeVariantProps {
 	children?: any;
 	class?: string;
+	interactive?: boolean;
 	colorPalette?:
 		| "blue"
 		| "green"

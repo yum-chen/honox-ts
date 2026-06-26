@@ -5,6 +5,7 @@ import { alert } from "../../../styled-system/recipes";
 export interface AlertProps extends AlertVariantProps {
 	children?: any;
 	class?: string;
+	interactive?: boolean;
 	[key: string]: any;
 }
 

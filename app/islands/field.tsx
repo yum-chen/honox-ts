@@ -1,5 +1,5 @@
 import { useState } from "hono/jsx";
-import { Field as UIField, type FieldProps } from "../components/ui/field";
+import { FieldBase, type FieldProps } from "../components/ui/field-base";
 
 export default function FieldIsland(props: FieldProps) {
 	const { defaultValue, onValueChange, ...rest } = props;
@@ -11,6 +11,6 @@ export default function FieldIsland(props: FieldProps) {
 	};
 
 	return (
-		<UIField {...rest} value={value} onValueChange={handleValueChange} />
+		<FieldBase {...rest} value={value} onValueChange={handleValueChange} />
 	);
 }

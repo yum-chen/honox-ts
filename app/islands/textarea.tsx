@@ -1,8 +1,8 @@
 import { useState } from "hono/jsx";
 import {
-	Textarea as UITextarea,
+	TextareaBase,
 	type TextareaProps,
-} from "../components/ui/textarea";
+} from "../components/ui/textarea-base";
 
 export default function TextareaIsland(props: TextareaProps) {
 	const { defaultValue, onInput, ...rest } = props;
@@ -13,5 +13,5 @@ export default function TextareaIsland(props: TextareaProps) {
 		if (onInput) onInput(e);
 	};
 
-	return <UITextarea {...rest} value={value} onInput={handleInput} />;
+	return <TextareaBase {...rest} value={value} onInput={handleInput} />;
 }

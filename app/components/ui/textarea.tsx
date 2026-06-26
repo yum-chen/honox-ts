@@ -1,59 +1,20 @@
-import { cx } from "../../../styled-system/css";
-import type { TextareaVariantProps } from "../../../styled-system/recipes";
-import { textarea } from "../../../styled-system/recipes";
-import { useFieldContext } from "./field";
+import {
+	TextareaBase,
+	type TextareaProps,
+} from "./textarea-base";
+import TextareaIsland from "../../islands/textarea";
 
-export interface TextareaProps extends TextareaVariantProps {
-	children?: any;
-	class?: string;
-	value?: string;
-	onInput?: (e: any) => void;
-	validator?: (value: string) => boolean;
-	interactive?: boolean;
-	[key: string]: any;
-}
+export const Textarea = (props: TextareaProps) => {
+	const isInteractive =
+		props.interactive !== false &&
+		(props.interactive === true ||
+			props.validator !== undefined ||
+			props.onInput !== undefined);
 
-export function Textarea(props: TextareaProps) {
-	const field = useFieldContext();
-	const [variantProps, localProps] = textarea.splitVariantProps(props);
-	const {
-		class: classProp,
-		value: valueProp,
-		onInput,
-		validator,
-		interactive,
-		...restProps
-	} = localProps;
-	const styles = textarea(variantProps);
+	if (isInteractive) {
+		return <TextareaIsland {...props} />;
+	}
+	return <TextareaBase {...props} />;
+};
 
-	const describedBy = [];
-	if (field?.hasHelperText) describedBy.push(field.helperTextId);
-	if (field?.invalid && field?.hasErrorText)
-		describedBy.push(field.errorTextId);
-
-	const value = valueProp !== undefined ? valueProp : field?.value;
-
-	const handleInput = (e: any) => {
-		if (onInput) onInput(e);
-		if (field?.onValueChange) {
-			field.onValueChange(e.target.value);
-		}
-	};
-
-	return (
-		<textarea
-			id={field?.id}
-			aria-describedby={
-				describedBy.length > 0 ? describedBy.join(" ") : undefined
-			}
-			aria-invalid={field?.invalid ? "true" : undefined}
-			aria-required={field?.required ? "true" : undefined}
-			disabled={field?.disabled}
-			readOnly={field?.readOnly}
-			class={cx(styles, classProp)}
-			value={value}
-			onInput={handleInput}
-			{...(restProps as any)}
-		/>
-	);
-}
+export { type TextareaProps } from "./textarea-base";
