@@ -18,10 +18,10 @@ import {
 	FieldsetHelperText,
 	FieldsetLegend,
 	Heading,
+	Switch,
 	Text,
 	Textarea,
 } from "../components/ui";
-import Switch from "../islands/switch";
 
 export default createRoute((c) => {
 	const name = c.req.query("name") ?? "Hono";

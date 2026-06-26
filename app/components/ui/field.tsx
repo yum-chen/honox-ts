@@ -1,8 +1,5 @@
-import {
-	FieldBase,
-	type FieldProps,
-} from "./field-base";
 import FieldIsland from "../../islands/field";
+import { FieldBase, type FieldProps } from "./field-base";
 
 export const Field = (props: FieldProps) => {
 	const isInteractive =
@@ -19,11 +16,11 @@ export const Field = (props: FieldProps) => {
 };
 
 export {
-	FieldLabel,
-	FieldHelperText,
 	FieldErrorText,
-	FieldRequiredIndicator,
 	FieldGroup,
-	useFieldContext,
+	FieldHelperText,
+	FieldLabel,
 	type FieldProps,
+	FieldRequiredIndicator,
+	useFieldContext,
 } from "./field-base";

@@ -1,8 +1,5 @@
-import {
-	TextareaBase,
-	type TextareaProps,
-} from "./textarea-base";
 import TextareaIsland from "../../islands/textarea";
+import { TextareaBase, type TextareaProps } from "./textarea-base";
 
 export const Textarea = (props: TextareaProps) => {
 	const isInteractive =
@@ -17,4 +14,4 @@ export const Textarea = (props: TextareaProps) => {
 	return <TextareaBase {...props} />;
 };
 
-export { type TextareaProps } from "./textarea-base";
+export type { TextareaProps } from "./textarea-base";
