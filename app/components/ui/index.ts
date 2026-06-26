@@ -1,3 +1,4 @@
+export { Switch, type SwitchProps } from "../../islands/switch";
 export {
 	Alert,
 	AlertContent,
