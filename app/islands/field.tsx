@@ -1,54 +1,16 @@
 import { useState } from "hono/jsx";
-import { Field as UIField, FieldGroup } from "../components/ui/field";
-import { Textarea } from "../components/ui/textarea";
+import { Field as UIField, type FieldProps } from "../components/ui/field";
 
-export interface FieldIslandProps {
-	as?: "textarea" | "input"; // For now just supporting these
-	label?: string;
-	helperText?: string;
-	errorText?: string;
-	minLength?: number;
-	id?: string;
-	placeholder?: string;
-	rows?: number;
-	defaultValue?: string;
-	class?: string;
-}
+export default function FieldIsland(props: FieldProps) {
+	const { defaultValue, onValueChange, ...rest } = props;
+	const [value, setValue] = useState(defaultValue ?? props.value ?? "");
 
-export default function FieldIsland(props: FieldIslandProps) {
-	const {
-		as = "input",
-		label,
-		helperText,
-		errorText,
-		minLength,
-		defaultValue = "",
-		class: className,
-		...rest
-	} = props;
-	const [value, setValue] = useState(defaultValue);
+	const handleValueChange = (newValue: string) => {
+		setValue(newValue);
+		if (onValueChange) onValueChange(newValue);
+	};
 
 	return (
-		<UIField
-			id={rest.id}
-			value={value}
-			onValueChange={setValue}
-			minLength={minLength}
-			class={className}
-		>
-			<FieldGroup label={label} helperText={helperText} errorText={errorText}>
-				{as === "textarea" ? (
-					<Textarea {...rest} />
-				) : (
-					<input
-						{...rest}
-						value={value}
-						onInput={(e: { target: { value: string } }) =>
-							setValue((e.target as HTMLInputElement).value)}
-						class={rest.class}
-					/>
-				)}
-			</FieldGroup>
-		</UIField>
+		<UIField {...rest} value={value} onValueChange={handleValueChange} />
 	);
 }

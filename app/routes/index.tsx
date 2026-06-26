@@ -9,6 +9,7 @@ import {
 	Badge,
 	Field,
 	FieldErrorText,
+	FieldGroup,
 	FieldHelperText,
 	FieldLabel,
 	FieldRequiredIndicator,
@@ -19,9 +20,9 @@ import {
 	FieldsetLegend,
 	Heading,
 	Text,
+	Textarea,
 } from "../components/ui";
 import Counter from "../islands/counter";
-import FieldIsland from "../islands/field";
 
 export default createRoute((c) => {
 	const name = c.req.query("name") ?? "Hono";
@@ -268,17 +269,20 @@ export default createRoute((c) => {
 								})}
 							/>
 						</Field>
-						<FieldIsland
-							as="textarea"
+						<Field
 							id="bio"
-							label="Bio"
-							placeholder="A short bio"
-							rows={4}
 							defaultValue="Short"
-							minLength={10}
-							helperText="At least 10 characters."
-							errorText="Bio must be at least 10 characters."
-						/>
+							validator={(val: string) => val.length >= 10}
+							interactive={true}
+						>
+							<FieldGroup
+								label="Bio"
+								helperText="At least 10 characters."
+								errorText="Bio must be at least 10 characters."
+							>
+								<Textarea placeholder="A short bio" rows={4} />
+							</FieldGroup>
+						</Field>
 					</FieldsetContent>
 				</Fieldset>
 			</div>

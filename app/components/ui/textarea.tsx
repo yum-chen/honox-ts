@@ -8,6 +8,8 @@ export interface TextareaProps extends TextareaVariantProps {
 	class?: string;
 	value?: string;
 	onInput?: (e: any) => void;
+	validator?: (value: string) => boolean;
+	interactive?: boolean;
 	[key: string]: any;
 }
 
@@ -18,6 +20,8 @@ export function Textarea(props: TextareaProps) {
 		class: classProp,
 		value: valueProp,
 		onInput,
+		validator,
+		interactive,
 		...restProps
 	} = localProps;
 	const styles = textarea(variantProps);

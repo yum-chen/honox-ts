@@ -14,6 +14,8 @@ export interface FieldProps extends FieldVariantProps {
 	value?: string;
 	onValueChange?: (value: string) => void;
 	minLength?: number;
+	validator?: (value: string) => boolean;
+	interactive?: boolean;
 	[key: string]: any;
 }
 
@@ -50,6 +52,8 @@ export function Field(props: FieldProps) {
 		value,
 		onValueChange,
 		minLength,
+		validator,
+		interactive,
 		...restProps
 	} = localProps;
 
@@ -57,13 +61,17 @@ export function Field(props: FieldProps) {
 	const id = idProp || autoId;
 	const styles = field(variantProps);
 
-	const isInvalid =
-		invalidProp !== undefined
-			? invalidProp
-			: minLength !== undefined &&
-				value !== undefined &&
-				value.length > 0 &&
-				value.length < minLength;
+	let isInvalid = invalidProp;
+	if (isInvalid === undefined) {
+		if (validator && value !== undefined) {
+			isInvalid = !validator(value);
+		} else if (
+			minLength !== undefined &&
+			value !== undefined
+		) {
+			isInvalid = value.length < minLength;
+		}
+	}
 
 	const contextValue: FieldContextValue = {
 		id,
@@ -184,7 +192,7 @@ export function FieldGroup(props: {
 }) {
 	const { label, helperText, errorText, children } = props;
 	return (
-		<div style={{ display: 'contents' }}>
+		<div style={{ display: "contents" }}>
 			{label && <FieldLabel>{label}</FieldLabel>}
 			{children}
 			{helperText && <FieldHelperText>{helperText}</FieldHelperText>}
