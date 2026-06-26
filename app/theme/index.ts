@@ -62,7 +62,11 @@ const config = {
 			},
 
 			border: {
-				DEFAULT: {
+				value: {
+					_light: "{colors.gray.4}",
+					_dark: "{colors.gray.4}",
+				},
+				default: {
 					value: {
 						_light: "{colors.gray.4}",
 						_dark: "{colors.gray.4}",

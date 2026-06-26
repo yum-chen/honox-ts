@@ -16,7 +16,7 @@ import {
 	Text,
 } from "../components/ui";
 import Counter from "../islands/counter";
-import FieldsetDemo from "../islands/fieldset-demo";
+import ProfileForm from "../islands/profile-form";
 
 export default createRoute((c) => {
 	const name = c.req.query("name") ?? "Hono";
@@ -241,7 +241,7 @@ export default createRoute((c) => {
 					Fieldset Component Examples
 				</h2>
 
-				<FieldsetDemo />
+				<ProfileForm />
 			</div>
 
 			<div class={css({ mt: "8" })}>
