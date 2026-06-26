@@ -35,7 +35,10 @@ export default createRoute((c) => {
 					justifyContent: "center",
 				})}
 			>
-				<Heading as="h2" class={css({ fontSize: "xl", mb: "4", width: "100%" })}>
+				<Heading
+					as="h2"
+					class={css({ fontSize: "xl", mb: "4", width: "100%" })}
+				>
 					Badge Component Examples
 				</Heading>
 
