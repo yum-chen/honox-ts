@@ -11,6 +11,9 @@ export interface FieldProps extends FieldVariantProps {
 	invalid?: boolean;
 	readOnly?: boolean;
 	required?: boolean;
+	value?: string;
+	onValueChange?: (value: string) => void;
+	minLength?: number;
 	[key: string]: any;
 }
 
@@ -20,6 +23,9 @@ interface FieldContextValue {
 	invalid?: boolean;
 	readOnly?: boolean;
 	required?: boolean;
+	value?: string;
+	onValueChange?: (value: string) => void;
+	minLength?: number;
 	labelId: string;
 	helperTextId: string;
 	errorTextId: string;
@@ -37,11 +43,13 @@ export function Field(props: FieldProps) {
 		children,
 		class: classProp,
 		id: idProp,
-		// Destructure from props to avoid being swallowed by splitVariantProps if they are variants
 		disabled = props.disabled,
-		invalid = props.invalid,
+		invalid: invalidProp = props.invalid,
 		readOnly = props.readOnly,
 		required = props.required,
+		value,
+		onValueChange,
+		minLength,
 		...restProps
 	} = localProps;
 
@@ -49,17 +57,26 @@ export function Field(props: FieldProps) {
 	const id = idProp || autoId;
 	const styles = field(variantProps);
 
+	const isInvalid =
+		invalidProp !== undefined
+			? invalidProp
+			: minLength !== undefined &&
+				value !== undefined &&
+				value.length > 0 &&
+				value.length < minLength;
+
 	const contextValue: FieldContextValue = {
 		id,
 		disabled,
-		invalid,
+		invalid: isInvalid,
 		readOnly,
 		required,
+		value,
+		onValueChange,
+		minLength,
 		labelId: `field::${id}::label`,
 		helperTextId: `field::${id}::helper-text`,
 		errorTextId: `field::${id}::error-text`,
-		// In SSR we assume they exist if rendered.
-		// We could allow users to pass hasHelperText/hasErrorText props to Field if they want to be explicit.
 		hasHelperText: true,
 		hasErrorText: true,
 	};
@@ -69,7 +86,7 @@ export function Field(props: FieldProps) {
 			<div
 				class={cx(styles.root, classProp)}
 				data-disabled={disabled ? "" : undefined}
-				data-invalid={invalid ? "" : undefined}
+				data-invalid={isInvalid ? "" : undefined}
 				data-readonly={readOnly ? "" : undefined}
 				data-required={required ? "" : undefined}
 				{...restProps}
@@ -156,5 +173,22 @@ export function FieldRequiredIndicator(props: {
 		>
 			{props.children || "*"}
 		</span>
+	);
+}
+
+export function FieldGroup(props: {
+	label?: string;
+	helperText?: string;
+	errorText?: string;
+	children?: any;
+}) {
+	const { label, helperText, errorText, children } = props;
+	return (
+		<div style={{ display: 'contents' }}>
+			{label && <FieldLabel>{label}</FieldLabel>}
+			{children}
+			{helperText && <FieldHelperText>{helperText}</FieldHelperText>}
+			<FieldErrorText>{errorText}</FieldErrorText>
+		</div>
 	);
 }

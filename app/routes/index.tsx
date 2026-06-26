@@ -21,7 +21,7 @@ import {
 	Text,
 } from "../components/ui";
 import Counter from "../islands/counter";
-import TextareaIsland from "../islands/textarea";
+import FieldIsland from "../islands/field";
 
 export default createRoute((c) => {
 	const name = c.req.query("name") ?? "Hono";
@@ -268,7 +268,8 @@ export default createRoute((c) => {
 								})}
 							/>
 						</Field>
-						<TextareaIsland
+						<FieldIsland
+							as="textarea"
 							id="bio"
 							label="Bio"
 							placeholder="A short bio"
