@@ -52,12 +52,28 @@ const config = {
 						_dark: "{colors.gray.10}",
 					},
 				},
+
+				error: {
+					value: {
+						_light: "{colors.red.11}",
+						_dark: "{colors.red.11}",
+					},
+				},
 			},
 
 			border: {
-				value: {
-					_light: "{colors.gray.4}",
-					_dark: "{colors.gray.4}",
+				DEFAULT: {
+					value: {
+						_light: "{colors.gray.4}",
+						_dark: "{colors.gray.4}",
+					},
+				},
+
+				error: {
+					value: {
+						_light: "{colors.red.9}",
+						_dark: "{colors.red.9}",
+					},
 				},
 			},
 
