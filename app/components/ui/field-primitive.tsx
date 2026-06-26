@@ -3,17 +3,6 @@ import { cx } from "../../../styled-system/css";
 import type { FieldVariantProps } from "../../../styled-system/recipes";
 import { field } from "../../../styled-system/recipes";
 
-export interface FieldProps extends FieldVariantProps {
-	children?: any;
-	class?: string;
-	id?: string;
-	disabled?: boolean;
-	invalid?: boolean;
-	readOnly?: boolean;
-	required?: boolean;
-	[key: string]: any;
-}
-
 interface FieldContextValue {
 	id: string;
 	disabled?: boolean;
@@ -28,6 +17,17 @@ interface FieldContextValue {
 }
 
 const FieldContext = createContext<FieldContextValue | null>(null);
+
+export interface FieldProps extends FieldVariantProps {
+	children?: any;
+	class?: string;
+	id?: string;
+	disabled?: boolean;
+	invalid?: boolean;
+	readOnly?: boolean;
+	required?: boolean;
+	[key: string]: any;
+}
 
 export const useFieldContext = () => useContext(FieldContext);
 
