@@ -26,8 +26,8 @@ export const textarea = defineRecipe({
 				borderColor: "gray.outline.border",
 				focusVisibleRing: "inside",
 				_invalid: {
-					borderColor: "error",
-					focusRingColor: "error",
+					borderColor: "border.error",
+					focusRingColor: "border.error",
 				},
 			},
 			surface: {
@@ -36,8 +36,8 @@ export const textarea = defineRecipe({
 				borderColor: "gray.surface.border",
 				focusVisibleRing: "inside",
 				_invalid: {
-					borderColor: "error",
-					focusRingColor: "error",
+					borderColor: "border.error",
+					focusRingColor: "border.error",
 				},
 			},
 			subtle: {
@@ -47,8 +47,8 @@ export const textarea = defineRecipe({
 				color: "gray.subtle.fg",
 				focusVisibleRing: "inside",
 				_invalid: {
-					borderColor: "error",
-					focusRingColor: "error",
+					borderColor: "border.error",
+					focusRingColor: "border.error",
 				},
 			},
 			flushed: {
@@ -58,15 +58,15 @@ export const textarea = defineRecipe({
 				color: "fg.default",
 				px: "0",
 				_invalid: {
-					borderColor: "error",
+					borderColor: "border.error",
 				},
 				_focus: {
 					borderColor: "colorPalette.solid.bg",
 					boxShadowColor: "colorPalette.solid.bg",
 					boxShadow: "0 1px 0 0 var(--shadow-color)",
 					_invalid: {
-						borderColor: "error",
-						boxShadowColor: "error",
+						borderColor: "border.error",
+						boxShadowColor: "border.error",
 					},
 				},
 			},

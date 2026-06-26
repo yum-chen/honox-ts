@@ -1,6 +1,11 @@
 import { useState } from "hono/jsx";
 import { css } from "../../styled-system/css";
-import { Field, FieldErrorText, FieldHelperText, FieldLabel } from "../components/ui/field";
+import {
+	Field,
+	FieldErrorText,
+	FieldHelperText,
+	FieldLabel,
+} from "../components/ui/field";
 import {
 	Fieldset,
 	FieldsetContent,
@@ -11,7 +16,7 @@ import {
 import { Textarea } from "../components/ui/textarea";
 
 export default function FieldsetDemo() {
-	const [bio, setBio] = useState("");
+	const [bio, setBio] = useState("Short");
 	const isInvalid = bio.length > 0 && bio.length < 10;
 
 	return (
@@ -36,13 +41,15 @@ export default function FieldsetDemo() {
 					/>
 				</Field>
 				<Field>
-					<FieldLabel>Bio</FieldLabel>
+					<FieldLabel for="bio">Bio</FieldLabel>
 					<Textarea
+						id="bio"
 						placeholder="A short bio"
 						rows={4}
 						value={bio}
 						onInput={(e: any) => setBio(e.target.value)}
-						class={isInvalid ? css({ borderColor: "error" }) : ""}
+						aria-invalid={isInvalid ? "true" : "false"}
+						data-invalid={isInvalid ? "" : undefined}
 					/>
 					<FieldHelperText>At least 10 characters.</FieldHelperText>
 					{isInvalid && (

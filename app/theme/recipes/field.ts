@@ -32,7 +32,7 @@ export const field = defineSlotRecipe({
 			},
 		},
 		errorText: {
-			color: "error",
+			color: "fg.error",
 			textStyle: "sm",
 		},
 	},

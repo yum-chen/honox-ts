@@ -20,29 +20,72 @@ export function Fieldset(props: FieldsetProps) {
 	);
 }
 
-export function FieldsetLegend(props: { children?: any; class?: string }) {
+export function FieldsetLegend(props: {
+	children?: any;
+	class?: string;
+	[key: string]: any;
+}) {
+	const { children, class: classProp, ...restProps } = props;
 	const styles = fieldset();
 	return (
-		<legend class={cx(styles.legend, props.class)}>{props.children}</legend>
+		<legend class={cx(styles.legend, classProp)} {...restProps}>
+			{children}
+		</legend>
 	);
 }
 
-export function FieldsetHelperText(props: { children?: any; class?: string }) {
+export function FieldsetHelperText(props: {
+	children?: any;
+	class?: string;
+	[key: string]: any;
+}) {
+	const { children, class: classProp, ...restProps } = props;
 	const styles = fieldset();
-	return <p class={cx(styles.helperText, props.class)}>{props.children}</p>;
+	return (
+		<p class={cx(styles.helperText, classProp)} {...restProps}>
+			{children}
+		</p>
+	);
 }
 
-export function FieldsetErrorText(props: { children?: any; class?: string }) {
+export function FieldsetErrorText(props: {
+	children?: any;
+	class?: string;
+	[key: string]: any;
+}) {
+	const { children, class: classProp, ...restProps } = props;
 	const styles = fieldset();
-	return <p class={cx(styles.errorText, props.class)}>{props.children}</p>;
+	return (
+		<p class={cx(styles.errorText, classProp)} {...restProps}>
+			{children}
+		</p>
+	);
 }
 
-export function FieldsetContent(props: { children?: any; class?: string }) {
+export function FieldsetContent(props: {
+	children?: any;
+	class?: string;
+	[key: string]: any;
+}) {
+	const { children, class: classProp, ...restProps } = props;
 	const styles = fieldset();
-	return <div class={cx(styles.content, props.class)}>{props.children}</div>;
+	return (
+		<div class={cx(styles.content, classProp)} {...restProps}>
+			{children}
+		</div>
+	);
 }
 
-export function FieldsetControl(props: { children?: any; class?: string }) {
+export function FieldsetControl(props: {
+	children?: any;
+	class?: string;
+	[key: string]: any;
+}) {
+	const { children, class: classProp, ...restProps } = props;
 	const styles = fieldset();
-	return <div class={cx(styles.control, props.class)}>{props.children}</div>;
+	return (
+		<div class={cx(styles.control, classProp)} {...restProps}>
+			{children}
+		</div>
+	);
 }

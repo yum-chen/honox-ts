@@ -215,7 +215,7 @@ export default createRoute((c) => {
 						placeholder="Enter your email"
 						class={css({
 							borderWidth: "1px",
-							borderColor: "error",
+							borderColor: "border.error",
 							borderRadius: "md",
 							px: "3",
 							py: "2",
