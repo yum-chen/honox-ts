@@ -1,4 +1,5 @@
 import { animationStyles } from "./animation-styles";
+import { amber } from "./colors/amber";
 import { cyan } from "./colors/cyan";
 import { green } from "./colors/green";
 import { red } from "./colors/red";
@@ -51,12 +52,21 @@ const config = {
 						_dark: "{colors.gray.10}",
 					},
 				},
+
+				error: {
+					value: "{colors.red.11}",
+				},
 			},
 
 			border: {
-				value: {
-					_light: "{colors.gray.4}",
-					_dark: "{colors.gray.4}",
+				DEFAULT: {
+					value: {
+						_light: "{colors.gray.4}",
+						_dark: "{colors.gray.4}",
+					},
+				},
+				error: {
+					value: "{colors.red.9}",
 				},
 			},
 
@@ -71,6 +81,7 @@ const config = {
 			gray: slate,
 			red,
 			green,
+			amber,
 		},
 
 		shadows,
