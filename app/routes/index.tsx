@@ -12,11 +12,16 @@ import {
 	FieldHelperText,
 	FieldLabel,
 	FieldRequiredIndicator,
+	Fieldset,
+	FieldsetContent,
+	FieldsetControl,
+	FieldsetHelperText,
+	FieldsetLegend,
 	Heading,
 	Text,
 } from "../components/ui";
 import Counter from "../islands/counter";
-import FieldsetDemo from "../islands/fieldset-demo";
+import TextareaIsland from "../islands/textarea";
 
 export default createRoute((c) => {
 	const name = c.req.query("name") ?? "Hono";
@@ -241,7 +246,40 @@ export default createRoute((c) => {
 					Fieldset Component Examples
 				</h2>
 
-				<FieldsetDemo />
+				<Fieldset>
+					<FieldsetControl>
+						<FieldsetLegend>Profile Info</FieldsetLegend>
+						<FieldsetHelperText>
+							Update your profile information.
+						</FieldsetHelperText>
+					</FieldsetControl>
+					<FieldsetContent>
+						<Field>
+							<FieldLabel>Name</FieldLabel>
+							<input
+								type="text"
+								placeholder="John Doe"
+								class={css({
+									borderWidth: "1px",
+									borderColor: "border",
+									borderRadius: "md",
+									px: "3",
+									py: "2",
+								})}
+							/>
+						</Field>
+						<TextareaIsland
+							id="bio"
+							label="Bio"
+							placeholder="A short bio"
+							rows={4}
+							defaultValue="Short"
+							minLength={10}
+							helperText="At least 10 characters."
+							errorText="Bio must be at least 10 characters."
+						/>
+					</FieldsetContent>
+				</Fieldset>
 			</div>
 
 			<div class={css({ mt: "8" })}>
