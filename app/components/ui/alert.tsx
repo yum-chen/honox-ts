@@ -14,7 +14,7 @@ export function Alert(props: AlertProps) {
 	const styles = alert(variantProps);
 
 	return (
-		<div class={cx(styles.root, classProp)} {...restProps}>
+		<div role="alert" class={cx(styles.root, classProp)} {...restProps}>
 			{children}
 		</div>
 	);
