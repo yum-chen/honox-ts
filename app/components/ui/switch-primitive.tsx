@@ -1,10 +1,11 @@
+import type { Child } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
 import type { SwitchRecipeVariantProps } from "../../../styled-system/recipes";
 import { switchRecipe } from "../../../styled-system/recipes";
 import { useFieldContext } from "./field-primitive";
 
 export interface SwitchProps extends SwitchRecipeVariantProps {
-	children?: any;
+	children?: Child;
 	class?: string;
 	checked?: boolean;
 	disabled?: boolean;
@@ -15,7 +16,7 @@ export interface SwitchProps extends SwitchRecipeVariantProps {
 	value?: string;
 	onCheckedChange?: (details: { checked: boolean }) => void;
 	id?: string;
-	[key: string]: any;
+	[key: string]: unknown;
 }
 
 export function Switch(props: SwitchProps) {
@@ -38,12 +39,12 @@ export function Switch(props: SwitchProps) {
 
 	const styles = switchRecipe(variantProps);
 
+	const labelId = `switch::${idProp}::label`;
+
 	const describedBy = [];
 	if (field?.hasHelperText) describedBy.push(field.helperTextId);
 	if (field?.invalid && field?.hasErrorText)
 		describedBy.push(field.errorTextId);
-
-	const labelId = `switch::${idProp}::label`;
 
 	return (
 		<label
@@ -51,14 +52,13 @@ export function Switch(props: SwitchProps) {
 			data-disabled={disabledProp ? "" : undefined}
 			data-invalid={invalidProp ? "" : undefined}
 			data-readonly={readOnlyProp ? "" : undefined}
+			data-required={requiredProp ? "" : undefined}
 			data-state={checked ? "checked" : "unchecked"}
 			{...restProps}
 		>
 			<input
 				type="checkbox"
 				role="switch"
-				aria-checked={checked}
-				class="peer"
 				style={{
 					border: "0",
 					clip: "rect(0 0 0 0)",
@@ -74,23 +74,26 @@ export function Switch(props: SwitchProps) {
 				value={value}
 				checked={checked}
 				disabled={disabledProp}
+				readOnly={readOnlyProp}
 				required={requiredProp}
-				aria-readonly={readOnlyProp}
-				aria-invalid={invalidProp || undefined}
+				id={idProp}
+				aria-readonly={readOnlyProp ? "true" : undefined}
+				aria-invalid={invalidProp ? "true" : undefined}
+				aria-required={requiredProp ? "true" : undefined}
+				aria-checked={checked ? "true" : "false"}
+				aria-labelledby={children ? labelId : undefined}
 				aria-describedby={
 					describedBy.length > 0 ? describedBy.join(" ") : undefined
 				}
-				id={idProp}
 				onChange={(e) => {
-					if (readOnlyProp) return;
 					if (e.target instanceof HTMLInputElement) {
 						onCheckedChange?.({ checked: e.target.checked });
 					}
 				}}
+				data-state={checked ? "checked" : "unchecked"}
 			/>
 			<div
-				class={cx(styles.control, "peer")}
-				aria-hidden="true"
+				class={styles.control}
 				data-disabled={disabledProp ? "" : undefined}
 				data-invalid={invalidProp ? "" : undefined}
 				data-readonly={readOnlyProp ? "" : undefined}

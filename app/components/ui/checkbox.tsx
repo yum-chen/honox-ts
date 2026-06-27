@@ -10,9 +10,15 @@ export interface CheckboxProps extends BaseCheckboxProps {
 }
 
 export function Checkbox(props: CheckboxProps) {
-	const { interactive, onCheckedChange, defaultChecked, ...rest } = props;
+	const { interactive, onCheckedChange, checked, defaultChecked, ...rest } =
+		props;
 
-	if (interactive || onCheckedChange || defaultChecked !== undefined) {
+	if (
+		interactive ||
+		onCheckedChange ||
+		checked !== undefined ||
+		defaultChecked !== undefined
+	) {
 		return <CheckboxIsland {...props} />;
 	}
 

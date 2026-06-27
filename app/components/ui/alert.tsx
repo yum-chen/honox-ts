@@ -3,14 +3,17 @@ import { cx } from "../../../styled-system/css";
 import type { AlertVariantProps } from "../../../styled-system/recipes";
 import { alert } from "../../../styled-system/recipes";
 
-import { useId } from "hono/jsx";
-
 export interface AlertProps extends AlertVariantProps {
 	title?: string;
 	description?: string;
 	indicator?: Child;
 	children?: Child;
 	class?: string;
+	/**
+	 * The aria-live setting of the alert.
+	 * @default 'polite'
+	 */
+	"aria-live"?: "polite" | "assertive" | "off";
 }
 
 export function Alert(props: AlertProps) {
@@ -22,39 +25,24 @@ export function Alert(props: AlertProps) {
 		indicator,
 		children,
 		class: classProp,
-		id: idProp,
+		"aria-live": ariaLive = "polite",
 		...restProps
 	} = localProps;
-
-	const autoId = useId();
-	const id = idProp || autoId;
-	const titleId = `alert::${id}::title`;
-	const descriptionId = `alert::${id}::description`;
 
 	const hasContent = title || description || children;
 
 	return (
 		<div
 			role="alert"
-			id={id}
-			aria-labelledby={title ? titleId : undefined}
-			aria-describedby={description ? descriptionId : undefined}
+			aria-live={ariaLive}
 			class={cx(styles.root, classProp)}
 			{...restProps}
 		>
 			{indicator && <span class={styles.indicator}>{indicator}</span>}
 			{hasContent && (
 				<div class={styles.content}>
-					{title && (
-						<h3 id={titleId} class={styles.title}>
-							{title}
-						</h3>
-					)}
-					{description && (
-						<div id={descriptionId} class={styles.description}>
-							{description}
-						</div>
-					)}
+					{title && <h3 class={styles.title}>{title}</h3>}
+					{description && <div class={styles.description}>{description}</div>}
 					{children}
 				</div>
 			)}

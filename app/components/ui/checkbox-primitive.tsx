@@ -1,3 +1,4 @@
+import type { Child } from "hono/jsx";
 import { useEffect, useRef } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
 import type { CheckboxVariantProps } from "../../../styled-system/recipes";
@@ -5,7 +6,7 @@ import { checkbox } from "../../../styled-system/recipes";
 import { useFieldContext } from "./field-primitive";
 
 export interface CheckboxProps extends CheckboxVariantProps {
-	children?: any;
+	children?: Child;
 	class?: string;
 	checked?: boolean | "indeterminate";
 	onCheckedChange?: (details: { checked: boolean | "indeterminate" }) => void;
@@ -16,7 +17,7 @@ export interface CheckboxProps extends CheckboxVariantProps {
 	id?: string;
 	name?: string;
 	value?: string;
-	[key: string]: any;
+	[key: string]: unknown;
 }
 
 export function Checkbox(props: CheckboxProps) {
@@ -46,7 +47,6 @@ export function Checkbox(props: CheckboxProps) {
 	}, [checked]);
 
 	const handleChange = (e: Event) => {
-		if (readOnly) return;
 		const target = e.target as HTMLInputElement;
 		onCheckedChange?.({ checked: target.checked });
 	};
@@ -63,10 +63,11 @@ export function Checkbox(props: CheckboxProps) {
 
 	return (
 		<label
-			class={cx(styles.root, classProp, "peer")}
+			class={cx(styles.root, classProp)}
 			data-disabled={disabled ? "" : undefined}
 			data-invalid={invalid ? "" : undefined}
 			data-readonly={readOnly ? "" : undefined}
+			data-required={required ? "" : undefined}
 			data-state={
 				isIndeterminate ? "indeterminate" : isChecked ? "checked" : "unchecked"
 			}
@@ -75,7 +76,6 @@ export function Checkbox(props: CheckboxProps) {
 			<input
 				ref={inputRef}
 				type="checkbox"
-				class="peer"
 				style={{
 					border: "0",
 					clip: "rect(0 0 0 0)",
@@ -92,13 +92,16 @@ export function Checkbox(props: CheckboxProps) {
 				checked={isChecked}
 				onChange={handleChange}
 				disabled={disabled}
+				readOnly={readOnly}
 				required={required}
-				aria-readonly={readOnly}
-				aria-invalid={invalid || undefined}
+				id={id}
+				aria-readonly={readOnly ? "true" : undefined}
+				aria-invalid={invalid ? "true" : undefined}
+				aria-required={required ? "true" : undefined}
+				aria-checked={isIndeterminate ? "mixed" : isChecked ? "true" : "false"}
 				aria-describedby={
 					describedBy.length > 0 ? describedBy.join(" ") : undefined
 				}
-				id={id}
 				data-state={
 					isIndeterminate
 						? "indeterminate"
@@ -108,7 +111,7 @@ export function Checkbox(props: CheckboxProps) {
 				}
 			/>
 			<div
-				class={cx(styles.control, "peer")}
+				class={styles.control}
 				data-disabled={disabled ? "" : undefined}
 				data-invalid={invalid ? "" : undefined}
 				data-readonly={readOnly ? "" : undefined}

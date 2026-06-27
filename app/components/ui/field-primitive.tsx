@@ -117,20 +117,23 @@ export function FieldLabel(props: {
 	children?: any;
 	class?: string;
 	for?: string;
+	[key: string]: any;
 }) {
 	const context = useFieldContext();
 	const styles = field();
+	const { children, class: classProp, for: forProp, ...rest } = props;
 	return (
 		<label
 			id={context?.labelId}
-			class={cx(styles.label, props.class)}
-			for={props.for || context?.id}
+			class={cx(styles.label, classProp)}
+			for={forProp || context?.id}
 			data-disabled={context?.disabled ? "" : undefined}
 			data-invalid={context?.invalid ? "" : undefined}
 			data-readonly={context?.readOnly ? "" : undefined}
 			data-required={context?.required ? "" : undefined}
+			{...rest}
 		>
-			{props.children}
+			{children}
 		</label>
 	);
 }
