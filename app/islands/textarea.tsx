@@ -1,10 +1,10 @@
 import { useState } from "hono/jsx";
 import {
-	Textarea as UITextarea,
-	type TextareaProps as UITextareaProps,
-} from "../components/ui/textarea-primitive";
+	TextareaBase,
+	type TextareaBaseProps,
+} from "../components/ui/textarea-base";
 
-export interface TextareaIslandProps extends UITextareaProps {
+export interface TextareaIslandProps extends TextareaBaseProps {
 	defaultValue?: string;
 }
 
@@ -22,7 +22,7 @@ export default function TextareaIsland(props: TextareaIslandProps) {
 	};
 
 	return (
-		<UITextarea
+		<TextareaBase
 			{...rest}
 			value={currentValue}
 			onValueChange={handleValueChange}

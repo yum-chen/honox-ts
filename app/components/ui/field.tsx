@@ -1,8 +1,5 @@
 import FieldIsland from "../../islands/field";
-import {
-	type FieldProps as BaseFieldProps,
-	FieldRoot,
-} from "./field-primitive";
+import { type FieldProps as BaseFieldProps, FieldRoot } from "./field-base";
 
 export interface FieldProps extends BaseFieldProps {
 	interactive?: boolean;

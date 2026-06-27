@@ -1,8 +1,8 @@
 import CheckboxIsland from "../../islands/checkbox";
 import {
 	type CheckboxProps as BaseCheckboxProps,
-	Checkbox as CheckboxPrimitive,
-} from "./checkbox-primitive";
+	Checkbox as CheckboxBase,
+} from "./checkbox-base";
 
 export interface CheckboxProps extends BaseCheckboxProps {
 	interactive?: boolean;
@@ -16,5 +16,5 @@ export function Checkbox(props: CheckboxProps) {
 		return <CheckboxIsland {...props} />;
 	}
 
-	return <CheckboxPrimitive {...rest} />;
+	return <CheckboxBase {...rest} />;
 }

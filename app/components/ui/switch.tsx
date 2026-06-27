@@ -1,8 +1,8 @@
 import SwitchIsland from "../../islands/switch";
 import {
 	type SwitchProps as BaseSwitchProps,
-	Switch as SwitchPrimitive,
-} from "./switch-primitive";
+	Switch as SwitchBase,
+} from "./switch-base";
 
 export interface SwitchProps extends BaseSwitchProps {
 	interactive?: boolean;
@@ -22,5 +22,5 @@ export function Switch(props: SwitchProps) {
 		return <SwitchIsland {...props} />;
 	}
 
-	return <SwitchPrimitive {...rest} />;
+	return <SwitchBase {...rest} />;
 }

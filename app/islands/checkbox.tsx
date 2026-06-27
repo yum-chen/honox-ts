@@ -2,7 +2,7 @@ import { useState } from "hono/jsx";
 import {
 	Checkbox as UICheckbox,
 	type CheckboxProps as UICheckboxProps,
-} from "../components/ui/checkbox-primitive";
+} from "../components/ui/checkbox-base";
 
 export interface CheckboxIslandProps extends UICheckboxProps {
 	defaultChecked?: boolean | "indeterminate";

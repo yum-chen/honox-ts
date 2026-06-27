@@ -2,7 +2,7 @@ import { useState } from "hono/jsx";
 import {
 	FieldRoot,
 	type FieldProps as UIFieldProps,
-} from "../components/ui/field-primitive";
+} from "../components/ui/field-base";
 
 export interface FieldIslandProps extends UIFieldProps {
 	defaultValue?: string;

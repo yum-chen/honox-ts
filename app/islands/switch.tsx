@@ -2,7 +2,7 @@ import { useState } from "hono/jsx";
 import {
 	Switch as UISwitch,
 	type SwitchProps as UISwitchProps,
-} from "../components/ui/switch-primitive";
+} from "../components/ui/switch-base";
 
 export interface SwitchIslandProps extends UISwitchProps {
 	defaultChecked?: boolean;

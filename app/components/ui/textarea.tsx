@@ -1,8 +1,8 @@
 import TextareaIsland from "../../islands/textarea";
 import {
 	type TextareaProps as BaseTextareaProps,
-	Textarea as TextareaPrimitive,
-} from "./textarea-primitive";
+	Textarea as TextareaBase,
+} from "./textarea-base";
 
 export interface TextareaProps extends BaseTextareaProps {
 	interactive?: boolean;
@@ -31,5 +31,5 @@ export function Textarea(props: TextareaProps) {
 		return <TextareaIsland {...props} />;
 	}
 
-	return <TextareaPrimitive {...rest} />;
+	return <TextareaBase {...rest} />;
 }

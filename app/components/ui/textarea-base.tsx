@@ -3,7 +3,7 @@ import type { TextareaVariantProps } from "../../../styled-system/recipes";
 import { textarea } from "../../../styled-system/recipes";
 import { useFieldContext } from "./field-base";
 
-export interface TextareaPrimitiveProps extends TextareaVariantProps {
+export interface TextareaBaseProps extends TextareaVariantProps {
 	children?: any;
 	class?: string;
 	value?: string;
@@ -12,7 +12,7 @@ export interface TextareaPrimitiveProps extends TextareaVariantProps {
 	[key: string]: any;
 }
 
-export function TextareaPrimitive(props: TextareaPrimitiveProps) {
+export function TextareaBase(props: TextareaBaseProps) {
 	const field = useFieldContext();
 	const [variantProps, localProps] = textarea.splitVariantProps(props);
 	const {
