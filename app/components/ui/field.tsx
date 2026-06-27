@@ -14,6 +14,9 @@ export function Field(props: FieldProps) {
 		defaultValue,
 		validator,
 		minLength,
+		label,
+		helperText,
+		errorText,
 		...rest
 	} = props;
 
@@ -25,8 +28,27 @@ export function Field(props: FieldProps) {
 		validator ||
 		minLength !== undefined
 	) {
-		return <FieldIsland {...props} />;
+		return (
+			<FieldIsland
+				label={label}
+				helperText={helperText}
+				errorText={errorText}
+				onValueChange={onValueChange}
+				value={value}
+				defaultValue={defaultValue}
+				validator={validator}
+				minLength={minLength}
+				{...rest}
+			/>
+		);
 	}
 
-	return <FieldRoot {...rest} />;
+	return (
+		<FieldRoot
+			label={label}
+			helperText={helperText}
+			errorText={errorText}
+			{...rest}
+		/>
+	);
 }

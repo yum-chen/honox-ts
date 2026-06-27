@@ -1,4 +1,11 @@
-import { createContext, useContext, useId } from "hono/jsx";
+import {
+	Children,
+	cloneElement,
+	createContext,
+	isValidElement,
+	useContext,
+	useId,
+} from "hono/jsx";
 import { cx } from "../../../styled-system/css";
 import type { FieldVariantProps } from "../../../styled-system/recipes";
 import { field } from "../../../styled-system/recipes";
@@ -26,6 +33,9 @@ export interface FieldProps extends FieldVariantProps {
 	children?: any;
 	class?: string;
 	id?: string;
+	label?: string;
+	helperText?: string;
+	errorText?: string;
 	disabled?: boolean;
 	invalid?: boolean;
 	readOnly?: boolean;
@@ -45,6 +55,9 @@ export function FieldRoot(props: FieldProps) {
 		children,
 		class: classProp,
 		id: idProp,
+		label,
+		helperText,
+		errorText: errorTextProp,
 		disabled = props.disabled,
 		invalid: invalidProp = props.invalid,
 		readOnly = props.readOnly,
@@ -61,7 +74,7 @@ export function FieldRoot(props: FieldProps) {
 	const styles = field(variantProps);
 
 	let isInvalid = invalidProp;
-	let errorText: string | undefined;
+	let errorText: string | undefined = errorTextProp;
 
 	if (isInvalid === undefined || isInvalid === false) {
 		if (validator && value !== undefined) {
@@ -92,8 +105,8 @@ export function FieldRoot(props: FieldProps) {
 		labelId: `field::${id}::label`,
 		helperTextId: `field::${id}::helper-text`,
 		errorTextId: `field::${id}::error-text`,
-		hasHelperText: true,
-		hasErrorText: true,
+		hasHelperText: !!helperText,
+		hasErrorText: !!errorText,
 		errorText,
 	};
 
@@ -107,7 +120,12 @@ export function FieldRoot(props: FieldProps) {
 				data-required={required ? "" : undefined}
 				{...restProps}
 			>
-				{children}
+				{label && <FieldLabel>{label}</FieldLabel>}
+				{Children.map(children, (child) =>
+					isValidElement(child) ? cloneElement(child, { styles }) : child,
+				)}
+				{helperText && <FieldHelperText>{helperText}</FieldHelperText>}
+				{isInvalid && errorText && <FieldErrorText>{errorText}</FieldErrorText>}
 			</div>
 		</FieldContext.Provider>
 	);
@@ -189,22 +207,5 @@ export function FieldRequiredIndicator(props: {
 		>
 			{props.children || "*"}
 		</span>
-	);
-}
-
-export function FieldGroup(props: {
-	label?: string;
-	helperText?: string;
-	errorText?: string;
-	children?: any;
-}) {
-	const { label, helperText, errorText, children } = props;
-	return (
-		<div style={{ display: "contents" }}>
-			{label && <FieldLabel>{label}</FieldLabel>}
-			{children}
-			{helperText && <FieldHelperText>{helperText}</FieldHelperText>}
-			<FieldErrorText>{errorText}</FieldErrorText>
-		</div>
 	);
 }

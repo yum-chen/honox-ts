@@ -10,12 +10,6 @@ export {
 	type FieldProps,
 } from "./field";
 export {
-	FieldErrorText,
-	FieldHelperText,
-	FieldLabel,
-	FieldRequiredIndicator,
-} from "./field-base";
-export {
 	Fieldset,
 	FieldsetContent,
 	FieldsetControl,

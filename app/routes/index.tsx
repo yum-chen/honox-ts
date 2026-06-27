@@ -6,9 +6,6 @@ import {
 	Badge,
 	Checkbox,
 	Field,
-	FieldErrorText,
-	FieldHelperText,
-	FieldLabel,
 	Heading,
 	Switch,
 	Text,
@@ -116,8 +113,11 @@ export default createRoute((c) => {
 					Field Component Examples
 				</h2>
 
-				<Field id="username-field">
-					<FieldLabel>Username *</FieldLabel>
+				<Field
+					id="username-field"
+					label="Username *"
+					helperText="Keep it unique."
+				>
 					<input
 						type="text"
 						placeholder="Enter your username"
@@ -129,11 +129,14 @@ export default createRoute((c) => {
 							py: "2",
 						})}
 					/>
-					<FieldHelperText>Keep it unique.</FieldHelperText>
 				</Field>
 
-				<Field id="email-field" invalid>
-					<FieldLabel>Email</FieldLabel>
+				<Field
+					id="email-field"
+					invalid
+					label="Email"
+					errorText="Invalid email address."
+				>
 					<input
 						type="email"
 						placeholder="Enter your email"
@@ -145,7 +148,6 @@ export default createRoute((c) => {
 							py: "2",
 						})}
 					/>
-					<FieldErrorText>Invalid email address.</FieldErrorText>
 				</Field>
 
 				<Heading as="h2" class={css({ fontSize: "xl", mt: "8", mb: "4" })}>
@@ -160,19 +162,23 @@ export default createRoute((c) => {
 						alignItems: "start",
 					})}
 				>
-					<Field id="switch-field">
-						<FieldLabel>Notifications</FieldLabel>
+					<Field
+						id="switch-field"
+						label="Notifications"
+						helperText="Receive updates about your account."
+					>
 						<Switch interactive>Enable notifications</Switch>
-						<FieldHelperText>
-							Receive updates about your account.
-						</FieldHelperText>
 					</Field>
 
-					<Field id="checkbox-field" required invalid>
+					<Field
+						id="checkbox-field"
+						required
+						invalid
+						errorText="You must agree to the terms."
+					>
 						<Checkbox interactive required invalid>
 							I agree to the terms and conditions
 						</Checkbox>
-						<FieldErrorText>You must agree to the terms.</FieldErrorText>
 					</Field>
 				</div>
 			</div>

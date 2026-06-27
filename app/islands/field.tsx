@@ -9,7 +9,15 @@ export interface FieldIslandProps extends UIFieldProps {
 }
 
 export default function FieldIsland(props: FieldIslandProps) {
-	const { value: valueProp, defaultValue = "", onValueChange, ...rest } = props;
+	const {
+		value: valueProp,
+		defaultValue = "",
+		onValueChange,
+		label,
+		helperText,
+		errorText,
+		...rest
+	} = props;
 	const [value, setValue] = useState(valueProp ?? defaultValue);
 	const isControlled = valueProp !== undefined;
 	const currentValue = isControlled ? valueProp : value;
@@ -24,6 +32,9 @@ export default function FieldIsland(props: FieldIslandProps) {
 	return (
 		<FieldRoot
 			{...rest}
+			label={label}
+			helperText={helperText}
+			errorText={errorText}
 			value={currentValue}
 			onValueChange={handleValueChange}
 		/>
