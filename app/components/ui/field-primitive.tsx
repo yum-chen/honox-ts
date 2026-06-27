@@ -55,14 +55,16 @@ export function FieldRoot(props: FieldProps) {
 		label,
 		helperText,
 		errorText: errorTextProp,
-		value,
+		value: valueProp,
 		onValueChange,
 		minLength,
 		validator,
 		interactive: _interactive,
-		defaultValue: _defaultValue,
+		defaultValue,
 		...restProps
 	} = localProps;
+
+	const value = valueProp ?? defaultValue;
 
 	const autoId = useId();
 	const id = idProp || autoId;
@@ -147,7 +149,8 @@ export function FieldRoot(props: FieldProps) {
 						required={required}
 						aria-invalid={isInvalid ? "true" : undefined}
 						aria-describedby={describedBy || undefined}
-						value={value ?? ""}
+						value={value}
+						defaultValue={defaultValue}
 						onInput={(e: any) => {
 							onValueChange?.(e.currentTarget.value);
 						}}
