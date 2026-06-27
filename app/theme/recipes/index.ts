@@ -1,3 +1,4 @@
+import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { badge } from "./badge";
 import { checkbox } from "./checkbox";
@@ -10,6 +11,7 @@ import { text } from "./text";
 import { textarea } from "./textarea";
 
 export const recipes = {
+	absoluteCenter,
 	badge,
 	group,
 	heading,
