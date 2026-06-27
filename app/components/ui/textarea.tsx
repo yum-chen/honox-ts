@@ -17,19 +17,20 @@ export function Textarea(props: TextareaProps) {
 		defaultValue,
 		validator,
 		minLength,
-		...rest
 	} = props;
 
-	if (
-		interactive ||
-		onValueChange ||
-		value !== undefined ||
-		defaultValue !== undefined ||
-		validator ||
-		minLength !== undefined
-	) {
+	const isInteractive =
+		interactive !== false &&
+		(interactive ||
+			onValueChange !== undefined ||
+			value !== undefined ||
+			defaultValue !== undefined ||
+			validator !== undefined ||
+			minLength !== undefined);
+
+	if (isInteractive) {
 		return <TextareaIsland {...props} />;
 	}
 
-	return <TextareaPrimitive {...rest} />;
+	return <TextareaPrimitive {...props} />;
 }

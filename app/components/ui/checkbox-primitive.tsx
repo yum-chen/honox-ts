@@ -1,5 +1,5 @@
 import type { Child } from "hono/jsx";
-import { useEffect, useRef } from "hono/jsx";
+import { useEffect, useRef, useState } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
 import type { CheckboxVariantProps } from "../../../styled-system/recipes";
 import { checkbox } from "../../../styled-system/recipes";
@@ -171,5 +171,41 @@ export function Checkbox(props: CheckboxProps) {
 				</span>
 			)}
 		</label>
+	);
+}
+
+export interface InteractiveCheckboxProps extends CheckboxProps {
+	defaultChecked?: boolean | "indeterminate";
+}
+
+export function InteractiveCheckbox(props: InteractiveCheckboxProps) {
+	const {
+		checked: checkedProp,
+		defaultChecked,
+		onCheckedChange,
+		...rest
+	} = props;
+
+	const [isChecked, setIsChecked] = useState(
+		checkedProp ?? defaultChecked ?? false,
+	);
+	const isControlled = checkedProp !== undefined;
+	const checked = isControlled ? checkedProp : isChecked;
+
+	const handleCheckedChange = (details: {
+		checked: boolean | "indeterminate";
+	}) => {
+		if (!isControlled) {
+			setIsChecked(details.checked);
+		}
+		onCheckedChange?.(details);
+	};
+
+	return (
+		<Checkbox
+			{...rest}
+			checked={checked}
+			onCheckedChange={handleCheckedChange}
+		/>
 	);
 }

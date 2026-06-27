@@ -10,17 +10,18 @@ export interface SwitchProps extends BaseSwitchProps {
 }
 
 export function Switch(props: SwitchProps) {
-	const { interactive, onCheckedChange, checked, defaultChecked, ...rest } =
-		props;
+	const { interactive, onCheckedChange, checked, defaultChecked } = props;
 
-	if (
-		interactive ||
-		onCheckedChange ||
-		checked !== undefined ||
-		defaultChecked !== undefined
-	) {
+	const isInteractive =
+		interactive !== false &&
+		(interactive ||
+			onCheckedChange !== undefined ||
+			checked !== undefined ||
+			defaultChecked !== undefined);
+
+	if (isInteractive) {
 		return <SwitchIsland {...props} />;
 	}
 
-	return <SwitchPrimitive {...rest} />;
+	return <SwitchPrimitive {...props} />;
 }

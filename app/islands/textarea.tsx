@@ -1,31 +1,10 @@
-import { useState } from "hono/jsx";
 import {
-	Textarea as UITextarea,
-	type TextareaProps as UITextareaProps,
+	InteractiveTextarea,
+	type TextareaProps,
 } from "../components/ui/textarea-primitive";
 
-export interface TextareaIslandProps extends UITextareaProps {
-	defaultValue?: string;
+export default function TextareaIsland(props: TextareaProps) {
+	return <InteractiveTextarea {...props} />;
 }
 
-export default function TextareaIsland(props: TextareaIslandProps) {
-	const { value: valueProp, defaultValue = "", onValueChange, ...rest } = props;
-	const [value, setValue] = useState(valueProp ?? defaultValue);
-	const isControlled = valueProp !== undefined;
-	const currentValue = isControlled ? valueProp : value;
-
-	const handleValueChange = (val: string) => {
-		if (!isControlled) {
-			setValue(val);
-		}
-		onValueChange?.(val);
-	};
-
-	return (
-		<UITextarea
-			{...rest}
-			value={currentValue}
-			onValueChange={handleValueChange}
-		/>
-	);
-}
+export type { TextareaProps as TextareaIslandProps };

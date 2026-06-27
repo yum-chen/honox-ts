@@ -1,3 +1,4 @@
+import { useState } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
 import type { TextareaVariantProps } from "../../../styled-system/recipes";
 import { textarea } from "../../../styled-system/recipes";
@@ -101,5 +102,27 @@ export function Textarea(props: TextareaProps) {
 		>
 			<TextareaPrimitive {...rest} />
 		</FieldRoot>
+	);
+}
+
+export function InteractiveTextarea(props: TextareaProps) {
+	const { value: valueProp, defaultValue = "", onValueChange, ...rest } = props;
+	const [value, setValue] = useState(valueProp ?? defaultValue);
+	const isControlled = valueProp !== undefined;
+	const currentValue = isControlled ? valueProp : value;
+
+	const handleValueChange = (val: string) => {
+		if (!isControlled) {
+			setValue(val);
+		}
+		onValueChange?.(val);
+	};
+
+	return (
+		<Textarea
+			{...rest}
+			value={currentValue}
+			onValueChange={handleValueChange}
+		/>
 	);
 }

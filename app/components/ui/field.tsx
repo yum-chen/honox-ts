@@ -19,14 +19,16 @@ export function Field(props: FieldProps) {
 		minLength,
 	} = props;
 
-	if (
-		interactive ||
-		onValueChange ||
-		value !== undefined ||
-		defaultValue !== undefined ||
-		validator ||
-		minLength !== undefined
-	) {
+	const isInteractive =
+		interactive !== false &&
+		(interactive ||
+			onValueChange !== undefined ||
+			value !== undefined ||
+			defaultValue !== undefined ||
+			validator !== undefined ||
+			minLength !== undefined);
+
+	if (isInteractive) {
 		return <FieldIsland {...props} />;
 	}
 

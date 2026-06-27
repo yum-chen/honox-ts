@@ -1,4 +1,4 @@
-import { createContext, useContext, useId } from "hono/jsx";
+import { createContext, useContext, useId, useState } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
 import type { FieldVariantProps } from "../../../styled-system/recipes";
 import { field } from "../../../styled-system/recipes";
@@ -245,5 +245,27 @@ export function FieldRequiredIndicator(props: {
 		>
 			{props.children || "*"}
 		</span>
+	);
+}
+
+export function InteractiveField(props: FieldProps) {
+	const { value: valueProp, defaultValue = "", onValueChange, ...rest } = props;
+	const [value, setValue] = useState(valueProp ?? defaultValue);
+	const isControlled = valueProp !== undefined;
+	const currentValue = isControlled ? valueProp : value;
+
+	const handleValueChange = (val: string) => {
+		if (!isControlled) {
+			setValue(val);
+		}
+		onValueChange?.(val);
+	};
+
+	return (
+		<FieldRoot
+			{...rest}
+			value={currentValue}
+			onValueChange={handleValueChange}
+		/>
 	);
 }
