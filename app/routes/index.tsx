@@ -2,25 +2,11 @@ import { createRoute } from "honox/factory";
 import { css } from "../../styled-system/css";
 import {
 	Alert,
-	AlertContent,
-	AlertDescription,
-	AlertIndicator,
-	AlertTitle,
+	AlertIcon,
 	Badge,
 	Field,
-	FieldErrorText,
-	FieldHelperText,
-	FieldLabel,
-	FieldRequiredIndicator,
-	Fieldset,
-	FieldsetContent,
-	FieldsetControl,
-	FieldsetHelperText,
-	FieldsetLegend,
 	Heading,
-	Switch,
 	Text,
-	Textarea,
 } from "../components/ui";
 
 export default createRoute((c) => {
@@ -32,6 +18,7 @@ export default createRoute((c) => {
 				Hello, {name}!
 			</Heading>
 
+			{/* Badge Examples */}
 			<div
 				class={css({
 					mt: "8",
@@ -48,38 +35,13 @@ export default createRoute((c) => {
 					Badge Component Examples
 				</Heading>
 
-				{/* Variant examples */}
-				<Badge variant="solid" colorPalette="blue">
-					Solid
-				</Badge>
-				<Badge variant="subtle" colorPalette="green">
-					Subtle
-				</Badge>
-				<Badge variant="outline" colorPalette="red">
-					Outline
-				</Badge>
-				<Badge variant="surface" colorPalette="purple">
-					Surface
-				</Badge>
-
-				{/* Size examples */}
-				<Badge size="sm" colorPalette="blue">
-					Small
-				</Badge>
-				<Badge size="md" colorPalette="blue">
-					Medium
-				</Badge>
-				<Badge size="lg" colorPalette="blue">
-					Large
-				</Badge>
-				<Badge size="xl" colorPalette="blue">
-					XL
-				</Badge>
-				<Badge size="2xl" colorPalette="blue">
-					2XL
-				</Badge>
+				<Badge variant="solid" colorPalette="blue">Solid</Badge>
+				<Badge variant="subtle" colorPalette="green">Subtle</Badge>
+				<Badge variant="outline" colorPalette="red">Outline</Badge>
+				<Badge variant="surface" colorPalette="purple">Surface</Badge>
 			</div>
 
+			{/* Text Examples */}
 			<div
 				class={css({
 					mt: "8",
@@ -94,50 +56,15 @@ export default createRoute((c) => {
 				</h2>
 
 				<Text as="h1" size="4xl" variant="heading">
-					Heading 1 (Text size="4xl" variant="heading")
+					Heading 1
 				</Text>
 
 				<Text as="p" size="lg" class={css({ color: "fg.muted" })}>
-					Large paragraph (Text size="lg")
+					Large paragraph
 				</Text>
-
-				<Text
-					as="span"
-					size="sm"
-					class={css({ color: "blue.500", textDecoration: "underline" })}
-				>
-					Small underlined span text
-				</Text>
-
-				<Text variant="label">Label variant text (Text variant="label")</Text>
 			</div>
 
-			<div
-				class={css({
-					mt: "8",
-					display: "flex",
-					flexDirection: "column",
-					gap: "4",
-					alignItems: "center",
-				})}
-			>
-				<h2 class={css({ fontSize: "xl", mb: "4" })}>
-					Heading Component Examples
-				</h2>
-
-				<Heading as="h1" size="5xl">
-					Heading 1 (size="5xl")
-				</Heading>
-
-				<Heading as="h2" size="3xl">
-					Heading 2 (size="3xl")
-				</Heading>
-
-				<Heading as="h3" size="xl">
-					Heading 3 (size="xl")
-				</Heading>
-			</div>
-
+			{/* Alert Examples */}
 			<div
 				class={css({
 					mt: "8",
@@ -153,33 +80,15 @@ export default createRoute((c) => {
 					Alert Component Examples
 				</h2>
 
-				<Alert status="info">
-					<AlertIndicator />
-					<AlertContent>
-						<AlertTitle>Info Alert</AlertTitle>
-						<AlertDescription>This is an informational alert.</AlertDescription>
-					</AlertContent>
-				</Alert>
-
-				<Alert status="success" variant="solid">
-					<AlertIndicator />
-					<AlertContent>
-						<AlertTitle>Success Alert</AlertTitle>
-						<AlertDescription>
-							Operation completed successfully!
-						</AlertDescription>
-					</AlertContent>
-				</Alert>
-
-				<Alert status="error" variant="outline">
-					<AlertIndicator />
-					<AlertContent>
-						<AlertTitle>Error Alert</AlertTitle>
-						<AlertDescription>Something went wrong.</AlertDescription>
-					</AlertContent>
-				</Alert>
+				<Alert
+					status="info"
+					title="Info Alert"
+					description="This is an informational alert."
+					indicator={AlertIcon()}
+				/>
 			</div>
 
+			{/* Field Examples - using plain HTML to isolate */}
 			<div
 				class={css({
 					mt: "8",
@@ -196,9 +105,9 @@ export default createRoute((c) => {
 				</h2>
 
 				<Field>
-					<FieldLabel>
-						Username <FieldRequiredIndicator />
-					</FieldLabel>
+					<label>
+						Username *
+					</label>
 					<input
 						type="text"
 						placeholder="Enter your username"
@@ -210,11 +119,11 @@ export default createRoute((c) => {
 							py: "2",
 						})}
 					/>
-					<FieldHelperText>Keep it unique.</FieldHelperText>
+					<div>Keep it unique.</div>
 				</Field>
 
 				<Field>
-					<FieldLabel>Email</FieldLabel>
+					<label>Email</label>
 					<input
 						type="email"
 						placeholder="Enter your email"
@@ -226,60 +135,8 @@ export default createRoute((c) => {
 							py: "2",
 						})}
 					/>
-					<FieldErrorText>Invalid email address.</FieldErrorText>
+					<div>Invalid email address.</div>
 				</Field>
-			</div>
-
-			<div
-				class={css({
-					mt: "8",
-					display: "flex",
-					flexDirection: "column",
-					gap: "8",
-					alignItems: "center",
-					maxWidth: "2xl",
-					mx: "auto",
-					textAlign: "start",
-				})}
-			>
-				<h2 class={css({ fontSize: "xl", mb: "4", textAlign: "center" })}>
-					Fieldset Component Examples
-				</h2>
-
-				<Fieldset>
-					<FieldsetControl>
-						<FieldsetLegend>Profile Info</FieldsetLegend>
-						<FieldsetHelperText>
-							Update your profile information.
-						</FieldsetHelperText>
-					</FieldsetControl>
-					<FieldsetContent>
-						<Field>
-							<FieldLabel>Name</FieldLabel>
-							<input
-								type="text"
-								placeholder="John Doe"
-								class={css({
-									borderWidth: "1px",
-									borderColor: "border",
-									borderRadius: "md",
-									px: "3",
-									py: "2",
-								})}
-							/>
-						</Field>
-						<Textarea
-							id="bio"
-							label="Bio"
-							placeholder="A short bio"
-							rows={4}
-							defaultValue="Short"
-							minLength={10}
-							helperText="At least 10 characters."
-							errorText="Bio must be at least 10 characters."
-						/>
-					</FieldsetContent>
-				</Fieldset>
 			</div>
 		</div>,
 	);

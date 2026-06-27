@@ -1,10 +1,7 @@
 export {
 	Alert,
-	AlertContent,
-	AlertDescription,
-	AlertIndicator,
+	AlertIcon,
 	type AlertProps,
-	AlertTitle,
 } from "./alert";
 export { Badge, type BadgeProps } from "./badge";
 export { Checkbox, type CheckboxProps } from "./checkbox";

@@ -70,6 +70,13 @@ const config = {
 				},
 			},
 
+			canvas: {
+				value: {
+					_light: "{colors.gray.1}",
+					_dark: "{colors.gray.1}",
+				},
+			},
+
 			error: {
 				value: {
 					_light: "{colors.red.9}",

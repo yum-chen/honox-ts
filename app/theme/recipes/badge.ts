@@ -33,6 +33,7 @@ export const badge = defineRecipe({
 			},
 			outline: {
 				borderWidth: "1px",
+				borderStyle: "solid",
 				borderColor: "colorPalette.outline.border",
 				color: "colorPalette.outline.fg",
 				_hover: {
@@ -43,6 +44,7 @@ export const badge = defineRecipe({
 				bg: "colorPalette.surface.bg",
 				color: "colorPalette.surface.fg",
 				borderWidth: "1px",
+				borderStyle: "solid",
 				borderColor: "colorPalette.surface.border",
 				_hover: {
 					bg: "colorPalette.surface.active",
