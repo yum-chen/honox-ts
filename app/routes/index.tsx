@@ -4,8 +4,13 @@ import {
 	Alert,
 	AlertIcon,
 	Badge,
+	Checkbox,
 	Field,
+	FieldErrorText,
+	FieldHelperText,
+	FieldLabel,
 	Heading,
+	Switch,
 	Text,
 } from "../components/ui";
 
@@ -34,10 +39,18 @@ export default createRoute((c) => {
 					Badge Component Examples
 				</Heading>
 
-				<Badge variant="solid" colorPalette="blue">Solid</Badge>
-				<Badge variant="subtle" colorPalette="green">Subtle</Badge>
-				<Badge variant="outline" colorPalette="red">Outline</Badge>
-				<Badge variant="surface" colorPalette="purple">Surface</Badge>
+				<Badge variant="solid" colorPalette="blue">
+					Solid
+				</Badge>
+				<Badge variant="subtle" colorPalette="green">
+					Subtle
+				</Badge>
+				<Badge variant="outline" colorPalette="red">
+					Outline
+				</Badge>
+				<Badge variant="surface" colorPalette="purple">
+					Surface
+				</Badge>
 			</div>
 
 			{/* Text Examples */}
@@ -87,7 +100,7 @@ export default createRoute((c) => {
 				/>
 			</div>
 
-			{/* Field Examples - using plain HTML to isolate */}
+			{/* Field Examples */}
 			<div
 				class={css({
 					mt: "8",
@@ -103,10 +116,8 @@ export default createRoute((c) => {
 					Field Component Examples
 				</h2>
 
-				<Field>
-					<label>
-						Username *
-					</label>
+				<Field id="username-field">
+					<FieldLabel>Username *</FieldLabel>
 					<input
 						type="text"
 						placeholder="Enter your username"
@@ -118,11 +129,11 @@ export default createRoute((c) => {
 							py: "2",
 						})}
 					/>
-					<div>Keep it unique.</div>
+					<FieldHelperText>Keep it unique.</FieldHelperText>
 				</Field>
 
-				<Field>
-					<label>Email</label>
+				<Field id="email-field" invalid>
+					<FieldLabel>Email</FieldLabel>
 					<input
 						type="email"
 						placeholder="Enter your email"
@@ -134,8 +145,47 @@ export default createRoute((c) => {
 							py: "2",
 						})}
 					/>
-					<div>Invalid email address.</div>
+					<FieldErrorText>Invalid email address.</FieldErrorText>
 				</Field>
+
+				<Heading as="h2" class={css({ fontSize: "xl", mt: "8", mb: "4" })}>
+					Switch and Checkbox Examples
+				</Heading>
+
+				<div
+					class={css({
+						display: "flex",
+						flexDir: "column",
+						gap: "4",
+						alignItems: "start",
+					})}
+				>
+					<Field id="switch-field">
+						<FieldLabel>Notifications</FieldLabel>
+						<Switch interactive>Enable notifications</Switch>
+						<FieldHelperText>
+							Receive updates about your account.
+						</FieldHelperText>
+					</Field>
+
+					<Field id="checkbox-field" required invalid>
+						<Checkbox interactive required invalid>
+							I agree to the terms and conditions
+						</Checkbox>
+						<FieldErrorText>You must agree to the terms.</FieldErrorText>
+					</Field>
+
+					<Field id="readonly-switch-field">
+						<Switch interactive readOnly checked>
+							ReadOnly Switch
+						</Switch>
+					</Field>
+					<Field id="readonly-checkbox-field">
+						<Checkbox interactive readOnly checked="indeterminate">
+							ReadOnly Indeterminate Checkbox
+						</Checkbox>
+					</Field>
+				</div>
 			</div>
 		</div>,
 	);
