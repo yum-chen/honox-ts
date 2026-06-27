@@ -104,6 +104,10 @@ export const keyframes = defineKeyframes({
 		from: { scale: "1" },
 		to: { scale: "0.95" },
 	},
+	spin: {
+		from: { transform: "rotate(0deg)" },
+		to: { transform: "rotate(360deg)" },
+	},
 	"bg-position": {
 		from: {
 			backgroundPosition: "var(--animate-from, 1rem) 0",

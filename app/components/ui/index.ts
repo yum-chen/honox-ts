@@ -24,6 +24,7 @@ export {
 	type FieldsetProps,
 } from "./fieldset";
 export { Heading, type HeadingProps } from "./heading";
+export { Spinner, type SpinnerProps } from "./spinner";
 export { Switch, type SwitchProps } from "./switch";
 export { Text, type TextProps } from "./text";
 export { Textarea, type TextareaProps } from "./textarea";
