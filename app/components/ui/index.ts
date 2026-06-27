@@ -23,6 +23,7 @@ export {
 	FieldsetLegend,
 	type FieldsetProps,
 } from "./fieldset";
+export { Group, type GroupProps } from "./group";
 export { Heading, type HeadingProps } from "./heading";
 export { Spinner, type SpinnerProps } from "./spinner";
 export { Switch, type SwitchProps } from "./switch";
