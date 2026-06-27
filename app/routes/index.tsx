@@ -174,17 +174,6 @@ export default createRoute((c) => {
 						</Checkbox>
 						<FieldErrorText>You must agree to the terms.</FieldErrorText>
 					</Field>
-
-					<Field id="readonly-switch-field">
-						<Switch interactive readOnly checked>
-							ReadOnly Switch
-						</Switch>
-					</Field>
-					<Field id="readonly-checkbox-field">
-						<Checkbox interactive readOnly checked="indeterminate">
-							ReadOnly Indeterminate Checkbox
-						</Checkbox>
-					</Field>
 				</div>
 			</div>
 		</div>,

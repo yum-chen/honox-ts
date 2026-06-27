@@ -7,13 +7,14 @@ export { Badge, type BadgeProps } from "./badge";
 export { Checkbox, type CheckboxProps } from "./checkbox";
 export {
 	Field,
+	type FieldProps,
+} from "./field";
+export {
 	FieldErrorText,
-	FieldGroup,
 	FieldHelperText,
 	FieldLabel,
-	type FieldProps,
 	FieldRequiredIndicator,
-} from "./field";
+} from "./field-base";
 export {
 	Fieldset,
 	FieldsetContent,
