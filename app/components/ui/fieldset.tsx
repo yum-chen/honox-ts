@@ -3,7 +3,7 @@ import { cx } from "../../../styled-system/css";
 import type { FieldsetVariantProps } from "../../../styled-system/recipes";
 import { fieldset } from "../../../styled-system/recipes";
 
-export interface FieldsetProps extends FieldsetVariantProps {
+interface FieldsetProps extends FieldsetVariantProps {
 	children?: any;
 	class?: string;
 	id?: string;
@@ -23,9 +23,9 @@ interface FieldsetContextValue {
 
 const FieldsetContext = createContext<FieldsetContextValue | null>(null);
 
-export const useFieldsetContext = () => useContext(FieldsetContext);
+const useFieldsetContext = () => useContext(FieldsetContext);
 
-export function Fieldset(props: FieldsetProps) {
+function Fieldset(props: FieldsetProps) {
 	const [variantProps, localProps] = fieldset.splitVariantProps(props);
 	const {
 		children,
@@ -68,7 +68,7 @@ export function Fieldset(props: FieldsetProps) {
 	);
 }
 
-export function FieldsetLegend(props: { children?: any; class?: string }) {
+function FieldsetLegend(props: { children?: any; class?: string }) {
 	const context = useFieldsetContext();
 	const styles = fieldset();
 	return (
@@ -82,7 +82,7 @@ export function FieldsetLegend(props: { children?: any; class?: string }) {
 	);
 }
 
-export function FieldsetHelperText(props: { children?: any; class?: string }) {
+function FieldsetHelperText(props: { children?: any; class?: string }) {
 	const context = useFieldsetContext();
 	const styles = fieldset();
 	return (
@@ -97,7 +97,7 @@ export function FieldsetHelperText(props: { children?: any; class?: string }) {
 	);
 }
 
-export function FieldsetErrorText(props: { children?: any; class?: string }) {
+function FieldsetErrorText(props: { children?: any; class?: string }) {
 	const context = useFieldsetContext();
 	const styles = fieldset();
 	if (context?.invalid) {
@@ -115,7 +115,7 @@ export function FieldsetErrorText(props: { children?: any; class?: string }) {
 	return null;
 }
 
-export function FieldsetContent(props: {
+function FieldsetContent(props: {
 	children?: any;
 	class?: string;
 	[key: string]: any;
@@ -129,7 +129,7 @@ export function FieldsetContent(props: {
 	);
 }
 
-export function FieldsetControl(props: {
+function FieldsetControl(props: {
 	children?: any;
 	class?: string;
 	[key: string]: any;
@@ -142,3 +142,14 @@ export function FieldsetControl(props: {
 		</div>
 	);
 }
+
+export type { FieldsetProps };
+export {
+	Fieldset,
+	FieldsetContent,
+	FieldsetControl,
+	FieldsetErrorText,
+	FieldsetHelperText,
+	FieldsetLegend,
+	useFieldsetContext,
+};

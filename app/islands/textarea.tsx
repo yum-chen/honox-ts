@@ -4,8 +4,8 @@ import {
 	FieldHelperText,
 	FieldLabel,
 	FieldRoot,
-} from "../components/ui/field-primitive";
-import { Textarea as UITextarea } from "../components/ui/textarea-primitive";
+} from "../components/ui/field-base";
+import { TextareaBase } from "../components/ui/textarea-base";
 
 export interface TextareaIslandProps {
 	label?: string;
@@ -17,6 +17,7 @@ export interface TextareaIslandProps {
 	placeholder?: string;
 	rows?: number;
 	defaultValue?: string;
+	value?: string;
 	class?: string;
 	interactive?: boolean;
 	[key: string]: any;
@@ -30,56 +31,45 @@ export default function Textarea(props: TextareaIslandProps) {
 		validator,
 		minLength,
 		defaultValue = "",
+		value: valueProp,
 		class: className,
 		...rest
 	} = props;
-	const [value, setValue] = useState(defaultValue);
-	const [localErrorText, setLocalErrorText] = useState<string | null>(null);
+	const [value, setValue] = useState(valueProp ?? defaultValue);
 
-	const validate = (val: string) => {
-		if (validator) {
-			const result = validator(val);
-			if (result === false) {
-				setLocalErrorText(errorText || "Invalid input");
-				return;
-			}
-			if (typeof result === "string") {
-				setLocalErrorText(result);
-				return;
-			}
+	const handleValueChange = (val: string) => {
+		setValue(val);
+		if (props.onValueChange) {
+			props.onValueChange(val);
 		}
-
-		if (minLength !== undefined && val.length < minLength) {
-			setLocalErrorText(errorText || `Must be at least ${minLength} characters`);
-			return;
-		}
-
-		setLocalErrorText(null);
 	};
 
-	const isInvalid = localErrorText !== null;
-
 	const content = (
-		<UITextarea
+		<TextareaBase
 			{...rest}
 			value={value}
 			onInput={(e: { target: { value: string } }) => {
-				const val = (e.target as HTMLTextAreaElement).value;
-				setValue(val);
-				validate(val);
+				handleValueChange(e.target.value);
+				if (props.onInput) {
+					props.onInput(e);
+				}
 			}}
 		/>
 	);
 
 	if (label || helperText || errorText || validator || minLength) {
 		return (
-			<FieldRoot id={rest.id} invalid={isInvalid} class={className}>
+			<FieldRoot
+				id={rest.id}
+				class={className}
+				value={value}
+				validator={validator}
+				minLength={minLength}
+			>
 				{label && <FieldLabel>{label}</FieldLabel>}
 				{content}
 				{helperText && <FieldHelperText>{helperText}</FieldHelperText>}
-				{isInvalid && (
-					<FieldErrorText>{localErrorText || errorText}</FieldErrorText>
-				)}
+				<FieldErrorText>{errorText}</FieldErrorText>
 			</FieldRoot>
 		);
 	}

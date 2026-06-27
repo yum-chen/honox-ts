@@ -3,7 +3,7 @@ import { cx } from "../../../styled-system/css";
 import type { FieldVariantProps } from "../../../styled-system/recipes";
 import { field } from "../../../styled-system/recipes";
 
-export interface FieldProps extends FieldVariantProps {
+interface FieldProps extends FieldVariantProps {
 	children?: any;
 	class?: string;
 	id?: string;
@@ -14,7 +14,7 @@ export interface FieldProps extends FieldVariantProps {
 	value?: string;
 	onValueChange?: (value: string) => void;
 	minLength?: number;
-	validator?: (value: string) => boolean;
+	validator?: (value: string) => boolean | string;
 	interactive?: boolean;
 	[key: string]: any;
 }
@@ -33,13 +33,14 @@ interface FieldContextValue {
 	errorTextId: string;
 	hasHelperText: boolean;
 	hasErrorText: boolean;
+	errorText?: string;
 }
 
 const FieldContext = createContext<FieldContextValue | null>(null);
 
-export const useFieldContext = () => useContext(FieldContext);
+const useFieldContext = () => useContext(FieldContext);
 
-export function FieldBase(props: FieldProps) {
+function FieldRoot(props: FieldProps) {
 	const [variantProps, localProps] = field.splitVariantProps(props);
 	const {
 		children,
@@ -62,11 +63,22 @@ export function FieldBase(props: FieldProps) {
 	const styles = field(variantProps);
 
 	let isInvalid = invalidProp;
+	let errorText: string | undefined;
+
 	if (isInvalid === undefined) {
 		if (validator && value !== undefined) {
-			isInvalid = !validator(value);
+			const result = validator(value);
+			if (result === false) {
+				isInvalid = true;
+			} else if (typeof result === "string") {
+				isInvalid = true;
+				errorText = result;
+			}
 		} else if (minLength !== undefined && value !== undefined) {
-			isInvalid = value.length < minLength;
+			if (value.length < minLength) {
+				isInvalid = true;
+				errorText = `Must be at least ${minLength} characters`;
+			}
 		}
 	}
 
@@ -84,6 +96,7 @@ export function FieldBase(props: FieldProps) {
 		errorTextId: `field::${id}::error-text`,
 		hasHelperText: true,
 		hasErrorText: true,
+		errorText,
 	};
 
 	return (
@@ -102,11 +115,7 @@ export function FieldBase(props: FieldProps) {
 	);
 }
 
-export function FieldLabel(props: {
-	children?: any;
-	class?: string;
-	for?: string;
-}) {
+function FieldLabel(props: { children?: any; class?: string; for?: string }) {
 	const context = useFieldContext();
 	const styles = field();
 	return (
@@ -124,7 +133,7 @@ export function FieldLabel(props: {
 	);
 }
 
-export function FieldHelperText(props: { children?: any; class?: string }) {
+function FieldHelperText(props: { children?: any; class?: string }) {
 	const context = useFieldContext();
 	const styles = field();
 	return (
@@ -141,7 +150,7 @@ export function FieldHelperText(props: { children?: any; class?: string }) {
 	);
 }
 
-export function FieldErrorText(props: { children?: any; class?: string }) {
+function FieldErrorText(props: { children?: any; class?: string }) {
 	const context = useFieldContext();
 	const styles = field();
 	if (context?.invalid) {
@@ -154,17 +163,14 @@ export function FieldErrorText(props: { children?: any; class?: string }) {
 				data-readonly={context?.readOnly ? "" : undefined}
 				data-required={context?.required ? "" : undefined}
 			>
-				{props.children}
+				{props.children || context.errorText}
 			</div>
 		);
 	}
 	return null;
 }
 
-export function FieldRequiredIndicator(props: {
-	children?: any;
-	class?: string;
-}) {
+function FieldRequiredIndicator(props: { children?: any; class?: string }) {
 	const context = useFieldContext();
 	const styles = field();
 	return (
@@ -181,7 +187,7 @@ export function FieldRequiredIndicator(props: {
 	);
 }
 
-export function FieldGroup(props: {
+function FieldGroup(props: {
 	label?: string;
 	helperText?: string;
 	errorText?: string;
@@ -197,3 +203,14 @@ export function FieldGroup(props: {
 		</div>
 	);
 }
+
+export type { FieldProps };
+export {
+	FieldErrorText,
+	FieldGroup,
+	FieldHelperText,
+	FieldLabel,
+	FieldRequiredIndicator,
+	FieldRoot,
+	useFieldContext,
+};

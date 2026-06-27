@@ -3,25 +3,21 @@ import type { TextareaVariantProps } from "../../../styled-system/recipes";
 import { textarea } from "../../../styled-system/recipes";
 import { useFieldContext } from "./field-base";
 
-export interface TextareaProps extends TextareaVariantProps {
+interface TextareaProps extends TextareaVariantProps {
 	children?: any;
 	class?: string;
 	value?: string;
 	onInput?: (e: any) => void;
-	validator?: (value: string) => boolean;
-	interactive?: boolean;
 	[key: string]: any;
 }
 
-export function TextareaBase(props: TextareaProps) {
+function TextareaBase(props: TextareaProps) {
 	const field = useFieldContext();
 	const [variantProps, localProps] = textarea.splitVariantProps(props);
 	const {
 		class: classProp,
 		value: valueProp,
 		onInput,
-		validator,
-		interactive,
 		...restProps
 	} = localProps;
 	const styles = textarea(variantProps);
@@ -57,3 +53,6 @@ export function TextareaBase(props: TextareaProps) {
 		/>
 	);
 }
+
+export type { TextareaProps };
+export { TextareaBase };

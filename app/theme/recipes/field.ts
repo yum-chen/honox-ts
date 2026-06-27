@@ -20,21 +20,22 @@ export const field = defineSlotRecipe({
 		label: {
 			alignItems: "center",
 			color: "fg.default",
+			fontWeight: "medium",
 			display: "flex",
 			gap: "0.5",
 			textAlign: "start",
 			userSelect: "none",
-			textStyle: "label",
+			textStyle: "sm",
 			_disabled: {
 				layerStyle: "disabled",
 			},
 		},
 		requiredIndicator: {
-			color: "colorPalette.solid",
+			color: "error",
 		},
 		helperText: {
 			color: "fg.muted",
-			textStyle: "sm",
+			textStyle: "xs",
 			_disabled: {
 				layerStyle: "disabled",
 			},
@@ -42,18 +43,6 @@ export const field = defineSlotRecipe({
 		errorText: {
 			color: "error",
 			textStyle: "xs",
-		},
-		helperText: {
-			color: "fg.muted",
-			textStyle: "xs",
-		},
-		label: {
-			color: "fg.default",
-			fontWeight: "medium",
-			textStyle: "sm",
-		},
-		requiredIndicator: {
-			color: "error",
 		},
 	},
 });

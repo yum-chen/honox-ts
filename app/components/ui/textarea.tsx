@@ -1,9 +1,10 @@
-import { Textarea as TextareaPrimitive, type TextareaProps as BaseTextareaProps } from "./textarea-primitive";
 import TextareaIsland from "../../islands/textarea";
+import {
+	type TextareaProps as BaseTextareaProps,
+	TextareaBase,
+} from "./textarea-base";
 
-export * from "./textarea-primitive";
-
-export interface TextareaProps extends BaseTextareaProps {
+interface TextareaProps extends BaseTextareaProps {
 	interactive?: boolean;
 	validator?: (value: string) => boolean | string;
 	minLength?: number;
@@ -12,12 +13,32 @@ export interface TextareaProps extends BaseTextareaProps {
 	errorText?: string;
 }
 
-export function Textarea(props: TextareaProps) {
-	const { interactive, validator, minLength, label, helperText, errorText, ...rest } = props;
+function Textarea(props: TextareaProps) {
+	const {
+		interactive,
+		validator,
+		minLength,
+		label,
+		helperText,
+		errorText,
+		...rest
+	} = props;
+	const isInteractive =
+		interactive !== undefined
+			? interactive
+			: !!validator ||
+				minLength !== undefined ||
+				!!label ||
+				!!helperText ||
+				!!errorText;
 
-	if (interactive || validator || minLength !== undefined || label || helperText || errorText) {
+	if (isInteractive) {
 		return <TextareaIsland {...props} />;
 	}
 
-	return <TextareaPrimitive {...rest} />;
+	return <TextareaBase {...rest} />;
 }
+
+export * from "./textarea-base";
+export type { TextareaProps };
+export { Textarea };

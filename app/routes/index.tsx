@@ -19,6 +19,7 @@ import {
 	FieldsetLegend,
 	Heading,
 	Text,
+	Switch,
 	Textarea,
 } from "../components/ui";
 
@@ -277,6 +278,12 @@ export default createRoute((c) => {
 							helperText="At least 10 characters."
 							errorText="Bio must be at least 10 characters."
 						/>
+						<Field>
+							<FieldLabel>Notifications</FieldLabel>
+							<Switch interactive defaultChecked>
+								Enable email notifications
+							</Switch>
+						</Field>
 					</FieldsetContent>
 				</Fieldset>
 			</div>
