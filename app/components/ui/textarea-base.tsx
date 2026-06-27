@@ -1,13 +1,7 @@
 import { cx } from "../../../styled-system/css";
 import type { TextareaVariantProps } from "../../../styled-system/recipes";
 import { textarea } from "../../../styled-system/recipes";
-import {
-	FieldErrorText,
-	FieldHelperText,
-	FieldLabel,
-	FieldRoot,
-	useFieldContext,
-} from "./field-primitive";
+import { useFieldContext } from "./field-base";
 
 export interface TextareaPrimitiveProps extends TextareaVariantProps {
 	children?: any;
@@ -60,52 +54,5 @@ export function TextareaPrimitive(props: TextareaPrimitiveProps) {
 			onInput={handleInput}
 			{...(restProps as any)}
 		/>
-	);
-}
-
-export interface TextareaProps extends TextareaPrimitiveProps {
-	label?: string;
-	helperText?: string;
-	errorText?: string;
-	validator?: (value: string) => boolean | string;
-	minLength?: number;
-}
-
-export function Textarea(props: TextareaProps) {
-	const {
-		label,
-		helperText,
-		errorText,
-		validator,
-		minLength,
-		class: className,
-		id,
-		disabled,
-		invalid,
-		readOnly,
-		required,
-		value,
-		onValueChange,
-		...rest
-	} = props;
-
-	return (
-		<FieldRoot
-			id={id}
-			disabled={disabled}
-			invalid={invalid}
-			readOnly={readOnly}
-			required={required}
-			value={value}
-			onValueChange={onValueChange}
-			validator={validator}
-			minLength={minLength}
-			class={className}
-		>
-			{label && <FieldLabel>{label}</FieldLabel>}
-			<TextareaPrimitive {...rest} />
-			{helperText && <FieldHelperText>{helperText}</FieldHelperText>}
-			<FieldErrorText>{errorText}</FieldErrorText>
-		</FieldRoot>
 	);
 }

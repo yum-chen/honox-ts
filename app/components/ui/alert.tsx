@@ -31,9 +31,7 @@ export function Alert(props: AlertProps) {
 			{hasContent && (
 				<div class={styles.content}>
 					{title && <h3 class={styles.title}>{title}</h3>}
-					{description && (
-						<div class={styles.description}>{description}</div>
-					)}
+					{description && <div class={styles.description}>{description}</div>}
 					{children}
 				</div>
 			)}
