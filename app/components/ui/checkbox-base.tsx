@@ -2,7 +2,7 @@ import { useEffect, useRef } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
 import type { CheckboxVariantProps } from "../../../styled-system/recipes";
 import { checkbox } from "../../../styled-system/recipes";
-import { useFieldContext } from "./field-primitive";
+import { useFieldContext } from "./field-base";
 
 export interface CheckboxProps extends CheckboxVariantProps {
 	children?: any;
@@ -12,6 +12,7 @@ export interface CheckboxProps extends CheckboxVariantProps {
 	disabled?: boolean;
 	invalid?: boolean;
 	required?: boolean;
+	readOnly?: boolean;
 	id?: string;
 	name?: string;
 	value?: string;
@@ -29,6 +30,7 @@ export function Checkbox(props: CheckboxProps) {
 		disabled = field?.disabled,
 		invalid = field?.invalid,
 		required = field?.required,
+		readOnly = field?.readOnly,
 		id = field?.id,
 		name,
 		value = "on",
@@ -44,6 +46,10 @@ export function Checkbox(props: CheckboxProps) {
 	}, [checked]);
 
 	const handleChange = (e: any) => {
+		if (readOnly) {
+			e.preventDefault();
+			return;
+		}
 		const target = e.target as HTMLInputElement;
 		onCheckedChange?.({ checked: target.checked });
 	};
@@ -52,15 +58,25 @@ export function Checkbox(props: CheckboxProps) {
 
 	const isChecked = checked === true;
 	const isIndeterminate = checked === "indeterminate";
+	const state = isIndeterminate
+		? "indeterminate"
+		: isChecked
+			? "checked"
+			: "unchecked";
+
+	const describedBy = [];
+	if (field?.hasHelperText) describedBy.push(field.helperTextId);
+	if (field?.invalid && field?.hasErrorText)
+		describedBy.push(field.errorTextId);
 
 	return (
 		<label
 			class={cx(styles.root, classProp)}
 			data-disabled={disabled ? "" : undefined}
 			data-invalid={invalid ? "" : undefined}
-			data-state={
-				isIndeterminate ? "indeterminate" : isChecked ? "checked" : "unchecked"
-			}
+			data-readonly={readOnly ? "" : undefined}
+			data-required={required ? "" : undefined}
+			data-state={state}
 			{...restProps}
 		>
 			<input
@@ -83,26 +99,29 @@ export function Checkbox(props: CheckboxProps) {
 				onChange={handleChange}
 				disabled={disabled}
 				required={required}
+				readOnly={readOnly}
 				id={id}
-				data-state={
-					isIndeterminate
-						? "indeterminate"
-						: isChecked
-							? "checked"
-							: "unchecked"
+				aria-invalid={invalid ? "true" : undefined}
+				aria-required={required ? "true" : undefined}
+				aria-readonly={readOnly ? "true" : undefined}
+				aria-checked={isIndeterminate ? "mixed" : isChecked}
+				aria-describedby={
+					describedBy.length > 0 ? describedBy.join(" ") : undefined
 				}
+				data-state={state}
+				data-disabled={disabled ? "" : undefined}
+				data-invalid={invalid ? "" : undefined}
+				data-readonly={readOnly ? "" : undefined}
+				data-required={required ? "" : undefined}
 			/>
 			<div
 				class={styles.control}
+				data-part="control"
 				data-disabled={disabled ? "" : undefined}
 				data-invalid={invalid ? "" : undefined}
-				data-state={
-					isIndeterminate
-						? "indeterminate"
-						: isChecked
-							? "checked"
-							: "unchecked"
-				}
+				data-readonly={readOnly ? "" : undefined}
+				data-required={required ? "" : undefined}
+				data-state={state}
 			>
 				{(isChecked || isIndeterminate) && (
 					<div class={styles.indicator}>
@@ -139,13 +158,9 @@ export function Checkbox(props: CheckboxProps) {
 					class={styles.label}
 					data-disabled={disabled ? "" : undefined}
 					data-invalid={invalid ? "" : undefined}
-					data-state={
-						isIndeterminate
-							? "indeterminate"
-							: isChecked
-								? "checked"
-								: "unchecked"
-					}
+					data-readonly={readOnly ? "" : undefined}
+					data-required={required ? "" : undefined}
+					data-state={state}
 				>
 					{children}
 				</span>
