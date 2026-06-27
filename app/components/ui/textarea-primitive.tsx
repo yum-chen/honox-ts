@@ -1,13 +1,7 @@
 import { cx } from "../../../styled-system/css";
 import type { TextareaVariantProps } from "../../../styled-system/recipes";
 import { textarea } from "../../../styled-system/recipes";
-import {
-	FieldErrorText,
-	FieldHelperText,
-	FieldLabel,
-	FieldRoot,
-	useFieldContext,
-} from "./field-primitive";
+import { FieldRoot, useFieldContext } from "./field-primitive";
 
 export interface TextareaPrimitiveProps extends TextareaVariantProps {
 	children?: any;
@@ -101,11 +95,11 @@ export function Textarea(props: TextareaProps) {
 			validator={validator}
 			minLength={minLength}
 			class={className}
+			label={label}
+			helperText={helperText}
+			errorText={errorText}
 		>
-			{label && <FieldLabel>{label}</FieldLabel>}
 			<TextareaPrimitive {...rest} />
-			{helperText && <FieldHelperText>{helperText}</FieldHelperText>}
-			<FieldErrorText>{errorText}</FieldErrorText>
 		</FieldRoot>
 	);
 }

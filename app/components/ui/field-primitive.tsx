@@ -30,6 +30,9 @@ export interface FieldProps extends FieldVariantProps {
 	invalid?: boolean;
 	readOnly?: boolean;
 	required?: boolean;
+	label?: string | any;
+	helperText?: string | any;
+	errorText?: string | any;
 	value?: string;
 	onValueChange?: (value: string) => void;
 	minLength?: number;
@@ -49,6 +52,9 @@ export function FieldRoot(props: FieldProps) {
 		invalid: invalidProp = props.invalid,
 		readOnly = props.readOnly,
 		required = props.required,
+		label,
+		helperText,
+		errorText: errorTextProp,
 		value,
 		onValueChange,
 		minLength,
@@ -92,10 +98,22 @@ export function FieldRoot(props: FieldProps) {
 		labelId: `field::${id}::label`,
 		helperTextId: `field::${id}::helper-text`,
 		errorTextId: `field::${id}::error-text`,
-		hasHelperText: true,
-		hasErrorText: true,
-		errorText,
+		hasHelperText: !!helperText,
+		hasErrorText: !!(errorTextProp || errorText),
+		errorText: errorText || errorTextProp,
 	};
+
+	const describedBy = [
+		contextValue.hasHelperText ? contextValue.helperTextId : null,
+		isInvalid && contextValue.hasErrorText ? contextValue.errorTextId : null,
+	]
+		.filter(Boolean)
+		.join(" ");
+
+	const isChildrenEmpty =
+		!children || (typeof children === "string" && !children.trim());
+
+	const { class: restClass, ...otherRestProps } = restProps;
 
 	return (
 		<FieldContext.Provider value={contextValue}>
@@ -105,9 +123,27 @@ export function FieldRoot(props: FieldProps) {
 				data-invalid={isInvalid ? "" : undefined}
 				data-readonly={readOnly ? "" : undefined}
 				data-required={required ? "" : undefined}
-				{...restProps}
+				{...(!isChildrenEmpty ? otherRestProps : {})}
 			>
-				{children}
+				{label && <FieldLabel>{label}</FieldLabel>}
+				{!isChildrenEmpty ? (
+					children
+				) : (
+					<input
+						id={id}
+						disabled={disabled}
+						readOnly={readOnly}
+						required={required}
+						aria-invalid={isInvalid ? "true" : undefined}
+						aria-describedby={describedBy || undefined}
+						value={value}
+						onInput={(e: any) => onValueChange?.(e.target.value)}
+						class={cx(styles.input, restClass)}
+						{...otherRestProps}
+					/>
+				)}
+				{helperText && <FieldHelperText>{helperText}</FieldHelperText>}
+				<FieldErrorText />
 			</div>
 		</FieldContext.Provider>
 	);
@@ -125,15 +161,16 @@ export function FieldLabel(props: {
 	return (
 		<label
 			id={context?.labelId}
-			class={cx(styles.label, classProp)}
 			for={forProp || context?.id}
 			data-disabled={context?.disabled ? "" : undefined}
 			data-invalid={context?.invalid ? "" : undefined}
 			data-readonly={context?.readOnly ? "" : undefined}
 			data-required={context?.required ? "" : undefined}
+			class={cx(styles.label, classProp)}
 			{...rest}
 		>
 			{children}
+			{context?.required && <FieldRequiredIndicator />}
 		</label>
 	);
 }
@@ -192,22 +229,5 @@ export function FieldRequiredIndicator(props: {
 		>
 			{props.children || "*"}
 		</span>
-	);
-}
-
-export function FieldGroup(props: {
-	label?: string;
-	helperText?: string;
-	errorText?: string;
-	children?: any;
-}) {
-	const { label, helperText, errorText, children } = props;
-	return (
-		<div style={{ display: "contents" }}>
-			{label && <FieldLabel>{label}</FieldLabel>}
-			{children}
-			{helperText && <FieldHelperText>{helperText}</FieldHelperText>}
-			<FieldErrorText>{errorText}</FieldErrorText>
-		</div>
 	);
 }

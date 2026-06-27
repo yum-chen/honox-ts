@@ -112,8 +112,13 @@ export default createRoute((c) => {
 					Field Component Examples
 				</h2>
 
-				<Field label="Email" validator={(value) => value.includes("@")} errorText="Must be a valid email" type="email" placeholder="Enter your email">
-				</Field>
+				<Field
+					label="Email"
+					validator={(value) => value.includes("@")}
+					errorText="Must be a valid email"
+					type="email"
+					placeholder="Enter your email"
+				></Field>
 			</div>
 		</div>,
 	);
