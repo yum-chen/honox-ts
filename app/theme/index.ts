@@ -1,7 +1,10 @@
 import { animationStyles } from "./animation-styles";
 import { amber } from "./colors/amber";
+import { blue } from "./colors/blue";
 import { cyan } from "./colors/cyan";
 import { green } from "./colors/green";
+import { orange } from "./colors/orange";
+import { purple } from "./colors/purple";
 import { red } from "./colors/red";
 import { slate } from "./colors/slate";
 import { conditions } from "./conditions";
@@ -77,11 +80,14 @@ const config = {
 				},
 			},
 
+			blue,
 			cyan,
 			gray: slate,
 			red,
 			green,
 			amber,
+			orange,
+			purple,
 		},
 
 		shadows,
@@ -103,7 +109,9 @@ const config = {
 };
 
 export {
+	amber,
 	animationStyles,
+	blue,
 	colors,
 	conditions,
 	config,
@@ -113,6 +121,8 @@ export {
 	green,
 	keyframes,
 	layerStyles,
+	orange,
+	purple,
 	recipes,
 	red,
 	shadows,
