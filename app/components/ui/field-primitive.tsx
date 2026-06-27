@@ -34,7 +34,6 @@ export interface FieldProps extends FieldVariantProps {
 	onValueChange?: (value: string) => void;
 	minLength?: number;
 	validator?: (value: string) => boolean | string;
-	interactive?: boolean;
 	[key: string]: any;
 }
 
@@ -54,7 +53,6 @@ export function FieldRoot(props: FieldProps) {
 		onValueChange,
 		minLength,
 		validator,
-		interactive,
 		...restProps
 	} = localProps;
 

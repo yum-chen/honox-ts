@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
 import type { CheckboxVariantProps } from "../../../styled-system/recipes";
 import { checkbox } from "../../../styled-system/recipes";
@@ -7,6 +8,7 @@ export interface CheckboxProps extends CheckboxVariantProps {
 	children?: any;
 	class?: string;
 	checked?: boolean | "indeterminate";
+	onCheckedChange?: (details: { checked: boolean | "indeterminate" }) => void;
 	disabled?: boolean;
 	invalid?: boolean;
 	required?: boolean;
@@ -23,6 +25,7 @@ export function Checkbox(props: CheckboxProps) {
 		children,
 		class: classProp,
 		checked,
+		onCheckedChange,
 		disabled = field?.disabled,
 		invalid = field?.invalid,
 		required = field?.required,
@@ -31,6 +34,19 @@ export function Checkbox(props: CheckboxProps) {
 		value = "on",
 		...restProps
 	} = localProps;
+
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.indeterminate = checked === "indeterminate";
+		}
+	}, [checked]);
+
+	const handleChange = (e: any) => {
+		const target = e.target as HTMLInputElement;
+		onCheckedChange?.({ checked: target.checked });
+	};
 
 	const styles = checkbox(variantProps);
 
@@ -48,6 +64,7 @@ export function Checkbox(props: CheckboxProps) {
 			{...restProps}
 		>
 			<input
+				ref={inputRef}
 				type="checkbox"
 				style={{
 					border: "0",
@@ -63,6 +80,7 @@ export function Checkbox(props: CheckboxProps) {
 				name={name}
 				value={value}
 				checked={isChecked}
+				onChange={handleChange}
 				disabled={disabled}
 				required={required}
 				id={id}

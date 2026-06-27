@@ -4,30 +4,29 @@ import {
 	Textarea as TextareaPrimitive,
 } from "./textarea-primitive";
 
-export * from "./textarea-primitive";
-
 export interface TextareaProps extends BaseTextareaProps {
 	interactive?: boolean;
+	defaultValue?: string;
 }
 
 export function Textarea(props: TextareaProps) {
 	const {
 		interactive,
+		onValueChange,
+		value,
+		defaultValue,
 		validator,
 		minLength,
-		label,
-		helperText,
-		errorText,
 		...rest
 	} = props;
 
 	if (
 		interactive ||
+		onValueChange ||
+		value !== undefined ||
+		defaultValue !== undefined ||
 		validator ||
-		minLength !== undefined ||
-		label ||
-		helperText ||
-		errorText
+		minLength !== undefined
 	) {
 		return <TextareaIsland {...props} />;
 	}

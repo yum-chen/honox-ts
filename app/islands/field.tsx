@@ -1,16 +1,31 @@
 import { useState } from "hono/jsx";
-import { type FieldProps, FieldRoot } from "../components/ui/field-primitive";
+import {
+	FieldRoot,
+	type FieldProps as UIFieldProps,
+} from "../components/ui/field-primitive";
 
-export default function FieldIsland(props: FieldProps) {
-	const { defaultValue = "", onValueChange, ...rest } = props;
-	const [value, setValue] = useState(defaultValue);
+export interface FieldIslandProps extends UIFieldProps {
+	defaultValue?: string;
+}
+
+export default function FieldIsland(props: FieldIslandProps) {
+	const { value: valueProp, defaultValue = "", onValueChange, ...rest } = props;
+	const [value, setValue] = useState(valueProp ?? defaultValue);
+	const isControlled = valueProp !== undefined;
+	const currentValue = isControlled ? valueProp : value;
 
 	const handleValueChange = (val: string) => {
-		setValue(val);
+		if (!isControlled) {
+			setValue(val);
+		}
 		onValueChange?.(val);
 	};
 
 	return (
-		<FieldRoot {...rest} value={value} onValueChange={handleValueChange} />
+		<FieldRoot
+			{...rest}
+			value={currentValue}
+			onValueChange={handleValueChange}
+		/>
 	);
 }

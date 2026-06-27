@@ -7,7 +7,6 @@ export interface SwitchProps extends SwitchRecipeVariantProps {
 	children?: any;
 	class?: string;
 	checked?: boolean;
-	defaultChecked?: boolean;
 	disabled?: boolean;
 	invalid?: boolean;
 	required?: boolean;

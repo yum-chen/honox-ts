@@ -13,6 +13,7 @@ export interface TextareaPrimitiveProps extends TextareaVariantProps {
 	children?: any;
 	class?: string;
 	value?: string;
+	onValueChange?: (value: string) => void;
 	onInput?: (e: any) => void;
 	[key: string]: any;
 }
@@ -37,8 +38,10 @@ export function TextareaPrimitive(props: TextareaPrimitiveProps) {
 
 	const handleInput = (e: any) => {
 		if (onInput) onInput(e);
+		const newValue = e.target.value;
+		if (onValueChange) onValueChange(newValue);
 		if (field?.onValueChange) {
-			field.onValueChange(e.target.value);
+			field.onValueChange(newValue);
 		}
 	};
 

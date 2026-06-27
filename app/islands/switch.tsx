@@ -1,10 +1,14 @@
 import { useState } from "hono/jsx";
 import {
-	type SwitchProps,
 	Switch as UISwitch,
+	type SwitchProps as UISwitchProps,
 } from "../components/ui/switch-primitive";
 
-export default function SwitchIsland(props: SwitchProps) {
+export interface SwitchIslandProps extends UISwitchProps {
+	defaultChecked?: boolean;
+}
+
+export default function SwitchIsland(props: SwitchIslandProps) {
 	const {
 		checked: checkedProp,
 		defaultChecked,

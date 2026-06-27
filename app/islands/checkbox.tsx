@@ -5,11 +5,10 @@ import {
 } from "../components/ui/checkbox-primitive";
 
 export interface CheckboxIslandProps extends UICheckboxProps {
-	onCheckedChange?: (details: { checked: boolean | "indeterminate" }) => void;
 	defaultChecked?: boolean | "indeterminate";
 }
 
-export default function Checkbox(props: CheckboxIslandProps) {
+export default function CheckboxIsland(props: CheckboxIslandProps) {
 	const {
 		checked: checkedProp,
 		defaultChecked,
@@ -23,15 +22,20 @@ export default function Checkbox(props: CheckboxIslandProps) {
 	const isControlled = checkedProp !== undefined;
 	const checked = isControlled ? checkedProp : isChecked;
 
-	const handleChange = (e: any) => {
-		const target = e.target as HTMLInputElement;
-		const nextChecked = target.checked;
-
+	const handleCheckedChange = (details: {
+		checked: boolean | "indeterminate";
+	}) => {
 		if (!isControlled) {
-			setIsChecked(nextChecked);
+			setIsChecked(details.checked);
 		}
-		onCheckedChange?.({ checked: nextChecked });
+		onCheckedChange?.(details);
 	};
 
-	return <UICheckbox {...rest} checked={checked} onChange={handleChange} />;
+	return (
+		<UICheckbox
+			{...rest}
+			checked={checked}
+			onCheckedChange={handleCheckedChange}
+		/>
+	);
 }

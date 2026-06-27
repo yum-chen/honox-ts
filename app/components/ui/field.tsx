@@ -4,16 +4,32 @@ import {
 	FieldRoot,
 } from "./field-primitive";
 
-export * from "./field-primitive";
-
 export interface FieldProps extends BaseFieldProps {
 	interactive?: boolean;
+	defaultValue?: string;
 }
 
 export function Field(props: FieldProps) {
-	const { interactive, validator, minLength, ...rest } = props;
-	if (interactive || validator || minLength !== undefined) {
+	const {
+		interactive,
+		onValueChange,
+		value,
+		defaultValue,
+		validator,
+		minLength,
+		...rest
+	} = props;
+
+	if (
+		interactive ||
+		onValueChange ||
+		value !== undefined ||
+		defaultValue !== undefined ||
+		validator ||
+		minLength !== undefined
+	) {
 		return <FieldIsland {...props} />;
 	}
+
 	return <FieldRoot {...rest} />;
 }

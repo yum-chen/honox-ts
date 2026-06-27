@@ -1,7 +1,7 @@
 import type { ChildNode } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
-import { switchRecipe } from "../../../styled-system/recipes";
 import type { SwitchRecipeVariantProps } from "../../../styled-system/recipes";
+import { switchRecipe } from "../../../styled-system/recipes";
 
 export interface SwitchProps extends SwitchRecipeVariantProps {
 	children?: ChildNode;

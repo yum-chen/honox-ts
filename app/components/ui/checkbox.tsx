@@ -4,11 +4,8 @@ import {
 	Checkbox as CheckboxPrimitive,
 } from "./checkbox-primitive";
 
-export * from "./checkbox-primitive";
-
 export interface CheckboxProps extends BaseCheckboxProps {
 	interactive?: boolean;
-	onCheckedChange?: (details: { checked: boolean | "indeterminate" }) => void;
 	defaultChecked?: boolean | "indeterminate";
 }
 

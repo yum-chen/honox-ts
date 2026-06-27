@@ -4,10 +4,9 @@ import {
 	Switch as SwitchPrimitive,
 } from "./switch-primitive";
 
-export * from "./switch-primitive";
-
 export interface SwitchProps extends BaseSwitchProps {
 	interactive?: boolean;
+	defaultChecked?: boolean;
 }
 
 export function Switch(props: SwitchProps) {
