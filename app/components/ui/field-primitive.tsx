@@ -59,6 +59,8 @@ export function FieldRoot(props: FieldProps) {
 		onValueChange,
 		minLength,
 		validator,
+		interactive: _interactive,
+		defaultValue: _defaultValue,
 		...restProps
 	} = localProps;
 
@@ -111,7 +113,16 @@ export function FieldRoot(props: FieldProps) {
 		.join(" ");
 
 	const isChildrenEmpty =
-		!children || (typeof children === "string" && !children.trim());
+		children === undefined ||
+		children === null ||
+		(typeof children === "string" && children.trim() === "") ||
+		(Array.isArray(children) &&
+			children.every(
+				(child) =>
+					child === undefined ||
+					child === null ||
+					(typeof child === "string" && child.trim() === ""),
+			));
 
 	const { class: restClass, ...otherRestProps } = restProps;
 
@@ -136,8 +147,10 @@ export function FieldRoot(props: FieldProps) {
 						required={required}
 						aria-invalid={isInvalid ? "true" : undefined}
 						aria-describedby={describedBy || undefined}
-						value={value}
-						onInput={(e: any) => onValueChange?.(e.target.value)}
+						value={value ?? ""}
+						onInput={(e: any) => {
+							onValueChange?.(e.currentTarget.value);
+						}}
 						class={cx(styles.input, restClass)}
 						{...otherRestProps}
 					/>

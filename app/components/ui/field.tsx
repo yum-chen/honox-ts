@@ -17,7 +17,6 @@ export function Field(props: FieldProps) {
 		defaultValue,
 		validator,
 		minLength,
-		...rest
 	} = props;
 
 	if (
@@ -31,5 +30,5 @@ export function Field(props: FieldProps) {
 		return <FieldIsland {...props} />;
 	}
 
-	return <FieldRoot {...rest} />;
+	return <FieldRoot {...props} />;
 }
