@@ -15,6 +15,7 @@ export {
 	FieldsetLegend,
 	type FieldsetProps,
 } from "./fieldset";
+export { Group, type GroupProps } from "./group";
 export { Heading, type HeadingProps } from "./heading";
 export { Switch, type SwitchProps } from "./switch";
 export { Text, type TextProps } from "./text";
