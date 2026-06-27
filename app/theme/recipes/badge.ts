@@ -3,13 +3,14 @@ import { defineRecipe } from "@pandacss/dev";
 export const badge = defineRecipe({
 	className: "badge",
 	base: {
+		display: "inline-flex",
 		alignItems: "center",
 		borderRadius: "l2",
-		display: "inline-flex",
+		lineHeight: "1",
 		fontWeight: "medium",
-		px: "2",
-		py: "0.5",
-		textStyle: "xs",
+		fontVariantNumeric: "tabular-nums",
+		whiteSpace: "nowrap",
+		userSelect: "none",
 	},
 	defaultVariants: {
 		variant: "subtle",
@@ -20,41 +21,29 @@ export const badge = defineRecipe({
 			solid: {
 				bg: "colorPalette.solid.bg",
 				color: "colorPalette.solid.fg",
-				_hover: {
-					bg: "colorPalette.solid.bg.hover",
-				},
 			},
 			subtle: {
 				bg: "colorPalette.subtle.bg",
 				color: "colorPalette.subtle.fg",
-				_hover: {
-					bg: "colorPalette.subtle.bg.hover",
-				},
 			},
 			outline: {
 				borderWidth: "1px",
 				borderColor: "colorPalette.outline.border",
 				color: "colorPalette.outline.fg",
-				_hover: {
-					bg: "colorPalette.outline.bg.hover",
-				},
 			},
 			surface: {
 				bg: "colorPalette.surface.bg",
 				color: "colorPalette.surface.fg",
 				borderWidth: "1px",
 				borderColor: "colorPalette.surface.border",
-				_hover: {
-					bg: "colorPalette.surface.active",
-				},
 			},
 		},
 		size: {
-			sm: { textStyle: "xs", px: "2", h: "5" },
-			md: { textStyle: "xs", px: "2.5", h: "6" },
-			lg: { textStyle: "sm", px: "3", h: "7" },
-			xl: { textStyle: "sm", px: "3.5", h: "8" },
-			"2xl": { textStyle: "md", px: "4", h: "10" },
+			sm: { fontSize: "xs", px: "1.5", h: "4.5", gap: "0.5" },
+			md: { fontSize: "xs", px: "2", h: "5", gap: "1" },
+			lg: { fontSize: "xs", px: "2.5", h: "5.5", gap: "1" },
+			xl: { fontSize: "sm", px: "2.5", h: "6", gap: "1.5" },
+			"2xl": { fontSize: "md", px: "3", h: "7", gap: "1.5" },
 		},
 	},
 });

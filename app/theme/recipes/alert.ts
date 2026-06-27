@@ -44,9 +44,7 @@ export const alert = defineSlotRecipe({
 					textStyle: "sm",
 				},
 				indicator: {
-					width: "5",
-					height: "5",
-					"& svg": {
+					_icon: {
 						width: "5",
 						height: "5",
 					},
@@ -59,9 +57,7 @@ export const alert = defineSlotRecipe({
 					textStyle: "md",
 				},
 				indicator: {
-					width: "6",
-					height: "6",
-					"& svg": {
+					_icon: {
 						width: "6",
 						height: "6",
 					},
@@ -99,7 +95,7 @@ export const alert = defineSlotRecipe({
 		},
 		status: {
 			info: {
-				root: { colorPalette: "cyan" },
+				root: { colorPalette: "blue" },
 			},
 			warning: {
 				root: { colorPalette: "orange" },

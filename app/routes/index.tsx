@@ -61,28 +61,100 @@ export default createRoute((c) => {
 				<Badge variant="surface" colorPalette="purple">
 					Surface
 				</Badge>
+				<Badge variant="subtle" colorPalette="orange">
+					Orange
+				</Badge>
 
 				{/* Size examples */}
-				<Badge size="sm" colorPalette="blue">
-					Small
-				</Badge>
-				<Badge size="md" colorPalette="blue">
-					Medium
-				</Badge>
-				<Badge size="lg" colorPalette="blue">
-					Large
-				</Badge>
-				<Badge size="xl" colorPalette="blue">
-					XL
-				</Badge>
-				<Badge size="2xl" colorPalette="blue">
-					2XL
-				</Badge>
+				<div
+					class={css({
+						display: "flex",
+						gap: "4",
+						alignItems: "center",
+						width: "100%",
+						justifyContent: "center",
+						mt: "4",
+					})}
+				>
+					<Badge size="sm" colorPalette="blue">
+						Small
+					</Badge>
+					<Badge size="md" colorPalette="blue">
+						Medium
+					</Badge>
+					<Badge size="lg" colorPalette="blue">
+						Large
+					</Badge>
+					<Badge size="xl" colorPalette="blue">
+						XL
+					</Badge>
+					<Badge size="2xl" colorPalette="blue">
+						2XL
+					</Badge>
+				</div>
 			</div>
 
 			<div
 				class={css({
-					mt: "8",
+					mt: "12",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<h2 class={css({ fontSize: "xl", mb: "4" })}>
+					Alert Component Examples
+				</h2>
+
+				<Alert status="info">
+					<AlertIndicator />
+					<AlertContent>
+						<AlertTitle>Info Alert (Blue)</AlertTitle>
+						<AlertDescription>This is an informational alert.</AlertDescription>
+					</AlertContent>
+				</Alert>
+
+				<Alert status="success" variant="solid">
+					<AlertIndicator />
+					<AlertContent>
+						<AlertTitle>Success Alert (Green)</AlertTitle>
+						<AlertDescription>
+							Operation completed successfully!
+						</AlertDescription>
+					</AlertContent>
+				</Alert>
+
+				<Alert status="error" variant="outline">
+					<AlertIndicator />
+					<AlertContent>
+						<AlertTitle>Error Alert (Red)</AlertTitle>
+						<AlertDescription>Something went wrong.</AlertDescription>
+					</AlertContent>
+				</Alert>
+
+				<Alert status="warning" variant="surface">
+					<AlertIndicator />
+					<AlertContent>
+						<AlertTitle>Warning Alert (Orange)</AlertTitle>
+						<AlertDescription>Please be careful.</AlertDescription>
+					</AlertContent>
+				</Alert>
+
+				<Alert variant="subtle" colorPalette="purple">
+					<AlertIndicator />
+					<AlertContent>
+						<AlertTitle>Custom Alert (Purple)</AlertTitle>
+						<AlertDescription>Using a custom color palette.</AlertDescription>
+					</AlertContent>
+				</Alert>
+			</div>
+
+			<div
+				class={css({
+					mt: "12",
 					display: "flex",
 					flexDirection: "column",
 					gap: "4",
@@ -114,7 +186,7 @@ export default createRoute((c) => {
 
 			<div
 				class={css({
-					mt: "8",
+					mt: "12",
 					display: "flex",
 					flexDirection: "column",
 					gap: "4",
@@ -140,49 +212,7 @@ export default createRoute((c) => {
 
 			<div
 				class={css({
-					mt: "8",
-					display: "flex",
-					flexDirection: "column",
-					gap: "4",
-					alignItems: "center",
-					maxWidth: "xl",
-					mx: "auto",
-				})}
-			>
-				<h2 class={css({ fontSize: "xl", mb: "4" })}>
-					Alert Component Examples
-				</h2>
-
-				<Alert status="info">
-					<AlertIndicator />
-					<AlertContent>
-						<AlertTitle>Info Alert</AlertTitle>
-						<AlertDescription>This is an informational alert.</AlertDescription>
-					</AlertContent>
-				</Alert>
-
-				<Alert status="success" variant="solid">
-					<AlertIndicator />
-					<AlertContent>
-						<AlertTitle>Success Alert</AlertTitle>
-						<AlertDescription>
-							Operation completed successfully!
-						</AlertDescription>
-					</AlertContent>
-				</Alert>
-
-				<Alert status="error" variant="outline">
-					<AlertIndicator />
-					<AlertContent>
-						<AlertTitle>Error Alert</AlertTitle>
-						<AlertDescription>Something went wrong.</AlertDescription>
-					</AlertContent>
-				</Alert>
-			</div>
-
-			<div
-				class={css({
-					mt: "8",
+					mt: "12",
 					display: "flex",
 					flexDirection: "column",
 					gap: "8",
@@ -232,7 +262,7 @@ export default createRoute((c) => {
 
 			<div
 				class={css({
-					mt: "8",
+					mt: "12",
 					display: "flex",
 					flexDirection: "column",
 					gap: "8",
