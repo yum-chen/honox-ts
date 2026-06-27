@@ -112,36 +112,7 @@ export default createRoute((c) => {
 					Field Component Examples
 				</h2>
 
-				<Field>
-					<label>Username *</label>
-					<input
-						type="text"
-						placeholder="Enter your username"
-						class={css({
-							borderWidth: "1px",
-							borderColor: "border",
-							borderRadius: "md",
-							px: "3",
-							py: "2",
-						})}
-					/>
-					<div>Keep it unique.</div>
-				</Field>
-
-				<Field>
-					<label>Email</label>
-					<input
-						type="email"
-						placeholder="Enter your email"
-						class={css({
-							borderWidth: "1px",
-							borderColor: "border.error",
-							borderRadius: "md",
-							px: "3",
-							py: "2",
-						})}
-					/>
-					<div>Invalid email address.</div>
+				<Field label="Email" validator={(value) => value.includes("@")} errorText="Must be a valid email" type="email" placeholder="Enter your email">
 				</Field>
 			</div>
 		</div>,
