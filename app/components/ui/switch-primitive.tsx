@@ -10,6 +10,7 @@ export interface SwitchProps extends SwitchRecipeVariantProps {
 	disabled?: boolean;
 	invalid?: boolean;
 	required?: boolean;
+	readOnly?: boolean;
 	name?: string;
 	value?: string;
 	onCheckedChange?: (details: { checked: boolean }) => void;
@@ -27,6 +28,7 @@ export function Switch(props: SwitchProps) {
 		disabled: disabledProp = field?.disabled,
 		invalid: invalidProp = field?.invalid,
 		required: requiredProp = field?.required,
+		readOnly: readOnlyProp = field?.readOnly,
 		name,
 		value = "on",
 		onCheckedChange,
@@ -36,10 +38,10 @@ export function Switch(props: SwitchProps) {
 
 	const styles = switchRecipe(variantProps);
 
-	const toggle = () => {
-		if (disabledProp) return;
-		onCheckedChange?.({ checked: !checked });
-	};
+	const describedBy = [];
+	if (field?.hasHelperText) describedBy.push(field.helperTextId);
+	if (field?.invalid && field?.hasErrorText)
+		describedBy.push(field.errorTextId);
 
 	const labelId = `switch::${idProp}::label`;
 
@@ -48,11 +50,15 @@ export function Switch(props: SwitchProps) {
 			class={cx(styles.root, classProp)}
 			data-disabled={disabledProp ? "" : undefined}
 			data-invalid={invalidProp ? "" : undefined}
-			data-checked={checked ? "" : undefined}
+			data-readonly={readOnlyProp ? "" : undefined}
+			data-state={checked ? "checked" : "unchecked"}
 			{...restProps}
 		>
 			<input
 				type="checkbox"
+				role="switch"
+				aria-checked={checked}
+				class="peer"
 				style={{
 					border: "0",
 					clip: "rect(0 0 0 0)",
@@ -69,40 +75,33 @@ export function Switch(props: SwitchProps) {
 				checked={checked}
 				disabled={disabledProp}
 				required={requiredProp}
+				aria-readonly={readOnlyProp}
+				aria-invalid={invalidProp || undefined}
+				aria-describedby={
+					describedBy.length > 0 ? describedBy.join(" ") : undefined
+				}
 				id={idProp}
 				onChange={(e) => {
+					if (readOnlyProp) return;
 					if (e.target instanceof HTMLInputElement) {
 						onCheckedChange?.({ checked: e.target.checked });
 					}
 				}}
 			/>
 			<div
-				class={styles.control}
-				onClick={(e) => {
-					e.stopPropagation();
-					toggle();
-				}}
+				class={cx(styles.control, "peer")}
+				aria-hidden="true"
 				data-disabled={disabledProp ? "" : undefined}
 				data-invalid={invalidProp ? "" : undefined}
-				data-checked={checked ? "" : undefined}
-				role="switch"
-				aria-checked={checked}
-				aria-disabled={disabledProp}
-				aria-invalid={invalidProp}
-				aria-labelledby={children ? labelId : undefined}
-				tabIndex={disabledProp ? -1 : 0}
-				onKeyDown={(e) => {
-					if (e.key === " " || e.key === "Enter") {
-						e.preventDefault();
-						toggle();
-					}
-				}}
+				data-readonly={readOnlyProp ? "" : undefined}
+				data-state={checked ? "checked" : "unchecked"}
 			>
 				<div
 					class={styles.thumb}
 					data-disabled={disabledProp ? "" : undefined}
 					data-invalid={invalidProp ? "" : undefined}
-					data-checked={checked ? "" : undefined}
+					data-readonly={readOnlyProp ? "" : undefined}
+					data-state={checked ? "checked" : "unchecked"}
 				/>
 			</div>
 			{children && (
@@ -111,7 +110,8 @@ export function Switch(props: SwitchProps) {
 					class={styles.label}
 					data-disabled={disabledProp ? "" : undefined}
 					data-invalid={invalidProp ? "" : undefined}
-					data-checked={checked ? "" : undefined}
+					data-readonly={readOnlyProp ? "" : undefined}
+					data-state={checked ? "checked" : "unchecked"}
 				>
 					{children}
 				</span>

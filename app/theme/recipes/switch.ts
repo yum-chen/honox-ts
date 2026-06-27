@@ -20,10 +20,23 @@ export const switchRecipe = defineSlotRecipe({
 			flexShrink: 0,
 			height: "6",
 			transitionDuration: "fast",
-			transitionProperty: "background",
+			transitionProperty: "background, box-shadow",
 			width: "11",
+			_peerFocusVisible: {
+				outline: "2px solid",
+				outlineColor: "colorPalette.solid.bg",
+				outlineOffset: "2px",
+			},
 			_checked: {
 				background: "colorPalette.solid.bg",
+			},
+			_disabled: {
+				opacity: 0.5,
+				cursor: "not-allowed",
+			},
+			_invalid: {
+				outline: "2px solid",
+				outlineColor: "error",
 			},
 		},
 		thumb: {

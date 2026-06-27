@@ -21,13 +21,21 @@ export const checkbox = defineSlotRecipe({
 			borderWidth: "1px",
 			borderColor: "border.default",
 			bg: "bg.default",
-			transition: "all 0.2s",
+			transitionDuration: "normal",
+			transitionProperty: "border-color, background, box-shadow",
 			width: "var(--checkbox-size)",
 			height: "var(--checkbox-size)",
+			_hover: {
+				borderColor: "border.emphasized",
+			},
 			_checked: {
 				bg: "colorPalette.solid.bg",
 				borderColor: "colorPalette.solid.bg",
 				color: "colorPalette.solid.fg",
+				_hover: {
+					bg: "colorPalette.solid.bg",
+					borderColor: "colorPalette.solid.bg",
+				},
 			},
 			_indeterminate: {
 				bg: "colorPalette.solid.bg",
@@ -40,6 +48,11 @@ export const checkbox = defineSlotRecipe({
 			},
 			_invalid: {
 				borderColor: "error",
+			},
+			_peerFocusVisible: {
+				outline: "2px solid",
+				outlineColor: "colorPalette.solid.bg",
+				outlineOffset: "2px",
 			},
 		},
 		label: {

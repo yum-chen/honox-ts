@@ -12,6 +12,7 @@ export interface CheckboxProps extends CheckboxVariantProps {
 	disabled?: boolean;
 	invalid?: boolean;
 	required?: boolean;
+	readOnly?: boolean;
 	id?: string;
 	name?: string;
 	value?: string;
@@ -29,6 +30,7 @@ export function Checkbox(props: CheckboxProps) {
 		disabled = field?.disabled,
 		invalid = field?.invalid,
 		required = field?.required,
+		readOnly = field?.readOnly,
 		id = field?.id,
 		name,
 		value = "on",
@@ -43,7 +45,8 @@ export function Checkbox(props: CheckboxProps) {
 		}
 	}, [checked]);
 
-	const handleChange = (e: any) => {
+	const handleChange = (e: Event) => {
+		if (readOnly) return;
 		const target = e.target as HTMLInputElement;
 		onCheckedChange?.({ checked: target.checked });
 	};
@@ -53,11 +56,17 @@ export function Checkbox(props: CheckboxProps) {
 	const isChecked = checked === true;
 	const isIndeterminate = checked === "indeterminate";
 
+	const describedBy = [];
+	if (field?.hasHelperText) describedBy.push(field.helperTextId);
+	if (field?.invalid && field?.hasErrorText)
+		describedBy.push(field.errorTextId);
+
 	return (
 		<label
-			class={cx(styles.root, classProp)}
+			class={cx(styles.root, classProp, "peer")}
 			data-disabled={disabled ? "" : undefined}
 			data-invalid={invalid ? "" : undefined}
+			data-readonly={readOnly ? "" : undefined}
 			data-state={
 				isIndeterminate ? "indeterminate" : isChecked ? "checked" : "unchecked"
 			}
@@ -66,6 +75,7 @@ export function Checkbox(props: CheckboxProps) {
 			<input
 				ref={inputRef}
 				type="checkbox"
+				class="peer"
 				style={{
 					border: "0",
 					clip: "rect(0 0 0 0)",
@@ -83,6 +93,11 @@ export function Checkbox(props: CheckboxProps) {
 				onChange={handleChange}
 				disabled={disabled}
 				required={required}
+				aria-readonly={readOnly}
+				aria-invalid={invalid || undefined}
+				aria-describedby={
+					describedBy.length > 0 ? describedBy.join(" ") : undefined
+				}
 				id={id}
 				data-state={
 					isIndeterminate
@@ -93,9 +108,10 @@ export function Checkbox(props: CheckboxProps) {
 				}
 			/>
 			<div
-				class={styles.control}
+				class={cx(styles.control, "peer")}
 				data-disabled={disabled ? "" : undefined}
 				data-invalid={invalid ? "" : undefined}
+				data-readonly={readOnly ? "" : undefined}
 				data-state={
 					isIndeterminate
 						? "indeterminate"
@@ -139,6 +155,7 @@ export function Checkbox(props: CheckboxProps) {
 					class={styles.label}
 					data-disabled={disabled ? "" : undefined}
 					data-invalid={invalid ? "" : undefined}
+					data-readonly={readOnly ? "" : undefined}
 					data-state={
 						isIndeterminate
 							? "indeterminate"

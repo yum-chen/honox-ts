@@ -70,7 +70,9 @@ export function Fieldset(props: FieldsetProps) {
 				class={cx(styles.root, classProp)}
 				disabled={disabled}
 				aria-describedby={describedBy.join(" ")}
+				aria-invalid={invalid ? "true" : undefined}
 				data-invalid={invalid ? "" : undefined}
+				data-disabled={disabled ? "" : undefined}
 				{...restProps}
 			>
 				{children}

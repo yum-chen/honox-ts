@@ -35,10 +35,18 @@ export default createRoute((c) => {
 					Badge Component Examples
 				</Heading>
 
-				<Badge variant="solid" colorPalette="blue">Solid</Badge>
-				<Badge variant="subtle" colorPalette="green">Subtle</Badge>
-				<Badge variant="outline" colorPalette="red">Outline</Badge>
-				<Badge variant="surface" colorPalette="purple">Surface</Badge>
+				<Badge variant="solid" colorPalette="blue">
+					Solid
+				</Badge>
+				<Badge variant="subtle" colorPalette="green">
+					Subtle
+				</Badge>
+				<Badge variant="outline" colorPalette="red">
+					Outline
+				</Badge>
+				<Badge variant="surface" colorPalette="purple">
+					Surface
+				</Badge>
 			</div>
 
 			{/* Text Examples */}
@@ -105,9 +113,7 @@ export default createRoute((c) => {
 				</h2>
 
 				<Field>
-					<label>
-						Username *
-					</label>
+					<label>Username *</label>
 					<input
 						type="text"
 						placeholder="Enter your username"
