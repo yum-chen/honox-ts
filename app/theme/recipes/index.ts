@@ -1,6 +1,7 @@
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { badge } from "./badge";
+import { button } from "./button";
 import { checkbox } from "./checkbox";
 import { field } from "./field";
 import { fieldset } from "./fieldset";
@@ -14,6 +15,7 @@ import { textarea } from "./textarea";
 export const recipes = {
 	absoluteCenter,
 	badge,
+	button,
 	group,
 	heading,
 	text,
