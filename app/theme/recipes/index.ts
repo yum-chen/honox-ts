@@ -18,9 +18,9 @@ export const recipes = {
 	button,
 	group,
 	heading,
+	spinner,
 	text,
 	textarea,
-	spinner,
 };
 
 export const slotRecipes = {
