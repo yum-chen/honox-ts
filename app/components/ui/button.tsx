@@ -6,24 +6,25 @@ import { Spinner } from "./spinner";
 
 export interface ButtonProps
 	extends ButtonVariantProps,
-		PropsWithChildren<{
-			class?: string;
-			loading?: boolean;
-			loadingText?: string;
-			type?: "button" | "submit" | "reset";
-			colorPalette?:
-				| "blue"
-				| "green"
-				| "red"
-				| "purple"
-				| "orange"
-				| "cyan"
-				| "yellow"
-				| "pink"
-				| "teal"
-				| "indigo"
-				| "gray";
-		}> {}
+		PropsWithChildren<
+			Omit<JSX.IntrinsicElements["button"], "color"> & {
+				class?: string;
+				loading?: boolean;
+				loadingText?: string;
+				colorPalette?:
+					| "blue"
+					| "green"
+					| "red"
+					| "purple"
+					| "orange"
+					| "cyan"
+					| "yellow"
+					| "pink"
+					| "teal"
+					| "indigo"
+					| "gray";
+			}
+		> {}
 
 export function Button(props: ButtonProps) {
 	const [variantProps, localProps] = button.splitVariantProps(props);
@@ -32,14 +33,14 @@ export function Button(props: ButtonProps) {
 		class: classProp,
 		loading,
 		loadingText,
-		type = "button",
 		colorPalette,
 		...restProps
 	} = localProps;
 
 	return (
 		<button
-			type={type}
+			type="button"
+			{...(restProps as JSX.IntrinsicElements["button"])}
 			class={cx(
 				button(variantProps),
 				css({ colorPalette: colorPalette || "gray" }),
@@ -47,7 +48,6 @@ export function Button(props: ButtonProps) {
 			)}
 			disabled={loading || restProps.disabled}
 			data-loading={loading ? "" : undefined}
-			{...(restProps as JSX.IntrinsicElements["button"])}
 		>
 			{loading ? (
 				<>
