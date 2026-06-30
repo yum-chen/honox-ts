@@ -3,9 +3,11 @@ import { css } from "../../styled-system/css";
 import {
 	Alert,
 	AlertIcon,
+	AbsoluteCenter,
 	Badge,
 	Button,
 	Field,
+	Group,
 	Heading,
 	Spinner,
 	Text,
@@ -162,6 +164,91 @@ export default createRoute((c) => {
 					<Spinner size="md" />
 					<Spinner size="lg" />
 					<Spinner size="xl" />
+				</div>
+			</div>
+
+			{/* Group Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Group Component Examples
+				</Heading>
+
+				<div class={css({ display: "flex", flexDirection: "column", gap: "8" })}>
+					<div class={css({ textAlign: "center" })}>
+						<Text size="sm" class={css({ mb: "2", color: "fg.muted" })}>
+							Attached Group
+						</Text>
+						<Group attached>
+							<Button variant="outline">First</Button>
+							<Button variant="outline">Second</Button>
+							<Button variant="outline">Third</Button>
+						</Group>
+					</div>
+
+					<div class={css({ textAlign: "center" })}>
+						<Text size="sm" class={css({ mb: "2", color: "fg.muted" })}>
+							Grow Group
+						</Text>
+						<Group grow class={css({ width: "400px" })}>
+							<Button variant="solid">Left</Button>
+							<Button variant="solid">Right</Button>
+						</Group>
+					</div>
+
+					<div class={css({ textAlign: "center" })}>
+						<Text size="sm" class={css({ mb: "2", color: "fg.muted" })}>
+							Vertical Group
+						</Text>
+						<Group orientation="vertical">
+							<Button variant="outline">Top</Button>
+							<Button variant="outline">Bottom</Button>
+						</Group>
+					</div>
+				</div>
+			</div>
+
+			{/* AbsoluteCenter Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					AbsoluteCenter Component Examples
+				</Heading>
+
+				<div
+					class={css({
+						position: "relative",
+						height: "150px",
+						width: "300px",
+						borderWidth: "1px",
+						borderColor: "border",
+						borderRadius: "md",
+						bg: "bg.subtle",
+					})}
+				>
+					<AbsoluteCenter>
+						<Badge variant="solid" colorPalette="blue">
+							Centered Content
+						</Badge>
+					</AbsoluteCenter>
 				</div>
 			</div>
 
