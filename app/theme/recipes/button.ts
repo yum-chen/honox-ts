@@ -25,7 +25,8 @@ export const button = defineRecipe({
 			flexShrink: "0",
 		},
 		_disabled: {
-			layerStyle: "disabled",
+			opacity: 0.5,
+			cursor: "not-allowed",
 		},
 		focusVisibleRing: "outside",
 	},

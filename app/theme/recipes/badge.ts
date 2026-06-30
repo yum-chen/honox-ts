@@ -3,13 +3,14 @@ import { defineRecipe } from "@pandacss/dev";
 export const badge = defineRecipe({
 	className: "badge",
 	base: {
+		display: "inline-flex",
 		alignItems: "center",
 		borderRadius: "l2",
-		display: "inline-flex",
+		lineHeight: "1",
 		fontWeight: "medium",
-		px: "2",
-		py: "0.5",
-		textStyle: "xs",
+		fontVariantNumeric: "tabular-nums",
+		whiteSpace: "nowrap",
+		userSelect: "none",
 	},
 	defaultVariants: {
 		variant: "subtle",
@@ -50,11 +51,11 @@ export const badge = defineRecipe({
 			},
 		},
 		size: {
-			sm: { textStyle: "xs", px: "2", h: "5" },
-			md: { textStyle: "xs", px: "2.5", h: "6" },
-			lg: { textStyle: "sm", px: "3", h: "7" },
-			xl: { textStyle: "sm", px: "3.5", h: "8" },
-			"2xl": { textStyle: "md", px: "4", h: "10" },
+			sm: { fontSize: "xs", px: "1.5", h: "4.5", gap: "0.5", _icon: { boxSize: "2.5" } },
+			md: { fontSize: "xs", px: "2", h: "5", gap: "1", _icon: { boxSize: "3" } },
+			lg: { fontSize: "xs", px: "2.5", h: "5.5", gap: "1", _icon: { boxSize: "3.5" } },
+			xl: { fontSize: "sm", px: "2.5", h: "6", gap: "1.5", _icon: { boxSize: "4" } },
+			"2xl": { fontSize: "md", px: "3", h: "7", gap: "1.5", _icon: { boxSize: "4.5" } },
 		},
 	},
 });
