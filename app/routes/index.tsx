@@ -140,9 +140,7 @@ export default createRoute((c) => {
 					<Button loading loadingText="Loading...">
 						Click me
 					</Button>
-					<Button loading>
-						Spinner only
-					</Button>
+					<Button loading>Spinner only</Button>
 				</div>
 			</div>
 
