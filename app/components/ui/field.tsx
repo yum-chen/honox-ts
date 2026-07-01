@@ -1,3 +1,4 @@
+import type { Child } from "hono/jsx";
 import FieldIsland from "../../islands/field";
 import {
 	type FieldProps as BaseFieldProps,
@@ -33,4 +34,16 @@ export function Field(props: FieldProps) {
 	}
 
 	return <FieldRoot {...props} />;
+}
+
+export {
+	FieldErrorText,
+	FieldHelperText,
+	FieldLabel,
+	FieldRequiredIndicator,
+	FieldRoot,
+} from "./field-primitive";
+
+export function FieldGroup(props: { children: Child; [key: string]: unknown }) {
+	return props.children;
 }

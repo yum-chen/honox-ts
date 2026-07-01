@@ -1,4 +1,10 @@
-import { createContext, useContext, useId, useState } from "hono/jsx";
+import {
+	type Child,
+	createContext,
+	useContext,
+	useId,
+	useState,
+} from "hono/jsx";
 import { cx } from "../../../styled-system/css";
 import type { FieldVariantProps } from "../../../styled-system/recipes";
 import { field } from "../../../styled-system/recipes";
@@ -23,21 +29,23 @@ interface FieldContextValue {
 const FieldContext = createContext<FieldContextValue | null>(null);
 
 export interface FieldProps extends FieldVariantProps {
-	children?: any;
+	children?: Child;
 	class?: string;
 	id?: string;
 	disabled?: boolean;
 	invalid?: boolean;
 	readOnly?: boolean;
 	required?: boolean;
-	label?: string | any;
-	helperText?: string | any;
-	errorText?: string | any;
+	label?: Child;
+	helperText?: Child;
+	errorText?: Child;
 	value?: string;
 	onValueChange?: (value: string) => void;
 	minLength?: number;
 	validator?: (value: string) => boolean | string;
-	[key: string]: any;
+	interactive?: boolean;
+	defaultValue?: string;
+	[key: string]: unknown;
 }
 
 export const useFieldContext = () => useContext(FieldContext);
@@ -82,7 +90,7 @@ export function FieldRoot(props: FieldProps) {
 				isInvalid = true;
 				errorText = result;
 			}
-		} else if (minLength !== undefined && value !== undefined) {
+		} else if (minLength !== undefined && value !== undefined && value !== "") {
 			if (value.length < minLength) {
 				isInvalid = true;
 				errorText = `Must be at least ${minLength} characters`;
@@ -104,7 +112,9 @@ export function FieldRoot(props: FieldProps) {
 		errorTextId: `field::${id}::error-text`,
 		hasHelperText: !!helperText,
 		hasErrorText: !!(errorTextProp || errorText),
-		errorText: errorText || errorTextProp,
+		errorText:
+			errorText ||
+			(typeof errorTextProp === "string" ? errorTextProp : undefined),
 	};
 
 	const describedBy = [
@@ -136,7 +146,9 @@ export function FieldRoot(props: FieldProps) {
 				data-invalid={isInvalid ? "" : undefined}
 				data-readonly={readOnly ? "" : undefined}
 				data-required={required ? "" : undefined}
-				{...(!isChildrenEmpty ? otherRestProps : {})}
+				{...(!isChildrenEmpty
+					? (otherRestProps as Record<string, unknown>)
+					: {})}
 			>
 				{label && <FieldLabel>{label}</FieldLabel>}
 				{!isChildrenEmpty ? (
@@ -151,11 +163,11 @@ export function FieldRoot(props: FieldProps) {
 						aria-describedby={describedBy || undefined}
 						value={value}
 						defaultValue={defaultValue}
-						onInput={(e: any) => {
-							onValueChange?.(e.currentTarget.value);
+						onInput={(e) => {
+							onValueChange?.((e.target as HTMLInputElement).value);
 						}}
-						class={cx(styles.input, restClass)}
-						{...otherRestProps}
+						class={cx(styles.input, restClass as string)}
+						{...(otherRestProps as Record<string, unknown>)}
 					/>
 				)}
 				{helperText && <FieldHelperText>{helperText}</FieldHelperText>}
@@ -166,10 +178,10 @@ export function FieldRoot(props: FieldProps) {
 }
 
 export function FieldLabel(props: {
-	children?: any;
+	children?: Child;
 	class?: string;
 	for?: string;
-	[key: string]: any;
+	[key: string]: unknown;
 }) {
 	const context = useFieldContext();
 	const styles = field();
@@ -183,7 +195,7 @@ export function FieldLabel(props: {
 			data-readonly={context?.readOnly ? "" : undefined}
 			data-required={context?.required ? "" : undefined}
 			class={cx(styles.label, classProp)}
-			{...rest}
+			{...(rest as Record<string, unknown>)}
 		>
 			{children}
 			{context?.required && <FieldRequiredIndicator />}
@@ -191,7 +203,7 @@ export function FieldLabel(props: {
 	);
 }
 
-export function FieldHelperText(props: { children?: any; class?: string }) {
+export function FieldHelperText(props: { children?: Child; class?: string }) {
 	const context = useFieldContext();
 	const styles = field();
 	return (
@@ -208,7 +220,7 @@ export function FieldHelperText(props: { children?: any; class?: string }) {
 	);
 }
 
-export function FieldErrorText(props: { children?: any; class?: string }) {
+export function FieldErrorText(props: { children?: Child; class?: string }) {
 	const context = useFieldContext();
 	const styles = field();
 	if (context?.invalid) {
@@ -229,7 +241,7 @@ export function FieldErrorText(props: { children?: any; class?: string }) {
 }
 
 export function FieldRequiredIndicator(props: {
-	children?: any;
+	children?: Child;
 	class?: string;
 }) {
 	const context = useFieldContext();
