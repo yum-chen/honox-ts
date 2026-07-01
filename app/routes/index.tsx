@@ -10,6 +10,7 @@ import {
 	Spinner,
 	Text,
 } from "../components/ui";
+import Counter from "../islands/counter";
 
 export default createRoute((c) => {
 	const name = c.req.query("name") ?? "Hono";
@@ -141,13 +142,7 @@ export default createRoute((c) => {
 						Click me
 					</Button>
 					<Button loading>Spinner only</Button>
-					<Button
-						interactive
-						onClick={() => alert("Button clicked!")}
-						colorPalette="orange"
-					>
-						Interactive Alert
-					</Button>
+					<Button colorPalette="orange">Not actually interactive</Button>
 				</div>
 			</div>
 
@@ -170,6 +165,24 @@ export default createRoute((c) => {
 					<Spinner size="lg" />
 					<Spinner size="xl" />
 				</div>
+			</div>
+
+			{/* Island Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Interactive Island Examples
+				</Heading>
+				<Counter />
 			</div>
 
 			{/* Field Examples - using plain HTML to isolate */}

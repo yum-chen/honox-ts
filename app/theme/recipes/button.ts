@@ -83,6 +83,9 @@ export const button = defineRecipe({
 				_on: {
 					bg: "colorPalette.outline.bg.active",
 				},
+				_icon: {
+					color: "colorPalette.outline.fg",
+				},
 			},
 			plain: {
 				color: "colorPalette.plain.fg",
