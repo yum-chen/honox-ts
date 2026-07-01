@@ -141,6 +141,13 @@ export default createRoute((c) => {
 						Click me
 					</Button>
 					<Button loading>Spinner only</Button>
+					<Button
+						interactive
+						onClick={() => alert("Button clicked!")}
+						colorPalette="orange"
+					>
+						Interactive Alert
+					</Button>
 				</div>
 			</div>
 

@@ -43,7 +43,7 @@ export const spinner = defineRecipe({
 			},
 			inherit: {
 				boxSize: "inherit",
-				borderWidth: "1.25em",
+				borderWidth: "0.125em",
 			},
 		},
 	},

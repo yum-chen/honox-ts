@@ -3,6 +3,7 @@ import { amber } from "./colors/amber";
 import { blue } from "./colors/blue";
 import { cyan } from "./colors/cyan";
 import { green } from "./colors/green";
+import { orange } from "./colors/orange";
 import { purple } from "./colors/purple";
 import { red } from "./colors/red";
 import { slate } from "./colors/slate";
@@ -90,6 +91,7 @@ const config = {
 			cyan,
 			gray: slate,
 			green,
+			orange,
 			purple,
 			red,
 			amber,
