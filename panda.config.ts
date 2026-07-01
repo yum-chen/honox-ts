@@ -1,5 +1,5 @@
-import { amber } from "app/theme/colors/amber";
 import { defineConfig } from "@pandacss/dev";
+import { amber } from "app/theme/colors/amber";
 import * as theme from "./app/theme";
 
 export default defineConfig({

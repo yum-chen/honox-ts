@@ -6,62 +6,36 @@ export const checkbox = defineSlotRecipe({
 	base: {
 		root: {
 			display: "inline-flex",
+			gap: "2",
 			alignItems: "center",
-			gap: "3",
+			verticalAlign: "top",
 			position: "relative",
-			verticalAlign: "middle",
-			cursor: "pointer",
+			_disabled: {
+				layerStyle: "disabled",
+			},
 		},
 		control: {
-			display: "flex",
+			display: "inline-flex",
 			alignItems: "center",
 			justifyContent: "center",
 			flexShrink: 0,
-			borderRadius: "sm",
 			borderWidth: "1px",
-			borderColor: "border.default",
-			bg: "bg.default",
+			borderColor: "transparent",
+			borderRadius: "l1",
+			cursor: "pointer",
 			transitionDuration: "normal",
 			transitionProperty: "border-color, background, box-shadow",
-			width: "var(--checkbox-size)",
-			height: "var(--checkbox-size)",
-			_hover: {
-				borderColor: "border.emphasized",
-			},
-			_checked: {
-				bg: "colorPalette.solid.bg",
-				borderColor: "colorPalette.solid.bg",
-				color: "colorPalette.solid.fg",
-				_hover: {
-					bg: "colorPalette.solid.bg",
-					borderColor: "colorPalette.solid.bg",
-				},
-			},
-			_indeterminate: {
-				bg: "colorPalette.solid.bg",
-				borderColor: "colorPalette.solid.bg",
-				color: "colorPalette.solid.fg",
-			},
-			_disabled: {
-				opacity: 0.5,
-				cursor: "not-allowed",
+			focusVisibleRing: "outside",
+			_icon: {
+				boxSize: "full",
 			},
 			_invalid: {
 				borderColor: "error",
-			},
-			_peerFocusVisible: {
-				outline: "2px solid",
-				outlineColor: "colorPalette.solid.bg",
-				outlineOffset: "2px",
 			},
 		},
 		label: {
 			fontWeight: "medium",
 			userSelect: "none",
-			_disabled: {
-				opacity: 0.5,
-				cursor: "not-allowed",
-			},
 		},
 		indicator: {
 			display: "flex",
@@ -69,10 +43,6 @@ export const checkbox = defineSlotRecipe({
 			justifyContent: "center",
 			width: "full",
 			height: "full",
-			"& svg": {
-				width: "100%",
-				height: "100%",
-			},
 		},
 		group: {
 			display: "flex",
@@ -81,30 +51,75 @@ export const checkbox = defineSlotRecipe({
 		},
 	},
 	defaultVariants: {
+		variant: "solid",
 		size: "md",
 	},
 	variants: {
+		variant: {
+			solid: {
+				control: {
+					borderColor: "border",
+					_checked: {
+						bg: "colorPalette.solid.bg",
+						borderColor: "colorPalette.solid.bg",
+						color: "colorPalette.solid.fg",
+					},
+					_invalid: {
+						background: "error",
+					},
+				},
+			},
+			surface: {
+				control: {
+					bg: "colorPalette.surface.bg",
+					borderWidth: "1px",
+					borderColor: "colorPalette.surface.border",
+					color: "colorPalette.surface.fg",
+					_checked: {
+						borderColor: "colorPalette.solid.bg",
+					},
+				},
+			},
+			subtle: {
+				control: {
+					bg: "colorPalette.subtle.bg",
+					color: "colorPalette.subtle.fg",
+					_checked: {
+						borderColor: "colorPalette.solid.bg",
+					},
+				},
+			},
+			outline: {
+				control: {
+					borderWidth: "1px",
+					borderColor: "colorPalette.outline.border",
+					color: "colorPalette.outline.fg",
+					_checked: {
+						borderColor: "colorPalette.solid.bg",
+					},
+				},
+			},
+			plain: {
+				control: {
+					color: "colorPalette.plain.fg",
+				},
+			},
+		},
 		size: {
 			sm: {
-				root: {
-					gap: "2",
-					"--checkbox-size": "sizes.4",
-				},
-				label: { fontSize: "sm" },
+				root: { gap: "2" },
+				label: { textStyle: "sm" },
+				control: { boxSize: "4.5", _icon: { boxSize: "3" } },
 			},
 			md: {
-				root: {
-					gap: "3",
-					"--checkbox-size": "sizes.5",
-				},
-				label: { fontSize: "md" },
+				root: { gap: "3" },
+				label: { textStyle: "md" },
+				control: { boxSize: "5", _icon: { boxSize: "3.5" } },
 			},
 			lg: {
-				root: {
-					gap: "4",
-					"--checkbox-size": "sizes.6",
-				},
-				label: { fontSize: "lg" },
+				root: { gap: "3" },
+				label: { textStyle: "lg" },
+				control: { boxSize: "5.5", _icon: { boxSize: "4" } },
 			},
 		},
 	},
