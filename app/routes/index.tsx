@@ -100,9 +100,9 @@ export default createRoute((c) => {
 				class={css({
 					mt: "8",
 					display: "flex",
+					flexDirection: "column",
 					gap: "4",
-					flexWrap: "wrap",
-					justifyContent: "center",
+					alignItems: "center",
 				})}
 			>
 				<Heading
@@ -112,18 +112,104 @@ export default createRoute((c) => {
 					Badge Component Examples
 				</Heading>
 
-				<Badge variant="solid" colorPalette="blue">
-					Solid
-				</Badge>
-				<Badge variant="subtle" colorPalette="green">
-					Subtle
-				</Badge>
-				<Badge variant="outline" colorPalette="red">
-					Outline
-				</Badge>
-				<Badge variant="surface" colorPalette="purple">
-					Surface
-				</Badge>
+				{/* Semantic Colors */}
+				<Text size="sm" class={css({ color: "fg.muted", width: "100%", textAlign: "left" })}>
+					Semantic Colors
+				</Text>
+				<div
+					class={css({
+						display: "flex",
+						gap: "4",
+						flexWrap: "wrap",
+						justifyContent: "center",
+						width: "100%",
+					})}
+				>
+					<Badge variant="solid" colorPalette="red">
+						Error
+					</Badge>
+					<Badge variant="solid" colorPalette="green">
+						Success
+					</Badge>
+					<Badge variant="solid" colorPalette="orange">
+						Warning
+					</Badge>
+					<Badge variant="solid" colorPalette="blue">
+						Info
+					</Badge>
+				</div>
+
+				{/* All Color Palettes */}
+				<Text
+					size="sm"
+					class={css({ color: "fg.muted", width: "100%", textAlign: "left", mt: "4" })}
+				>
+					All Color Palettes
+				</Text>
+				<div
+					class={css({
+						display: "flex",
+						gap: "4",
+						flexWrap: "wrap",
+						justifyContent: "center",
+						width: "100%",
+					})}
+				>
+					<Badge variant="subtle" colorPalette="red">
+						Red
+					</Badge>
+					<Badge variant="subtle" colorPalette="orange">
+						Orange
+					</Badge>
+					<Badge variant="subtle" colorPalette="amber">
+						Amber
+					</Badge>
+					<Badge variant="subtle" colorPalette="green">
+						Green
+					</Badge>
+					<Badge variant="subtle" colorPalette="blue">
+						Blue
+					</Badge>
+					<Badge variant="subtle" colorPalette="cyan">
+						Cyan
+					</Badge>
+					<Badge variant="subtle" colorPalette="purple">
+						Purple
+					</Badge>
+					<Badge variant="subtle" colorPalette="slate">
+						Slate
+					</Badge>
+				</div>
+
+				{/* Variants */}
+				<Text
+					size="sm"
+					class={css({ color: "fg.muted", width: "100%", textAlign: "left", mt: "4" })}
+				>
+					Variants (Blue)
+				</Text>
+				<div
+					class={css({
+						display: "flex",
+						gap: "4",
+						flexWrap: "wrap",
+						justifyContent: "center",
+						width: "100%",
+					})}
+				>
+					<Badge variant="solid" colorPalette="blue">
+						Solid
+					</Badge>
+					<Badge variant="subtle" colorPalette="blue">
+						Subtle
+					</Badge>
+					<Badge variant="outline" colorPalette="blue">
+						Outline
+					</Badge>
+					<Badge variant="surface" colorPalette="blue">
+						Surface
+					</Badge>
+				</div>
 			</div>
 
 			{/* Spinner Examples */}
