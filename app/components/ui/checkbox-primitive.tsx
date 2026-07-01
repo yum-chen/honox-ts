@@ -61,6 +61,12 @@ export function Checkbox(props: CheckboxProps) {
 	if (field?.invalid && field?.hasErrorText)
 		describedBy.push(field.errorTextId);
 
+	const dataState = isIndeterminate
+		? "indeterminate"
+		: isChecked
+			? "checked"
+			: "unchecked";
+
 	return (
 		<label
 			class={cx(styles.root, classProp)}
@@ -68,9 +74,7 @@ export function Checkbox(props: CheckboxProps) {
 			data-invalid={invalid ? "" : undefined}
 			data-readonly={readOnly ? "" : undefined}
 			data-required={required ? "" : undefined}
-			data-state={
-				isIndeterminate ? "indeterminate" : isChecked ? "checked" : "unchecked"
-			}
+			data-state={dataState}
 			{...restProps}
 		>
 			<input
@@ -102,54 +106,32 @@ export function Checkbox(props: CheckboxProps) {
 				aria-describedby={
 					describedBy.length > 0 ? describedBy.join(" ") : undefined
 				}
-				data-state={
-					isIndeterminate
-						? "indeterminate"
-						: isChecked
-							? "checked"
-							: "unchecked"
-				}
+				data-state={dataState}
 			/>
 			<div
 				class={styles.control}
 				data-disabled={disabled ? "" : undefined}
 				data-invalid={invalid ? "" : undefined}
 				data-readonly={readOnly ? "" : undefined}
-				data-state={
-					isIndeterminate
-						? "indeterminate"
-						: isChecked
-							? "checked"
-							: "unchecked"
-				}
+				data-state={dataState}
 			>
 				{(isChecked || isIndeterminate) && (
 					<div class={styles.indicator}>
-						{isIndeterminate ? (
-							<svg
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="4"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							>
-								<title>Indeterminate</title>
-								<line x1="5" y1="12" x2="19" y2="12" />
-							</svg>
-						) : (
-							<svg
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="4"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							>
-								<title>Checked</title>
-								<polyline points="20 6 9 17 4 12" />
-							</svg>
-						)}
+						<svg
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth="3px"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						>
+							<title>{isIndeterminate ? "Indeterminate" : "Checked"}</title>
+							{isIndeterminate ? (
+								<path d="M5 12h14" />
+							) : (
+								<path d="M20 6 9 17l-5-5" />
+							)}
+						</svg>
 					</div>
 				)}
 			</div>
@@ -159,13 +141,7 @@ export function Checkbox(props: CheckboxProps) {
 					data-disabled={disabled ? "" : undefined}
 					data-invalid={invalid ? "" : undefined}
 					data-readonly={readOnly ? "" : undefined}
-					data-state={
-						isIndeterminate
-							? "indeterminate"
-							: isChecked
-								? "checked"
-								: "unchecked"
-					}
+					data-state={dataState}
 				>
 					{children}
 				</span>
