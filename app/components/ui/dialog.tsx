@@ -1,4 +1,4 @@
-import DrawerIsland from "../../islands/drawer";
+import DialogIsland from "../../islands/dialog";
 import {
 	ActionTrigger,
 	Backdrop,
@@ -6,25 +6,25 @@ import {
 	CloseTrigger,
 	Content,
 	Description,
-	Root as DrawerPrimitiveRoot,
-	type RootProps as DrawerPrimitiveRootProps,
+	Root as DialogPrimitiveRoot,
+	type RootProps as DialogPrimitiveRootProps,
 	Footer,
 	Header,
 	Positioner,
 	Title,
 	Trigger,
-} from "./drawer-primitive";
+} from "./dialog-primitive";
 
-export interface RootProps extends DrawerPrimitiveRootProps {
+export interface RootProps extends DialogPrimitiveRootProps {
 	interactive?: boolean;
 }
 
 export function Root(props: RootProps) {
 	const { interactive, ...rest } = props;
 	if (interactive) {
-		return <DrawerIsland {...rest} />;
+		return <DialogIsland {...rest} />;
 	}
-	return <DrawerPrimitiveRoot {...rest} />;
+	return <DialogPrimitiveRoot {...rest} />;
 }
 
 export {

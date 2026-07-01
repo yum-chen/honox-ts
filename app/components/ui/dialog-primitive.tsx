@@ -1,35 +1,35 @@
 import type { PropsWithChildren } from "hono/jsx";
 import { cloneElement, createContext, useContext, useId } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
-import type { DrawerVariantProps } from "../../../styled-system/recipes";
-import { drawer } from "../../../styled-system/recipes";
+import type { DialogVariantProps } from "../../../styled-system/recipes";
+import { dialog } from "../../../styled-system/recipes";
 
-type DrawerStyles = ReturnType<typeof drawer>;
+type DialogStyles = ReturnType<typeof dialog>;
 
-interface DrawerContextValue {
-	styles: DrawerStyles;
+interface DialogContextValue {
+	styles: DialogStyles;
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 	id: string;
 }
 
-const DrawerContext = createContext<DrawerContextValue | null>(null);
+const DialogContext = createContext<DialogContextValue | null>(null);
 
-const useDrawerContext = () => {
-	const context = useContext(DrawerContext);
+const useDialogContext = () => {
+	const context = useContext(DialogContext);
 	return context;
 };
 
-export interface RootProps extends DrawerVariantProps, PropsWithChildren {
+export interface RootProps extends DialogVariantProps, PropsWithChildren {
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 	id?: string;
 }
 
 export function Root(props: RootProps) {
-	const [variantProps, localProps] = drawer.splitVariantProps(props);
+	const [variantProps, localProps] = dialog.splitVariantProps(props);
 	const { children, open, onOpenChange, id: idProp } = localProps;
-	const styles = drawer(variantProps);
+	const styles = dialog(variantProps);
 	const generatedId = useId();
 	const id = idProp || generatedId;
 
@@ -41,7 +41,7 @@ export function Root(props: RootProps) {
 	};
 
 	return (
-		<DrawerContext.Provider value={value}>{children}</DrawerContext.Provider>
+		<DialogContext.Provider value={value}>{children}</DialogContext.Provider>
 	);
 }
 
@@ -52,7 +52,7 @@ export interface TriggerProps extends PropsWithChildren {
 
 export function Trigger(props: TriggerProps) {
 	const { children, class: classProp, asChild, ...restProps } = props;
-	const context = useDrawerContext();
+	const context = useDialogContext();
 	const onOpenChange = context?.onOpenChange;
 	const open = context?.open;
 
@@ -81,7 +81,7 @@ export interface BackdropProps extends PropsWithChildren {
 
 export function Backdrop(props: BackdropProps) {
 	const { children, class: classProp, ...restProps } = props;
-	const context = useDrawerContext();
+	const context = useDialogContext();
 	if (!context) return null;
 	const { styles, open, onOpenChange } = context;
 
@@ -99,40 +99,13 @@ export function Backdrop(props: BackdropProps) {
 	);
 }
 
-export interface ActionTriggerProps extends PropsWithChildren {
-	class?: string;
-	asChild?: boolean;
-}
-
-export function ActionTrigger(props: ActionTriggerProps) {
-	const { children, class: classProp, asChild, ...restProps } = props;
-	const context = useDrawerContext();
-	const onOpenChange = context?.onOpenChange;
-
-	const triggerProps = {
-		onClick: () => onOpenChange?.(false),
-		class: cx(classProp),
-		...restProps,
-	};
-
-	if (asChild && children) {
-		return cloneElement(children as any, triggerProps);
-	}
-
-	return (
-		<button type="button" {...triggerProps}>
-			{children}
-		</button>
-	);
-}
-
 export interface PositionerProps extends PropsWithChildren {
 	class?: string;
 }
 
 export function Positioner(props: PositionerProps) {
 	const { children, class: classProp, ...restProps } = props;
-	const context = useDrawerContext();
+	const context = useDialogContext();
 	if (!context) return null;
 	const { styles, open } = context;
 
@@ -155,7 +128,7 @@ export interface ContentProps extends PropsWithChildren {
 
 export function Content(props: ContentProps) {
 	const { children, class: classProp, ...restProps } = props;
-	const context = useDrawerContext();
+	const context = useDialogContext();
 	if (!context) return null;
 	const { styles, open, id } = context;
 
@@ -183,7 +156,7 @@ export interface HeaderProps extends PropsWithChildren {
 
 export function Header(props: HeaderProps) {
 	const { children, class: classProp, ...restProps } = props;
-	const context = useDrawerContext();
+	const context = useDialogContext();
 	const styles = context?.styles;
 
 	return (
@@ -199,7 +172,7 @@ export interface BodyProps extends PropsWithChildren {
 
 export function Body(props: BodyProps) {
 	const { children, class: classProp, ...restProps } = props;
-	const context = useDrawerContext();
+	const context = useDialogContext();
 	const styles = context?.styles;
 
 	return (
@@ -215,7 +188,7 @@ export interface FooterProps extends PropsWithChildren {
 
 export function Footer(props: FooterProps) {
 	const { children, class: classProp, ...restProps } = props;
-	const context = useDrawerContext();
+	const context = useDialogContext();
 	const styles = context?.styles;
 
 	return (
@@ -231,7 +204,7 @@ export interface TitleProps extends PropsWithChildren {
 
 export function Title(props: TitleProps) {
 	const { children, class: classProp, ...restProps } = props;
-	const context = useDrawerContext();
+	const context = useDialogContext();
 	const styles = context?.styles;
 	const id = context?.id;
 
@@ -252,7 +225,7 @@ export interface DescriptionProps extends PropsWithChildren {
 
 export function Description(props: DescriptionProps) {
 	const { children, class: classProp, ...restProps } = props;
-	const context = useDrawerContext();
+	const context = useDialogContext();
 	const styles = context?.styles;
 	const id = context?.id;
 
@@ -274,7 +247,7 @@ export interface CloseTriggerProps extends PropsWithChildren {
 
 export function CloseTrigger(props: CloseTriggerProps) {
 	const { children, class: classProp, asChild, ...restProps } = props;
-	const context = useDrawerContext();
+	const context = useDialogContext();
 	const styles = context?.styles;
 	const onOpenChange = context?.onOpenChange;
 
@@ -293,5 +266,32 @@ export function CloseTrigger(props: CloseTriggerProps) {
 				</button>
 			)}
 		</div>
+	);
+}
+
+export interface ActionTriggerProps extends PropsWithChildren {
+	class?: string;
+	asChild?: boolean;
+}
+
+export function ActionTrigger(props: ActionTriggerProps) {
+	const { children, class: classProp, asChild, ...restProps } = props;
+	const context = useDialogContext();
+	const onOpenChange = context?.onOpenChange;
+
+	const triggerProps = {
+		onClick: () => onOpenChange?.(false),
+		class: cx(classProp),
+		...restProps,
+	};
+
+	if (asChild && children) {
+		return cloneElement(children as any, triggerProps);
+	}
+
+	return (
+		<button type="button" {...triggerProps}>
+			{children}
+		</button>
 	);
 }

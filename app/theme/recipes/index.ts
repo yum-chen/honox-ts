@@ -1,4 +1,3 @@
-import { drawer } from "./drawer";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { badge } from "./badge";
@@ -6,6 +5,8 @@ import { breadcrumb } from "./breadcrumb";
 import { button } from "./button";
 import { card } from "./card";
 import { checkbox } from "./checkbox";
+import { dialog } from "./dialog";
+import { drawer } from "./drawer";
 import { field } from "./field";
 import { fieldset } from "./fieldset";
 import { group } from "./group";
@@ -33,6 +34,7 @@ export const slotRecipes = {
 	breadcrumb,
 	card,
 	checkbox,
+	dialog,
 	drawer,
 	field,
 	fieldset,

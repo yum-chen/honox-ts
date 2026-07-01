@@ -9,6 +9,8 @@ import {
 	ButtonGroup,
 	Checkbox,
 	CloseButton,
+	Dialog,
+	Drawer,
 	Field,
 	Group,
 	Heading,
@@ -19,7 +21,6 @@ import {
 	Spinner,
 	Switch,
 	Text,
-	Drawer,
 } from "../components/ui";
 
 export default createRoute((c) => {
@@ -752,6 +753,50 @@ export default createRoute((c) => {
 				/>
 			</div>
 
+			{/* Dialog Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Dialog Component Examples
+				</Heading>
+
+				<Dialog.Root interactive>
+					<Dialog.Trigger asChild>
+						<Button variant="outline">Open Dialog</Button>
+					</Dialog.Trigger>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<Dialog.Content>
+							<Dialog.Header>
+								<Dialog.Title>Dialog Title</Dialog.Title>
+								<Dialog.Description>Dialog Description</Dialog.Description>
+								<Dialog.CloseTrigger asChild>
+									<CloseButton size="sm" />
+								</Dialog.CloseTrigger>
+							</Dialog.Header>
+							<Dialog.Body>
+								<Text>This is the dialog body content.</Text>
+							</Dialog.Body>
+							<Dialog.Footer>
+								<Dialog.ActionTrigger asChild>
+									<Button variant="outline">Cancel</Button>
+								</Dialog.ActionTrigger>
+								<Button>Confirm</Button>
+							</Dialog.Footer>
+						</Dialog.Content>
+					</Dialog.Positioner>
+				</Dialog.Root>
+			</div>
+
 			{/* Drawer Examples */}
 			<div
 				class={css({
@@ -786,9 +831,9 @@ export default createRoute((c) => {
 								<Text>This is the drawer body content.</Text>
 							</Drawer.Body>
 							<Drawer.Footer>
-								<Drawer.CloseTrigger asChild>
+								<Drawer.ActionTrigger asChild>
 									<Button variant="outline">Cancel</Button>
-								</Drawer.CloseTrigger>
+								</Drawer.ActionTrigger>
 								<Button>Confirm</Button>
 							</Drawer.Footer>
 						</Drawer.Content>

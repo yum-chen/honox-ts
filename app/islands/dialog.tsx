@@ -1,10 +1,10 @@
 import { useState } from "hono/jsx";
 import {
-	Root as DrawerPrimitiveRoot,
+	Root as DialogPrimitiveRoot,
 	type RootProps,
-} from "../components/ui/drawer-primitive";
+} from "../components/ui/dialog-primitive";
 
-export default function DrawerIsland(props: RootProps) {
+export default function DialogIsland(props: RootProps) {
 	const { open: openProp, onOpenChange: onOpenChangeProp, ...rest } = props;
 	const [isOpen, setIsOpen] = useState(openProp || false);
 
@@ -19,7 +19,7 @@ export default function DrawerIsland(props: RootProps) {
 	};
 
 	return (
-		<DrawerPrimitiveRoot
+		<DialogPrimitiveRoot
 			{...rest}
 			open={open}
 			onOpenChange={handleOpenChange}
