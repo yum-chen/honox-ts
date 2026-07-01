@@ -14,6 +14,7 @@ import { heading } from "./heading";
 import { popover } from "./popover";
 import { skeleton } from "./skeleton";
 import { spinner } from "./spinner";
+import { splitter } from "./splitter";
 import { switchRecipe } from "./switch";
 import { text } from "./text";
 import { textarea } from "./textarea";
@@ -33,6 +34,7 @@ export const recipes = {
 
 export const slotRecipes = {
 	alert,
+	splitter,
 	breadcrumb,
 	card,
 	checkbox,

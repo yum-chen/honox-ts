@@ -51,6 +51,7 @@ export {
 	type SkeletonTextProps,
 } from "./skeleton";
 export { Spinner, type SpinnerProps } from "./spinner";
+export * as Splitter from "./splitter";
 export { Switch, type SwitchProps } from "./switch";
 export { Text, type TextProps } from "./text";
 export { Textarea, type TextareaProps } from "./textarea";

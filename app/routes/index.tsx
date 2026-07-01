@@ -21,6 +21,7 @@ import {
 	Group,
 	Heading,
 	IconButton,
+	Loader,
 	Skeleton,
 	SkeletonCircle,
 	SkeletonText,
@@ -29,7 +30,6 @@ import {
 	Text,
 	Textarea,
 	Tooltip,
-	Loader,
 } from "../components/ui";
 
 export default createRoute((c) => {
