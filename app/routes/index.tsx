@@ -5,11 +5,19 @@ import {
 	Alert,
 	AlertIcon,
 	Badge,
+	Breadcrumb,
 	Button,
 	ButtonGroup,
+	Card,
 	Checkbox,
 	CloseButton,
 	Field,
+	Fieldset,
+	FieldsetContent,
+	FieldsetControl,
+	FieldsetErrorText,
+	FieldsetHelperText,
+	FieldsetLegend,
 	Group,
 	Heading,
 	IconButton,
@@ -19,6 +27,9 @@ import {
 	Spinner,
 	Switch,
 	Text,
+	Textarea,
+	Tooltip,
+	Loader,
 } from "../components/ui";
 
 export default createRoute((c) => {
@@ -848,6 +859,224 @@ export default createRoute((c) => {
 							<Button>Loaded Content</Button>
 						</Skeleton>
 					</div>
+				</div>
+			</div>
+
+			{/* Breadcrumb Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Breadcrumb Component Examples
+				</Heading>
+				<Breadcrumb.Root>
+					<Breadcrumb.List>
+						<Breadcrumb.Item>
+							<Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+						</Breadcrumb.Item>
+						<Breadcrumb.Separator />
+						<Breadcrumb.Item>
+							<Breadcrumb.Link href="/components">Components</Breadcrumb.Link>
+						</Breadcrumb.Item>
+						<Breadcrumb.Separator />
+						<Breadcrumb.Item>
+							<Breadcrumb.Link href="/components/breadcrumb" current>
+								Breadcrumb
+							</Breadcrumb.Link>
+						</Breadcrumb.Item>
+					</Breadcrumb.List>
+				</Breadcrumb.Root>
+			</div>
+
+			{/* Card Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Card Component Examples
+				</Heading>
+				<div
+					class={css({
+						display: "flex",
+						gap: "6",
+						flexWrap: "wrap",
+						justifyContent: "center",
+					})}
+				>
+					<Card.Root width="sm">
+						<Card.Header>
+							<Card.Title>Team Members</Card.Title>
+							<Card.Description>
+								Add new members to your organization.
+							</Card.Description>
+						</Card.Header>
+						<Card.Body>
+							<Text size="sm">Invite your colleagues to collaborate.</Text>
+						</Card.Body>
+						<Card.Footer>
+							<Button variant="outline">Cancel</Button>
+							<Button>Invite</Button>
+						</Card.Footer>
+					</Card.Root>
+
+					<Card.Root width="sm" variant="subtle">
+						<Card.Header>
+							<Card.Title>Subtle Card</Card.Title>
+						</Card.Header>
+						<Card.Body>
+							<Text size="sm">This card uses the subtle variant.</Text>
+						</Card.Body>
+					</Card.Root>
+				</div>
+			</div>
+
+			{/* Fieldset Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Fieldset Component Examples
+				</Heading>
+				<Fieldset>
+					<FieldsetLegend>Shipping Information</FieldsetLegend>
+					<FieldsetHelperText>
+						Please enter your delivery details.
+					</FieldsetHelperText>
+					<FieldsetContent>
+						<FieldsetControl>
+							<Field label="Full Name" placeholder="John Doe" />
+							<Field label="Address" placeholder="123 Main St" />
+						</FieldsetControl>
+					</FieldsetContent>
+				</Fieldset>
+
+				<Fieldset invalid mt="4">
+					<FieldsetLegend>Account Settings</FieldsetLegend>
+					<FieldsetContent>
+						<Field label="Email" defaultValue="invalid-email" />
+					</FieldsetContent>
+					<FieldsetErrorText>
+						Please fix the errors in this section.
+					</FieldsetErrorText>
+				</Fieldset>
+			</div>
+
+			{/* Textarea Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Textarea Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "4",
+					})}
+				>
+					<Textarea placeholder="Basic Textarea" />
+					<Textarea
+						placeholder="Interactive Textarea"
+						interactive
+						defaultValue="Hello from island!"
+					/>
+					<Textarea placeholder="Disabled Textarea" disabled />
+				</div>
+			</div>
+
+			{/* Tooltip Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+					pb: "20",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Tooltip Component Examples
+				</Heading>
+				<div class={css({ display: "flex", gap: "8" })}>
+					<Tooltip content="This is a static tooltip" interactable={false}>
+						<Button variant="outline">Static Tooltip</Button>
+					</Tooltip>
+
+					<Tooltip content="This is an interactive tooltip" interactable={true}>
+						<Button variant="outline">Interactive Tooltip</Button>
+					</Tooltip>
+
+					<Tooltip content="Tooltip with Arrow" showArrow>
+						<Button variant="outline">With Arrow</Button>
+					</Tooltip>
+				</div>
+			</div>
+
+			{/* Loader Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+					pb: "20",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Loader Component Examples
+				</Heading>
+				<div
+					class={css({
+						display: "flex",
+						gap: "8",
+						alignItems: "center",
+						flexWrap: "wrap",
+						justifyContent: "center",
+					})}
+				>
+					<Loader text="Loading..." />
+					<Loader spinnerPlacement="end">Processing</Loader>
+					<Loader spinner={<Spinner color="blue.500" />}>Custom Spinner</Loader>
 				</div>
 			</div>
 		</div>,
