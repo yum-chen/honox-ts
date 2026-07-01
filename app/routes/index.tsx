@@ -261,7 +261,9 @@ export default createRoute((c) => {
 						<Text size="sm" class={css({ color: "fg.muted" })}>
 							Sizes
 						</Text>
-						<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+						<div
+							class={css({ display: "flex", gap: "4", alignItems: "center" })}
+						>
 							<Switch size="sm">Small</Switch>
 							<Switch size="md">Medium</Switch>
 							<Switch size="lg">Large</Switch>
@@ -279,7 +281,9 @@ export default createRoute((c) => {
 						<Text size="sm" class={css({ color: "fg.muted" })}>
 							States
 						</Text>
-						<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+						<div
+							class={css({ display: "flex", gap: "4", alignItems: "center" })}
+						>
 							<Switch checked>Checked</Switch>
 							<Switch disabled>Disabled</Switch>
 							<Switch invalid>Invalid</Switch>
@@ -297,7 +301,9 @@ export default createRoute((c) => {
 						<Text size="sm" class={css({ color: "fg.muted" })}>
 							Interactive
 						</Text>
-						<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+						<div
+							class={css({ display: "flex", gap: "4", alignItems: "center" })}
+						>
 							<Switch interactive defaultChecked>
 								Interactive
 							</Switch>
@@ -339,7 +345,9 @@ export default createRoute((c) => {
 						<Text size="sm" class={css({ color: "fg.muted" })}>
 							Sizes
 						</Text>
-						<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+						<div
+							class={css({ display: "flex", gap: "4", alignItems: "center" })}
+						>
 							<Checkbox size="sm">Small</Checkbox>
 							<Checkbox size="md">Medium</Checkbox>
 							<Checkbox size="lg">Large</Checkbox>
@@ -357,7 +365,9 @@ export default createRoute((c) => {
 						<Text size="sm" class={css({ color: "fg.muted" })}>
 							States
 						</Text>
-						<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+						<div
+							class={css({ display: "flex", gap: "4", alignItems: "center" })}
+						>
 							<Checkbox checked>Checked</Checkbox>
 							<Checkbox checked="indeterminate">Indeterminate</Checkbox>
 							<Checkbox disabled>Disabled</Checkbox>
@@ -376,7 +386,9 @@ export default createRoute((c) => {
 						<Text size="sm" class={css({ color: "fg.muted" })}>
 							Interactive
 						</Text>
-						<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+						<div
+							class={css({ display: "flex", gap: "4", alignItems: "center" })}
+						>
 							<Checkbox interactive defaultChecked>
 								Interactive
 							</Checkbox>
