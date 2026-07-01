@@ -36,9 +36,22 @@ export interface FieldProps extends FieldVariantProps {
 	value?: string;
 	onValueChange?: (value: string) => void;
 	minLength?: number;
-	validator?: (value: string) => boolean | string;
+	validator?: ((value: string) => boolean | string) | string;
 	[key: string]: any;
 }
+
+const getValidator = (validator?: FieldProps["validator"]) => {
+	if (typeof validator === "function") return validator;
+	if (typeof validator === "string") {
+		try {
+			// biome-ignore lint/security/noGlobalEval: serialized function
+			return eval(validator);
+		} catch (e) {
+			console.error("Failed to parse validator string", e);
+		}
+	}
+	return undefined;
+};
 
 export const useFieldContext = () => useContext(FieldContext);
 
@@ -58,7 +71,7 @@ export function FieldRoot(props: FieldProps) {
 		value: valueProp,
 		onValueChange,
 		minLength,
-		validator,
+		validator: validatorProp,
 		interactive: _interactive,
 		defaultValue,
 		...restProps
@@ -73,19 +86,23 @@ export function FieldRoot(props: FieldProps) {
 	let isInvalid = invalidProp;
 	let errorText: string | undefined;
 
+	const validator = getValidator(validatorProp);
+
 	if (isInvalid === undefined || isInvalid === false) {
-		if (validator && value !== undefined) {
+		if (minLength !== undefined && value !== undefined) {
+			if (value.length < minLength) {
+				isInvalid = true;
+				errorText = `Must be at least ${minLength} characters`;
+			}
+		}
+
+		if (!isInvalid && validator && value !== undefined) {
 			const result = validator(value);
 			if (result === false) {
 				isInvalid = true;
 			} else if (typeof result === "string") {
 				isInvalid = true;
 				errorText = result;
-			}
-		} else if (minLength !== undefined && value !== undefined) {
-			if (value.length < minLength) {
-				isInvalid = true;
-				errorText = `Must be at least ${minLength} characters`;
 			}
 		}
 	}

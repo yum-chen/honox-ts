@@ -29,7 +29,11 @@ export function Field(props: FieldProps) {
 			minLength !== undefined);
 
 	if (isInteractive) {
-		return <FieldIsland {...props} />;
+		const islandProps = { ...props };
+		if (typeof islandProps.validator === "function") {
+			islandProps.validator = islandProps.validator.toString();
+		}
+		return <FieldIsland {...islandProps} />;
 	}
 
 	return <FieldRoot {...props} />;

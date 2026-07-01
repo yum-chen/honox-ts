@@ -113,7 +113,10 @@ export default createRoute((c) => {
 				</Heading>
 
 				{/* Semantic Colors */}
-				<Text size="sm" class={css({ color: "fg.muted", width: "100%", textAlign: "left" })}>
+				<Text
+					size="sm"
+					class={css({ color: "fg.muted", width: "100%", textAlign: "left" })}
+				>
 					Semantic Colors
 				</Text>
 				<div
@@ -142,7 +145,12 @@ export default createRoute((c) => {
 				{/* All Color Palettes */}
 				<Text
 					size="sm"
-					class={css({ color: "fg.muted", width: "100%", textAlign: "left", mt: "4" })}
+					class={css({
+						color: "fg.muted",
+						width: "100%",
+						textAlign: "left",
+						mt: "4",
+					})}
 				>
 					All Color Palettes
 				</Text>
@@ -184,7 +192,12 @@ export default createRoute((c) => {
 				{/* Variants */}
 				<Text
 					size="sm"
-					class={css({ color: "fg.muted", width: "100%", textAlign: "left", mt: "4" })}
+					class={css({
+						color: "fg.muted",
+						width: "100%",
+						textAlign: "left",
+						mt: "4",
+					})}
 				>
 					Variants (Blue)
 				</Text>
@@ -458,11 +471,16 @@ export default createRoute((c) => {
 
 				<Field
 					label="Email"
-					validator={(value) => value.includes("@")}
-					errorText="Must be a valid email"
+					validator={(value) =>
+						value.length > 0 && !value.includes("@")
+							? "Invalid email format"
+							: true
+					}
+					minLength={5}
+					helperText="We'll never share your email."
 					type="email"
 					placeholder="Enter your email"
-				></Field>
+				/>
 			</div>
 		</div>,
 	);
