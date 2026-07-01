@@ -7,26 +7,28 @@ Displays a brief, important message in a way that attracts the user's attention 
 
 | Prop | Type | Description |
 | :--- | :--- | :---------- |
-| `children` | `any` | Content to be rendered inside the component. |
+| `title` | `string` | The title of the alert. |
+| `description` | `string` | The description of the alert. |
+| `indicator` | `Child` | An icon or element to be rendered as an indicator. |
+| `children` | `Child` | Additional content to be rendered inside the component. |
 | `class` | `string` | Custom CSS classes. |
-| `status` | `"info" \| "success" | "warning" | "error"` | The status color palette of the alert. |
-| `variant` | `"subtle" \| "solid" | "outline"` | The visual style of the alert. |
-| `interactive` | `boolean` | Whether to enable client-side hydration. |
+| `status` | `"info" \| "success" \| "warning" \| "error"` | The status color palette of the alert. |
+| `variant` | `"subtle" \| "solid" \| "outline"` | The visual style of the alert. |
+| `aria-live` | `"polite" \| "assertive" \| "off"` | The aria-live setting of the alert. Defaults to "polite". |
 
 # Usage
 
 ```tsx
-import { Alert, AlertContent, AlertDescription, AlertIndicator, AlertTitle } from "../components/ui";
+import { Alert, AlertIcon } from "../components/ui";
 
 export default function MyPage() {
   return (
-    <Alert status="success">
-      <AlertIndicator />
-      <AlertContent>
-        <AlertTitle>Success</AlertTitle>
-        <AlertDescription>Your changes have been saved.</AlertDescription>
-      </AlertContent>
-    </Alert>
+    <Alert
+      status="success"
+      title="Success"
+      description="Your changes have been saved."
+      indicator={<AlertIcon />}
+    />
   );
 }
 ```

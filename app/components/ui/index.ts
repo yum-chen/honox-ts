@@ -39,6 +39,7 @@ export {
 export { Group, type GroupProps } from "./group";
 export { Heading, type HeadingProps } from "./heading";
 export { Loader, type LoaderProps } from "./loader";
+export { Span, type SpanProps } from "./span";
 export { Spinner, type SpinnerProps } from "./spinner";
 export { Switch, type SwitchProps } from "./switch";
 export { Text, type TextProps } from "./text";

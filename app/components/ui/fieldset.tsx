@@ -14,16 +14,6 @@ interface FieldsetContextValue {
 
 const FieldsetContext = createContext<FieldsetContextValue | null>(null);
 
-export interface FieldsetProps extends FieldsetVariantProps {
-	children?: any;
-	class?: string;
-	id?: string;
-	disabled?: boolean;
-	invalid?: boolean;
-	interactive?: boolean;
-	[key: string]: any;
-}
-
 export const useFieldsetContext = () => useContext(FieldsetContext);
 
 export interface FieldsetProps extends FieldsetVariantProps {
