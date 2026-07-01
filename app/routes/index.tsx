@@ -142,7 +142,18 @@ export default createRoute((c) => {
 					<Button loading loadingText="Loading...">
 						Click me
 					</Button>
-					<Button loading>Spinner only</Button>
+					<Button loading>
+						Spinner only
+					</Button>
+					<Button
+						interactive
+						onClick={async () => {
+							await new Promise((resolve) => setTimeout(resolve, 2000));
+							alert("Finished!");
+						}}
+					>
+						Interactive
+					</Button>
 				</div>
 			</div>
 
