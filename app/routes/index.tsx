@@ -19,6 +19,7 @@ import {
 	Spinner,
 	Switch,
 	Text,
+	Drawer,
 } from "../components/ui";
 
 export default createRoute((c) => {
@@ -749,6 +750,50 @@ export default createRoute((c) => {
 					defaultValue="usr"
 					placeholder="Enter username"
 				/>
+			</div>
+
+			{/* Drawer Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Drawer Component Examples
+				</Heading>
+
+				<Drawer.Root interactive>
+					<Drawer.Trigger asChild>
+						<Button variant="outline">Open Drawer</Button>
+					</Drawer.Trigger>
+					<Drawer.Backdrop />
+					<Drawer.Positioner>
+						<Drawer.Content>
+							<Drawer.Header>
+								<Drawer.Title>Drawer Title</Drawer.Title>
+								<Drawer.Description>Drawer Description</Drawer.Description>
+								<Drawer.CloseTrigger asChild>
+									<CloseButton size="sm" />
+								</Drawer.CloseTrigger>
+							</Drawer.Header>
+							<Drawer.Body>
+								<Text>This is the drawer body content.</Text>
+							</Drawer.Body>
+							<Drawer.Footer>
+								<Drawer.CloseTrigger asChild>
+									<Button variant="outline">Cancel</Button>
+								</Drawer.CloseTrigger>
+								<Button>Confirm</Button>
+							</Drawer.Footer>
+						</Drawer.Content>
+					</Drawer.Positioner>
+				</Drawer.Root>
 			</div>
 
 			{/* Skeleton Examples */}

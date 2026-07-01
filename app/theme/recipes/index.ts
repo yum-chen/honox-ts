@@ -1,3 +1,4 @@
+import { drawer } from "./drawer";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { badge } from "./badge";
@@ -33,6 +34,7 @@ export const slotRecipes = {
 	breadcrumb,
 	card,
 	checkbox,
+	drawer,
 	field,
 	fieldset,
 	switchRecipe,
