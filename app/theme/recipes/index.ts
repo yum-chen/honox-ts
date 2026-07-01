@@ -3,6 +3,7 @@ import { alert } from "./alert";
 import { badge } from "./badge";
 import { breadcrumb } from "./breadcrumb";
 import { button } from "./button";
+import { card } from "./card";
 import { checkbox } from "./checkbox";
 import { field } from "./field";
 import { fieldset } from "./fieldset";
@@ -27,6 +28,7 @@ export const recipes = {
 export const slotRecipes = {
 	alert,
 	breadcrumb,
+	card,
 	checkbox,
 	field,
 	fieldset,
