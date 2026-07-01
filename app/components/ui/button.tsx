@@ -1,16 +1,11 @@
 import ButtonIsland from "../../islands/button";
-import { Button as ButtonPrimitive, type ButtonProps as BaseButtonProps } from "./button-base";
-
-export interface ButtonProps extends BaseButtonProps {
-    interactive?: boolean;
-}
+import { Button as ButtonBase, type ButtonProps } from "./button-base";
 
 export function Button(props: ButtonProps) {
-    const { interactive, ...rest } = props;
-
-    if (interactive) {
-        return <ButtonIsland {...props} />;
-    }
-
-    return <ButtonPrimitive {...rest} />;
+	if (props.interactive) {
+		return <ButtonIsland {...props} />;
+	}
+	return <ButtonBase {...props} />;
 }
+
+export type { ButtonProps };

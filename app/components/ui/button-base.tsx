@@ -9,6 +9,7 @@ export interface ButtonProps
 		PropsWithChildren<
 			Omit<JSX.IntrinsicElements["button"], "color"> & {
 				class?: string;
+				interactive?: boolean;
 				loading?: boolean;
 				loadingText?: string;
 				colorPalette?:
