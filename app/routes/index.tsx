@@ -12,6 +12,7 @@ import {
 	Spinner,
 	Text,
 } from "../components/ui";
+import ButtonDemo from "../islands/button-demo";
 
 export default createRoute((c) => {
 	const name = c.req.query("name") ?? "Hono";
@@ -145,15 +146,7 @@ export default createRoute((c) => {
 					<Button loading>
 						Spinner only
 					</Button>
-					<Button
-						interactive
-						onClick={async () => {
-							await new Promise((resolve) => setTimeout(resolve, 2000));
-							alert("Finished!");
-						}}
-					>
-						Interactive
-					</Button>
+					<ButtonDemo />
 				</div>
 			</div>
 

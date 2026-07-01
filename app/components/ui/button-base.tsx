@@ -11,6 +11,7 @@ export interface ButtonProps
 				class?: string;
 				loading?: boolean;
 				loadingText?: string;
+				interactive?: boolean;
 				colorPalette?:
 					| "blue"
 					| "green"
@@ -33,6 +34,7 @@ export function Button(props: ButtonProps) {
 		class: classProp,
 		loading,
 		loadingText,
+		interactive,
 		colorPalette,
 		...restProps
 	} = localProps;
