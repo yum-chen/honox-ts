@@ -83,6 +83,7 @@ export default createRoute((c) => {
 							stroke-linecap="round"
 							stroke-linejoin="round"
 						>
+							<title>Search</title>
 							<circle cx="11" cy="11" r="8" />
 							<path d="m21 21-4.3-4.3" />
 						</svg>
@@ -224,6 +225,163 @@ export default createRoute((c) => {
 					<Badge variant="surface" colorPalette="blue">
 						Surface
 					</Badge>
+				</div>
+			</div>
+
+			{/* Switch Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "2" })}>
+					Switch Component Examples
+				</Heading>
+				<div
+					class={css({
+						display: "flex",
+						gap: "8",
+						alignItems: "center",
+						flexWrap: "wrap",
+						justifyContent: "center",
+					})}
+				>
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Sizes
+						</Text>
+						<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+							<Switch size="sm">Small</Switch>
+							<Switch size="md">Medium</Switch>
+							<Switch size="lg">Large</Switch>
+						</div>
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							States
+						</Text>
+						<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+							<Switch checked>Checked</Switch>
+							<Switch disabled>Disabled</Switch>
+							<Switch invalid>Invalid</Switch>
+						</div>
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Interactive
+						</Text>
+						<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+							<Switch interactive defaultChecked>
+								Interactive
+							</Switch>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{/* Checkbox Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "2" })}>
+					Checkbox Component Examples
+				</Heading>
+				<div
+					class={css({
+						display: "flex",
+						gap: "8",
+						alignItems: "center",
+						flexWrap: "wrap",
+						justifyContent: "center",
+					})}
+				>
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Sizes
+						</Text>
+						<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+							<Checkbox size="sm">Small</Checkbox>
+							<Checkbox size="md">Medium</Checkbox>
+							<Checkbox size="lg">Large</Checkbox>
+						</div>
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							States
+						</Text>
+						<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+							<Checkbox checked>Checked</Checkbox>
+							<Checkbox checked="indeterminate">Indeterminate</Checkbox>
+							<Checkbox disabled>Disabled</Checkbox>
+							<Checkbox invalid>Invalid</Checkbox>
+						</div>
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Interactive
+						</Text>
+						<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+							<Checkbox interactive defaultChecked>
+								Interactive
+							</Checkbox>
+						</div>
+					</div>
 				</div>
 			</div>
 
