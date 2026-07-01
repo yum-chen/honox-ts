@@ -1,7 +1,17 @@
 import TooltipIsland from "../../islands/tooltip";
-import { TooltipBase, type TooltipBaseProps } from "./tooltip-base";
+import {
+	TooltipArrow as Arrow,
+	TooltipArrowTip as ArrowTip,
+	TooltipContent as Content,
+	TooltipPositioner as Positioner,
+	TooltipRoot as RootPrimitive,
+	TooltipBase,
+	type TooltipBaseProps,
+	type TooltipRootProps,
+	TooltipTrigger as Trigger,
+} from "./tooltip-base";
 
-export interface TooltipProps extends TooltipBaseProps {
+export interface TooltipProps extends TooltipRootProps {
 	/**
 	 * Whether the tooltip should be interactive (hydrated as an island).
 	 * Defaults to true if not explicitly set to false.
@@ -9,7 +19,20 @@ export interface TooltipProps extends TooltipBaseProps {
 	interactable?: boolean;
 }
 
-export function Tooltip(props: TooltipProps) {
+export function Root(props: TooltipProps) {
+	const { interactable = true, ...rest } = props;
+
+	if (interactable) {
+		return <TooltipIsland {...rest} />;
+	}
+
+	return <RootPrimitive {...rest} />;
+}
+
+/**
+ * A high-level Tooltip component for common use cases.
+ */
+export function Tooltip(props: TooltipBaseProps & { interactable?: boolean }) {
 	const { interactable = true, ...rest } = props;
 
 	if (interactable) {
@@ -19,4 +42,4 @@ export function Tooltip(props: TooltipProps) {
 	return <TooltipBase {...rest} />;
 }
 
-export type { TooltipBaseProps as TooltipPropsValue };
+export { Arrow, ArrowTip, Content, Positioner, Trigger };

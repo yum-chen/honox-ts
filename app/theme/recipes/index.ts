@@ -10,6 +10,7 @@ import { field } from "./field";
 import { fieldset } from "./fieldset";
 import { group } from "./group";
 import { heading } from "./heading";
+import { popover } from "./popover";
 import { skeleton } from "./skeleton";
 import { spinner } from "./spinner";
 import { switchRecipe } from "./switch";
@@ -37,6 +38,7 @@ export const slotRecipes = {
 	drawer,
 	field,
 	fieldset,
+	popover,
 	switchRecipe,
 	tooltip,
 };

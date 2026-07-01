@@ -38,6 +38,7 @@ export {
 export { Group, type GroupProps } from "./group";
 export { Heading, type HeadingProps } from "./heading";
 export { Loader, type LoaderProps } from "./loader";
+export * as Popover from "./popover";
 export {
     Skeleton,
     SkeletonCircle, SkeletonText, type SkeletonCircleProps,
