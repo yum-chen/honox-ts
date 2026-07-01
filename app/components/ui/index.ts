@@ -48,7 +48,6 @@ export {
 	SkeletonText,
 	type SkeletonTextProps,
 } from "./skeleton";
-export { Span, type SpanProps } from "./span";
 export { Spinner, type SpinnerProps } from "./spinner";
 export { Switch, type SwitchProps } from "./switch";
 export { Text, type TextProps } from "./text";
