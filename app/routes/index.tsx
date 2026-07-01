@@ -1,9 +1,9 @@
 import { createRoute } from "honox/factory";
 import { css } from "../../styled-system/css";
 import {
+	AbsoluteCenter,
 	Alert,
 	AlertIcon,
-	AbsoluteCenter,
 	Badge,
 	Button,
 	ButtonGroup,
@@ -39,19 +39,51 @@ export default createRoute((c) => {
 					Button Component Examples
 				</Heading>
 
-				<div class={css({ display: "flex", gap: "4", flexWrap: "wrap", justifyContent: "center" })}>
-					<Button variant="solid" colorPalette="blue">Solid Blue</Button>
-					<Button variant="outline" colorPalette="green">Outline Green</Button>
-					<Button variant="subtle" colorPalette="red">Subtle Red</Button>
-					<Button variant="surface" colorPalette="purple">Surface Purple</Button>
+				<div
+					class={css({
+						display: "flex",
+						gap: "4",
+						flexWrap: "wrap",
+						justifyContent: "center",
+					})}
+				>
+					<Button variant="solid" colorPalette="blue">
+						Solid Blue
+					</Button>
+					<Button variant="outline" colorPalette="green">
+						Outline Green
+					</Button>
+					<Button variant="subtle" colorPalette="red">
+						Subtle Red
+					</Button>
+					<Button variant="surface" colorPalette="purple">
+						Surface Purple
+					</Button>
 					<Button variant="plain">Plain</Button>
 				</div>
 
 				<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
-					<Button loading loadingText="Saving...">Save</Button>
-					<Button interactive onclick="alert('Hello!')">Interactive</Button>
+					<Button loading loadingText="Saving...">
+						Save
+					</Button>
+					<Button interactive onclick="alert('Hello!')">
+						Interactive
+					</Button>
 					<IconButton aria-label="Search">
-						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="20"
+							height="20"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<circle cx="11" cy="11" r="8" />
+							<path d="m21 21-4.3-4.3" />
+						</svg>
 					</IconButton>
 					<CloseButton />
 				</div>
@@ -251,7 +283,9 @@ export default createRoute((c) => {
 					Group Component Examples
 				</Heading>
 
-				<div class={css({ display: "flex", flexDirection: "column", gap: "8" })}>
+				<div
+					class={css({ display: "flex", flexDirection: "column", gap: "8" })}
+				>
 					<div class={css({ textAlign: "center" })}>
 						<Text size="sm" class={css({ mb: "2", color: "fg.muted" })}>
 							Attached Group

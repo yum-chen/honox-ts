@@ -1,12 +1,14 @@
-import { createContext, useContext } from "hono/jsx";
 import type { PropsWithChildren } from "hono/jsx";
+import { createContext, useContext } from "hono/jsx";
 import { css, cx } from "../../../styled-system/css";
 import type { ButtonVariantProps } from "../../../styled-system/recipes";
 import { button } from "../../../styled-system/recipes";
 import { Group, type GroupProps } from "./group";
 import { Loader } from "./loader";
 
-const ButtonContext = createContext<ButtonVariantProps & { colorPalette?: string }>({});
+const ButtonContext = createContext<
+	ButtonVariantProps & { colorPalette?: string }
+>({});
 
 export interface ButtonLoadingProps {
 	loading?: boolean;
@@ -50,7 +52,9 @@ export function Button(props: ButtonProps) {
 			type={type}
 			class={cx(
 				button(variantProps),
-				css({ colorPalette: colorPalette || mergedProps.colorPalette || "gray" }),
+				css({
+					colorPalette: colorPalette || mergedProps.colorPalette || "gray",
+				}),
 				classProp,
 			)}
 			disabled={loading || disabled}
@@ -75,7 +79,7 @@ export function Button(props: ButtonProps) {
 }
 
 export interface ButtonGroupProps extends GroupProps, ButtonVariantProps {
-    colorPalette?: string;
+	colorPalette?: string;
 }
 
 export function ButtonGroup(props: ButtonGroupProps) {

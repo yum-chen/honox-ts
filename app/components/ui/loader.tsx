@@ -1,30 +1,37 @@
-import type { PropsWithChildren } from "hono/jsx";
+import type { Child, PropsWithChildren } from "hono/jsx";
+import { css } from "../../../styled-system/css";
 import { Spinner } from "./spinner";
 
-export interface LoaderProps extends PropsWithChildren<{
-	spinner?: any;
-	text?: any;
+export interface LoaderProps extends PropsWithChildren {
+	spinner?: Child;
+	text?: Child;
 	spinnerPlacement?: "start" | "end";
-}> {}
+}
 
 export function Loader(props: LoaderProps) {
-	const { spinner, text, spinnerPlacement = "start", children } = props;
-
-	const spinnerElement = spinner || <Spinner size="sm" />;
+	const {
+		spinner = <Spinner size="inherit" />,
+		text,
+		spinnerPlacement = "start",
+		children,
+	} = props;
 
 	return (
-		<>
+		<div
+			class={css({
+				display: "inline-flex",
+				alignItems: "center",
+				gap: "2",
+				justifyContent: "center",
+			})}
+		>
 			{spinnerPlacement === "start" && (
-				<span style={{ display: "inline-flex", marginRight: text ? "0.5em" : "0" }}>
-					{spinnerElement}
-				</span>
+				<div class={css({ display: "flex", flexShrink: "0" })}>{spinner}</div>
 			)}
 			{text || children}
 			{spinnerPlacement === "end" && (
-				<span style={{ display: "inline-flex", marginLeft: text ? "0.5em" : "0" }}>
-					{spinnerElement}
-				</span>
+				<div class={css({ display: "flex", flexShrink: "0" })}>{spinner}</div>
 			)}
-		</>
+		</div>
 	);
 }
