@@ -1,8 +1,8 @@
 import {
-	Button as ButtonBase,
+	Button as BaseButton,
 	type ButtonProps,
 } from "../components/ui/button-base";
 
 export default function ButtonIsland(props: ButtonProps) {
-	return <ButtonBase {...props} />;
+	return <BaseButton {...props} />;
 }
