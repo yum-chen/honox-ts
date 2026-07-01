@@ -7,12 +7,14 @@ import {
 	Badge,
 	Button,
 	ButtonGroup,
+	Checkbox,
 	CloseButton,
 	Field,
 	Group,
 	Heading,
 	IconButton,
 	Spinner,
+	Switch,
 	Text,
 } from "../components/ui";
 
@@ -450,6 +452,92 @@ export default createRoute((c) => {
 							Centered Content
 						</Badge>
 					</AbsoluteCenter>
+				</div>
+			</div>
+
+			{/* Switch Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Switch Component Examples
+				</Heading>
+
+				<div class={css({ display: "flex", gap: "8", alignItems: "center" })}>
+					<Switch size="sm">Small</Switch>
+					<Switch size="md">Medium</Switch>
+					<Switch size="lg">Large</Switch>
+				</div>
+
+				<div class={css({ display: "flex", gap: "8", alignItems: "center" })}>
+					<Switch checked>Checked</Switch>
+					<Switch disabled>Disabled</Switch>
+					<Switch disabled checked>
+						Disabled Checked
+					</Switch>
+				</div>
+
+				<div class={css({ display: "flex", gap: "8", alignItems: "center" })}>
+					<Switch interactive colorPalette="blue">
+						Interactive Blue
+					</Switch>
+					<Switch
+						interactive
+						colorPalette="red"
+						onCheckedChange={(details) =>
+							console.log("Switch changed:", details.checked)
+						}
+					>
+						Check Console
+					</Switch>
+				</div>
+			</div>
+
+			{/* Checkbox Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Checkbox Component Examples
+				</Heading>
+
+				<div class={css({ display: "flex", gap: "8", alignItems: "center" })}>
+					<Checkbox size="sm">Small</Checkbox>
+					<Checkbox size="md">Medium</Checkbox>
+					<Checkbox size="lg">Large</Checkbox>
+				</div>
+
+				<div class={css({ display: "flex", gap: "8", alignItems: "center" })}>
+					<Checkbox checked>Checked</Checkbox>
+					<Checkbox checked="indeterminate">Indeterminate</Checkbox>
+					<Checkbox disabled>Disabled</Checkbox>
+				</div>
+
+				<div class={css({ display: "flex", gap: "8", alignItems: "center" })}>
+					<Checkbox interactive colorPalette="blue">
+						Interactive Blue
+					</Checkbox>
+					<Checkbox
+						interactive
+						colorPalette="green"
+						onCheckedChange={(details) =>
+							console.log("Checkbox changed:", details.checked)
+						}
+					>
+						Check Console
+					</Checkbox>
 				</div>
 			</div>
 
