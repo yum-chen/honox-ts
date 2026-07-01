@@ -11,6 +11,8 @@ import {
 	Card,
 	Checkbox,
 	CloseButton,
+	Dialog,
+	Drawer,
 	Field,
 	Fieldset,
 	FieldsetContent,
@@ -22,10 +24,12 @@ import {
 	Heading,
 	IconButton,
 	Loader,
+	Popover,
 	Skeleton,
 	SkeletonCircle,
 	SkeletonText,
 	Spinner,
+	Splitter,
 	Switch,
 	Text,
 	Textarea,
@@ -476,6 +480,180 @@ export default createRoute((c) => {
 					description="This is an informational alert."
 					indicator={AlertIcon()}
 				/>
+			</div>
+
+			{/* Dialog Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Dialog Component Examples
+				</Heading>
+				<Dialog.Root interactive>
+					<Dialog.Trigger asChild>
+						<Button variant="outline">Open Dialog</Button>
+					</Dialog.Trigger>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<Dialog.Content>
+							<Dialog.Header>
+								<Dialog.Title>Dialog Title</Dialog.Title>
+								<Dialog.Description>Dialog Description</Dialog.Description>
+							</Dialog.Header>
+							<Dialog.Body>This is the dialog body content.</Dialog.Body>
+							<Dialog.Footer>
+								<Dialog.CloseTrigger asChild>
+									<Button variant="outline">Cancel</Button>
+								</Dialog.CloseTrigger>
+								<Dialog.ActionTrigger asChild>
+									<Button>Confirm</Button>
+								</Dialog.ActionTrigger>
+							</Dialog.Footer>
+						</Dialog.Content>
+					</Dialog.Positioner>
+				</Dialog.Root>
+			</div>
+
+			{/* Drawer Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Drawer Component Examples
+				</Heading>
+				<Drawer.Root interactive>
+					<Drawer.Trigger asChild>
+						<Button variant="outline">Open Drawer</Button>
+					</Drawer.Trigger>
+					<Drawer.Backdrop />
+					<Drawer.Positioner>
+						<Drawer.Content>
+							<Drawer.Header>
+								<Drawer.Title>Drawer Title</Drawer.Title>
+								<Drawer.Description>Drawer Description</Drawer.Description>
+							</Drawer.Header>
+							<Drawer.Body>This is the drawer body content.</Drawer.Body>
+							<Drawer.Footer>
+								<Drawer.CloseTrigger asChild>
+									<Button variant="outline">Cancel</Button>
+								</Drawer.CloseTrigger>
+								<Drawer.ActionTrigger asChild>
+									<Button>Confirm</Button>
+								</Drawer.ActionTrigger>
+							</Drawer.Footer>
+						</Drawer.Content>
+					</Drawer.Positioner>
+				</Drawer.Root>
+			</div>
+
+			{/* Popover Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Popover Component Examples
+				</Heading>
+				<Popover.Root interactive>
+					<Popover.Trigger asChild>
+						<Button variant="outline">Open Popover</Button>
+					</Popover.Trigger>
+					<Popover.Positioner>
+						<Popover.Content>
+							<Popover.Arrow>
+								<Popover.ArrowTip />
+							</Popover.Arrow>
+							<Popover.Header>
+								<Popover.Title>Popover Title</Popover.Title>
+							</Popover.Header>
+							<Popover.Body>This is the popover body content.</Popover.Body>
+							<Popover.CloseTrigger asChild>
+								<IconButton
+									aria-label="Close"
+									variant="ghost"
+									size="sm"
+									class={css({ position: "absolute", top: "2", right: "2" })}
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="20"
+										height="20"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									>
+										<title>Close</title>
+										<path d="M18 6 6 18M6 6l12 12" />
+									</svg>
+								</IconButton>
+							</Popover.CloseTrigger>
+						</Popover.Content>
+					</Popover.Positioner>
+				</Popover.Root>
+			</div>
+
+			{/* Splitter Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Splitter Component Examples
+				</Heading>
+				<Splitter.Root
+					interactive
+					defaultSize={[
+						{ id: "left", size: 50 },
+						{ id: "right", size: 50 },
+					]}
+					class={css({
+						width: "full",
+						height: "200px",
+						borderWidth: "1px",
+						borderRadius: "md",
+					})}
+				>
+					<Splitter.Panel id="left">
+						<AbsoluteCenter>Left Panel</AbsoluteCenter>
+					</Splitter.Panel>
+					<Splitter.ResizeTrigger id="left:right" />
+					<Splitter.Panel id="right">
+						<AbsoluteCenter>Right Panel</AbsoluteCenter>
+					</Splitter.Panel>
+				</Splitter.Root>
 			</div>
 
 			{/* Button Examples */}
@@ -1048,11 +1226,11 @@ export default createRoute((c) => {
 					Tooltip Component Examples
 				</Heading>
 				<div class={css({ display: "flex", gap: "8" })}>
-					<Tooltip content="This is a static tooltip" interactable={false}>
+					<Tooltip content="This is a static tooltip" interactive={false}>
 						<Button variant="outline">Static Tooltip</Button>
 					</Tooltip>
 
-					<Tooltip content="This is an interactive tooltip" interactable={true}>
+					<Tooltip content="This is an interactive tooltip" interactive={true}>
 						<Button variant="outline">Interactive Tooltip</Button>
 					</Tooltip>
 
