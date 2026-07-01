@@ -228,21 +228,19 @@ export function FieldHelperText(props: { children?: any; class?: string }) {
 export function FieldErrorText(props: { children?: any; class?: string }) {
 	const context = useFieldContext();
 	const styles = field();
-	if (context?.invalid) {
-		return (
-			<div
-				id={context?.errorTextId}
-				class={cx(styles.errorText, props.class)}
-				data-disabled={context?.disabled ? "" : undefined}
-				data-invalid={context?.invalid ? "" : undefined}
-				data-readonly={context?.readOnly ? "" : undefined}
-				data-required={context?.required ? "" : undefined}
-			>
-				{props.children || context.errorText}
-			</div>
-		);
-	}
-	return null;
+	return (
+		<div
+			id={context?.errorTextId}
+			class={cx(styles.errorText, props.class)}
+			data-disabled={context?.disabled ? "" : undefined}
+			data-invalid={context?.invalid ? "" : undefined}
+			data-readonly={context?.readOnly ? "" : undefined}
+			data-required={context?.required ? "" : undefined}
+			style={context?.invalid ? {} : { display: "none" }}
+		>
+			{props.children || context?.errorText}
+		</div>
+	);
 }
 
 export function FieldRequiredIndicator(props: {

@@ -38,3 +38,11 @@ export function Field(props: FieldProps) {
 
 	return <FieldRoot {...props} />;
 }
+
+export {
+	FieldLabel,
+	FieldHelperText,
+	FieldErrorText,
+	FieldRequiredIndicator,
+	useFieldContext,
+} from "./field-primitive";

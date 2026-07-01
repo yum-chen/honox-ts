@@ -6,7 +6,7 @@ import {
 
 export interface CheckboxProps extends BaseCheckboxProps {
 	interactive?: boolean;
-	defaultChecked?: boolean | "indeterminate";
+	defaultChecked?: boolean;
 }
 
 export function Checkbox(props: CheckboxProps) {

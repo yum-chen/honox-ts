@@ -29,7 +29,11 @@ export function Textarea(props: TextareaProps) {
 			minLength !== undefined);
 
 	if (isInteractive) {
-		return <TextareaIsland {...props} />;
+		const islandProps = { ...props };
+		if (typeof islandProps.validator === "function") {
+			islandProps.validator = islandProps.validator.toString();
+		}
+		return <TextareaIsland {...islandProps} />;
 	}
 
 	return <TextareaPrimitive {...props} />;

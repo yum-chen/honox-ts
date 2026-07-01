@@ -14,6 +14,7 @@ import {
 	IconButton,
 	Spinner,
 	Text,
+	Textarea,
 } from "../components/ui";
 
 export default createRoute((c) => {
@@ -292,80 +293,6 @@ export default createRoute((c) => {
 				/>
 			</div>
 
-			{/* Button Examples */}
-			<div
-				class={css({
-					mt: "8",
-					display: "flex",
-					flexDirection: "column",
-					gap: "4",
-					alignItems: "center",
-					maxWidth: "xl",
-					mx: "auto",
-				})}
-			>
-				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
-					Button Component Examples
-				</Heading>
-
-				<div class={css({ display: "flex", gap: "4", flexWrap: "wrap" })}>
-					<Button variant="solid" colorPalette="blue">
-						Solid
-					</Button>
-					<Button variant="outline" colorPalette="green">
-						Outline
-					</Button>
-					<Button variant="ghost" colorPalette="red">
-						Ghost
-					</Button>
-					<Button variant="link" colorPalette="purple">
-						Link
-					</Button>
-				</div>
-
-				<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
-					<Button size="xs">Extra Small</Button>
-					<Button size="sm">Small</Button>
-					<Button size="md">Medium</Button>
-					<Button size="lg">Large</Button>
-				</div>
-
-				<div class={css({ display: "flex", gap: "4" })}>
-					<Button loading loadingText="Loading...">
-						Click me
-					</Button>
-					<Button loading>Spinner only</Button>
-					<Button
-						interactive
-						onClick={() => alert("Button clicked!")}
-						colorPalette="orange"
-					>
-						Interactive Alert
-					</Button>
-				</div>
-			</div>
-
-			{/* Spinner Examples */}
-			<div
-				class={css({
-					mt: "8",
-					display: "flex",
-					flexDirection: "column",
-					gap: "4",
-					alignItems: "center",
-				})}
-			>
-				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
-					Spinner Component Examples
-				</Heading>
-				<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
-					<Spinner size="sm" />
-					<Spinner size="md" />
-					<Spinner size="lg" />
-					<Spinner size="xl" />
-				</div>
-			</div>
-
 			{/* Group Examples */}
 			<div
 				class={css({
@@ -453,20 +380,24 @@ export default createRoute((c) => {
 				</div>
 			</div>
 
-			{/* Field Examples - using plain HTML to isolate */}
+			{/* Field & Textarea Examples */}
 			<div
 				class={css({
 					mt: "8",
 					display: "flex",
 					flexDirection: "column",
 					gap: "8",
-					alignItems: "center",
+					alignItems: "stretch",
 					maxWidth: "xl",
 					mx: "auto",
+					textAlign: "left",
 				})}
 			>
-				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
-					Field Component Examples
+				<Heading
+					as="h2"
+					class={css({ fontSize: "xl", mb: "4", textAlign: "center" })}
+				>
+					Field & Textarea Component Examples
 				</Heading>
 
 				<Field
@@ -478,8 +409,17 @@ export default createRoute((c) => {
 					}
 					minLength={5}
 					helperText="We'll never share your email."
-					type="email"
 					placeholder="Enter your email"
+				/>
+
+				<Textarea
+					label="Bio"
+					placeholder="Tell us about yourself"
+					helperText="Brief description for your profile."
+					minLength={10}
+					validator={(value) =>
+						value.includes("badword") ? "Please be polite!" : true
+					}
 				/>
 			</div>
 		</div>,

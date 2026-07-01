@@ -4,7 +4,7 @@ import {
 	ButtonGroup as ButtonGroupBase,
 	type ButtonGroupProps,
 	type ButtonProps,
-} from "./button-base";
+} from "./button-primitive";
 
 export function Button(props: ButtonProps) {
 	if (props.interactive) {
