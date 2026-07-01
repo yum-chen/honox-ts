@@ -1,4 +1,3 @@
-import type { Child } from "hono/jsx";
 import FieldIsland from "../../islands/field";
 import {
 	type FieldProps as BaseFieldProps,

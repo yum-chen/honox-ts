@@ -14,19 +14,21 @@ interface FieldsetContextValue {
 
 const FieldsetContext = createContext<FieldsetContextValue | null>(null);
 
-export const useFieldsetContext = () => useContext(FieldsetContext);
+const useFieldsetContext = () => useContext(FieldsetContext);
 
-export interface FieldsetProps extends FieldsetVariantProps {
+interface FieldsetProps extends FieldsetVariantProps {
 	children?: Child;
 	class?: string;
 	id?: string;
 	disabled?: boolean;
 	invalid?: boolean;
-	interactive?: boolean;
+	legend?: Child;
+	helperText?: Child;
+	errorText?: Child;
 	[key: string]: unknown;
 }
 
-export function Fieldset(props: FieldsetProps) {
+function FieldsetRoot(props: FieldsetProps) {
 	const [variantProps, localProps] = fieldset.splitVariantProps(props);
 	const {
 		children,
@@ -34,6 +36,9 @@ export function Fieldset(props: FieldsetProps) {
 		id: idProp,
 		disabled = props.disabled,
 		invalid = props.invalid,
+		legend,
+		helperText,
+		errorText,
 		...restProps
 	} = localProps;
 
@@ -50,8 +55,8 @@ export function Fieldset(props: FieldsetProps) {
 	};
 
 	const describedBy = [];
-	describedBy.push(contextValue.helperTextId);
-	if (invalid) describedBy.push(contextValue.errorTextId);
+	if (helperText) describedBy.push(contextValue.helperTextId);
+	if (invalid && errorText) describedBy.push(contextValue.errorTextId);
 
 	return (
 		<FieldsetContext.Provider value={contextValue}>
@@ -59,19 +64,24 @@ export function Fieldset(props: FieldsetProps) {
 				id={id}
 				class={cx(styles.root, classProp)}
 				disabled={disabled}
-				aria-describedby={describedBy.join(" ")}
+				aria-describedby={
+					describedBy.length > 0 ? describedBy.join(" ") : undefined
+				}
 				aria-invalid={invalid ? "true" : undefined}
 				data-invalid={invalid ? "" : undefined}
 				data-disabled={disabled ? "" : undefined}
 				{...restProps}
 			>
+				{legend && <FieldsetLegend>{legend}</FieldsetLegend>}
 				{children}
+				{helperText && <FieldsetHelperText>{helperText}</FieldsetHelperText>}
+				{errorText && <FieldsetErrorText>{errorText}</FieldsetErrorText>}
 			</fieldset>
 		</FieldsetContext.Provider>
 	);
 }
 
-export function FieldsetLegend(props: { children?: Child; class?: string }) {
+function FieldsetLegend(props: { children?: Child; class?: string }) {
 	const context = useFieldsetContext();
 	const styles = fieldset();
 	return (
@@ -85,10 +95,7 @@ export function FieldsetLegend(props: { children?: Child; class?: string }) {
 	);
 }
 
-export function FieldsetHelperText(props: {
-	children?: Child;
-	class?: string;
-}) {
+function FieldsetHelperText(props: { children?: Child; class?: string }) {
 	const context = useFieldsetContext();
 	const styles = fieldset();
 	return (
@@ -103,7 +110,7 @@ export function FieldsetHelperText(props: {
 	);
 }
 
-export function FieldsetErrorText(props: { children?: Child; class?: string }) {
+function FieldsetErrorText(props: { children?: Child; class?: string }) {
 	const context = useFieldsetContext();
 	const styles = fieldset();
 	if (context?.invalid) {
@@ -121,7 +128,7 @@ export function FieldsetErrorText(props: { children?: Child; class?: string }) {
 	return null;
 }
 
-export function FieldsetContent(props: {
+function FieldsetContent(props: {
 	children?: Child;
 	class?: string;
 	[key: string]: unknown;
@@ -135,7 +142,7 @@ export function FieldsetContent(props: {
 	);
 }
 
-export function FieldsetControl(props: {
+function FieldsetControl(props: {
 	children?: Child;
 	class?: string;
 	[key: string]: unknown;
@@ -148,3 +155,14 @@ export function FieldsetControl(props: {
 		</div>
 	);
 }
+
+const Fieldset = Object.assign(FieldsetRoot, {
+	Legend: FieldsetLegend,
+	HelperText: FieldsetHelperText,
+	ErrorText: FieldsetErrorText,
+	Content: FieldsetContent,
+	Control: FieldsetControl,
+});
+
+export { Fieldset, useFieldsetContext };
+export type { FieldsetProps };

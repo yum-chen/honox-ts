@@ -13,11 +13,6 @@ import {
 	CloseButton,
 	Field,
 	Fieldset,
-	FieldsetContent,
-	FieldsetControl,
-	FieldsetErrorText,
-	FieldsetHelperText,
-	FieldsetLegend,
 	Group,
 	Heading,
 	IconButton,
@@ -961,27 +956,27 @@ export default createRoute((c) => {
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
 					Fieldset Component Examples
 				</Heading>
-				<Fieldset>
-					<FieldsetLegend>Shipping Information</FieldsetLegend>
-					<FieldsetHelperText>
-						Please enter your delivery details.
-					</FieldsetHelperText>
-					<FieldsetContent>
-						<FieldsetControl>
+				<Fieldset
+					legend="Shipping Information"
+					helperText="Please enter your delivery details."
+				>
+					<Fieldset.Content>
+						<Fieldset.Control>
 							<Field label="Full Name" placeholder="John Doe" />
 							<Field label="Address" placeholder="123 Main St" />
-						</FieldsetControl>
-					</FieldsetContent>
+						</Fieldset.Control>
+					</Fieldset.Content>
 				</Fieldset>
 
-				<Fieldset invalid class={css({ mt: "4" })}>
-					<FieldsetLegend>Account Settings</FieldsetLegend>
-					<FieldsetContent>
+				<Fieldset
+					invalid
+					class={css({ mt: "4" })}
+					legend="Account Settings"
+					errorText="Please fix the errors in this section."
+				>
+					<Fieldset.Content>
 						<Field label="Email" defaultValue="invalid-email" />
-					</FieldsetContent>
-					<FieldsetErrorText>
-						Please fix the errors in this section.
-					</FieldsetErrorText>
+					</Fieldset.Content>
 				</Fieldset>
 			</div>
 
