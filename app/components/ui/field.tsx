@@ -43,7 +43,3 @@ export {
 	FieldRequiredIndicator,
 	FieldRoot,
 } from "./field-primitive";
-
-export function FieldGroup(props: { children: Child; [key: string]: unknown }) {
-	return props.children;
-}

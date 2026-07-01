@@ -22,7 +22,6 @@ export { Checkbox, type CheckboxProps } from "./checkbox";
 export {
 	Field,
 	FieldErrorText,
-	FieldGroup,
 	FieldHelperText,
 	FieldLabel,
 	type FieldProps,
