@@ -60,12 +60,15 @@ export function Trigger(props: TriggerProps) {
 		"aria-haspopup": "dialog",
 		"aria-expanded": open,
 		onClick: () => onOpenChange?.(!open),
-		class: cx(classProp),
 		...restProps,
 	};
 
-	if (asChild && children) {
-		return cloneElement(children as any, triggerProps);
+	if (asChild && typeof children === "object" && children !== null) {
+		const child = children as any;
+		return cloneElement(child, {
+			...triggerProps,
+			class: cx(classProp, child.props?.class),
+		});
 	}
 
 	return (
@@ -256,16 +259,23 @@ export function CloseTrigger(props: CloseTriggerProps) {
 		...restProps,
 	};
 
+	if (asChild && typeof children === "object" && children !== null) {
+		const child = children as any;
+		return cloneElement(child, {
+			...triggerProps,
+			class: cx(styles?.closeTrigger, classProp, child.props?.class),
+		});
+	}
+
 	return (
-		<div class={cx(styles?.closeTrigger, classProp)}>
-			{asChild && children ? (
-				cloneElement(children as any, triggerProps)
-			) : (
-				<button type="button" aria-label="Close" {...triggerProps}>
-					{children}
-				</button>
-			)}
-		</div>
+		<button
+			type="button"
+			aria-label="Close"
+			class={cx(styles?.closeTrigger, classProp)}
+			{...triggerProps}
+		>
+			{children}
+		</button>
 	);
 }
 
@@ -281,16 +291,19 @@ export function ActionTrigger(props: ActionTriggerProps) {
 
 	const triggerProps = {
 		onClick: () => onOpenChange?.(false),
-		class: cx(classProp),
 		...restProps,
 	};
 
-	if (asChild && children) {
-		return cloneElement(children as any, triggerProps);
+	if (asChild && typeof children === "object" && children !== null) {
+		const child = children as any;
+		return cloneElement(child, {
+			...triggerProps,
+			class: cx(classProp, child.props?.class),
+		});
 	}
 
 	return (
-		<button type="button" {...triggerProps}>
+		<button type="button" class={cx(classProp)} {...triggerProps}>
 			{children}
 		</button>
 	);

@@ -16,13 +16,13 @@ import {
 } from "./popover-base";
 
 export interface PopoverProps extends PopoverRootProps {
-	interactable?: boolean;
+	interactive?: boolean;
 }
 
 export function Root(props: PopoverProps) {
-	const { interactable = true, ...rest } = props;
+	const { interactive = true, ...rest } = props;
 
-	if (interactable) {
+	if (interactive) {
 		return <PopoverIsland {...rest} />;
 	}
 

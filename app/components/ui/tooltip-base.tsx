@@ -1,5 +1,6 @@
 import {
 	type Child,
+	cloneElement,
 	createContext,
 	type PropsWithChildren,
 	useContext,
@@ -20,11 +21,6 @@ const TooltipContext = createContext<TooltipContextValue | null>(null);
 
 const useTooltipContext = () => {
 	const context = useContext(TooltipContext);
-	if (!context) {
-		throw new Error(
-			"Tooltip components must be wrapped in <TooltipRoot /> or <Tooltip />",
-		);
-	}
 	return context;
 };
 
@@ -56,29 +52,32 @@ export interface TooltipTriggerProps extends PropsWithChildren {
 
 export function TooltipTrigger(props: TooltipTriggerProps) {
 	const { children, class: classProp, asChild, ...restProps } = props;
-	const { id, open, styles } = useTooltipContext();
+	const context = useTooltipContext();
+	const id = context?.id;
+	const open = context?.open;
+	const styles = context?.styles;
 
 	const triggerProps = {
-		id: `tooltip-trigger-${id}`,
-		"aria-describedby": open ? `tooltip-content-${id}` : undefined,
-		class: cx(styles.trigger, classProp),
+		id: id ? `tooltip-trigger-${id}` : undefined,
+		"aria-describedby": open && id ? `tooltip-content-${id}` : undefined,
 		"data-state": open ? "open" : "closed",
 		...restProps,
 	};
 
 	if (asChild && typeof children === "object" && children !== null) {
 		const child = children as any;
-		return {
-			...child,
-			props: {
-				...child.props,
-				...triggerProps,
-			},
-		};
+		return cloneElement(child, {
+			...triggerProps,
+			class: cx(styles?.trigger, classProp, child.props?.class),
+		});
 	}
 
 	return (
-		<div style={{ display: "inline-block" }} {...triggerProps}>
+		<div
+			style={{ display: "inline-block" }}
+			class={cx(styles?.trigger, classProp)}
+			{...triggerProps}
+		>
 			{children}
 		</div>
 	);
@@ -91,13 +90,15 @@ export interface TooltipPositionerProps extends PropsWithChildren {
 
 export function TooltipPositioner(props: TooltipPositionerProps) {
 	const { children, class: classProp, ...restProps } = props;
-	const { open, styles } = useTooltipContext();
+	const context = useTooltipContext();
+	const open = context?.open;
+	const styles = context?.styles;
 
 	if (!open) return null;
 
 	return (
 		<div
-			class={cx(styles.positioner, classProp)}
+			class={cx(styles?.positioner, classProp)}
 			data-state={open ? "open" : "closed"}
 			style={{
 				position: "absolute",
@@ -122,13 +123,16 @@ export interface TooltipContentProps extends PropsWithChildren {
 
 export function TooltipContent(props: TooltipContentProps) {
 	const { children, class: classProp, ...restProps } = props;
-	const { id, open, styles } = useTooltipContext();
+	const context = useTooltipContext();
+	const id = context?.id;
+	const open = context?.open;
+	const styles = context?.styles;
 
 	return (
 		<div
-			id={`tooltip-content-${id}`}
+			id={id ? `tooltip-content-${id}` : undefined}
 			role="tooltip"
-			class={cx(styles.content, classProp)}
+			class={cx(styles?.content, classProp)}
 			data-state={open ? "open" : "closed"}
 			{...restProps}
 		>
@@ -139,9 +143,10 @@ export function TooltipContent(props: TooltipContentProps) {
 
 export function TooltipArrow(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...restProps } = props;
-	const { styles } = useTooltipContext();
+	const context = useTooltipContext();
+	const styles = context?.styles;
 	return (
-		<div class={cx(styles.arrow, classProp)} {...restProps}>
+		<div class={cx(styles?.arrow, classProp)} {...restProps}>
 			{children}
 		</div>
 	);
@@ -149,8 +154,9 @@ export function TooltipArrow(props: PropsWithChildren<{ class?: string }>) {
 
 export function TooltipArrowTip(props: { class?: string }) {
 	const { class: classProp, ...restProps } = props;
-	const { styles } = useTooltipContext();
-	return <div class={cx(styles.arrowTip, classProp)} {...restProps} />;
+	const context = useTooltipContext();
+	const styles = context?.styles;
+	return <div class={cx(styles?.arrowTip, classProp)} {...restProps} />;
 }
 
 export interface TooltipBaseProps extends TooltipRootProps {

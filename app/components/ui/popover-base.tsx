@@ -1,5 +1,6 @@
 import {
 	type Child,
+	cloneElement,
 	createContext,
 	type PropsWithChildren,
 	useContext,
@@ -23,11 +24,6 @@ const PopoverContext = createContext<PopoverContextValue | null>(null);
 
 const usePopoverContext = () => {
 	const context = useContext(PopoverContext);
-	if (!context) {
-		throw new Error(
-			"Popover components must be wrapped in <PopoverRoot /> or <Popover />",
-		);
-	}
 	return context;
 };
 
@@ -59,14 +55,17 @@ export interface PopoverTriggerProps extends PropsWithChildren {
 
 export function PopoverTrigger(props: PopoverTriggerProps) {
 	const { children, class: classProp, asChild, ...restProps } = props;
-	const { id, open, styles, onToggle } = usePopoverContext();
+	const context = usePopoverContext();
+	const id = context?.id;
+	const open = context?.open;
+	const styles = context?.styles;
+	const onToggle = context?.onToggle;
 
 	const triggerProps = {
-		id: `popover-trigger-${id}`,
+		id: id ? `popover-trigger-${id}` : undefined,
 		"aria-haspopup": "dialog",
 		"aria-expanded": open ? "true" : "false",
-		"aria-controls": open ? `popover-content-${id}` : undefined,
-		class: cx(styles.trigger, classProp),
+		"aria-controls": open && id ? `popover-content-${id}` : undefined,
 		"data-state": open ? "open" : "closed",
 		onClick: onToggle,
 		...restProps,
@@ -74,13 +73,10 @@ export function PopoverTrigger(props: PopoverTriggerProps) {
 
 	if (asChild && typeof children === "object" && children !== null) {
 		const child = children as any;
-		return {
-			...child,
-			props: {
-				...child.props,
-				...triggerProps,
-			},
-		};
+		return cloneElement(child, {
+			...triggerProps,
+			class: cx(styles?.trigger, classProp, child.props?.class),
+		});
 	}
 
 	return (
@@ -97,13 +93,15 @@ export interface PopoverPositionerProps extends PropsWithChildren {
 
 export function PopoverPositioner(props: PopoverPositionerProps) {
 	const { children, class: classProp, ...restProps } = props;
-	const { open, styles } = usePopoverContext();
+	const context = usePopoverContext();
+	const open = context?.open;
+	const styles = context?.styles;
 
 	if (!open) return null;
 
 	return (
 		<div
-			class={cx(styles.positioner, classProp)}
+			class={cx(styles?.positioner, classProp)}
 			data-state={open ? "open" : "closed"}
 			style={{
 				position: "absolute",
@@ -125,13 +123,16 @@ export interface PopoverContentProps extends PropsWithChildren {
 
 export function PopoverContent(props: PopoverContentProps) {
 	const { children, class: classProp, ...restProps } = props;
-	const { id, open, styles } = usePopoverContext();
+	const context = usePopoverContext();
+	const id = context?.id;
+	const open = context?.open;
+	const styles = context?.styles;
 
 	return (
 		<div
-			id={`popover-content-${id}`}
+			id={id ? `popover-content-${id}` : undefined}
 			role="dialog"
-			class={cx(styles.content, classProp)}
+			class={cx(styles?.content, classProp)}
 			data-state={open ? "open" : "closed"}
 			tabIndex={-1}
 			{...restProps}
@@ -143,9 +144,10 @@ export function PopoverContent(props: PopoverContentProps) {
 
 export function PopoverHeader(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...restProps } = props;
-	const { styles } = usePopoverContext();
+	const context = usePopoverContext();
+	const styles = context?.styles;
 	return (
-		<header class={cx(styles.header, classProp)} {...restProps}>
+		<header class={cx(styles?.header, classProp)} {...restProps}>
 			{children}
 		</header>
 	);
@@ -153,9 +155,10 @@ export function PopoverHeader(props: PropsWithChildren<{ class?: string }>) {
 
 export function PopoverBody(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...restProps } = props;
-	const { styles } = usePopoverContext();
+	const context = usePopoverContext();
+	const styles = context?.styles;
 	return (
-		<div class={cx(styles.body, classProp)} {...restProps}>
+		<div class={cx(styles?.body, classProp)} {...restProps}>
 			{children}
 		</div>
 	);
@@ -163,9 +166,10 @@ export function PopoverBody(props: PropsWithChildren<{ class?: string }>) {
 
 export function PopoverFooter(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...restProps } = props;
-	const { styles } = usePopoverContext();
+	const context = usePopoverContext();
+	const styles = context?.styles;
 	return (
-		<footer class={cx(styles.footer, classProp)} {...restProps}>
+		<footer class={cx(styles?.footer, classProp)} {...restProps}>
 			{children}
 		</footer>
 	);
@@ -173,9 +177,10 @@ export function PopoverFooter(props: PropsWithChildren<{ class?: string }>) {
 
 export function PopoverTitle(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...restProps } = props;
-	const { styles } = usePopoverContext();
+	const context = usePopoverContext();
+	const styles = context?.styles;
 	return (
-		<h2 class={cx(styles.title, classProp)} {...restProps}>
+		<h2 class={cx(styles?.title, classProp)} {...restProps}>
 			{children}
 		</h2>
 	);
@@ -185,26 +190,45 @@ export function PopoverDescription(
 	props: PropsWithChildren<{ class?: string }>,
 ) {
 	const { children, class: classProp, ...restProps } = props;
-	const { styles } = usePopoverContext();
+	const context = usePopoverContext();
+	const styles = context?.styles;
 	return (
-		<p class={cx(styles.description, classProp)} {...restProps}>
+		<p class={cx(styles?.description, classProp)} {...restProps}>
 			{children}
 		</p>
 	);
 }
 
-export function PopoverCloseTrigger(
-	props: PropsWithChildren<{ class?: string }>,
-) {
-	const { children, class: classProp, ...restProps } = props;
-	const { styles, onClose } = usePopoverContext();
+export interface PopoverCloseTriggerProps extends PropsWithChildren {
+	class?: string;
+	asChild?: boolean;
+}
+
+export function PopoverCloseTrigger(props: PopoverCloseTriggerProps) {
+	const { children, class: classProp, asChild, ...restProps } = props;
+	const context = usePopoverContext();
+	const styles = context?.styles;
+	const onClose = context?.onClose;
+
+	const triggerProps = {
+		onClick: onClose,
+		"aria-label": "Close",
+		...restProps,
+	};
+
+	if (asChild && typeof children === "object" && children !== null) {
+		const child = children as any;
+		return cloneElement(child, {
+			...triggerProps,
+			class: cx(styles?.closeTrigger, classProp, child.props?.class),
+		});
+	}
+
 	return (
 		<button
 			type="button"
-			class={cx(styles.closeTrigger, classProp)}
-			onClick={onClose}
-			aria-label="Close"
-			{...restProps}
+			class={cx(styles?.closeTrigger, classProp)}
+			{...triggerProps}
 		>
 			{children}
 		</button>
@@ -213,9 +237,10 @@ export function PopoverCloseTrigger(
 
 export function PopoverArrow(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...restProps } = props;
-	const { styles } = usePopoverContext();
+	const context = usePopoverContext();
+	const styles = context?.styles;
 	return (
-		<div class={cx(styles.arrow, classProp)} {...restProps}>
+		<div class={cx(styles?.arrow, classProp)} {...restProps}>
 			{children}
 		</div>
 	);
@@ -223,8 +248,9 @@ export function PopoverArrow(props: PropsWithChildren<{ class?: string }>) {
 
 export function PopoverArrowTip(props: { class?: string }) {
 	const { class: classProp, ...restProps } = props;
-	const { styles } = usePopoverContext();
-	return <div class={cx(styles.arrowTip, classProp)} {...restProps} />;
+	const context = usePopoverContext();
+	const styles = context?.styles;
+	return <div class={cx(styles?.arrowTip, classProp)} {...restProps} />;
 }
 
 export function InteractivePopoverRoot(props: PopoverRootProps) {

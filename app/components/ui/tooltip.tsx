@@ -16,13 +16,13 @@ export interface TooltipProps extends TooltipRootProps {
 	 * Whether the tooltip should be interactive (hydrated as an island).
 	 * Defaults to true if not explicitly set to false.
 	 */
-	interactable?: boolean;
+	interactive?: boolean;
 }
 
 export function Root(props: TooltipProps) {
-	const { interactable = true, ...rest } = props;
+	const { interactive = true, ...rest } = props;
 
-	if (interactable) {
+	if (interactive) {
 		return <TooltipIsland {...rest} />;
 	}
 
@@ -32,10 +32,10 @@ export function Root(props: TooltipProps) {
 /**
  * A high-level Tooltip component for common use cases.
  */
-export function Tooltip(props: TooltipBaseProps & { interactable?: boolean }) {
-	const { interactable = true, ...rest } = props;
+export function Tooltip(props: TooltipBaseProps & { interactive?: boolean }) {
+	const { interactive = true, ...rest } = props;
 
-	if (interactable) {
+	if (interactive) {
 		return <TooltipIsland {...rest} />;
 	}
 
