@@ -5,7 +5,7 @@ export const badge = defineRecipe({
 	base: {
 		display: "inline-flex",
 		alignItems: "center",
-		borderRadius: "full",
+		borderRadius: "l2",
 		lineHeight: "1",
 		fontWeight: "medium",
 		fontVariantNumeric: "tabular-nums",
@@ -21,33 +21,21 @@ export const badge = defineRecipe({
 			solid: {
 				bg: "colorPalette.solid.bg",
 				color: "colorPalette.solid.fg",
-				_hover: {
-					bg: "colorPalette.solid.bg.hover",
-				},
 			},
 			subtle: {
 				bg: "colorPalette.subtle.bg",
 				color: "colorPalette.subtle.fg",
-				_hover: {
-					bg: "colorPalette.subtle.bg.hover",
-				},
 			},
 			outline: {
 				borderWidth: "1px",
 				borderColor: "colorPalette.outline.border",
 				color: "colorPalette.outline.fg",
-				_hover: {
-					bg: "colorPalette.outline.bg.hover",
-				},
 			},
 			surface: {
 				bg: "colorPalette.surface.bg",
 				color: "colorPalette.surface.fg",
 				borderWidth: "1px",
 				borderColor: "colorPalette.surface.border",
-				_hover: {
-					bg: "colorPalette.surface.bg.active",
-				},
 			},
 		},
 		size: {

@@ -19,18 +19,30 @@ export interface BadgeProps
 				| "pink"
 				| "teal"
 				| "indigo"
-				| "gray";
+				| "gray"
+				| "success"
+				| "error"
+				| "warning";
 		}> {}
 
 export function Badge(props: BadgeProps) {
 	const [variantProps, localProps] = badge.splitVariantProps(props);
 	const { children, class: classProp, colorPalette, ...restProps } = localProps;
 
+	const colorPaletteMap: Record<string, string> = {
+		success: "green",
+		error: "red",
+		warning: "orange",
+	};
+
+	const resolvedColorPalette =
+		(colorPalette && colorPaletteMap[colorPalette]) || colorPalette || "gray";
+
 	return (
 		<div
 			class={cx(
 				badge(variantProps),
-				css({ colorPalette: colorPalette || "gray" }),
+				css({ colorPalette: resolvedColorPalette }),
 				classProp,
 			)}
 			{...restProps}
