@@ -13,6 +13,9 @@ import {
 	Group,
 	Heading,
 	IconButton,
+	Skeleton,
+	SkeletonCircle,
+	SkeletonText,
 	Spinner,
 	Switch,
 	Text,
@@ -746,6 +749,106 @@ export default createRoute((c) => {
 					defaultValue="usr"
 					placeholder="Enter username"
 				/>
+			</div>
+
+			{/* Skeleton Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Skeleton Component Examples
+				</Heading>
+
+				<div
+					class={css({
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+						width: "full",
+					})}
+				>
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							alignItems: "flex-start",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic Skeleton
+						</Text>
+						<Skeleton class={css({ height: "4", width: "full" })} />
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							alignItems: "flex-start",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Skeleton Circle
+						</Text>
+						<SkeletonCircle class={css({ size: "12" })} />
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							alignItems: "flex-start",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Skeleton Text
+						</Text>
+						<SkeletonText noOfLines={3} gap="3" />
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							alignItems: "flex-start",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Skeleton with Children (Loading: true)
+						</Text>
+						<Skeleton loading={true}>
+							<Button>Loaded Content</Button>
+						</Skeleton>
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							alignItems: "flex-start",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Skeleton with Children (Loading: false)
+						</Text>
+						<Skeleton loading={false}>
+							<Button>Loaded Content</Button>
+						</Skeleton>
+					</div>
+				</div>
 			</div>
 		</div>,
 	);

@@ -130,4 +130,12 @@ export const keyframes = defineKeyframes({
 			insetBlockStart: "var(--animate-to-y)",
 		},
 	},
+	pulse: {
+		"0%, 100%": {
+			opacity: "1",
+		},
+		"50%": {
+			opacity: "0.5",
+		},
+	},
 });

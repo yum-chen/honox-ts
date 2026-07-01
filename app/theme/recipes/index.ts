@@ -9,6 +9,7 @@ import { field } from "./field";
 import { fieldset } from "./fieldset";
 import { group } from "./group";
 import { heading } from "./heading";
+import { skeleton } from "./skeleton";
 import { spinner } from "./spinner";
 import { switchRecipe } from "./switch";
 import { text } from "./text";
@@ -23,6 +24,7 @@ export const recipes = {
 	spinner,
 	text,
 	textarea,
+	skeleton,
 };
 
 export const slotRecipes = {
