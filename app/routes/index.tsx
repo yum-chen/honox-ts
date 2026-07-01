@@ -4,8 +4,13 @@ import {
 	Alert,
 	AlertIcon,
 	Badge,
+	Button,
+	ButtonGroup,
+	CloseButton,
 	Field,
 	Heading,
+	IconButton,
+	Spinner,
 	Text,
 } from "../components/ui";
 
@@ -17,6 +22,44 @@ export default createRoute((c) => {
 			<Heading as="h1" class={css({ fontSize: "3xl", fontWeight: "bold" })}>
 				Hello, {name}!
 			</Heading>
+
+			{/* Button Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "2" })}>
+					Button Component Examples
+				</Heading>
+
+				<div class={css({ display: "flex", gap: "4", flexWrap: "wrap", justifyContent: "center" })}>
+					<Button variant="solid" colorPalette="blue">Solid Blue</Button>
+					<Button variant="outline" colorPalette="green">Outline Green</Button>
+					<Button variant="subtle" colorPalette="red">Subtle Red</Button>
+					<Button variant="surface" colorPalette="purple">Surface Purple</Button>
+					<Button variant="plain">Plain</Button>
+				</div>
+
+				<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+					<Button loading loadingText="Saving...">Save</Button>
+					<Button interactive onclick="alert('Hello!')">Interactive</Button>
+					<IconButton aria-label="Search">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+					</IconButton>
+					<CloseButton />
+				</div>
+
+				<ButtonGroup variant="outline" attached>
+					<Button>Left</Button>
+					<Button>Middle</Button>
+					<Button>Right</Button>
+				</ButtonGroup>
+			</div>
 
 			{/* Badge Examples */}
 			<div
@@ -47,6 +90,26 @@ export default createRoute((c) => {
 				<Badge variant="surface" colorPalette="purple">
 					Surface
 				</Badge>
+			</div>
+
+			{/* Spinner Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "2" })}>
+					Spinner Component Examples
+				</Heading>
+				<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+					<Spinner size="sm" />
+					<Spinner size="md" />
+					<Spinner size="lg" />
+				</div>
 			</div>
 
 			{/* Text Examples */}

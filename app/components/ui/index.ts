@@ -13,6 +13,8 @@ export {
 	ButtonGroup,
 	type ButtonGroupProps,
 	type ButtonProps,
+	IconButton,
+	CloseButton,
 } from "./button";
 export { Checkbox, type CheckboxProps } from "./checkbox";
 export {

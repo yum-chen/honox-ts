@@ -1,86 +1,63 @@
-import type { PropsWithChildren } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
-import type { ButtonVariantProps } from "../../../styled-system/recipes";
-import { button } from "../../../styled-system/recipes";
-import { Group, type GroupProps } from "./group";
-import { Loader } from "./loader";
-
-export interface ButtonLoadingProps {
-	/**
-	 * If `true`, the button will show a loading spinner.
-	 * @default false
-	 */
-	loading?: boolean;
-	/**
-	 * The text to show while loading.
-	 */
-	loadingText?: any;
-	/**
-	 * The spinner to show while loading.
-	 */
-	spinner?: any;
-	/**
-	 * The placement of the spinner
-	 * @default "start"
-	 */
-	spinnerPlacement?: "start" | "end";
-}
-
-export interface ButtonProps
-	extends ButtonVariantProps,
-		ButtonLoadingProps,
-		PropsWithChildren<{
-			class?: string;
-			type?: "button" | "submit" | "reset";
-			disabled?: boolean;
-			[key: string]: unknown;
-		}> {}
+import ButtonIsland from "../../islands/button";
+import {
+	Button as ButtonBase,
+	ButtonGroup as ButtonGroupBase,
+	type ButtonGroupProps,
+	type ButtonProps,
+} from "./button-base";
 
 export function Button(props: ButtonProps) {
-	const [variantProps, localProps] = button.splitVariantProps(props);
-	const {
-		loading,
-		loadingText,
-		children,
-		spinner,
-		spinnerPlacement,
-		class: classProp,
-		type = "button",
-		disabled,
-		...rest
-	} = localProps;
+	if (props.interactive) {
+		return <ButtonIsland {...props} />;
+	}
+	return <ButtonBase {...props} />;
+}
 
+export function ButtonGroup(props: ButtonGroupProps) {
+	return <ButtonGroupBase {...props} />;
+}
+
+export function IconButton(props: ButtonProps) {
+	if (props.interactive) {
+		return <ButtonIsland {...props} px="0" />;
+	}
 	return (
-		<button
-			type={type}
-			class={cx(button(variantProps), classProp)}
-			disabled={loading || disabled}
-			data-loading={loading ? "" : undefined}
-			{...(rest as any)}
-		>
-			{loading ? (
-				<Loader
-					spinner={spinner}
-					text={loadingText}
-					spinnerPlacement={spinnerPlacement}
-				>
-					{children}
-				</Loader>
-			) : (
-				children
-			)}
-		</button>
+		<ButtonBase px="0" {...props}>
+			{props.children}
+		</ButtonBase>
 	);
 }
 
-export interface ButtonGroupProps extends GroupProps, ButtonVariantProps {}
-
-export function ButtonGroup(props: ButtonGroupProps) {
-	const [variantProps, localProps] = button.splitVariantProps(props);
-	const { children, ...rest } = localProps;
-
-	// In Hono JSX we don't have a clean way to provide context to children easily without Wrapper
-	// For now, we'll just render the Group and users should apply variants to buttons if needed
-	// or we could potentially clone children if we really wanted to, but that's complex in Hono
-	return <Group {...(rest as any)}>{children}</Group>;
+export function CloseButton(props: ButtonProps) {
+	if (props.interactive) {
+		return (
+			<ButtonIsland variant="plain" aria-label="Close" {...props} px="0">
+				<CloseIcon />
+			</ButtonIsland>
+		);
+	}
+	return (
+		<ButtonBase variant="plain" aria-label="Close" {...props} px="0">
+			<CloseIcon />
+		</ButtonBase>
+	);
 }
+
+const CloseIcon = () => (
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="24"
+		height="24"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+	>
+		<path d="M18 6 6 18" />
+		<path d="m6 6 12 12" />
+	</svg>
+);
+
+export type { ButtonGroupProps, ButtonProps };
