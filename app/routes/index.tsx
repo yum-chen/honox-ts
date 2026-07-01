@@ -919,7 +919,7 @@ export default createRoute((c) => {
 						justifyContent: "center",
 					})}
 				>
-					<Card.Root width="sm">
+					<Card.Root class={css({ width: "sm" })}>
 						<Card.Header>
 							<Card.Title>Team Members</Card.Title>
 							<Card.Description>
@@ -935,7 +935,7 @@ export default createRoute((c) => {
 						</Card.Footer>
 					</Card.Root>
 
-					<Card.Root width="sm" variant="subtle">
+					<Card.Root class={css({ width: "sm" })} variant="subtle">
 						<Card.Header>
 							<Card.Title>Subtle Card</Card.Title>
 						</Card.Header>
@@ -974,7 +974,7 @@ export default createRoute((c) => {
 					</FieldsetContent>
 				</Fieldset>
 
-				<Fieldset invalid mt="4">
+				<Fieldset invalid class={css({ mt: "4" })}>
 					<FieldsetLegend>Account Settings</FieldsetLegend>
 					<FieldsetContent>
 						<Field label="Email" defaultValue="invalid-email" />
@@ -1005,16 +1005,29 @@ export default createRoute((c) => {
 						width: "full",
 						display: "flex",
 						flexDirection: "column",
-						gap: "4",
+						gap: "8",
 					})}
 				>
-					<Textarea placeholder="Basic Textarea" />
-					<Textarea
-						placeholder="Interactive Textarea"
-						interactive
-						defaultValue="Hello from island!"
-					/>
-					<Textarea placeholder="Disabled Textarea" disabled />
+					<div class={css({ display: "flex", flexDirection: "column", gap: "2" })}>
+						<Text size="sm" class={css({ color: "fg.muted" })}>Static</Text>
+						<Textarea placeholder="Basic Textarea" />
+					</div>
+
+					<div class={css({ display: "flex", flexDirection: "column", gap: "2" })}>
+						<Text size="sm" class={css({ color: "fg.muted" })}>Interactive (Validated)</Text>
+						<Textarea
+							label="Feedback"
+							placeholder="Tell us what you think..."
+							interactive
+							minLength={10}
+							helperText="Minimum 10 characters required."
+						/>
+					</div>
+
+					<div class={css({ display: "flex", flexDirection: "column", gap: "2" })}>
+						<Text size="sm" class={css({ color: "fg.muted" })}>Disabled</Text>
+						<Textarea placeholder="Disabled Textarea" disabled />
+					</div>
 				</div>
 			</div>
 
