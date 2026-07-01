@@ -9,6 +9,8 @@ export const field = defineSlotRecipe({
 		"input",
 		"label",
 		"requiredIndicator",
+		"textarea",
+		"select",
 	],
 	base: {
 		root: {
@@ -24,25 +26,24 @@ export const field = defineSlotRecipe({
 			gap: "0.5",
 			textAlign: "start",
 			userSelect: "none",
-			fontWeight: "medium",
-			textStyle: "sm",
+			textStyle: "label",
 			_disabled: {
 				layerStyle: "disabled",
 			},
 		},
 		requiredIndicator: {
-			color: "error",
+			color: "colorPalette.solid",
 		},
 		helperText: {
 			color: "fg.muted",
-			textStyle: "xs",
+			textStyle: "sm",
 			_disabled: {
 				layerStyle: "disabled",
 			},
 		},
 		errorText: {
 			color: "error",
-			textStyle: "xs",
+			textStyle: "sm",
 		},
 	},
 });
