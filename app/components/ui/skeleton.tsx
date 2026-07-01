@@ -1,7 +1,10 @@
 import type { PropsWithChildren } from "hono/jsx";
 import { css, cx } from "../../../styled-system/css";
 import { stack } from "../../../styled-system/patterns";
-import { type SkeletonVariantProps, skeleton } from "../../../styled-system/recipes";
+import {
+	type SkeletonVariantProps,
+	skeleton,
+} from "../../../styled-system/recipes";
 
 export interface SkeletonProps
 	extends PropsWithChildren<SkeletonVariantProps>,
@@ -14,10 +17,7 @@ export function Skeleton(props: SkeletonProps) {
 	const { children, class: classProp, ...restProps } = localProps;
 
 	return (
-		<div
-			class={cx(skeleton(variantProps), classProp)}
-			{...restProps}
-		>
+		<div class={cx(skeleton(variantProps), classProp)} {...restProps}>
 			{children}
 		</div>
 	);
@@ -39,16 +39,15 @@ export interface SkeletonTextProps extends SkeletonProps {
 }
 
 export function SkeletonText(props: SkeletonTextProps) {
-	const { noOfLines = 3, gap = "2", class: classProp, ...skeletonProps } = props;
+	const {
+		noOfLines = 3,
+		gap = "2",
+		class: classProp,
+		...skeletonProps
+	} = props;
 
 	return (
-		<div
-			class={cx(
-				stack({ gap }),
-				css({ width: "full" }),
-				classProp,
-			)}
-		>
+		<div class={cx(stack({ gap }), css({ width: "full" }), classProp)}>
 			{Array.from({ length: noOfLines }).map((_, index) => (
 				<Skeleton
 					key={index}

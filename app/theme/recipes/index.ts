@@ -14,6 +14,7 @@ import { spinner } from "./spinner";
 import { switchRecipe } from "./switch";
 import { text } from "./text";
 import { textarea } from "./textarea";
+import { tooltip } from "./tooltip";
 
 export const recipes = {
 	absoluteCenter,
@@ -35,4 +36,5 @@ export const slotRecipes = {
 	field,
 	fieldset,
 	switchRecipe,
+	tooltip,
 };

@@ -51,3 +51,4 @@ export { Spinner, type SpinnerProps } from "./spinner";
 export { Switch, type SwitchProps } from "./switch";
 export { Text, type TextProps } from "./text";
 export { Textarea, type TextareaProps } from "./textarea";
+export { Tooltip, type TooltipProps } from "./tooltip";
