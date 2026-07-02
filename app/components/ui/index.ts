@@ -20,6 +20,7 @@ export {
 export * as Card from "./card";
 export { Checkbox, type CheckboxProps } from "./checkbox";
 export * as Collapsible from "./collapsible";
+export { Combobox, type ComboboxProps } from "./combobox";
 export * as Dialog from "./dialog";
 export * as Drawer from "./drawer";
 export {
@@ -61,4 +62,3 @@ export * as Table from "./table";
 export { Text, type TextProps } from "./text";
 export { Textarea, type TextareaProps } from "./textarea";
 export { Tooltip, type TooltipProps } from "./tooltip";
-export { Combobox, type ComboboxProps } from "./combobox";
