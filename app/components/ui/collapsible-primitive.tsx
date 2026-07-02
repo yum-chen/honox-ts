@@ -244,15 +244,6 @@ function InteractiveRoot(props: InteractiveRootProps) {
 		if (!root) return;
 
 		const handleClick = (e: Event) => {
-			console.log(`[Collapsible DEBUG] Root not found: ${rootId}`);
-			return;
-		};
-		console.log(
-			`[Collapsible DEBUG] Event listener attached for rootId: ${rootId}`,
-		);
-
-		const handleClick = (e: Event) => {
-			console.log(`[Collapsible DEBUG] Click event on:`, e.target);
 			const target = (e.target as HTMLElement).closest(
 				"[data-part]",
 			) as HTMLElement;
