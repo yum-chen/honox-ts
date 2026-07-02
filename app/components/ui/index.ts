@@ -41,6 +41,7 @@ export {
 } from "./fieldset";
 export { Group, type GroupProps } from "./group";
 export { Heading, type HeadingProps } from "./heading";
+export * as HoverCard from "./hover-card";
 export { Loader, type LoaderProps } from "./loader";
 export * as Popover from "./popover";
 export * as Progress from "./progress";

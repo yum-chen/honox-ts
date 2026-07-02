@@ -12,6 +12,7 @@ import { field } from "./field";
 import { fieldset } from "./fieldset";
 import { group } from "./group";
 import { heading } from "./heading";
+import { hoverCard } from "./hover-card";
 import { popover } from "./popover";
 import { progress } from "./progress";
 import { skeleton } from "./skeleton";
@@ -50,6 +51,7 @@ export const slotRecipes = {
 	drawer,
 	field,
 	fieldset,
+	hoverCard,
 	popover,
 	switchRecipe,
 	tooltip,
