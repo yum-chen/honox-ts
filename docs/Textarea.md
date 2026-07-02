@@ -6,21 +6,24 @@ A multi-line text input component that integrates with the `Field` context. It c
 
 # Props
 
-| Prop            | Type                                 | Description                                                |
-| :-------------- | :----------------------------------- | :--------------------------------------------------------- |
-| `class`         | `string`                             | Custom CSS classes.                                        |
-| `label`         | `string`                             | The label for the field (when used as a standalone Field). |
-| `helperText`    | `string`                             | The helper text for the field.                             |
-| `errorText`     | `string`                             | The error text for the field.                              |
-| `value`         | `string`                             | The current value.                                         |
-| `defaultValue`  | `string`                             | The initial value.                                         |
-| `onValueChange` | `(val: string) => void`              | Callback triggered when value changes.                     |
-| `onInput`       | `(e: any) => void`                   | Event handler for input changes.                           |
-| `rows`          | `number`                             | Number of visible text lines.                              |
-| `placeholder`   | `string`                             | Hint text.                                                 |
-| `minLength`     | `number`                             | Minimum length validation.                                 |
-| `validator`     | `(val: string) => boolean \| string` | Custom validation logic.                                   |
-| `interactive`   | `boolean`                            | Forces hydration as an island.                             |
+| Prop            | Type                                                     | Description                                                |
+| :-------------- | :------------------------------------------------------- | :--------------------------------------------------------- |
+| `class`         | `string`                                                 | Custom CSS classes.                                        |
+| `variant`       | `"outline" \| "surface" \| "subtle" \| "flushed"`        | The visual style of the textarea.                          |
+| `size`          | `"xs" \| "sm" \| "md" \| "lg" \| "xl"`                   | The size of the textarea.                                  |
+| `resize`        | `"none" \| "both" \| "horizontal" \| "vertical"`         | Whether the textarea can be resized.                       |
+| `label`         | `string`                                                 | The label for the field (when used as a standalone Field). |
+| `helperText`    | `string`                                                 | The helper text for the field.                             |
+| `errorText`     | `string`                                                 | The error text for the field.                              |
+| `value`         | `string`                                                 | The current value.                                         |
+| `defaultValue`  | `string`                                                 | The initial value.                                         |
+| `onValueChange` | `(val: string) => void`                                  | Callback triggered when value changes.                     |
+| `onInput`       | `(e: any) => void`                                       | Event handler for input changes.                           |
+| `rows`          | `number`                                                 | Number of visible text lines.                              |
+| `placeholder`   | `string`                                                 | Hint text.                                                 |
+| `minLength`     | `number`                                                 | Minimum length validation.                                 |
+| `validator`     | `(val: string) => boolean \| string`                     | Custom validation logic.                                   |
+| `interactive`   | `boolean`                                                | Forces hydration as an island.                             |
 
 # Usage
 
@@ -40,6 +43,43 @@ export default function MyPage() {
       minLength={10}
       interactive
     />
+  );
+}
+```
+
+## Variants
+
+```tsx
+import { Stack } from "../styled-system/jsx";
+import { Textarea } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Stack gap="4">
+      <Textarea variant="outline" placeholder="Outline" />
+      <Textarea variant="surface" placeholder="Surface" />
+      <Textarea variant="subtle" placeholder="Subtle" />
+      <Textarea variant="flushed" placeholder="Flushed" />
+    </Stack>
+  );
+}
+```
+
+## Sizes
+
+```tsx
+import { Stack } from "../styled-system/jsx";
+import { Textarea } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Stack gap="4">
+      <Textarea size="xs" placeholder="Extra Small" />
+      <Textarea size="sm" placeholder="Small" />
+      <Textarea size="md" placeholder="Medium" />
+      <Textarea size="lg" placeholder="Large" />
+      <Textarea size="xl" placeholder="Extra Large" />
+    </Stack>
   );
 }
 ```

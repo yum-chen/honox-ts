@@ -4,6 +4,7 @@ import {
 	useContext,
 	useId,
 	useState,
+    useEffect,
 } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
 import type { FieldVariantProps } from "../../../styled-system/recipes";
@@ -72,7 +73,16 @@ export function FieldRoot(props: FieldProps) {
 		...restProps
 	} = localProps;
 
-	const value = valueProp ?? defaultValue;
+    const [internalValue, setInternalValue] = useState(valueProp ?? defaultValue);
+
+    // Sync internal state if props change (for controlled components)
+    useEffect(() => {
+        if (valueProp !== undefined) {
+            setInternalValue(valueProp);
+        }
+    }, [valueProp]);
+
+	const value = valueProp !== undefined ? valueProp : internalValue;
 
 	const autoId = useId();
 	const id = idProp || autoId;
@@ -98,6 +108,13 @@ export function FieldRoot(props: FieldProps) {
 		}
 	}
 
+    const handleValueChange = (newValue: string) => {
+        if (valueProp === undefined) {
+            setInternalValue(newValue);
+        }
+        onValueChange?.(newValue);
+    };
+
 	const contextValue: FieldContextValue = {
 		id,
 		disabled,
@@ -105,7 +122,7 @@ export function FieldRoot(props: FieldProps) {
 		readOnly,
 		required,
 		value,
-		onValueChange,
+		onValueChange: handleValueChange,
 		minLength,
 		labelId: `field::${id}::label`,
 		helperTextId: `field::${id}::helper-text`,
@@ -164,7 +181,7 @@ export function FieldRoot(props: FieldProps) {
 						value={value}
 						defaultValue={defaultValue}
 						onInput={(e) => {
-							onValueChange?.((e.target as HTMLInputElement).value);
+							handleValueChange((e.target as HTMLInputElement).value);
 						}}
 						class={cx(styles.input, restClass as string)}
 						{...(otherRestProps as Record<string, unknown>)}
@@ -261,23 +278,5 @@ export function FieldRequiredIndicator(props: {
 }
 
 export function InteractiveField(props: FieldProps) {
-	const { value: valueProp, defaultValue = "", onValueChange, ...rest } = props;
-	const [value, setValue] = useState(valueProp ?? defaultValue);
-	const isControlled = valueProp !== undefined;
-	const currentValue = isControlled ? valueProp : value;
-
-	const handleValueChange = (val: string) => {
-		if (!isControlled) {
-			setValue(val);
-		}
-		onValueChange?.(val);
-	};
-
-	return (
-		<FieldRoot
-			{...rest}
-			value={currentValue}
-			onValueChange={handleValueChange}
-		/>
-	);
+	return <FieldRoot {...props} />;
 }
