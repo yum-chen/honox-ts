@@ -476,14 +476,7 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 
 	const handleToggle = () => {
 		if (!isControlled) {
-			setIsOpen((prev) => {
-				const nextOpen = !prev;
-				// When opening via trigger, clear input to show all items
-				if (nextOpen) {
-					setInputValue("");
-				}
-				return nextOpen;
-			});
+			setIsOpen((prev) => !prev);
 		}
 	};
 
@@ -495,7 +488,6 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 
 	const handleInputChange = (val: string) => {
 		setInputValue(val);
-		// Open dropdown only when user is actively typing (has non-empty input)
 		if (val && !open) {
 			if (!isControlled) {
 				setIsOpen(true);
@@ -504,7 +496,6 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 	};
 
 	const handleItemSelect = (val: string) => {
-		// Keep the display value but reset the filter
 		setInputValue(val);
 		if (!isControlled) {
 			setIsOpen(false);
@@ -618,19 +609,8 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 			if (dataPart === "trigger") {
 				const currentOpen = root.getAttribute("data-state") === "open";
 				const nextOpen = !currentOpen;
-				if (nextOpen) {
-					// When opening, clear the input to show all items
-					const inputElement = root.querySelector(
-						'[data-part="input"]',
-					) as HTMLInputElement | null;
-					if (inputElement) {
-						inputElement.value = "";
-						setInputValue("");
-					}
-					show();
-				} else {
-					hide();
-				}
+				if (nextOpen) show();
+				else hide();
 				handleToggleRef.current?.();
 			} else if (dataPart === "clear-trigger") {
 				const inputElement = root.querySelector(
@@ -639,10 +619,6 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 				if (inputElement) {
 					inputElement.value = "";
 					setInputValue("");
-					// Keep the dropdown open to show all options after clearing
-					if (root.getAttribute("data-state") !== "open") {
-						show();
-					}
 				}
 			} else if (dataPart === "item" && !isDisabled) {
 				const value = target.getAttribute("data-value") || "";
@@ -650,7 +626,6 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 					'[data-part="input"]',
 				) as HTMLInputElement | null;
 				if (inputElement) {
-					// Store the full label for display
 					inputElement.value = value;
 					setInputValue(value);
 				}
@@ -668,8 +643,7 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 			const value = input.value;
 			setInputValue(value);
 
-			// Open the dropdown when user types
-			if (root.getAttribute("data-state") !== "open" && value) {
+			if (value && root.getAttribute("data-state") !== "open") {
 				root.setAttribute("data-state", "open");
 				positioners.forEach((p) => {
 					p.style.cssText =
@@ -683,9 +657,6 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 						c.style.cssText =
 							"display: block !important; visibility: visible !important;";
 					});
-			} else if (!value && root.getAttribute("data-state") === "open") {
-				// When user clears the input, show all items while dropdown is open
-				setInputValue("");
 			}
 		};
 
