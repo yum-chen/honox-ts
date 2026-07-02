@@ -11,6 +11,7 @@ import {
 	Card,
 	Checkbox,
 	CloseButton,
+	Collapsible,
 	Dialog,
 	Drawer,
 	Field,
@@ -1519,6 +1520,55 @@ export default createRoute((c) => {
 					<Loader text="Loading..." />
 					<Loader spinnerPlacement="end">Processing</Loader>
 					<Loader spinner={<Spinner color="blue.500" />}>Custom Spinner</Loader>
+				</div>
+			</div>
+
+			{/* Collapsible Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+					pb: "20",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Collapsible Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+					})}
+				>
+					<Collapsible.Root
+						interactive
+						class={css({ width: "full", border: "1px solid border", p: "4" })}
+					>
+						<Collapsible.Trigger asChild>
+							<Button variant="outline">Click to Toggle</Button>
+						</Collapsible.Trigger>
+						<Collapsible.Content class={css({ mt: "4" })}>
+							<div
+								class={css({
+									bg: "bg.subtle",
+									p: "4",
+									borderRadius: "md",
+								})}
+							>
+								<Text>
+									This is the collapsible content. It can contain any elements
+									and will expand/collapse when the trigger is clicked.
+								</Text>
+							</div>
+						</Collapsible.Content>
+					</Collapsible.Root>
 				</div>
 			</div>
 		</div>,
