@@ -50,6 +50,32 @@ export interface FieldProps extends FieldVariantProps {
 
 export const useFieldContext = () => useContext(FieldContext);
 
+export const validateField = (
+	value: string | undefined,
+	minLength?: number,
+	validator?: (value: string) => boolean | string,
+) => {
+	let isInvalid = false;
+	let errorText: string | undefined;
+
+	if (validator && value !== undefined) {
+		const result = validator(value);
+		if (result === false) {
+			isInvalid = true;
+		} else if (typeof result === "string") {
+			isInvalid = true;
+			errorText = result;
+		}
+	} else if (minLength !== undefined && value !== undefined && value !== "") {
+		if (value.length < minLength) {
+			isInvalid = true;
+			errorText = `Must be at least ${minLength} characters`;
+		}
+	}
+
+	return { isInvalid, errorText };
+};
+
 export function FieldRoot(props: FieldProps) {
 	const [variantProps, localProps] = field.splitVariantProps(props);
 	const {
@@ -78,24 +104,10 @@ export function FieldRoot(props: FieldProps) {
 	const id = idProp || autoId;
 	const styles = field(variantProps);
 
-	let isInvalid = invalidProp;
-	let errorText: string | undefined;
+	let { isInvalid, errorText } = validateField(value, minLength, validator);
 
-	if (isInvalid === undefined || isInvalid === false) {
-		if (validator && value !== undefined) {
-			const result = validator(value);
-			if (result === false) {
-				isInvalid = true;
-			} else if (typeof result === "string") {
-				isInvalid = true;
-				errorText = result;
-			}
-		} else if (minLength !== undefined && value !== undefined && value !== "") {
-			if (value.length < minLength) {
-				isInvalid = true;
-				errorText = `Must be at least ${minLength} characters`;
-			}
-		}
+	if (invalidProp !== undefined) {
+		isInvalid = invalidProp;
 	}
 
 	const contextValue: FieldContextValue = {
