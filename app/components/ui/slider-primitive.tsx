@@ -235,7 +235,11 @@ export function ValueText(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSliderContext();
 	return (
-		<span class={cx(context?.styles.valueText, classProp)} {...rest}>
+		<span
+			data-part="value-text"
+			class={cx(context?.styles.valueText, classProp)}
+			{...rest}
+		>
 			{children || context?.value.join(", ")}
 		</span>
 	);
