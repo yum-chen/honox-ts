@@ -242,6 +242,13 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 			content.addEventListener("mouseleave", handleClose);
 		}
 
+		// If the pointer is already over the trigger at hydration time, open.
+		// A one-time hover fired before hydration would otherwise be missed
+		// since no further mouseenter is dispatched while the pointer is still.
+		if (trigger?.matches(":hover")) {
+			handleOpen();
+		}
+
 		return () => {
 			if (trigger) {
 				trigger.removeEventListener("mouseenter", handleOpen);

@@ -20,6 +20,7 @@ export function TextareaPrimitive(props: TextareaPrimitiveProps) {
 		class: classProp,
 		value: valueProp,
 		onInput,
+		onValueChange,
 		...restProps
 	} = localProps;
 	const styles = textarea(variantProps);

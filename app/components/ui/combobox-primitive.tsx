@@ -215,7 +215,6 @@ export function Trigger(props: PropsWithChildren<{ class?: string }>) {
 			data-readonly={context?.readOnly ? "" : undefined}
 			disabled={context?.disabled}
 			class={cx(context?.styles.trigger, classProp)}
-			onClick={() => context?.onToggle?.()}
 			{...rest}
 		>
 			{children || (
