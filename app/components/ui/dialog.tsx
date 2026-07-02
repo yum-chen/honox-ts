@@ -20,7 +20,7 @@ export interface RootProps extends DialogPrimitiveRootProps {
 }
 
 export function Root(props: RootProps) {
-	const { interactive = true, ...rest } = props;
+	const { interactive, ...rest } = props;
 	if (interactive) {
 		return <DialogIsland {...rest} />;
 	}

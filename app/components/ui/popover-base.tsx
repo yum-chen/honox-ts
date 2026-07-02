@@ -1,13 +1,14 @@
 import {
-	type Child,
 	cloneElement,
 	createContext,
 	type PropsWithChildren,
 	useContext,
 	useId,
+	useRef,
 	useState,
+	useEffect,
 } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
+import { cx, css } from "../../../styled-system/css";
 import { popover } from "../../../styled-system/recipes";
 
 type PopoverStyles = ReturnType<typeof popover>;
@@ -59,7 +60,6 @@ export function PopoverTrigger(props: PopoverTriggerProps) {
 	const id = context?.id;
 	const open = context?.open;
 	const styles = context?.styles;
-	const onToggle = context?.onToggle;
 
 	const triggerProps = {
 		id: id ? `popover-trigger-${id}` : undefined,
@@ -67,7 +67,7 @@ export function PopoverTrigger(props: PopoverTriggerProps) {
 		"aria-expanded": open ? "true" : "false",
 		"aria-controls": open && id ? `popover-content-${id}` : undefined,
 		"data-state": open ? "open" : "closed",
-		onClick: onToggle,
+		"data-part": "trigger",
 		...restProps,
 	};
 
@@ -97,12 +97,15 @@ export function PopoverPositioner(props: PopoverPositionerProps) {
 	const open = context?.open;
 	const styles = context?.styles;
 
-	if (!open) return null;
-
 	return (
 		<div
-			class={cx(styles?.positioner, classProp)}
+			class={cx(
+				styles?.positioner,
+				classProp,
+				!open && css({ display: "none" }),
+			)}
 			data-state={open ? "open" : "closed"}
+			data-part="positioner"
 			style={{
 				position: "absolute",
 				top: "100%",
@@ -208,11 +211,10 @@ export function PopoverCloseTrigger(props: PopoverCloseTriggerProps) {
 	const { children, class: classProp, asChild, ...restProps } = props;
 	const context = usePopoverContext();
 	const styles = context?.styles;
-	const onClose = context?.onClose;
 
 	const triggerProps = {
-		onClick: onClose,
 		"aria-label": "Close",
+		"data-part": "close-trigger",
 		...restProps,
 	};
 
@@ -254,20 +256,115 @@ export function PopoverArrowTip(props: { class?: string }) {
 }
 
 export function InteractivePopoverRoot(props: PopoverRootProps) {
-	const { open: openProp, children, ...rest } = props;
+	const { open: openProp, children, id: idProp, ...rest } = props;
 	const [isOpen, setIsOpen] = useState(openProp ?? false);
 
-	const handleToggle = () => setIsOpen(!isOpen);
-	const handleClose = () => setIsOpen(false);
+	const fallbackId = useId();
+	const rootId = idProp || `popover-${fallbackId}`;
+
+	console.log(
+		"[Popover] InteractivePopoverRoot rendering with rootId:",
+		rootId,
+	);
+	console.log("[Popover] typeof document:", typeof document);
+
+	const handleOpenChangeRef = useRef<(nextOpen: boolean) => void>(() => {});
+
+	const handleOpenChange = (nextOpen: boolean) => {
+		console.log("[Popover] handleOpenChange called with:", nextOpen);
+		setIsOpen(nextOpen);
+	};
+
+	useEffect(() => {
+		handleOpenChangeRef.current = handleOpenChange;
+	}, []);
+
+	useEffect(() => {
+		console.log("[Popover] useEffect running, rootId:", rootId);
+		console.log("[Popover] typeof document:", typeof document);
+
+		if (typeof document === "undefined") {
+			console.log("[Popover] Running on server, skipping");
+			return;
+		}
+
+		const root = document.getElementById(rootId);
+		console.log("[Popover] Found root element:", !!root);
+
+		if (!root) {
+			console.log(
+				"[Popover] Root not found! Looking for any element with id starting with 'popover':",
+			);
+			const allPopovers = document.querySelectorAll('[id^="popover"]');
+			console.log("[Popover] Found", allPopovers.length, "popover elements");
+			allPopovers.forEach((el) =>
+				console.log(
+					"[Popover]   -",
+					el.id,
+					el.tagName,
+					el.innerHTML.substring(0, 50),
+				),
+			);
+			return;
+		}
+
+		const triggers = Array.from(
+			root.querySelectorAll<HTMLElement>('[data-part="trigger"]'),
+		);
+		const closeButtons = Array.from(
+			root.querySelectorAll<HTMLElement>('[data-part="close-trigger"]'),
+		);
+		const positioners = Array.from(
+			root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
+		);
+
+		console.log("[Popover] Found triggers:", triggers.length);
+		console.log("[Popover] Found close buttons:", closeButtons.length);
+		console.log("[Popover] Found positioners:", positioners.length);
+
+		const handleClick = (e: Event) => {
+			const target = e.target as HTMLElement;
+			console.log(
+				"[Popover] Click event triggered on:",
+				target.getAttribute("data-part"),
+			);
+
+			const dataPart = target.getAttribute("data-part");
+
+			if (dataPart === "trigger") {
+				console.log("[Popover] Trigger clicked, toggling");
+				const nextOpen = !isOpen;
+				if (nextOpen) {
+					positioners.forEach((p) => {
+						p.style.cssText = "display: block !important;";
+					});
+				} else {
+					positioners.forEach((p) => {
+						p.style.cssText = "display: none !important;";
+					});
+				}
+				handleOpenChangeRef.current?.(nextOpen);
+			} else if (dataPart === "close-trigger") {
+				console.log("[Popover] Close trigger clicked");
+				positioners.forEach((p) => {
+					p.style.cssText = "display: none !important;";
+				});
+				handleOpenChangeRef.current?.(false);
+			}
+		};
+
+		root.addEventListener("click", handleClick);
+
+		return () => {
+			root.removeEventListener("click", handleClick);
+		};
+	}, [rootId, isOpen]);
 
 	return (
-		<PopoverRoot
-			{...rest}
-			open={isOpen}
-			onToggle={handleToggle}
-			onClose={handleClose}
-		>
-			{children}
-		</PopoverRoot>
+		<div id={rootId}>
+			<PopoverRoot {...rest} open={isOpen}>
+				{children}
+			</PopoverRoot>
+		</div>
 	);
 }
