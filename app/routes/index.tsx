@@ -20,6 +20,7 @@ import {
 	IconButton,
 	Loader,
 	Popover,
+	Progress,
 	Skeleton,
 	SkeletonCircle,
 	SkeletonText,
@@ -1419,6 +1420,75 @@ export default createRoute((c) => {
 						</Table.Row>
 					</Table.Body>
 				</Table.Root>
+			</div>
+
+			{/* Progress Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Progress Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+					})}
+				>
+					<Progress.Progress
+						label="Default Progress"
+						value={40}
+						showValueText
+					/>
+					<Progress.Progress
+						label="Subtle Progress"
+						variant="subtle"
+						colorPalette="amber"
+						value={60}
+						showValueText
+					/>
+					<Progress.Progress label="Indeterminate Progress" value={null} />
+
+					<div
+						class={css({ display: "flex", gap: "8", justifyContent: "center" })}
+					>
+						<Progress.Root value={75} size="lg" class={css({ width: "full" })}>
+							<Progress.Label>Custom Composition</Progress.Label>
+							<Progress.Track>
+								<Progress.Range />
+							</Progress.Track>
+							<Progress.ValueText />
+						</Progress.Root>
+					</div>
+
+					<div
+						class={css({ display: "flex", gap: "8", justifyContent: "center" })}
+					>
+						<Progress.Root value={25} size="sm">
+							<Progress.Circle>
+								<Progress.CircleTrack />
+								<Progress.CircleRange />
+							</Progress.Circle>
+						</Progress.Root>
+
+						<Progress.Root value={null} size="md">
+							<Progress.Circle>
+								<Progress.CircleTrack />
+								<Progress.CircleRange />
+							</Progress.Circle>
+						</Progress.Root>
+					</div>
+				</div>
 			</div>
 
 			{/* Loader Examples */}
