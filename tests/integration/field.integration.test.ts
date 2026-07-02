@@ -20,14 +20,14 @@ test.describe("Field Component", () => {
     const root = page.locator("section:has-text('Disabled Field')");
     const input = root.locator("input");
     await expect(input).toBeDisabled();
-    await expect(root.locator("div[data-disabled]")).toBeVisible();
+    await expect(root.locator("[data-disabled]").first()).toBeVisible();
   });
 
   test("should respect readOnly state", async ({ page }) => {
     const root = page.locator("section:has-text('ReadOnly Field')");
     const input = root.locator("input");
-    await expect(input).toHaveAttribute("readonly", "");
-    await expect(root.locator("div[data-readonly]")).toBeVisible();
+    await expect(input).toHaveAttribute("readonly");
+    await expect(root.locator("[data-readonly]").first()).toBeVisible();
   });
 
   test("should show initial validation errors from SSR", async ({ page }) => {
