@@ -178,6 +178,7 @@ interface InteractiveRootProps extends RootProps {
 }
 
 function InteractiveRoot(props: InteractiveRootProps) {
+	console.log("[InteractiveRoot] Rendering");
 	const {
 		open: openProp,
 		defaultOpen,
@@ -191,10 +192,12 @@ function InteractiveRoot(props: InteractiveRootProps) {
 
 	const fallbackId = useId();
 	const rootId = idProp || `collapsible-${fallbackId}`;
+	console.log("[InteractiveRoot] rootId:", rootId, "open:", open);
 
 	const handleOpenChangeRef = useRef<(nextOpen: boolean) => void>(() => {});
 
 	const handleOpenChange = (nextOpen: boolean) => {
+		console.log("[InteractiveRoot] handleOpenChange:", nextOpen);
 		if (!isControlled) {
 			setIsOpen(nextOpen);
 		}
@@ -203,12 +206,18 @@ function InteractiveRoot(props: InteractiveRootProps) {
 
 	// Store the handler in a ref
 	useEffect(() => {
+		console.log("[InteractiveRoot] Updating handleOpenChangeRef");
 		handleOpenChangeRef.current = handleOpenChange;
 	}, [isControlled, onOpenChangeProp]);
 
 	// Sync initial DOM state to match component state (fixes hydration mismatch)
 	useEffect(() => {
+		console.log(
+			"[InteractiveRoot] Hydration sync effect, looking for:",
+			rootId,
+		);
 		const root = document.getElementById(rootId);
+		console.log("[InteractiveRoot] Root element found:", !!root);
 		if (!root) return;
 		root.setAttribute("data-state", open ? "open" : "closed");
 		const contentElements = Array.from(
@@ -240,20 +249,38 @@ function InteractiveRoot(props: InteractiveRootProps) {
 	}, [rootId, open]);
 
 	useEffect(() => {
+		console.log(
+			"[InteractiveRoot] Event listener effect, looking for:",
+			rootId,
+		);
 		const root = document.getElementById(rootId);
-		if (!root) return;
+		console.log("[InteractiveRoot] Root element found for listeners:", !!root);
+		if (!root) {
+			console.log("[InteractiveRoot] ERROR: Root not found!");
+			return;
+		}
 
 		const handleClick = (e: Event) => {
+			console.log("[InteractiveRoot] Click event!", e.target);
 			const target = (e.target as HTMLElement).closest(
 				"[data-part]",
 			) as HTMLElement;
-			if (!target) return;
+			if (!target) {
+				console.log("[InteractiveRoot] No [data-part] found");
+				return;
+			}
 			const dataPart = target.getAttribute("data-part");
+			console.log("[InteractiveRoot] dataPart:", dataPart);
 
-			if (dataPart !== "trigger") return;
+			if (dataPart !== "trigger") {
+				console.log("[InteractiveRoot] Not a trigger, ignoring");
+				return;
+			}
+			console.log("[InteractiveRoot] Trigger clicked!");
 
 			const currentOpen = root.getAttribute("data-state") === "open";
 			const nextOpen = !currentOpen;
+			console.log("[InteractiveRoot] Toggle:", currentOpen, "=>", nextOpen);
 			handleOpenChangeRef.current?.(nextOpen);
 
 			// Update attributes manually for immediate feedback and to trigger animations
@@ -288,9 +315,11 @@ function InteractiveRoot(props: InteractiveRootProps) {
 		};
 
 		root.addEventListener("click", handleClick);
+		console.log("[InteractiveRoot] Event listener attached to:", rootId);
 
 		return () => {
 			root.removeEventListener("click", handleClick);
+			console.log("[InteractiveRoot] Event listener removed");
 		};
 	}, [rootId]);
 

@@ -454,6 +454,7 @@ export interface InteractiveComboboxProps extends ComboboxFlattenedProps {
 }
 
 export function InteractiveCombobox(props: InteractiveComboboxProps) {
+	console.log("[InteractiveCombobox] Rendering");
 	const {
 		open: openProp,
 		inputValue: inputValueProp,
@@ -468,6 +469,7 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 
 	const fallbackId = useId();
 	const rootId = idProp || `combobox-${fallbackId}`;
+	console.log("[InteractiveCombobox] rootId:", rootId);
 
 	const handleToggleRef = useRef<() => void>(() => {});
 	const handleCloseRef = useRef<() => void>(() => {});
@@ -519,7 +521,9 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 
 	// Sync initial DOM state to match component state (fixes hydration mismatch)
 	useEffect(() => {
+		console.log("[InteractiveCombobox] Hydration sync, looking for:", rootId);
 		const root = document.getElementById(rootId);
+		console.log("[InteractiveCombobox] Root found:", !!root);
 		if (!root) return;
 
 		root.setAttribute("data-state", open ? "open" : "closed");
@@ -558,7 +562,12 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 
 	// Attach event listeners using event delegation
 	useEffect(() => {
+		console.log(
+			"[InteractiveCombobox] Event listener effect, looking for:",
+			rootId,
+		);
 		const root = document.getElementById(rootId);
+		console.log("[InteractiveCombobox] Root found:", !!root);
 		if (!root) return;
 
 		const positioners = Array.from(
