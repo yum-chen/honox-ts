@@ -181,7 +181,7 @@ function InteractiveRoot(props: InteractiveRootProps) {
 	const {
 		open: openProp,
 		defaultOpen,
-		onOpenChange,
+		onOpenChange: onOpenChangeProp,
 		id: idProp,
 		...rest
 	} = props;
@@ -192,26 +192,56 @@ function InteractiveRoot(props: InteractiveRootProps) {
 	const fallbackId = useId();
 	const rootId = idProp || `collapsible-${fallbackId}`;
 
-	const onOpenChangeRef = useRef(onOpenChange);
+	const handleOpenChangeRef = useRef<(nextOpen: boolean) => void>(() => {});
+
+	const handleOpenChange = (nextOpen: boolean) => {
+		console.log("[Collapsible] handleOpenChange called with:", nextOpen);
+		if (!isControlled) {
+			console.log("[Collapsible] Calling setIsOpen(", nextOpen, ")");
+			setIsOpen(nextOpen);
+		}
+		onOpenChangeProp?.({ open: nextOpen });
+	};
+
+	// Store the handler in a ref
 	useEffect(() => {
-		onOpenChangeRef.current = onOpenChange;
-	}, [onOpenChange]);
+		handleOpenChangeRef.current = handleOpenChange;
+	}, [isControlled, onOpenChangeProp]);
 
 	useEffect(() => {
 		const root = document.getElementById(rootId);
-		if (!root) return;
+		console.log("[Collapsible] useEffect running for rootId:", rootId);
+		if (!root) {
+			console.log("[Collapsible] Root element not found:", rootId);
+			return;
+		}
+		console.log("[Collapsible] Root found, attaching listener");
 
 		const handleClick = (e: MouseEvent) => {
 			const target = (e.target as HTMLElement).closest('[data-part="trigger"]');
-			if (!target || !root.contains(target)) return;
+			console.log(
+				"[Collapsible] Click event, target:",
+				target,
+				"data-part:",
+				target?.getAttribute("data-part"),
+			);
+			if (!target || !root.contains(target)) {
+				console.log(
+					"[Collapsible] Click ignored - no trigger found or outside root",
+				);
+				return;
+			}
 
 			const currentOpen = root.getAttribute("data-state") === "open";
 			const nextOpen = !currentOpen;
+			console.log(
+				"[Collapsible] Toggle triggered. Current state:",
+				currentOpen,
+				"Next state:",
+				nextOpen,
+			);
 
-			if (!isControlled) {
-				setIsOpen(nextOpen);
-			}
-			onOpenChangeRef.current?.({ open: nextOpen });
+			handleOpenChangeRef.current?.(nextOpen);
 
 			// Update attributes manually for immediate feedback and to trigger animations
 			root.setAttribute("data-state", nextOpen ? "open" : "closed");
@@ -219,15 +249,19 @@ function InteractiveRoot(props: InteractiveRootProps) {
 			if (content) {
 				content.setAttribute("data-state", nextOpen ? "open" : "closed");
 			}
-			const triggers = root.querySelectorAll('[data-part="trigger"]');
-			for (const t of triggers) {
+			const triggers = Array.from(
+				root.querySelectorAll<HTMLElement>('[data-part="trigger"]'),
+			);
+			triggers.forEach((t) => {
 				t.setAttribute("data-state", nextOpen ? "open" : "closed");
 				t.setAttribute("aria-expanded", nextOpen ? "true" : "false");
-			}
-			const indicators = root.querySelectorAll('[data-part="indicator"]');
-			for (const i of indicators) {
+			});
+			const indicators = Array.from(
+				root.querySelectorAll<HTMLElement>('[data-part="indicator"]'),
+			);
+			indicators.forEach((i) => {
 				i.setAttribute("data-state", nextOpen ? "open" : "closed");
-			}
+			});
 		};
 
 		root.addEventListener("click", handleClick);
@@ -240,8 +274,7 @@ function InteractiveRoot(props: InteractiveRootProps) {
 			id={rootId}
 			open={open}
 			onOpenChange={(details) => {
-				if (!isControlled) setIsOpen(details.open);
-				onOpenChange?.(details);
+				handleOpenChangeRef.current?.(details.open);
 			}}
 		/>
 	);
