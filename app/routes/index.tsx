@@ -33,6 +33,7 @@ import {
 	Table,
 	Text,
 	Textarea,
+	Toast,
 	Tooltip,
 } from "../components/ui";
 
@@ -1343,6 +1344,51 @@ export default createRoute((c) => {
 				</div>
 			</div>
 
+			{/* Toast Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Toast Component Examples
+				</Heading>
+				<Toast.Toaster />
+				<div
+					class={css({
+						display: "flex",
+						gap: "4",
+						flexWrap: "wrap",
+						justifyContent: "center",
+					})}
+				>
+					<Button
+						variant="outline"
+						onclick="import('/app/islands/toast').then(m => m.toaster.success('Success', { description: 'Action completed successfully', closable: true }))"
+					>
+						Success Toast
+					</Button>
+					<Button
+						variant="outline"
+						onclick="import('/app/islands/toast').then(m => m.toaster.error('Error', { description: 'An error occurred', closable: true }))"
+					>
+						Error Toast
+					</Button>
+					<Button
+						variant="outline"
+						onclick="import('/app/islands/toast').then(m => m.toaster.create({ title: 'Loading', description: 'Please wait...', type: 'loading' }))"
+					>
+						Loading Toast
+					</Button>
+				</div>
+			</div>
+
 			{/* Tooltip Examples */}
 			<div
 				class={css({
@@ -1353,7 +1399,6 @@ export default createRoute((c) => {
 					alignItems: "center",
 					maxWidth: "xl",
 					mx: "auto",
-					pb: "20",
 				})}
 			>
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>

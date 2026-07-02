@@ -61,4 +61,5 @@ export { Switch, type SwitchProps } from "./switch";
 export * as Table from "./table";
 export { Text, type TextProps } from "./text";
 export { Textarea, type TextareaProps } from "./textarea";
+export * as Toast from "./toast";
 export { Tooltip, type TooltipProps } from "./tooltip";

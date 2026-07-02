@@ -24,6 +24,7 @@ import { switchRecipe } from "./switch";
 import { table } from "./table";
 import { text } from "./text";
 import { textarea } from "./textarea";
+import { toast } from "./toast";
 import { tooltip } from "./tooltip";
 
 export const recipes = {
@@ -56,5 +57,6 @@ export const slotRecipes = {
 	hoverCard,
 	popover,
 	switchRecipe,
+	toast,
 	tooltip,
 };
