@@ -8,5 +8,8 @@ export const conditions = {
 			"&:is(:checked, [data-checked], [data-state=checked], [aria-checked=true], [data-state=indeterminate])",
 		on: "&:is([data-state=on])",
 		pinned: "&:is([data-pinned])",
+		highlighted: "&:is([data-highlighted])",
+		open: "&:is([data-state=open])",
+		closed: "&:is([data-state=closed])",
 	},
 } as const;
