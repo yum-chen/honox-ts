@@ -1370,21 +1370,21 @@ export default createRoute((c) => {
 				>
 					<Button
 						variant="outline"
-						onclick="import('/app/islands/toast').then(m => m.toaster.success('Success', { description: 'Action completed successfully', closable: true }))"
+						onclick="window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Success', description: 'Action completed successfully', closable: true, type: 'success' } }))"
 					>
-						Success Toast
+						Show Success Toast
 					</Button>
 					<Button
 						variant="outline"
-						onclick="import('/app/islands/toast').then(m => m.toaster.error('Error', { description: 'An error occurred', closable: true }))"
+						onclick="window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Error', description: 'An error occurred', closable: true, type: 'error' } }))"
 					>
-						Error Toast
+						Show Error Toast
 					</Button>
 					<Button
 						variant="outline"
-						onclick="import('/app/islands/toast').then(m => m.toaster.create({ title: 'Loading', description: 'Please wait...', type: 'loading' }))"
+						onclick="window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Loading', description: 'Please wait...', type: 'loading' } }))"
 					>
-						Loading Toast
+						Show Loading Toast
 					</Button>
 				</div>
 			</div>
