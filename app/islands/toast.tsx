@@ -27,7 +27,6 @@ export interface ToastOptions {
 
 const dispatchToast = (options: Omit<ToastOptions, "id">) => {
 	const id = Math.random().toString(36).substring(2, 9);
-	console.log(`[Toast] Dispatching toast event:`, options, id);
 	window.dispatchEvent(
 		new CustomEvent("park-ui:toast:create", {
 			detail: { ...options, id },
@@ -55,7 +54,6 @@ export const toaster = {
 		options?: Partial<Omit<ToastOptions, "id" | "title" | "type">>,
 	) => dispatchToast({ ...options, title, type: "info" }),
 	dismiss: (id?: string) => {
-		console.log(`[Toast] Dispatching dismiss event:`, id);
 		window.dispatchEvent(
 			new CustomEvent("park-ui:toast:dismiss", { detail: { id } }),
 		);
@@ -137,14 +135,10 @@ const Icons = {
 };
 
 export function Toaster() {
-	console.log(`[Toast] Toaster component mounting`);
 	const [toasts, setToasts] = useState<ToastOptions[]>([]);
 
 	useEffect(() => {
-		console.log(`[Toast] useEffect running, setting up event listeners`);
-
 		const handleCreate = (e: any) => {
-			console.log(`[Toast] Create event received:`, e.detail);
 			const newToast = e.detail;
 			setToasts((prev) => [...prev, newToast]);
 
@@ -157,7 +151,6 @@ export function Toaster() {
 		};
 
 		const handleDismiss = (e: any) => {
-			console.log(`[Toast] Dismiss event received:`, e.detail);
 			const { id } = e.detail;
 			if (id) {
 				setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -168,7 +161,6 @@ export function Toaster() {
 
 		window.addEventListener("park-ui:toast:create", handleCreate);
 		window.addEventListener("park-ui:toast:dismiss", handleDismiss);
-		console.log(`[Toast] Event listeners attached`);
 
 		return () => {
 			window.removeEventListener("park-ui:toast:create", handleCreate);

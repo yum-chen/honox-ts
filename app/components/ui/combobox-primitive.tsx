@@ -665,12 +665,10 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 
 			const dataPart = target.getAttribute("data-part");
 			const isDisabled = target.hasAttribute("data-disabled");
-
 			if (dataPart === "trigger") {
 				const currentOpen = root.getAttribute("data-state") === "open";
 				const nextOpen = !currentOpen;
 				if (nextOpen) {
-					// When opening, clear the input to show all options
 					const inputElement = root.querySelector(
 						'[data-part="input"]',
 					) as HTMLInputElement | null;
