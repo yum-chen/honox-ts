@@ -3,8 +3,9 @@ import { test, expect } from '@playwright/test';
 test('HoverCard should show content on hover after delay', async ({ page }) => {
   await page.goto('/test-hover-card');
 
-  const trigger = page.locator('#trigger');
-  const content = page.locator('#content');
+  // Use data-part selectors since the component generates its own IDs
+  const trigger = page.locator('[data-part="trigger"]');
+  const content = page.locator('[data-part="content"]');
 
   // Initially content should be hidden
   await expect(content).not.toBeVisible();

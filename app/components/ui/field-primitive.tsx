@@ -194,7 +194,7 @@ export function FieldRoot(props: FieldProps) {
 					<input
 						id={id}
 						disabled={disabled}
-						readOnly={readOnly}
+						{...((readOnly ? { readOnly: "" } : {}) as Record<string, unknown>)}
 						required={required}
 						aria-invalid={isInvalid ? "true" : undefined}
 						aria-describedby={describedBy || undefined}

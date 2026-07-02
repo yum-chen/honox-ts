@@ -189,6 +189,10 @@ export function Input(props: any) {
 			required={context?.required}
 			class={cx(context?.styles.input, classProp)}
 			value={context?.inputValue}
+			onInput={(e: Event) => {
+				const value = (e.target as HTMLInputElement).value;
+				context?.onInputChange?.(value);
+			}}
 			{...rest}
 		/>
 	);
@@ -211,6 +215,7 @@ export function Trigger(props: PropsWithChildren<{ class?: string }>) {
 			data-readonly={context?.readOnly ? "" : undefined}
 			disabled={context?.disabled}
 			class={cx(context?.styles.trigger, classProp)}
+			onClick={() => context?.onToggle?.()}
 			{...rest}
 		>
 			{children || (
@@ -373,6 +378,11 @@ export function Item(
 			data-highlighted={isHighlighted ? "" : undefined}
 			data-state={isSelected ? "checked" : "unchecked"}
 			class={cx(context?.styles.item, classProp)}
+			onClick={() => {
+				if (!disabled) {
+					context?.onItemSelect?.(value);
+				}
+			}}
 			{...rest}
 		>
 			{children}
@@ -635,7 +645,7 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 	);
 
 	// Store handlers in refs
-	useLayoutEffect(() => {
+	useEffect(() => {
 		handleToggleRef.current = handleToggle;
 		handleCloseRef.current = handleClose;
 		handleInputChangeRef.current = handleInputChange;
@@ -650,7 +660,7 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 	]);
 
 	// Attach event listeners using event delegation
-	useLayoutEffect(() => {
+	useEffect(() => {
 		const root = document.getElementById(rootId);
 		if (!root) {
 			console.error("InteractiveCombobox: root element not found:", rootId);

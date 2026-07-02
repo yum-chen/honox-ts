@@ -31,7 +31,7 @@ test.describe('Combobox Integration Tests (Draft)', () => {
 
     // Check if some items are present
     const items = combobox.locator('[data-part="item"]');
-    await expect(items.count()).toBeGreaterThan(0);
+    await expect(items.first()).toBeVisible();
   });
 
   test('should filter options when typing in the input', async ({ page }) => {
