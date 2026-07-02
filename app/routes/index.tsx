@@ -2,9 +2,6 @@ import { createRoute } from "honox/factory";
 import { css } from "../../styled-system/css";
 import {
 	AbsoluteCenter,
-	Alert,
-	AlertIcon,
-	Badge,
 	Breadcrumb,
 	Button,
 	ButtonGroup,
@@ -164,168 +161,6 @@ export default createRoute((c) => {
 					<Heading size="md">Heading md</Heading>
 					<Heading size="sm">Heading sm</Heading>
 					<Heading size="xs">Heading xs</Heading>
-				</div>
-			</div>
-
-			{/* Badge Examples */}
-			<div
-				class={css({
-					mt: "8",
-					display: "flex",
-					flexDirection: "column",
-					gap: "4",
-					alignItems: "center",
-				})}
-			>
-				<Heading
-					as="h2"
-					class={css({
-						fontSize: "xl",
-						mb: "4",
-						width: "100%",
-						textAlign: "center",
-					})}
-				>
-					Badge Component Examples
-				</Heading>
-
-				{/* Semantic Colors */}
-				<Text
-					size="sm"
-					class={css({ color: "fg.muted", width: "100%", textAlign: "left" })}
-				>
-					Semantic Colors
-				</Text>
-				<div
-					class={css({
-						display: "flex",
-						gap: "4",
-						flexWrap: "wrap",
-						justifyContent: "center",
-						width: "100%",
-					})}
-				>
-					<Badge variant="solid" colorPalette="red">
-						Error
-					</Badge>
-					<Badge variant="solid" colorPalette="green">
-						Success
-					</Badge>
-					<Badge variant="solid" colorPalette="orange">
-						Warning
-					</Badge>
-					<Badge variant="solid" colorPalette="blue">
-						Info
-					</Badge>
-				</div>
-
-				{/* All Color Palettes */}
-				<Text
-					size="sm"
-					class={css({
-						color: "fg.muted",
-						width: "100%",
-						textAlign: "left",
-						mt: "4",
-					})}
-				>
-					All Color Palettes
-				</Text>
-				<div
-					class={css({
-						display: "flex",
-						gap: "4",
-						flexWrap: "wrap",
-						justifyContent: "center",
-						width: "100%",
-					})}
-				>
-					<Badge variant="subtle" colorPalette="red">
-						Red
-					</Badge>
-					<Badge variant="subtle" colorPalette="orange">
-						Orange
-					</Badge>
-					<Badge variant="subtle" colorPalette="amber">
-						Amber
-					</Badge>
-					<Badge variant="subtle" colorPalette="green">
-						Green
-					</Badge>
-					<Badge variant="subtle" colorPalette="blue">
-						Blue
-					</Badge>
-					<Badge variant="subtle" colorPalette="cyan">
-						Cyan
-					</Badge>
-					<Badge variant="subtle" colorPalette="purple">
-						Purple
-					</Badge>
-					<Badge variant="subtle" colorPalette="slate">
-						Slate
-					</Badge>
-				</div>
-
-				{/* Variants */}
-				<Text
-					size="sm"
-					class={css({
-						color: "fg.muted",
-						width: "100%",
-						textAlign: "left",
-						mt: "4",
-					})}
-				>
-					Variants (Blue)
-				</Text>
-				<div
-					class={css({
-						display: "flex",
-						gap: "4",
-						flexWrap: "wrap",
-						justifyContent: "center",
-						width: "100%",
-					})}
-				>
-					<Badge variant="solid" colorPalette="blue">
-						Solid
-					</Badge>
-					<Badge variant="subtle" colorPalette="blue">
-						Subtle
-					</Badge>
-					<Badge variant="outline" colorPalette="blue">
-						Outline
-					</Badge>
-					<Badge variant="surface" colorPalette="blue">
-						Surface
-					</Badge>
-				</div>
-
-				{/* Sizes */}
-				<Text
-					size="sm"
-					class={css({
-						color: "fg.muted",
-						width: "100%",
-						textAlign: "left",
-						mt: "4",
-					})}
-				>
-					Sizes
-				</Text>
-				<div
-					class={css({
-						display: "flex",
-						gap: "4",
-						flexWrap: "wrap",
-						justifyContent: "center",
-						width: "100%",
-						alignItems: "center",
-					})}
-				>
-					<Badge size="sm">Small</Badge>
-					<Badge size="md">Medium</Badge>
-					<Badge size="lg">Large</Badge>
 				</div>
 			</div>
 
@@ -578,59 +413,6 @@ export default createRoute((c) => {
 				</div>
 			</div>
 
-			{/* Alert Examples */}
-			<div
-				class={css({
-					mt: "8",
-					display: "flex",
-					flexDirection: "column",
-					gap: "4",
-					alignItems: "center",
-					maxWidth: "xl",
-					mx: "auto",
-				})}
-			>
-				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
-					Alert Component Examples
-				</Heading>
-
-				<div
-					class={css({
-						display: "flex",
-						flexDirection: "column",
-						gap: "4",
-						width: "full",
-					})}
-				>
-					<Alert
-						status="info"
-						title="Info Alert"
-						description="This is an informational alert."
-						indicator={AlertIcon()}
-					/>
-					<Alert
-						status="success"
-						variant="solid"
-						title="Success Alert"
-						description="Your changes have been saved."
-						indicator={AlertIcon()}
-					/>
-					<Alert
-						status="warning"
-						variant="outline"
-						title="Warning Alert"
-						description="This action cannot be undone."
-						indicator={AlertIcon()}
-					/>
-					<Alert
-						status="error"
-						variant="surface"
-						title="Error Alert"
-						description="An error occurred while processing your request."
-						indicator={AlertIcon()}
-					/>
-				</div>
-			</div>
 
 			{/* Dialog Examples */}
 			<div
@@ -992,9 +774,7 @@ export default createRoute((c) => {
 					})}
 				>
 					<AbsoluteCenter>
-						<Badge variant="solid" colorPalette="blue">
-							Centered Content
-						</Badge>
+						<Text>Centered Content</Text>
 					</AbsoluteCenter>
 				</div>
 			</div>
