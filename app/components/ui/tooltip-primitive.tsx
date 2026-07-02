@@ -97,8 +97,6 @@ export function TooltipPositioner(props: TooltipPositionerProps) {
 	const open = context?.open;
 	const styles = context?.styles;
 
-	if (!open) return null;
-
 	return (
 		<div
 			class={cx(styles?.positioner, classProp)}
@@ -111,6 +109,7 @@ export function TooltipPositioner(props: TooltipPositionerProps) {
 				width: "max-content",
 				pointerEvents: "none",
 				zIndex: 1000,
+				display: open ? "block" : "none",
 				...(styleProp as any),
 			}}
 			{...restProps}

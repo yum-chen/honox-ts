@@ -97,8 +97,6 @@ export function PopoverPositioner(props: PopoverPositionerProps) {
 	const open = context?.open;
 	const styles = context?.styles;
 
-	if (!open) return null;
-
 	return (
 		<div
 			class={cx(styles?.positioner, classProp)}
@@ -108,6 +106,7 @@ export function PopoverPositioner(props: PopoverPositionerProps) {
 				top: "100%",
 				left: "0",
 				zIndex: 1000,
+				display: open ? "block" : "none",
 			}}
 			{...restProps}
 		>

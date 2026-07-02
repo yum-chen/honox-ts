@@ -93,13 +93,13 @@ export interface BackdropProps extends PropsWithChildren {
 export function Backdrop(props: BackdropProps) {
   const { children, class: classProp, ...restProps } = props;
   const context = useDialogContext();
-  if (!context) return null;
-  const { styles, open } = context;
+  const styles = context?.styles;
+  const open = context?.open;
   console.log("[Dialog.Backdrop] Rendering with open:", open);
 
   return (
     <div
-      class={cx(styles.backdrop, classProp, !open && css({ display: "none" }))}
+      class={cx(styles?.backdrop, classProp, !open && css({ display: "none" }))}
       data-state={open ? "open" : "closed"}
       data-part="backdrop"
       {...restProps}
@@ -116,13 +116,13 @@ export interface PositionerProps extends PropsWithChildren {
 export function Positioner(props: PositionerProps) {
   const { children, class: classProp, ...restProps } = props;
   const context = useDialogContext();
-  if (!context) return null;
-  const { styles, open } = context;
+  const styles = context?.styles;
+  const open = context?.open;
 
   return (
     <div
       class={cx(
-        styles.positioner,
+        styles?.positioner,
         classProp,
         !open && css({ display: "none" }),
       )}
@@ -142,8 +142,9 @@ export interface ContentProps extends PropsWithChildren {
 export function Content(props: ContentProps) {
   const { children, class: classProp, ...restProps } = props;
   const context = useDialogContext();
-  if (!context) return null;
-  const { styles, open, id } = context;
+  const styles = context?.styles;
+  const open = context?.open;
+  const id = context?.id;
   console.log("[Dialog.Content] Rendering with open:", open);
 
   return (
@@ -151,9 +152,9 @@ export function Content(props: ContentProps) {
       role="dialog"
       data-part="content"
       aria-modal="true"
-      aria-labelledby={`${id}-title`}
-      aria-describedby={`${id}-description`}
-      class={cx(styles.content, classProp, !open && css({ display: "none" }))}
+      aria-labelledby={id ? `${id}-title` : undefined}
+      aria-describedby={id ? `${id}-description` : undefined}
+      class={cx(styles?.content, classProp, !open && css({ display: "none" }))}
       data-state={open ? "open" : "closed"}
       {...restProps}
     >
@@ -172,7 +173,11 @@ export function Header(props: HeaderProps) {
   const styles = context?.styles;
 
   return (
-    <div class={cx(styles?.header, classProp)} {...restProps}>
+    <div
+      class={cx(styles?.header, classProp)}
+      data-part="header"
+      {...restProps}
+    >
       {children}
     </div>
   );
@@ -188,7 +193,11 @@ export function Body(props: BodyProps) {
   const styles = context?.styles;
 
   return (
-    <div class={cx(styles?.body, classProp)} {...restProps}>
+    <div
+      class={cx(styles?.body, classProp)}
+      data-part="body"
+      {...restProps}
+    >
       {children}
     </div>
   );
@@ -204,7 +213,11 @@ export function Footer(props: FooterProps) {
   const styles = context?.styles;
 
   return (
-    <div class={cx(styles?.footer, classProp)} {...restProps}>
+    <div
+      class={cx(styles?.footer, classProp)}
+      data-part="footer"
+      {...restProps}
+    >
       {children}
     </div>
   );
@@ -224,6 +237,7 @@ export function Title(props: TitleProps) {
     <h2
       id={id ? `${id}-title` : undefined}
       class={cx(styles?.title, classProp)}
+      data-part="title"
       {...restProps}
     >
       {children}
@@ -245,6 +259,7 @@ export function Description(props: DescriptionProps) {
     <div
       id={id ? `${id}-description` : undefined}
       class={cx(styles?.description, classProp)}
+      data-part="description"
       {...restProps}
     >
       {children}
@@ -362,6 +377,43 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
     const root = document.getElementById(rootId);
     console.log("[Dialog] Attaching listeners to:", rootId, root);
     if (!root) return;
+
+    const [variantProps] = dialog.splitVariantProps(props);
+    const styles = dialog(variantProps);
+
+    const syncDom = (isOpen: boolean) => {
+      const parts = root.querySelectorAll<HTMLElement>("[data-part]");
+      for (const part of Array.from(parts)) {
+        const dataPart = part.getAttribute("data-part");
+        if (dataPart === "backdrop") {
+          part.className = cx(styles.backdrop, part.getAttribute("class"));
+          part.setAttribute("data-state", isOpen ? "open" : "closed");
+          part.style.display = isOpen ? "block" : "none";
+        } else if (dataPart === "positioner") {
+          part.className = cx(styles.positioner, part.getAttribute("class"));
+          part.setAttribute("data-state", isOpen ? "open" : "closed");
+          part.style.display = isOpen ? "block" : "none";
+        } else if (dataPart === "content") {
+          part.className = cx(styles.content, part.getAttribute("class"));
+          part.setAttribute("data-state", isOpen ? "open" : "closed");
+          part.style.display = isOpen ? "block" : "none";
+        } else if (dataPart === "header") {
+          part.className = cx(styles.header, part.getAttribute("class"));
+        } else if (dataPart === "body") {
+          part.className = cx(styles.body, part.getAttribute("class"));
+        } else if (dataPart === "footer") {
+          part.className = cx(styles.footer, part.getAttribute("class"));
+        } else if (dataPart === "title") {
+          part.className = cx(styles.title, part.getAttribute("class"));
+        } else if (dataPart === "description") {
+          part.className = cx(styles.description, part.getAttribute("class"));
+        } else if (dataPart === "close-trigger") {
+          part.className = cx(styles.closeTrigger, part.getAttribute("class"));
+        }
+      }
+    };
+
+    syncDom(open);
 
     console.log("[Dialog] Root innerHTML:", root.innerHTML);
     console.log("[Dialog] Root children:", root.children);
