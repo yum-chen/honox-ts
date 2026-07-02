@@ -13,6 +13,13 @@ import {
 	ValueText,
 } from "./slider-primitive";
 
+type SliderRootValue = SliderPrimitiveRootProps["value"];
+
+const serializeValue = (value: SliderRootValue) => {
+	if (Array.isArray(value)) return value.join(",");
+	return value;
+};
+
 export interface RootProps extends SliderPrimitiveRootProps {
 	interactive?: boolean;
 	onValueChange?: (details: { value: number[] }) => void;
@@ -29,15 +36,17 @@ export function Root(props: RootProps) {
 			defaultValue !== undefined);
 
 	if (isInteractive) {
-		return <SliderIsland {...props} />;
+		return (
+			<SliderIsland
+				{...props}
+				value={serializeValue(value)}
+				defaultValue={serializeValue(defaultValue)}
+			/>
+		);
 	}
 
 	return (
-		<SliderPrimitiveRoot
-			{...rest}
-			value={value}
-			defaultValue={defaultValue}
-		/>
+		<SliderPrimitiveRoot {...rest} value={value} defaultValue={defaultValue} />
 	);
 }
 

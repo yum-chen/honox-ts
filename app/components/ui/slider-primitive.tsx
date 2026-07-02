@@ -1,5 +1,12 @@
-import type { Child, PropsWithChildren } from "hono/jsx";
-import { createContext, useContext, useEffect, useId, useRef, useState } from "hono/jsx";
+import type { PropsWithChildren } from "hono/jsx";
+import {
+	createContext,
+	useContext,
+	useEffect,
+	useId,
+	useRef,
+	useState,
+} from "hono/jsx";
 import { cx } from "../../../styled-system/css";
 import type { SliderVariantProps } from "../../../styled-system/recipes";
 import { slider } from "../../../styled-system/recipes";
@@ -33,10 +40,33 @@ const useSliderInteractionContext = () => {
 	return useContext(SliderInteractionContext);
 };
 
+type SliderValue = number[] | number | string;
+
+const toValueArray = (value: SliderValue | undefined, fallback: number[]) => {
+	if (Array.isArray(value)) {
+		const parsed = value.map(Number).filter(Number.isFinite);
+		return parsed.length > 0 ? parsed : fallback;
+	}
+
+	if (typeof value === "number") {
+		return Number.isFinite(value) ? [value] : fallback;
+	}
+
+	if (typeof value === "string") {
+		const parsed = value
+			.split(",")
+			.map((item) => Number(item.trim()))
+			.filter(Number.isFinite);
+		return parsed.length > 0 ? parsed : fallback;
+	}
+
+	return fallback;
+};
+
 export interface RootProps extends SliderVariantProps, PropsWithChildren {
 	orientation?: "horizontal" | "vertical";
-	value?: number[];
-	defaultValue?: number[];
+	value?: SliderValue;
+	defaultValue?: SliderValue;
 	min?: number;
 	max?: number;
 	step?: number;
@@ -49,7 +79,6 @@ export function Root(props: RootProps) {
 	const [variantProps, localProps] = slider.splitVariantProps(props);
 	const {
 		children,
-		orientation = "horizontal",
 		value: valueProp,
 		defaultValue,
 		min = 0,
@@ -58,7 +87,8 @@ export function Root(props: RootProps) {
 		id: idProp,
 		...restProps
 	} = localProps;
-	const value = valueProp ?? defaultValue ?? [min];
+	const orientation = props.orientation ?? "horizontal";
+	const value = toValueArray(valueProp, toValueArray(defaultValue, [min]));
 	const styles = slider(variantProps);
 	const generatedId = useId();
 	const id = idProp || generatedId;
@@ -94,7 +124,11 @@ export function Label(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSliderContext();
 	return (
-		<label class={cx(context?.styles.label, classProp)} {...rest}>
+		<label
+			data-part="label"
+			class={cx(context?.styles.label, classProp)}
+			{...rest}
+		>
 			{children}
 		</label>
 	);
@@ -151,7 +185,7 @@ export function Range(
 
 	let rangeStyle = {};
 	if (values.length === 1) {
-		const percent = ((values[0] - min) / (max - min)) * 100;
+		const percent = (((values[0] ?? min) - min) / (max - min)) * 100;
 		rangeStyle =
 			context?.orientation === "horizontal"
 				? {
@@ -167,8 +201,9 @@ export function Range(
 						position: "absolute",
 					};
 	} else {
-		const startPercent = ((values[0] - min) / (max - min)) * 100;
-		const endPercent = ((values[values.length - 1] - min) / (max - min)) * 100;
+		const startPercent = (((values[0] ?? min) - min) / (max - min)) * 100;
+		const endPercent =
+			(((values[values.length - 1] ?? min) - min) / (max - min)) * 100;
 		rangeStyle =
 			context?.orientation === "horizontal"
 				? {
@@ -254,7 +289,11 @@ export function ValueText(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSliderContext();
 	return (
-		<span class={cx(context?.styles.valueText, classProp)} {...rest}>
+		<span
+			data-part="value-text"
+			class={cx(context?.styles.valueText, classProp)}
+			{...rest}
+		>
 			{children || context?.value.join(", ")}
 		</span>
 	);
@@ -352,111 +391,221 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 		...rootProps
 	} = props;
 
-	const [value, setValue] = useState<number[]>(
-		valueProp ?? defaultValue ?? [min],
+	const generatedId = useId();
+	const rootId = rootProps.id || generatedId;
+	const initialValue = toValueArray(
+		valueProp,
+		toValueArray(defaultValue, [min]),
 	);
+	const [value, setValue] = useState<number[]>(initialValue);
 	const isControlled = valueProp !== undefined;
-	const currentValue = isControlled ? valueProp : value;
-
-	const dragControlRef = useRef<HTMLElement | null>(null);
+	const currentValue = isControlled
+		? toValueArray(valueProp, toValueArray(defaultValue, [min]))
+		: value;
+	const valueRef = useRef<number[]>(currentValue);
 	const activeThumbIndex = useRef<number | null>(null);
 
-	const getValueFromPoint = (clientX: number, clientY: number) => {
-		const control = dragControlRef.current;
-		if (!control) return null;
+	useEffect(() => {
+		valueRef.current = currentValue;
+		const root = document.getElementById(rootId);
+		if (!root) return;
 
-		const rect = control.getBoundingClientRect();
+		const [variantProps] = slider.splitVariantProps({
+			...rootProps,
+			orientation,
+		});
+		const styles = slider(variantProps);
+		const addClass = (element: Element | null, className?: string) => {
+			if (!element || !className) return;
+			element.classList.add(...className.split(/\s+/).filter(Boolean));
+		};
+		const percentForValue = (item: number) =>
+			((item - min) / Math.max(1, max - min)) * 100;
+		const syncDom = (values: number[]) => {
+			addClass(root, styles.root);
 
-		let percent: number;
-		if (orientation === "horizontal") {
-			percent = (clientX - rect.left) / rect.width;
-		} else {
-			percent = 1 - (clientY - rect.top) / rect.height;
-		}
-
-		percent = Math.max(0, Math.min(1, percent));
-		let newValue = min + percent * (max - min);
-		newValue = Math.round(newValue / step) * step;
-		newValue = Math.max(min, Math.min(max, newValue));
-		return newValue;
-	};
-
-	const updateThumbValue = (index: number, newValue: number) => {
-		const newValues = [...currentValue];
-		newValues[index] = newValue;
-		if (index > 0 && newValues[index] < newValues[index - 1]) {
-			newValues[index] = newValues[index - 1];
-		}
-		if (
-			index < newValues.length - 1 &&
-			newValues[index] > newValues[index + 1]
-		) {
-			newValues[index] = newValues[index + 1];
-		}
-
-		if (!isControlled) {
-			setValue(newValues);
-		}
-		// #region agent log
-		fetch('http://127.0.0.1:7377/ingest/03b4832f-9674-4f32-bd7b-0d1df1a67f9e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'722a6d'},body:JSON.stringify({sessionId:'722a6d',location:'slider-primitive.tsx:updateThumbValue',message:'slider value updated',data:{index,newValue,newValues,isControlled},timestamp:Date.now(),hypothesisId:'E',runId:'post-fix'})}).catch(()=>{});
-		// #endregion
-		onValueChange?.({ value: newValues });
-	};
-
-	const handleMove = (e: MouseEvent | TouchEvent) => {
-		if (activeThumbIndex.current === null) return;
-		const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
-		const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
-		const newValue = getValueFromPoint(clientX, clientY);
-		if (newValue !== null) {
-			updateThumbValue(activeThumbIndex.current, newValue);
-		}
-		if ("touches" in e) e.preventDefault();
-	};
-
-	const handleEnd = () => {
-		activeThumbIndex.current = null;
-		dragControlRef.current = null;
-		document.removeEventListener("mousemove", handleMove);
-		document.removeEventListener("mouseup", handleEnd);
-		document.removeEventListener("touchmove", handleMove);
-		document.removeEventListener("touchend", handleEnd);
-	};
-
-	const handleControlPointerDown = (e: MouseEvent | TouchEvent) => {
-		dragControlRef.current = e.currentTarget as HTMLElement;
-		const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
-		const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
-		const newValue = getValueFromPoint(clientX, clientY);
-		// #region agent log
-		fetch('http://127.0.0.1:7377/ingest/03b4832f-9674-4f32-bd7b-0d1df1a67f9e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'722a6d'},body:JSON.stringify({sessionId:'722a6d',location:'slider-primitive.tsx:handleControlPointerDown',message:'slider drag start',data:{clientX,clientY,newValue,currentValue},timestamp:Date.now(),hypothesisId:'B',runId:'post-fix'})}).catch(()=>{});
-		// #endregion
-		if (newValue === null) return;
-
-		let closestIndex = 0;
-		let minDistance = Math.abs(currentValue[0] - newValue);
-		for (let i = 1; i < currentValue.length; i++) {
-			const distance = Math.abs(currentValue[i] - newValue);
-			if (distance < minDistance) {
-				minDistance = distance;
-				closestIndex = i;
+			for (const element of Array.from(
+				root.querySelectorAll('[data-part="label"]'),
+			)) {
+				addClass(element, styles.label);
 			}
-		}
+			for (const element of Array.from(
+				root.querySelectorAll('[data-part="control"]'),
+			)) {
+				addClass(element, styles.control);
+				element.setAttribute("data-orientation", orientation);
+			}
+			for (const element of Array.from(
+				root.querySelectorAll('[data-part="track"]'),
+			)) {
+				addClass(element, styles.track);
+				element.setAttribute("data-orientation", orientation);
+			}
+			for (const element of Array.from(
+				root.querySelectorAll('[data-part="marker-group"]'),
+			)) {
+				addClass(element, styles.markerGroup);
+				element.setAttribute("data-orientation", orientation);
+			}
+			for (const element of Array.from(
+				root.querySelectorAll('[data-part="marker"]'),
+			)) {
+				addClass(element, styles.marker);
+				element.setAttribute("data-orientation", orientation);
+			}
+			for (const element of Array.from(
+				root.querySelectorAll('[data-part="marker-indicator"]'),
+			)) {
+				addClass(element, styles.markerIndicator);
+				element.setAttribute("data-orientation", orientation);
+			}
 
-		activeThumbIndex.current = closestIndex;
-		updateThumbValue(closestIndex, newValue);
+			const valueText = root.querySelector('[data-part="value-text"]');
+			addClass(valueText, styles.valueText);
+			if (valueText) valueText.textContent = values.join(", ");
 
-		document.addEventListener("mousemove", handleMove);
-		document.addEventListener("mouseup", handleEnd);
-		document.addEventListener("touchmove", handleMove, { passive: false });
-		document.addEventListener("touchend", handleEnd);
-	};
+			const range = root.querySelector<HTMLElement>('[data-part="range"]');
+			addClass(range, styles.range);
+			range?.setAttribute("data-orientation", orientation);
+			if (range) {
+				const start = percentForValue(
+					values.length > 1 ? (values[0] ?? min) : min,
+				);
+				const end = percentForValue(values[values.length - 1] ?? min);
+				if (orientation === "horizontal") {
+					range.style.left = `${start}%`;
+					range.style.width = `${end - start}%`;
+					range.style.height = "100%";
+					range.style.bottom = "";
+				} else {
+					range.style.bottom = `${start}%`;
+					range.style.height = `${end - start}%`;
+					range.style.width = "100%";
+					range.style.left = "";
+				}
+				range.style.position = "absolute";
+			}
 
-	const handleThumbKeyDown =
-		(index: number) => (e: KeyboardEvent) => {
+			const thumbs = Array.from(
+				root.querySelectorAll<HTMLElement>('[data-part="thumb"]'),
+			);
+			thumbs.forEach((thumb, index) => {
+				const item = values[index] ?? min;
+				const percent = percentForValue(item);
+				addClass(thumb, styles.thumb);
+				thumb.setAttribute("aria-valuemin", String(min));
+				thumb.setAttribute("aria-valuemax", String(max));
+				thumb.setAttribute("aria-valuenow", String(item));
+				thumb.setAttribute("aria-orientation", orientation);
+				thumb.setAttribute("data-orientation", orientation);
+				thumb.tabIndex = 0;
+				if (orientation === "horizontal") {
+					thumb.style.left = `${percent}%`;
+					thumb.style.bottom = "";
+					thumb.style.transform = "translateX(-50%)";
+				} else {
+					thumb.style.bottom = `${percent}%`;
+					thumb.style.left = "";
+					thumb.style.transform = "translateY(50%)";
+				}
+				thumb.style.position = "absolute";
+				const input = thumb.querySelector<HTMLInputElement>(
+					'input[type="hidden"]',
+				);
+				if (input) input.value = String(item);
+			});
+		};
+		syncDom(currentValue);
+
+		const control = root.querySelector<HTMLElement>('[data-part="control"]');
+		if (!control) return;
+
+		const getValueFromPoint = (clientX: number, clientY: number) => {
+			const rect = control.getBoundingClientRect();
+			const length = orientation === "horizontal" ? rect.width : rect.height;
+			if (length <= 0) return null;
+
+			const rawPercent =
+				orientation === "horizontal"
+					? (clientX - rect.left) / rect.width
+					: 1 - (clientY - rect.top) / rect.height;
+			const percent = Math.max(0, Math.min(1, rawPercent));
+			const effectiveStep = step > 0 ? step : 1;
+			const next = min + percent * (max - min);
+			const rounded =
+				Math.round((next - min) / effectiveStep) * effectiveStep + min;
+			return Math.max(min, Math.min(max, rounded));
+		};
+		const updateThumbValue = (index: number, newValue: number) => {
+			const newValues = [...(valueRef.current ?? [min])];
+			newValues[index] = newValue;
+			const previousValue = newValues[index - 1];
+			const nextValue = newValues[index + 1];
+			if (
+				index > 0 &&
+				previousValue !== undefined &&
+				newValue < previousValue
+			) {
+				newValues[index] = previousValue;
+			}
+			if (index < newValues.length - 1 && nextValue !== undefined) {
+				const item = newValues[index] ?? newValue;
+				if (item > nextValue) newValues[index] = nextValue;
+			}
+			valueRef.current = newValues;
+			syncDom(newValues);
+			if (!isControlled) setValue(newValues);
+			onValueChange?.({ value: newValues });
+		};
+		const handleMove = (e: MouseEvent | TouchEvent) => {
+			if (activeThumbIndex.current === null) return;
+			const point = "touches" in e ? e.touches[0] : e;
+			if (!point) return;
+			const newValue = getValueFromPoint(point.clientX, point.clientY);
+			if (newValue !== null)
+				updateThumbValue(activeThumbIndex.current, newValue);
+			if ("touches" in e) e.preventDefault();
+		};
+		const handleEnd = () => {
+			activeThumbIndex.current = null;
+			document.removeEventListener("mousemove", handleMove);
+			document.removeEventListener("mouseup", handleEnd);
+			document.removeEventListener("touchmove", handleMove);
+			document.removeEventListener("touchend", handleEnd);
+		};
+		const handleControlPointerDown = (e: MouseEvent | TouchEvent) => {
+			const point = "touches" in e ? e.touches[0] : e;
+			if (!point) return;
+			const newValue = getValueFromPoint(point.clientX, point.clientY);
+			if (newValue === null) return;
+
+			const values = valueRef.current ?? [min];
+			let closestIndex = 0;
+			let minDistance = Math.abs((values[0] ?? min) - newValue);
+			for (let i = 1; i < values.length; i++) {
+				const distance = Math.abs((values[i] ?? min) - newValue);
+				if (distance < minDistance) {
+					minDistance = distance;
+					closestIndex = i;
+				}
+			}
+
+			activeThumbIndex.current = closestIndex;
+			updateThumbValue(closestIndex, newValue);
+			document.addEventListener("mousemove", handleMove);
+			document.addEventListener("mouseup", handleEnd);
+			document.addEventListener("touchmove", handleMove, { passive: false });
+			document.addEventListener("touchend", handleEnd);
+			e.preventDefault();
+		};
+		const handleThumbKeyDown = (e: KeyboardEvent) => {
+			const thumb = e.currentTarget as HTMLElement;
+			const thumbs = Array.from(root.querySelectorAll('[data-part="thumb"]'));
+			const index = thumbs.indexOf(thumb);
+			if (index < 0) return;
+
 			const stepValue = e.shiftKey ? step * 10 : step;
-			let newValue = currentValue[index];
-
+			let newValue = (valueRef.current ?? [min])[index] ?? min;
 			if (e.key === "ArrowRight" || e.key === "ArrowUp") {
 				newValue = Math.min(max, newValue + stepValue);
 			} else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
@@ -468,37 +617,54 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 			} else {
 				return;
 			}
-
 			e.preventDefault();
 			updateThumbValue(index, newValue);
 		};
+		const thumbs = Array.from(
+			root.querySelectorAll<HTMLElement>('[data-part="thumb"]'),
+		);
+		control.addEventListener("mousedown", handleControlPointerDown);
+		control.addEventListener("touchstart", handleControlPointerDown, {
+			passive: false,
+		});
+		for (const thumb of thumbs) {
+			thumb.addEventListener("keydown", handleThumbKeyDown);
+		}
 
-	useEffect(() => {
 		return () => {
+			control.removeEventListener("mousedown", handleControlPointerDown);
+			control.removeEventListener("touchstart", handleControlPointerDown);
+			for (const thumb of thumbs) {
+				thumb.removeEventListener("keydown", handleThumbKeyDown);
+			}
 			document.removeEventListener("mousemove", handleMove);
 			document.removeEventListener("mouseup", handleEnd);
 			document.removeEventListener("touchmove", handleMove);
 			document.removeEventListener("touchend", handleEnd);
 		};
-	}, []);
-
-	const interactionValue = {
-		onControlPointerDown: handleControlPointerDown,
-		onThumbKeyDown: handleThumbKeyDown,
-	};
+	}, [
+		currentValue,
+		isControlled,
+		max,
+		min,
+		onValueChange,
+		orientation,
+		rootId,
+		rootProps,
+		step,
+	]);
 
 	return (
-		<SliderInteractionContext.Provider value={interactionValue}>
-			<Root
-				{...rootProps}
-				orientation={orientation}
-				value={currentValue}
-				min={min}
-				max={max}
-				step={step}
-			>
-				{children}
-			</Root>
-		</SliderInteractionContext.Provider>
+		<Root
+			{...rootProps}
+			id={rootId}
+			orientation={orientation}
+			value={currentValue}
+			min={min}
+			max={max}
+			step={step}
+		>
+			{children}
+		</Root>
 	);
 }
