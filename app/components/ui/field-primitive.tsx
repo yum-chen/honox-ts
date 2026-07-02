@@ -4,7 +4,7 @@ import {
 	useContext,
 	useId,
 	useState,
-    useEffect,
+	useEffect,
 } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
 import type { FieldVariantProps } from "../../../styled-system/recipes";
@@ -99,14 +99,14 @@ export function FieldRoot(props: FieldProps) {
 		...restProps
 	} = localProps;
 
-    const [internalValue, setInternalValue] = useState(valueProp ?? defaultValue);
+	const [internalValue, setInternalValue] = useState(valueProp ?? defaultValue);
 
-    // Sync internal state if props change (for controlled components)
-    useEffect(() => {
-        if (valueProp !== undefined) {
-            setInternalValue(valueProp);
-        }
-    }, [valueProp]);
+	// Sync internal state if props change (for controlled components)
+	useEffect(() => {
+		if (valueProp !== undefined) {
+			setInternalValue(valueProp);
+		}
+	}, [valueProp]);
 
 	const value = valueProp !== undefined ? valueProp : internalValue;
 
@@ -120,12 +120,12 @@ export function FieldRoot(props: FieldProps) {
 		isInvalid = invalidProp;
 	}
 
-    const handleValueChange = (newValue: string) => {
-        if (valueProp === undefined) {
-            setInternalValue(newValue);
-        }
-        onValueChange?.(newValue);
-    };
+	const handleValueChange = (newValue: string) => {
+		if (valueProp === undefined) {
+			setInternalValue(newValue);
+		}
+		onValueChange?.(newValue);
+	};
 
 	const contextValue: FieldContextValue = {
 		id,
