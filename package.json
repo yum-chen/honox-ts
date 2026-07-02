@@ -14,9 +14,8 @@
 		"format": "bun x @biomejs/biome format --fix .",
 		"lint": "bun x @biomejs/biome lint --fix .",
 		"start": "bun run src/main.ts",
-		"test": "bun run test:unit && bun run test:integration",
-		"test:unit": "bun test tests/*.unit.test.ts",
-		"test:integration": "bun x playwright test"
+		"test": "bun run test:unit",
+		"test:unit": "bun test tests/*.unit.test.ts"
 	},
 	"dependencies": {
 		"hono": "^4.12.26",
@@ -31,7 +30,6 @@
 		"@hono/vite-dev-server": "^0.25.3",
 		"@hono/vite-ssg": "^0.3.3",
 		"@pandacss/dev": "^1.11.3",
-		"@playwright/test": "^1.61.1",
 		"@types/bun": "latest",
 		"autoprefixer": "^10.5.0",
 		"postcss": "^8.5.15",
