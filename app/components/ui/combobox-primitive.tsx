@@ -684,7 +684,7 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 				inputElement.removeEventListener("input", handleInputEvent);
 			}
 		};
-	}, [rootId, open]);
+	}, [rootId]);
 
 	return (
 		<Root
