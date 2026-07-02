@@ -1,3 +1,4 @@
+import { progress } from "./progress";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { badge } from "./badge";
@@ -23,19 +24,20 @@ import { textarea } from "./textarea";
 import { tooltip } from "./tooltip";
 
 export const recipes = {
-	absoluteCenter,
-	badge,
-	button,
-	group,
-	heading,
-	spinner,
-	text,
-	textarea,
-	skeleton,
+    absoluteCenter,
+    badge,
+    button,
+    group,
+    heading,
+    spinner,
+    text,
+    textarea,
+    skeleton,
 };
 
 export const slotRecipes = {
 	alert,
+	progress,
 	table,
 	slider,
 	splitter,
