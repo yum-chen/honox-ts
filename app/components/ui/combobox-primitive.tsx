@@ -454,6 +454,7 @@ export interface InteractiveComboboxProps extends ComboboxFlattenedProps {
 }
 
 export function InteractiveCombobox(props: InteractiveComboboxProps) {
+	console.log(`[Combobox] InteractiveCombobox rendering with props:`, props);
 	const {
 		open: openProp,
 		inputValue: inputValueProp,
@@ -559,19 +560,30 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 	// Attach event listeners using event delegation
 	useEffect(() => {
 		const root = document.getElementById(rootId);
-		if (!root) return;
+		if (!root) {
+			console.log(`[Combobox DEBUG] Root not found: ${rootId}`);
+			return;
+		}
+		console.log(
+			`[Combobox DEBUG] Event listener attached for rootId: ${rootId}`,
+		);
 
 		const positioners = Array.from(
 			root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
 		);
 
 		const handleClick = (e: Event) => {
+			console.log(`[Combobox DEBUG] Click event:`, e.target);
 			const target = (e.target as HTMLElement).closest(
 				"[data-part]",
 			) as HTMLElement;
-			if (!target) return;
+			if (!target) {
+				console.log(`[Combobox DEBUG] No target with data-part found`);
+				return;
+			}
 
 			const dataPart = target.getAttribute("data-part");
+			console.log(`[Combobox DEBUG] dataPart: ${dataPart}`);
 			const isDisabled = target.hasAttribute("data-disabled");
 
 			const hide = () => {
@@ -609,8 +621,19 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 			if (dataPart === "trigger") {
 				const currentOpen = root.getAttribute("data-state") === "open";
 				const nextOpen = !currentOpen;
-				if (nextOpen) show();
-				else hide();
+				if (nextOpen) {
+					// When opening, clear the input to show all options
+					const inputElement = root.querySelector(
+						'[data-part="input"]',
+					) as HTMLInputElement | null;
+					if (inputElement) {
+						inputElement.value = "";
+						setInputValue("");
+					}
+					show();
+				} else {
+					hide();
+				}
 				handleToggleRef.current?.();
 			} else if (dataPart === "clear-trigger") {
 				const inputElement = root.querySelector(

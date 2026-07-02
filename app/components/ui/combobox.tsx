@@ -26,6 +26,7 @@ export interface ComboboxProps extends ComboboxFlattenedProps {
 
 export function Combobox(props: ComboboxProps) {
 	const { interactive, ...rest } = props;
+	console.log(`[Wrapper] Combobox called with interactive=${interactive}`);
 
 	const isInteractive =
 		interactive !== false &&
@@ -35,7 +36,10 @@ export function Combobox(props: ComboboxProps) {
 			rest.onToggle !== undefined ||
 			rest.onInputChange !== undefined);
 
+	console.log(`[Wrapper] Combobox isInteractive=${isInteractive}`);
+
 	if (isInteractive) {
+		console.log(`[Wrapper] Combobox returning ComboboxIsland`);
 		return <ComboboxIsland {...rest} />;
 	}
 

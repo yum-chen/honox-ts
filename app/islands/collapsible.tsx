@@ -4,6 +4,7 @@ import {
 } from "../components/ui/collapsible-primitive";
 
 export default function CollapsibleIsland(props: InteractiveRootProps) {
+	console.log(`[Island] CollapsibleIsland component mounted`, props);
 	return <InteractiveRoot {...props} />;
 }
 
