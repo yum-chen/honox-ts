@@ -93,8 +93,8 @@ export interface BackdropProps extends PropsWithChildren {
 export function Backdrop(props: BackdropProps) {
   const { children, class: classProp, ...restProps } = props;
   const context = useDialogContext();
-  if (!context) return null;
-  const { styles, open } = context;
+  const styles = context?.styles || dialog();
+  const open = context?.open;
   console.log("[Dialog.Backdrop] Rendering with open:", open);
 
   return (
@@ -116,8 +116,8 @@ export interface PositionerProps extends PropsWithChildren {
 export function Positioner(props: PositionerProps) {
   const { children, class: classProp, ...restProps } = props;
   const context = useDialogContext();
-  if (!context) return null;
-  const { styles, open } = context;
+  const styles = context?.styles || dialog();
+  const open = context?.open;
 
   return (
     <div
@@ -142,8 +142,9 @@ export interface ContentProps extends PropsWithChildren {
 export function Content(props: ContentProps) {
   const { children, class: classProp, ...restProps } = props;
   const context = useDialogContext();
-  if (!context) return null;
-  const { styles, open, id } = context;
+  const styles = context?.styles || dialog();
+  const open = context?.open;
+  const id = context?.id;
   console.log("[Dialog.Content] Rendering with open:", open);
 
   return (
@@ -151,8 +152,8 @@ export function Content(props: ContentProps) {
       role="dialog"
       data-part="content"
       aria-modal="true"
-      aria-labelledby={`${id}-title`}
-      aria-describedby={`${id}-description`}
+      aria-labelledby={id ? `${id}-title` : undefined}
+      aria-describedby={id ? `${id}-description` : undefined}
       class={cx(styles.content, classProp, !open && css({ display: "none" }))}
       data-state={open ? "open" : "closed"}
       {...restProps}
@@ -384,64 +385,60 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 
     // Handle all clicks via event delegation
     const handleClick = (e: Event) => {
-      const target = e.target as HTMLElement;
-      console.log("[Dialog] Click event triggered on:", target);
-      console.log(
-        "[Dialog] target.getAttribute('data-part'):",
-        target.getAttribute("data-part"),
-      );
-      console.log("[Dialog] open value:", open);
+      const target = (e.target as HTMLElement).closest("[data-part]") as HTMLElement;
+      if (!target) return;
 
+      console.log("[Dialog] Click event triggered on:", target);
       const dataPart = target.getAttribute("data-part");
+      console.log("[Dialog] data-part:", dataPart);
+
+      const hide = () => {
+        root.setAttribute("data-state", "closed");
+        positioners.forEach((p) => {
+          p.style.cssText = "display: none !important; visibility: hidden !important;";
+          p.setAttribute("data-state", "closed");
+        });
+        backdrops.forEach((b) => {
+          b.style.cssText = "display: none !important; visibility: hidden !important;";
+          b.setAttribute("data-state", "closed");
+        });
+        root.querySelectorAll<HTMLElement>('[data-part="content"]').forEach((c) => {
+          c.setAttribute("data-state", "closed");
+          c.style.cssText = "display: none !important; visibility: hidden !important;";
+        });
+      };
+
+      const show = () => {
+        root.setAttribute("data-state", "open");
+        positioners.forEach((p) => {
+          p.style.cssText = "display: flex !important; visibility: visible !important;";
+          p.setAttribute("data-state", "open");
+        });
+        backdrops.forEach((b) => {
+          b.style.cssText = "display: block !important; visibility: visible !important;";
+          b.setAttribute("data-state", "open");
+        });
+        root.querySelectorAll<HTMLElement>('[data-part="content"]').forEach((c) => {
+          c.setAttribute("data-state", "open");
+          c.style.cssText = "display: flex !important; visibility: visible !important;";
+        });
+      };
 
       if (dataPart === "backdrop") {
         console.log("[Dialog] Backdrop clicked, closing");
-        positioners.forEach((p) => {
-          p.style.cssText =
-            "display: none !important; visibility: hidden !important;";
-        });
-        backdrops.forEach((b) => {
-          b.style.cssText =
-            "display: none !important; visibility: hidden !important;";
-        });
+        hide();
         handleOpenChangeRef.current?.(false);
       } else if (dataPart === "trigger") {
         console.log("[Dialog] Trigger clicked");
-        const nextOpen = !open;
+        const currentOpen = root.getAttribute("data-state") === "open";
+        const nextOpen = !currentOpen;
         console.log("[Dialog] Toggling to:", nextOpen);
-        if (nextOpen) {
-          positioners.forEach((p) => {
-            p.style.cssText =
-              "display: block !important; visibility: visible !important;";
-          });
-          backdrops.forEach((b) => {
-            b.style.cssText =
-              "display: block !important; visibility: visible !important;";
-          });
-        } else {
-          positioners.forEach((p) => {
-            p.style.cssText =
-              "display: none !important; visibility: hidden !important;";
-          });
-          backdrops.forEach((b) => {
-            b.style.cssText =
-              "display: none !important; visibility: hidden !important;";
-          });
-        }
+        if (nextOpen) show();
+        else hide();
         handleOpenChangeRef.current?.(nextOpen);
-      } else if (
-        dataPart === "close-trigger" ||
-        dataPart === "action-trigger"
-      ) {
+      } else if (dataPart === "close-trigger" || dataPart === "action-trigger") {
         console.log("[Dialog] Close/Action trigger clicked");
-        positioners.forEach((p) => {
-          p.style.cssText =
-            "display: none !important; visibility: hidden !important;";
-        });
-        backdrops.forEach((b) => {
-          b.style.cssText =
-            "display: none !important; visibility: hidden !important;";
-        });
+        hide();
         handleOpenChangeRef.current?.(false);
       }
     };
