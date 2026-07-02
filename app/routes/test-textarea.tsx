@@ -2,10 +2,21 @@ import { Textarea } from "../components/ui";
 
 export default function TestTextareaPage() {
 	return (
-		<div style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "2rem" }}>
+		<div
+			style={{
+				padding: "2rem",
+				display: "flex",
+				flexDirection: "column",
+				gap: "2rem",
+			}}
+		>
 			<section>
 				<h2>Static Textarea</h2>
-				<Textarea id="static-textarea" label="Static Label" placeholder="Static Placeholder" />
+				<Textarea
+					id="static-textarea"
+					label="Static Label"
+					placeholder="Static Placeholder"
+				/>
 			</section>
 
 			<section>
@@ -39,7 +50,7 @@ export default function TestTextareaPage() {
 				/>
 			</section>
 
-            <section>
+			<section>
 				<h2>Custom Validator</h2>
 				<Textarea
 					id="custom-validator-textarea"

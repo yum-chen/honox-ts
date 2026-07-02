@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from "hono/jsx";
+import type { Child, PropsWithChildren } from "hono/jsx";
 import { createContext, useContext } from "hono/jsx";
 import { css, cx } from "../../../styled-system/css";
 import type { ButtonVariantProps } from "../../../styled-system/recipes";
@@ -12,8 +12,8 @@ const ButtonContext = createContext<
 
 export interface ButtonLoadingProps {
 	loading?: boolean;
-	loadingText?: any;
-	spinner?: any;
+	loadingText?: Child;
+	spinner?: Child;
 	spinnerPlacement?: "start" | "end";
 }
 
@@ -61,7 +61,7 @@ export function Button(props: ButtonProps) {
 			aria-busy={loading}
 			aria-disabled={loading || disabled}
 			data-loading={loading ? "" : undefined}
-			{...(rest as any)}
+			{...(rest as Record<string, unknown>)}
 		>
 			{loading ? (
 				<Loader
@@ -88,7 +88,7 @@ export function ButtonGroup(props: ButtonGroupProps) {
 
 	return (
 		<ButtonContext.Provider value={{ ...variantProps, colorPalette }}>
-			<Group {...(rest as any)}>{children}</Group>
+			<Group {...(rest as Record<string, unknown>)}>{children}</Group>
 		</ButtonContext.Provider>
 	);
 }

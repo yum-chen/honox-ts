@@ -102,9 +102,11 @@ function Trigger(props: TriggerProps) {
 	};
 
 	if (asChild && typeof children === "object" && children !== null) {
-		const child = children as any;
+		const child = children as {
+			props?: { class?: string; className?: string };
+		};
 		const childProps = child.props || {};
-		return cloneElement(child, {
+		return cloneElement(children as any, {
 			...triggerProps,
 			class: cx(
 				styles?.trigger,

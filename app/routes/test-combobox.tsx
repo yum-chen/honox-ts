@@ -12,11 +12,7 @@ export default function TestComboboxPage() {
 	return (
 		<div style={{ padding: "2rem" }}>
 			<h1>Combobox Test Page</h1>
-			<Combobox
-				items={items}
-				placeholder="Select a framework..."
-				interactive
-			/>
+			<Combobox items={items} placeholder="Select a framework..." interactive />
 		</div>
 	);
 }
