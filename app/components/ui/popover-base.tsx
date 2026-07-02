@@ -1,11 +1,9 @@
 import {
-	type Child,
 	cloneElement,
 	createContext,
 	type PropsWithChildren,
 	useContext,
 	useId,
-	useState,
 } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
 import { popover } from "../../../styled-system/recipes";
@@ -16,8 +14,7 @@ interface PopoverContextValue {
 	id: string;
 	open: boolean;
 	styles: PopoverStyles;
-	onClose?: () => void;
-	onToggle?: () => void;
+	onOpenChange?: (open: boolean) => void;
 }
 
 const PopoverContext = createContext<PopoverContextValue | null>(null);
@@ -30,18 +27,17 @@ const usePopoverContext = () => {
 export interface PopoverRootProps extends PropsWithChildren {
 	id?: string;
 	open?: boolean;
-	onClose?: () => void;
-	onToggle?: () => void;
+	onOpenChange?: (open: boolean) => void;
 }
 
 export function PopoverRoot(props: PopoverRootProps) {
-	const { id: idProp, open = false, children, onClose, onToggle } = props;
+	const { id: idProp, open = false, children, onOpenChange } = props;
 	const autoId = useId();
 	const id = idProp || autoId;
 	const styles = popover();
 
 	return (
-		<PopoverContext.Provider value={{ id, open, styles, onClose, onToggle }}>
+		<PopoverContext.Provider value={{ id, open, styles, onOpenChange }}>
 			{children}
 		</PopoverContext.Provider>
 	);
@@ -59,7 +55,7 @@ export function PopoverTrigger(props: PopoverTriggerProps) {
 	const id = context?.id;
 	const open = context?.open;
 	const styles = context?.styles;
-	const onToggle = context?.onToggle;
+	const onOpenChange = context?.onOpenChange;
 
 	const triggerProps = {
 		id: id ? `popover-trigger-${id}` : undefined,
@@ -67,7 +63,7 @@ export function PopoverTrigger(props: PopoverTriggerProps) {
 		"aria-expanded": open ? "true" : "false",
 		"aria-controls": open && id ? `popover-content-${id}` : undefined,
 		"data-state": open ? "open" : "closed",
-		onClick: onToggle,
+		onClick: () => onOpenChange?.(!open),
 		...restProps,
 	};
 
@@ -208,10 +204,10 @@ export function PopoverCloseTrigger(props: PopoverCloseTriggerProps) {
 	const { children, class: classProp, asChild, ...restProps } = props;
 	const context = usePopoverContext();
 	const styles = context?.styles;
-	const onClose = context?.onClose;
+	const onOpenChange = context?.onOpenChange;
 
 	const triggerProps = {
-		onClick: onClose,
+		onClick: () => onOpenChange?.(false),
 		"aria-label": "Close",
 		...restProps,
 	};
@@ -251,23 +247,4 @@ export function PopoverArrowTip(props: { class?: string }) {
 	const context = usePopoverContext();
 	const styles = context?.styles;
 	return <div class={cx(styles?.arrowTip, classProp)} {...restProps} />;
-}
-
-export function InteractivePopoverRoot(props: PopoverRootProps) {
-	const { open: openProp, children, ...rest } = props;
-	const [isOpen, setIsOpen] = useState(openProp ?? false);
-
-	const handleToggle = () => setIsOpen(!isOpen);
-	const handleClose = () => setIsOpen(false);
-
-	return (
-		<PopoverRoot
-			{...rest}
-			open={isOpen}
-			onToggle={handleToggle}
-			onClose={handleClose}
-		>
-			{children}
-		</PopoverRoot>
-	);
 }
