@@ -1,5 +1,5 @@
 import type { Child, PropsWithChildren } from "hono/jsx";
-import { createContext, useContext, useId } from "hono/jsx";
+import { createContext, useContext, useEffect, useId, useRef, useState } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
 import type { SliderVariantProps } from "../../../styled-system/recipes";
 import { slider } from "../../../styled-system/recipes";
@@ -16,9 +16,21 @@ interface SliderContextValue {
 
 const SliderContext = createContext<SliderContextValue | null>(null);
 
+interface SliderInteractionContextValue {
+	onControlPointerDown: (e: MouseEvent | TouchEvent) => void;
+	onThumbKeyDown: (index: number) => (e: KeyboardEvent) => void;
+}
+
+const SliderInteractionContext =
+	createContext<SliderInteractionContextValue | null>(null);
+
 const useSliderContext = () => {
 	const context = useContext(SliderContext);
 	return context;
+};
+
+const useSliderInteractionContext = () => {
+	return useContext(SliderInteractionContext);
 };
 
 export interface RootProps extends SliderVariantProps, PropsWithChildren {
@@ -38,13 +50,15 @@ export function Root(props: RootProps) {
 	const {
 		children,
 		orientation = "horizontal",
-		value = [0],
+		value: valueProp,
+		defaultValue,
 		min = 0,
 		max = 100,
 		class: classProp,
 		id: idProp,
 		...restProps
 	} = localProps;
+	const value = valueProp ?? defaultValue ?? [min];
 	const styles = slider(variantProps);
 	const generatedId = useId();
 	const id = idProp || generatedId;
@@ -91,12 +105,15 @@ export function Control(
 ) {
 	const { children, class: classProp, style, ...rest } = props;
 	const context = useSliderContext();
+	const interaction = useSliderInteractionContext();
 	return (
 		<div
 			data-part="control"
 			class={cx(context?.styles.control, classProp)}
 			data-orientation={context?.orientation}
 			style={{ position: "relative", ...style }}
+			onMouseDown={interaction?.onControlPointerDown}
+			onTouchStart={interaction?.onControlPointerDown}
 			{...rest}
 		>
 			{children}
@@ -191,6 +208,7 @@ export function Thumb(
 ) {
 	const { children, index, name, class: classProp, style, ...rest } = props;
 	const context = useSliderContext();
+	const interaction = useSliderInteractionContext();
 
 	const min = context?.min ?? 0;
 	const max = context?.max ?? 100;
@@ -221,8 +239,9 @@ export function Thumb(
 			data-part="thumb"
 			class={cx(context?.styles.thumb, classProp)}
 			data-orientation={context?.orientation}
-			tabIndex={0}
+			tabIndex={interaction ? 0 : undefined}
 			style={{ ...thumbStyle, ...style }}
+			onKeyDown={interaction?.onThumbKeyDown(index)}
 			{...rest}
 		>
 			<input type="hidden" name={name} value={value} />
@@ -313,5 +332,173 @@ export function MarkerIndicator(props: { class?: string }) {
 			data-orientation={context?.orientation}
 			{...rest}
 		/>
+	);
+}
+
+export interface InteractiveSliderProps extends RootProps {
+	onValueChange?: (details: { value: number[] }) => void;
+}
+
+export function InteractiveSlider(props: InteractiveSliderProps) {
+	const {
+		value: valueProp,
+		defaultValue,
+		onValueChange,
+		children,
+		min = 0,
+		max = 100,
+		step = 1,
+		orientation = "horizontal",
+		...rootProps
+	} = props;
+
+	const [value, setValue] = useState<number[]>(
+		valueProp ?? defaultValue ?? [min],
+	);
+	const isControlled = valueProp !== undefined;
+	const currentValue = isControlled ? valueProp : value;
+
+	const dragControlRef = useRef<HTMLElement | null>(null);
+	const activeThumbIndex = useRef<number | null>(null);
+
+	const getValueFromPoint = (clientX: number, clientY: number) => {
+		const control = dragControlRef.current;
+		if (!control) return null;
+
+		const rect = control.getBoundingClientRect();
+
+		let percent: number;
+		if (orientation === "horizontal") {
+			percent = (clientX - rect.left) / rect.width;
+		} else {
+			percent = 1 - (clientY - rect.top) / rect.height;
+		}
+
+		percent = Math.max(0, Math.min(1, percent));
+		let newValue = min + percent * (max - min);
+		newValue = Math.round(newValue / step) * step;
+		newValue = Math.max(min, Math.min(max, newValue));
+		return newValue;
+	};
+
+	const updateThumbValue = (index: number, newValue: number) => {
+		const newValues = [...currentValue];
+		newValues[index] = newValue;
+		if (index > 0 && newValues[index] < newValues[index - 1]) {
+			newValues[index] = newValues[index - 1];
+		}
+		if (
+			index < newValues.length - 1 &&
+			newValues[index] > newValues[index + 1]
+		) {
+			newValues[index] = newValues[index + 1];
+		}
+
+		if (!isControlled) {
+			setValue(newValues);
+		}
+		// #region agent log
+		fetch('http://127.0.0.1:7377/ingest/03b4832f-9674-4f32-bd7b-0d1df1a67f9e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'722a6d'},body:JSON.stringify({sessionId:'722a6d',location:'slider-primitive.tsx:updateThumbValue',message:'slider value updated',data:{index,newValue,newValues,isControlled},timestamp:Date.now(),hypothesisId:'E',runId:'post-fix'})}).catch(()=>{});
+		// #endregion
+		onValueChange?.({ value: newValues });
+	};
+
+	const handleMove = (e: MouseEvent | TouchEvent) => {
+		if (activeThumbIndex.current === null) return;
+		const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+		const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+		const newValue = getValueFromPoint(clientX, clientY);
+		if (newValue !== null) {
+			updateThumbValue(activeThumbIndex.current, newValue);
+		}
+		if ("touches" in e) e.preventDefault();
+	};
+
+	const handleEnd = () => {
+		activeThumbIndex.current = null;
+		dragControlRef.current = null;
+		document.removeEventListener("mousemove", handleMove);
+		document.removeEventListener("mouseup", handleEnd);
+		document.removeEventListener("touchmove", handleMove);
+		document.removeEventListener("touchend", handleEnd);
+	};
+
+	const handleControlPointerDown = (e: MouseEvent | TouchEvent) => {
+		dragControlRef.current = e.currentTarget as HTMLElement;
+		const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+		const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+		const newValue = getValueFromPoint(clientX, clientY);
+		// #region agent log
+		fetch('http://127.0.0.1:7377/ingest/03b4832f-9674-4f32-bd7b-0d1df1a67f9e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'722a6d'},body:JSON.stringify({sessionId:'722a6d',location:'slider-primitive.tsx:handleControlPointerDown',message:'slider drag start',data:{clientX,clientY,newValue,currentValue},timestamp:Date.now(),hypothesisId:'B',runId:'post-fix'})}).catch(()=>{});
+		// #endregion
+		if (newValue === null) return;
+
+		let closestIndex = 0;
+		let minDistance = Math.abs(currentValue[0] - newValue);
+		for (let i = 1; i < currentValue.length; i++) {
+			const distance = Math.abs(currentValue[i] - newValue);
+			if (distance < minDistance) {
+				minDistance = distance;
+				closestIndex = i;
+			}
+		}
+
+		activeThumbIndex.current = closestIndex;
+		updateThumbValue(closestIndex, newValue);
+
+		document.addEventListener("mousemove", handleMove);
+		document.addEventListener("mouseup", handleEnd);
+		document.addEventListener("touchmove", handleMove, { passive: false });
+		document.addEventListener("touchend", handleEnd);
+	};
+
+	const handleThumbKeyDown =
+		(index: number) => (e: KeyboardEvent) => {
+			const stepValue = e.shiftKey ? step * 10 : step;
+			let newValue = currentValue[index];
+
+			if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+				newValue = Math.min(max, newValue + stepValue);
+			} else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+				newValue = Math.max(min, newValue - stepValue);
+			} else if (e.key === "Home") {
+				newValue = min;
+			} else if (e.key === "End") {
+				newValue = max;
+			} else {
+				return;
+			}
+
+			e.preventDefault();
+			updateThumbValue(index, newValue);
+		};
+
+	useEffect(() => {
+		return () => {
+			document.removeEventListener("mousemove", handleMove);
+			document.removeEventListener("mouseup", handleEnd);
+			document.removeEventListener("touchmove", handleMove);
+			document.removeEventListener("touchend", handleEnd);
+		};
+	}, []);
+
+	const interactionValue = {
+		onControlPointerDown: handleControlPointerDown,
+		onThumbKeyDown: handleThumbKeyDown,
+	};
+
+	return (
+		<SliderInteractionContext.Provider value={interactionValue}>
+			<Root
+				{...rootProps}
+				orientation={orientation}
+				value={currentValue}
+				min={min}
+				max={max}
+				step={step}
+			>
+				{children}
+			</Root>
+		</SliderInteractionContext.Provider>
 	);
 }

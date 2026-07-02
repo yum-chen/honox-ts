@@ -1,4 +1,4 @@
-import SliderIsland, { type SliderIslandProps } from "../../islands/slider";
+import SliderIsland from "../../islands/slider";
 import {
 	Control,
 	Label,
@@ -7,21 +7,38 @@ import {
 	MarkerIndicator,
 	Range,
 	Root as SliderPrimitiveRoot,
+	type RootProps as SliderPrimitiveRootProps,
 	Thumb,
 	Track,
 	ValueText,
 } from "./slider-primitive";
 
-export interface RootProps extends SliderIslandProps {
+export interface RootProps extends SliderPrimitiveRootProps {
 	interactive?: boolean;
+	onValueChange?: (details: { value: number[] }) => void;
 }
 
 export function Root(props: RootProps) {
-	const { interactive, ...rest } = props;
-	if (interactive) {
-		return <SliderIsland {...rest} />;
+	const { interactive, onValueChange, value, defaultValue, ...rest } = props;
+
+	const isInteractive =
+		interactive !== false &&
+		(interactive ||
+			onValueChange !== undefined ||
+			value !== undefined ||
+			defaultValue !== undefined);
+
+	if (isInteractive) {
+		return <SliderIsland {...props} />;
 	}
-	return <SliderPrimitiveRoot {...rest} />;
+
+	return (
+		<SliderPrimitiveRoot
+			{...rest}
+			value={value}
+			defaultValue={defaultValue}
+		/>
+	);
 }
 
 export {
