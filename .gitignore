@@ -36,3 +36,7 @@ lerna-debug.log*
 ## Panda
 styled-system
 styled-system-studio
+
+# tests
+test-results/
+playwright-report/
