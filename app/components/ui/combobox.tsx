@@ -1,6 +1,9 @@
 import ComboboxIsland from "../../islands/combobox";
 import {
 	ClearTrigger,
+	type ComboboxFlattenedProps,
+	Root as ComboboxPrimitiveRoot,
+	ComboboxStructure,
 	Content,
 	Control,
 	Empty,
@@ -14,9 +17,6 @@ import {
 	Label,
 	List,
 	Positioner,
-	Root as ComboboxPrimitiveRoot,
-	ComboboxStructure,
-	type ComboboxFlattenedProps,
 	Trigger,
 } from "./combobox-primitive";
 
@@ -47,20 +47,20 @@ export function Combobox(props: ComboboxProps) {
 }
 
 export {
-	Label,
-	Control,
-	Input,
-	Trigger,
 	ClearTrigger,
-	IndicatorGroup,
-	Positioner,
+	ComboboxPrimitiveRoot as Root,
 	Content,
-	List,
+	Control,
+	Empty,
+	IndicatorGroup,
+	Input,
 	Item,
-	ItemText,
-	ItemIndicator,
 	ItemGroup,
 	ItemGroupLabel,
-	Empty,
-	ComboboxPrimitiveRoot as Root,
+	ItemIndicator,
+	ItemText,
+	Label,
+	List,
+	Positioner,
+	Trigger,
 };

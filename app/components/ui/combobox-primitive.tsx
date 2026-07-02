@@ -1,3 +1,4 @@
+import type { Child } from "hono/jsx";
 import {
 	createContext,
 	type PropsWithChildren,
@@ -10,7 +11,6 @@ import {
 import { cx } from "../../../styled-system/css";
 import type { ComboboxVariantProps } from "../../../styled-system/recipes";
 import { combobox } from "../../../styled-system/recipes";
-import type { Child } from "hono/jsx";
 
 type ComboboxStyles = ReturnType<typeof combobox>;
 
