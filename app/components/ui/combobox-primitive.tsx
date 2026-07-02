@@ -2,11 +2,14 @@ import {
 	createContext,
 	type PropsWithChildren,
 	useContext,
+	useEffect,
+	useId,
+	useRef,
 	useState,
 } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
-import { combobox } from "../../../styled-system/recipes/index.mjs";
-import type { ComboboxVariantProps } from "../../../styled-system/recipes/index.mjs";
+import type { ComboboxVariantProps } from "../../../styled-system/recipes";
+import { combobox } from "../../../styled-system/recipes";
 import type { Child } from "hono/jsx";
 
 type ComboboxStyles = ReturnType<typeof combobox>;
@@ -44,6 +47,7 @@ export interface RootProps extends ComboboxVariantProps, PropsWithChildren {
 	class?: string;
 	id?: string;
 	style?: any;
+	[key: string]: any;
 }
 
 export function Root(props: RootProps) {
@@ -58,6 +62,7 @@ export function Root(props: RootProps) {
 		onItemSelect,
 		class: classProp,
 		style,
+		id,
 		...rest
 	} = localProps;
 
@@ -76,6 +81,7 @@ export function Root(props: RootProps) {
 			}}
 		>
 			<div
+				id={id}
 				data-scope="combobox"
 				data-part="root"
 				class={cx(styles.root, classProp)}
@@ -131,7 +137,6 @@ export function Input(props: any) {
 			data-part="input"
 			class={cx(context?.styles.input, classProp)}
 			value={context?.inputValue}
-			onInput={(e: any) => context?.onInputChange?.(e.target.value)}
 			{...rest}
 		/>
 	);
@@ -149,7 +154,6 @@ export function Trigger(props: PropsWithChildren<{ class?: string }>) {
 			data-scope="combobox"
 			data-part="trigger"
 			class={cx(context?.styles.trigger, classProp)}
-			onClick={context?.onToggle}
 			{...rest}
 		>
 			{children || (
@@ -183,7 +187,6 @@ export function ClearTrigger(props: PropsWithChildren<{ class?: string }>) {
 			data-scope="combobox"
 			data-part="clear-trigger"
 			class={cx(context?.styles.clearTrigger, classProp)}
-			onClick={() => context?.onInputChange?.("")}
 			{...rest}
 		>
 			{children || (
@@ -225,11 +228,11 @@ export function IndicatorGroup(props: PropsWithChildren<{ class?: string }>) {
 export function Positioner(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useComboboxContext();
-	if (!context?.open) return null;
 	return (
 		<div
 			data-scope="combobox"
 			data-part="positioner"
+			data-state={context?.open ? "open" : "closed"}
 			class={cx(context?.styles.positioner, classProp)}
 			style={{
 				position: "absolute",
@@ -237,6 +240,7 @@ export function Positioner(props: PropsWithChildren<{ class?: string }>) {
 				left: "0",
 				width: "100%",
 				zIndex: 1000,
+				...(context?.open ? { display: "block" } : { display: "none" }),
 			}}
 			{...rest}
 		>
@@ -297,7 +301,6 @@ export function Item(
 			data-value={value}
 			data-disabled={disabled ? "" : undefined}
 			class={cx(context?.styles.item, classProp)}
-			onClick={() => !disabled && context?.onItemSelect?.(value)}
 			{...rest}
 		>
 			{children}
@@ -404,18 +407,11 @@ export interface ComboboxFlattenedProps extends RootProps {
 }
 
 export function ComboboxStructure(props: ComboboxFlattenedProps) {
-	const {
-		items = [],
-		label,
-		placeholder,
-		allowClear,
-		children,
-		...rest
-	} = props;
-	const { inputValue } = useComboboxContext();
+	const { items = [], label, placeholder, allowClear, children } = props;
+	const context = useComboboxContext();
 
 	const filteredItems = items.filter((item) =>
-		item.label.toLowerCase().includes(inputValue.toLowerCase()),
+		item.label.toLowerCase().includes(context?.inputValue.toLowerCase() || ""),
 	);
 
 	return (
@@ -453,26 +449,238 @@ export function ComboboxStructure(props: ComboboxFlattenedProps) {
 	);
 }
 
-export function InteractiveCombobox(props: ComboboxFlattenedProps) {
-	const { open: openProp, inputValue: inputValueProp, ...rest } = props;
+export interface InteractiveComboboxProps extends ComboboxFlattenedProps {
+	id?: string;
+}
+
+export function InteractiveCombobox(props: InteractiveComboboxProps) {
+	const {
+		open: openProp,
+		inputValue: inputValueProp,
+		id: idProp,
+		...rest
+	} = props;
 	const [isOpen, setIsOpen] = useState(openProp ?? false);
 	const [inputValue, setInputValue] = useState(inputValueProp ?? "");
 
-	const handleToggle = () => setIsOpen(!isOpen);
-	const handleClose = () => setIsOpen(false);
+	const isControlled = openProp !== undefined;
+	const open = isControlled ? openProp : isOpen;
+
+	const fallbackId = useId();
+	const rootId = idProp || `combobox-${fallbackId}`;
+
+	const handleToggleRef = useRef<() => void>(() => {});
+	const handleCloseRef = useRef<() => void>(() => {});
+	const handleInputChangeRef = useRef<(val: string) => void>(() => {});
+	const handleItemSelectRef = useRef<(val: string) => void>(() => {});
+
+	const handleToggle = () => {
+		if (!isControlled) {
+			setIsOpen((prev) => !prev);
+		}
+	};
+
+	const handleClose = () => {
+		if (!isControlled) {
+			setIsOpen(false);
+		}
+	};
+
 	const handleInputChange = (val: string) => {
 		setInputValue(val);
-		if (val && !isOpen) setIsOpen(true);
+		if (val && !open) {
+			if (!isControlled) {
+				setIsOpen(true);
+			}
+		}
 	};
+
 	const handleItemSelect = (val: string) => {
 		setInputValue(val);
-		setIsOpen(false);
+		if (!isControlled) {
+			setIsOpen(false);
+		}
 	};
+
+	// Store handlers in refs
+	useEffect(() => {
+		handleToggleRef.current = handleToggle;
+		handleCloseRef.current = handleClose;
+		handleInputChangeRef.current = handleInputChange;
+		handleItemSelectRef.current = handleItemSelect;
+	}, [
+		isControlled,
+		open,
+		handleToggle,
+		handleClose,
+		handleInputChange,
+		handleItemSelect,
+	]);
+
+	// Sync initial DOM state to match component state (fixes hydration mismatch)
+	useEffect(() => {
+		const root = document.getElementById(rootId);
+		if (!root) return;
+
+		root.setAttribute("data-state", open ? "open" : "closed");
+
+		const positioners = Array.from(
+			root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
+		);
+		const contents = Array.from(
+			root.querySelectorAll<HTMLElement>('[data-part="content"]'),
+		);
+
+		if (open) {
+			positioners.forEach((p) => {
+				p.style.cssText =
+					"display: block !important; visibility: visible !important;";
+				p.setAttribute("data-state", "open");
+			});
+			contents.forEach((c) => {
+				c.style.cssText =
+					"display: block !important; visibility: visible !important;";
+				c.setAttribute("data-state", "open");
+			});
+		} else {
+			positioners.forEach((p) => {
+				p.style.cssText =
+					"display: none !important; visibility: hidden !important;";
+				p.setAttribute("data-state", "closed");
+			});
+			contents.forEach((c) => {
+				c.style.cssText =
+					"display: none !important; visibility: hidden !important;";
+				c.setAttribute("data-state", "closed");
+			});
+		}
+	}, [rootId, open]);
+
+	// Attach event listeners using event delegation
+	useEffect(() => {
+		const root = document.getElementById(rootId);
+		if (!root) return;
+
+		const positioners = Array.from(
+			root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
+		);
+
+		const handleClick = (e: Event) => {
+			const target = (e.target as HTMLElement).closest(
+				"[data-part]",
+			) as HTMLElement;
+			if (!target) return;
+
+			const dataPart = target.getAttribute("data-part");
+			const isDisabled = target.hasAttribute("data-disabled");
+
+			const hide = () => {
+				root.setAttribute("data-state", "closed");
+				positioners.forEach((p) => {
+					p.style.cssText =
+						"display: none !important; visibility: hidden !important;";
+					p.setAttribute("data-state", "closed");
+				});
+				root
+					.querySelectorAll<HTMLElement>('[data-part="content"]')
+					.forEach((c) => {
+						c.setAttribute("data-state", "closed");
+						c.style.cssText =
+							"display: none !important; visibility: hidden !important;";
+					});
+			};
+
+			const show = () => {
+				root.setAttribute("data-state", "open");
+				positioners.forEach((p) => {
+					p.style.cssText =
+						"display: block !important; visibility: visible !important;";
+					p.setAttribute("data-state", "open");
+				});
+				root
+					.querySelectorAll<HTMLElement>('[data-part="content"]')
+					.forEach((c) => {
+						c.setAttribute("data-state", "open");
+						c.style.cssText =
+							"display: block !important; visibility: visible !important;";
+					});
+			};
+
+			if (dataPart === "trigger") {
+				const currentOpen = root.getAttribute("data-state") === "open";
+				const nextOpen = !currentOpen;
+				if (nextOpen) show();
+				else hide();
+				handleToggleRef.current?.();
+			} else if (dataPart === "clear-trigger") {
+				const inputElement = root.querySelector(
+					'[data-part="input"]',
+				) as HTMLInputElement | null;
+				if (inputElement) {
+					inputElement.value = "";
+					setInputValue("");
+				}
+			} else if (dataPart === "item" && !isDisabled) {
+				const value = target.getAttribute("data-value") || "";
+				const inputElement = root.querySelector(
+					'[data-part="input"]',
+				) as HTMLInputElement | null;
+				if (inputElement) {
+					inputElement.value = value;
+					setInputValue(value);
+				}
+				hide();
+				handleItemSelectRef.current?.(value);
+			}
+		};
+
+		// Attach event listeners
+		root.addEventListener("click", handleClick);
+
+		// Handle input change for opening/closing
+		const handleInputEvent = (e: Event) => {
+			const input = e.target as HTMLInputElement;
+			const value = input.value;
+			setInputValue(value);
+
+			if (value && root.getAttribute("data-state") !== "open") {
+				root.setAttribute("data-state", "open");
+				positioners.forEach((p) => {
+					p.style.cssText =
+						"display: block !important; visibility: visible !important;";
+					p.setAttribute("data-state", "open");
+				});
+				root
+					.querySelectorAll<HTMLElement>('[data-part="content"]')
+					.forEach((c) => {
+						c.setAttribute("data-state", "open");
+						c.style.cssText =
+							"display: block !important; visibility: visible !important;";
+					});
+			}
+		};
+
+		const inputElement = root.querySelector(
+			'[data-part="input"]',
+		) as HTMLInputElement | null;
+		if (inputElement) {
+			inputElement.addEventListener("input", handleInputEvent);
+		}
+
+		return () => {
+			root.removeEventListener("click", handleClick);
+			if (inputElement) {
+				inputElement.removeEventListener("input", handleInputEvent);
+			}
+		};
+	}, [rootId, open]);
 
 	return (
 		<Root
+			id={rootId}
+			data-state={open ? "open" : "closed"}
 			{...rest}
-			open={isOpen}
+			open={open}
 			inputValue={inputValue}
 			onToggle={handleToggle}
 			onClose={handleClose}

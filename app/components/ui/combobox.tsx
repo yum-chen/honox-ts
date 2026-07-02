@@ -30,18 +30,18 @@ export function Combobox(props: ComboboxProps) {
 	const isInteractive =
 		interactive !== false &&
 		(interactive ||
-			props.open !== undefined ||
-			props.inputValue !== undefined ||
-			props.onToggle !== undefined ||
-			props.onInputChange !== undefined);
+			rest.open !== undefined ||
+			rest.inputValue !== undefined ||
+			rest.onToggle !== undefined ||
+			rest.onInputChange !== undefined);
 
 	if (isInteractive) {
-		return <ComboboxIsland {...props} />;
+		return <ComboboxIsland {...rest} />;
 	}
 
 	return (
 		<ComboboxPrimitiveRoot {...rest}>
-			<ComboboxStructure {...props} />
+			<ComboboxStructure {...rest} />
 		</ComboboxPrimitiveRoot>
 	);
 }

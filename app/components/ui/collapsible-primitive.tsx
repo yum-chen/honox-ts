@@ -224,6 +224,19 @@ function InteractiveRoot(props: InteractiveRootProps) {
 					"display: none !important; visibility: hidden !important;";
 			}
 		});
+		const triggers = Array.from(
+			root.querySelectorAll<HTMLElement>('[data-part="trigger"]'),
+		);
+		triggers.forEach((t) => {
+			t.setAttribute("data-state", open ? "open" : "closed");
+			t.setAttribute("aria-expanded", open ? "true" : "false");
+		});
+		const indicators = Array.from(
+			root.querySelectorAll<HTMLElement>('[data-part="indicator"]'),
+		);
+		indicators.forEach((i) => {
+			i.setAttribute("data-state", open ? "open" : "closed");
+		});
 	}, [rootId, open]);
 
 	useEffect(() => {
@@ -275,7 +288,10 @@ function InteractiveRoot(props: InteractiveRootProps) {
 		};
 
 		root.addEventListener("click", handleClick);
-		return () => root.removeEventListener("click", handleClick);
+
+		return () => {
+			root.removeEventListener("click", handleClick);
+		};
 	}, [rootId]);
 
 	return (

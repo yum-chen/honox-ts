@@ -13,20 +13,27 @@ export interface CollapsibleProps extends RootProps {
 }
 
 export function Root(props: CollapsibleProps) {
-	const { interactive, onOpenChange, open, defaultOpen } = props;
+	const { interactive, onOpenChange, open, ...rest } = props;
 
 	const isInteractive =
 		interactive !== false &&
 		(interactive ||
 			onOpenChange !== undefined ||
 			open !== undefined ||
-			defaultOpen !== undefined);
+			props.defaultOpen !== undefined);
 
 	if (isInteractive) {
-		return <CollapsibleIsland {...props} />;
+		return (
+			<CollapsibleIsland
+				{...rest}
+				onOpenChange={onOpenChange}
+				open={open}
+				defaultOpen={props.defaultOpen}
+			/>
+		);
 	}
 
-	return <RootPrimitive {...props} />;
+	return <RootPrimitive {...rest} onOpenChange={onOpenChange} open={open} />;
 }
 
 export { Content, Indicator, Trigger };
