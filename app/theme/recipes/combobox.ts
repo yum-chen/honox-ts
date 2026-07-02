@@ -1,0 +1,163 @@
+import { defineSlotRecipe } from "@pandacss/dev";
+
+export const combobox = defineSlotRecipe({
+	className: "combobox",
+	slots: [
+		"root",
+		"label",
+		"control",
+		"input",
+		"trigger",
+		"clearTrigger",
+		"indicatorGroup",
+		"positioner",
+		"content",
+		"list",
+		"item",
+		"itemText",
+		"itemIndicator",
+		"itemGroup",
+		"itemGroupLabel",
+		"empty",
+	],
+	base: {
+		root: {
+			position: "relative",
+			width: "full",
+		},
+		label: {
+			display: "block",
+			textStyle: "sm",
+			fontWeight: "medium",
+			color: "fg.default",
+			mb: "1.5",
+		},
+		control: {
+			display: "flex",
+			alignItems: "center",
+			width: "full",
+			position: "relative",
+		},
+		input: {
+			width: "full",
+			appearance: "none",
+			background: "transparent",
+			border: "none",
+			color: "fg.default",
+			textStyle: "md",
+			outline: "none",
+			_placeholder: {
+				color: "fg.muted",
+			},
+		},
+		trigger: {
+			display: "inline-flex",
+			alignItems: "center",
+			justifyContent: "center",
+			color: "fg.muted",
+			_hover: {
+				color: "fg.default",
+			},
+			_active: {
+				color: "fg.default",
+			},
+		},
+		clearTrigger: {
+			display: "inline-flex",
+			alignItems: "center",
+			justifyContent: "center",
+			color: "fg.muted",
+			_hover: {
+				color: "fg.default",
+			},
+		},
+		indicatorGroup: {
+			display: "flex",
+			alignItems: "center",
+			gap: "1",
+			flexShrink: "0",
+		},
+		positioner: {
+			position: "absolute",
+			top: "100%",
+			left: "0",
+			width: "full",
+			zIndex: "calc(var(--z-index-popover) + var(--layer-index, 0))",
+			mt: "1",
+		},
+		content: {
+			background: "gray.surface.bg",
+			borderRadius: "l3",
+			boxShadow: "lg",
+			outline: "0",
+			overflow: "auto",
+			maxHeight: "xs",
+			_open: {
+				animationStyle: "scale-fade-in",
+				animationDuration: "fast",
+			},
+			_closed: {
+				animationStyle: "scale-fade-out",
+				animationDuration: "faster",
+			},
+		},
+		list: {
+			display: "flex",
+			flexDirection: "column",
+			padding: "2",
+		},
+		item: {
+			display: "flex",
+			alignItems: "center",
+			gap: "2",
+			padding: "2",
+			paddingInline: "3",
+			borderRadius: "l2",
+			textStyle: "sm",
+			color: "fg.default",
+			cursor: "pointer",
+			_hover: {
+				background: "gray.surface.hover",
+			},
+			_highlighted: {
+				background: "gray.surface.hover",
+			},
+			_disabled: {
+				opacity: "0.4",
+				cursor: "not-allowed",
+			},
+		},
+		itemText: {
+			flex: "1",
+			overflow: "hidden",
+			textOverflow: "ellipsis",
+			whiteSpace: "nowrap",
+		},
+		itemIndicator: {
+			display: "inline-flex",
+			alignItems: "center",
+			justifyContent: "center",
+			color: "accent.default",
+			flexShrink: "0",
+		},
+		itemGroup: {
+			display: "flex",
+			flexDirection: "column",
+		},
+		itemGroupLabel: {
+			padding: "2",
+			paddingInline: "3",
+			textStyle: "xs",
+			fontWeight: "semibold",
+			color: "fg.muted",
+			textTransform: "uppercase",
+			letterSpacing: "wider",
+		},
+		empty: {
+			padding: "4",
+			textStyle: "sm",
+			color: "fg.muted",
+			textAlign: "center",
+		},
+	},
+});

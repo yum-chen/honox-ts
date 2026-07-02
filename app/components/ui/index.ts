@@ -44,7 +44,7 @@ export { Heading, type HeadingProps } from "./heading";
 export * as HoverCard from "./hover-card";
 export { Loader, type LoaderProps } from "./loader";
 export * as Popover from "./popover";
-export * as Progress from "./progress";
+export { Progress, type ProgressProps } from "./progress";
 export {
 	Skeleton,
 	SkeletonCircle,
