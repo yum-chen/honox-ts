@@ -1,3 +1,4 @@
+import type { Child } from "hono/jsx";
 import { useState } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
 import type { TextareaVariantProps } from "../../../styled-system/recipes";
@@ -5,12 +6,12 @@ import { textarea } from "../../../styled-system/recipes";
 import { FieldRoot, useFieldContext } from "./field-primitive";
 
 export interface TextareaPrimitiveProps extends TextareaVariantProps {
-	children?: any;
+	children?: Child;
 	class?: string;
 	value?: string;
 	onValueChange?: (value: string) => void;
-	onInput?: (e: any) => void;
-	[key: string]: any;
+	onInput?: (e: Event & { target: HTMLTextAreaElement }) => void;
+	[key: string]: unknown;
 }
 
 export function TextareaPrimitive(props: TextareaPrimitiveProps) {
@@ -31,9 +32,10 @@ export function TextareaPrimitive(props: TextareaPrimitiveProps) {
 
 	const value = valueProp !== undefined ? valueProp : field?.value;
 
-	const handleInput = (e: any) => {
-		if (onInput) onInput(e);
-		const newValue = e.target.value;
+	const handleInput = (e: Event) => {
+		const target = e.target as HTMLTextAreaElement;
+		if (onInput) onInput(e as Event & { target: HTMLTextAreaElement });
+		const newValue = target.value;
 		if (onValueChange) onValueChange(newValue);
 		if (field?.onValueChange) {
 			field.onValueChange(newValue);
@@ -53,7 +55,7 @@ export function TextareaPrimitive(props: TextareaPrimitiveProps) {
 			class={cx(styles, classProp)}
 			value={value}
 			onInput={handleInput}
-			{...(restProps as any)}
+			{...(restProps as Record<string, unknown>)}
 		/>
 	);
 }

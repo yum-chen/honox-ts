@@ -80,8 +80,10 @@ export function Root(props: RootProps) {
 	);
 }
 
-export function Label(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp, ...rest } = props;
+export function Label(
+	props: PropsWithChildren<{ class?: string; for?: string }>,
+) {
+	const { children, class: classProp, for: forProp, ...rest } = props;
 	const { styles, value, max } = useProgressContext();
 	const state =
 		value === null ? "indeterminate" : value >= max ? "complete" : "loading";
@@ -91,6 +93,7 @@ export function Label(props: PropsWithChildren<{ class?: string }>) {
 			data-scope="progress"
 			data-part="label"
 			data-state={state}
+			for={forProp}
 			class={cx(styles.label, classProp)}
 			{...rest}
 		>
@@ -120,7 +123,10 @@ export function Track(props: PropsWithChildren<{ class?: string }>) {
 }
 
 export function Range(
-	props: PropsWithChildren<{ class?: string; style?: any }>,
+	props: PropsWithChildren<{
+		class?: string;
+		style?: Record<string, string | number>;
+	}>,
 ) {
 	const { children, class: classProp, style, ...rest } = props;
 	const { styles, value, min, max, orientation } = useProgressContext();
@@ -202,8 +208,10 @@ export function View(props: ViewProps) {
 	);
 }
 
-export function Circle(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp, ...rest } = props;
+export function Circle(
+	props: PropsWithChildren<{ class?: string; title?: string }>,
+) {
+	const { children, class: classProp, title, ...rest } = props;
 	const { styles, value, max } = useProgressContext();
 	const state =
 		value === null ? "indeterminate" : value >= max ? "complete" : "loading";
@@ -217,13 +225,17 @@ export function Circle(props: PropsWithChildren<{ class?: string }>) {
 			class={cx(styles.circle, classProp)}
 			{...rest}
 		>
+			<title>{title}</title>
 			{children}
 		</svg>
 	);
 }
 
 export function CircleTrack(
-	props: PropsWithChildren<{ class?: string; style?: any }>,
+	props: PropsWithChildren<{
+		class?: string;
+		style?: Record<string, string | number>;
+	}>,
 ) {
 	const { class: classProp, ...rest } = props;
 	const { styles } = useProgressContext();
@@ -244,7 +256,10 @@ export function CircleTrack(
 }
 
 export function CircleRange(
-	props: PropsWithChildren<{ class?: string; style?: any }>,
+	props: PropsWithChildren<{
+		class?: string;
+		style?: Record<string, string | number>;
+	}>,
 ) {
 	const { class: classProp, style, ...rest } = props;
 	const { styles, value, min, max } = useProgressContext();

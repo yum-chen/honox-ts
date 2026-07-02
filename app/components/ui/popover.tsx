@@ -13,7 +13,7 @@ import {
 	PopoverRoot as RootPrimitive,
 	PopoverTitle as Title,
 	PopoverTrigger as Trigger,
-} from "./popover-base";
+} from "./popover-primitive";
 
 export interface PopoverProps extends PopoverRootProps {
 	interactive?: boolean;

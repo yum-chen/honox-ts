@@ -4,7 +4,7 @@ import {
 	ButtonGroup as ButtonGroupBase,
 	type ButtonGroupProps,
 	type ButtonProps,
-} from "./button-base";
+} from "./button-primitive";
 
 const CloseIcon = () => (
 	<svg

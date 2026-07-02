@@ -61,8 +61,8 @@ export interface RootProps extends ComboboxVariantProps, PropsWithChildren {
 	setHighlightedIndex?: (index: number) => void;
 	class?: string;
 	id?: string;
-	style?: any;
-	[key: string]: any;
+	style?: Record<string, string | number>;
+	[key: string]: unknown;
 }
 
 export function Root(props: RootProps) {
@@ -167,7 +167,7 @@ export function Control(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function Input(props: any) {
+export function Input(props: Record<string, unknown>) {
 	const { class: classProp, id, ...rest } = props;
 	const context = useComboboxContext();
 	return (
@@ -350,7 +350,7 @@ export function Item(
 		disabled?: boolean;
 		index?: number;
 		class?: string;
-		[key: string]: any;
+		[key: string]: unknown;
 	}>,
 ) {
 	const { children, value, disabled, index, class: classProp, ...rest } = props;
@@ -653,10 +653,6 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 		const root = document.getElementById(rootId);
 		if (!root) return;
 
-		const positioners = Array.from(
-			root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
-		);
-
 		const handleClick = (e: Event) => {
 			const target = (e.target as HTMLElement).closest(
 				"[data-part]",
@@ -718,7 +714,7 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 
 		// Attach event listeners
 		root.addEventListener("click", handleClick);
-		root.addEventListener("mouseover", handleMouseOver as any);
+		root.addEventListener("mouseover", handleMouseOver as EventListener);
 
 		// Handle input change for opening/closing
 		const handleInputEvent = (e: Event) => {
@@ -815,17 +811,20 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 		) as HTMLInputElement | null;
 		if (inputElement) {
 			inputElement.addEventListener("input", handleInputEvent);
-			inputElement.addEventListener("keydown", handleKeyDown as any);
+			inputElement.addEventListener("keydown", handleKeyDown as EventListener);
 			inputElement.addEventListener("focus", handleFocus);
 			inputElement.addEventListener("blur", handleBlur);
 		}
 
 		return () => {
 			root.removeEventListener("click", handleClick);
-			root.removeEventListener("mouseover", handleMouseOver as any);
+			root.removeEventListener("mouseover", handleMouseOver as EventListener);
 			if (inputElement) {
 				inputElement.removeEventListener("input", handleInputEvent);
-				inputElement.removeEventListener("keydown", handleKeyDown as any);
+				inputElement.removeEventListener(
+					"keydown",
+					handleKeyDown as EventListener,
+				);
 				inputElement.removeEventListener("focus", handleFocus);
 				inputElement.removeEventListener("blur", handleBlur);
 			}
