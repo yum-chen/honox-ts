@@ -2,7 +2,7 @@
 
 # Introduction
 
-A foundational component for form fields, managing labels, helper text, error messages, and validation state. It supports a flattened API for simple use cases and sub-components for more complex layouts.
+A foundational component for form fields, managing labels, helper text, error messages, and validation state. It follows the "Smart Switcher" pattern, automatically hydrating as an interactive island when needed.
 
 # Props
 
@@ -13,19 +13,53 @@ A foundational component for form fields, managing labels, helper text, error me
 | `id`            | `string`                             | Unique identifier. If not provided, one is generated.                                         |
 | `label`         | `Child`                              | The label for the field.                                                                      |
 | `helperText`    | `Child`                              | The helper text for the field.                                                                |
-| `errorText`     | `Child`                              | The error text for the field.                                                                 |
+| `errorText`     | `Child`                              | The error text for the field. If provided as a string, it will be used as the message.        |
 | `disabled`      | `boolean`                            | Whether the field is disabled.                                                                |
 | `invalid`       | `boolean`                            | Whether the field is in an invalid state.                                                     |
 | `required`      | `boolean`                            | Whether the field is required.                                                                |
 | `readOnly`      | `boolean`                            | Whether the field is read-only.                                                               |
-| `value`         | `string`                             | The current value (for interactive mode).                                                     |
-| `defaultValue`  | `string`                             | The initial value.                                                                            |
-| `onValueChange` | `(val: string) => void`              | Callback triggered when value changes.                                                        |
-| `minLength`     | `number`                             | Minimum length validation.                                                                    |
-| `validator`     | `(val: string) => boolean \| string` | Custom validation function.                                                                   |
+| `value`         | `string`                             | The current value (forces interactive mode).                                                  |
+| `defaultValue`  | `string`                             | The initial value (forces interactive mode).                                                  |
+| `onValueChange` | `(val: string) => void`              | Callback triggered when value changes (forces interactive mode).                              |
+| `minLength`     | `number`                             | Minimum length validation (forces interactive mode).                                          |
+| `validator`     | `(val: string) => boolean \| string` | Custom validation function (forces interactive mode).                                         |
 | `interactive`   | `boolean`                            | Forces hydration as an island.                                                                |
 
 # Usage
+
+## Smart Switcher
+
+The `Field` component automatically determines if it should be interactive. It becomes an island if any of the following props are provided: `interactive`, `onValueChange`, `value`, `defaultValue`, `validator`, or `minLength`.
+
+## Validation
+
+Field supports built-in and custom validation.
+
+### Minimum Length
+
+Using `minLength` will automatically show an error message if the input is too short.
+
+```tsx
+<Field
+  label="Username"
+  minLength={5}
+  placeholder="Enter at least 5 characters"
+/>
+```
+
+### Custom Validator
+
+The `validator` prop accepts a function that returns `true` for valid, `false` for invalid (using default error message), or a `string` as a custom error message.
+
+```tsx
+<Field
+  label="Email"
+  validator={(value) => {
+    if (!value.includes("@")) return "Must be a valid email";
+    return true;
+  }}
+/>
+```
 
 ## Flattened API
 
@@ -41,7 +75,6 @@ export default function MyPage() {
       helperText="Choose a unique username."
       placeholder="Type here..."
       minLength={3}
-      interactive
     />
   );
 }
@@ -49,7 +82,7 @@ export default function MyPage() {
 
 ## Composition
 
-For more control, you can wrap other components like `Textarea` or custom inputs.
+For more control, you can wrap other components like `Textarea` or custom inputs. The `Field` provides context to its children.
 
 ```tsx
 import { Field, Textarea } from "../components/ui";
@@ -59,9 +92,7 @@ export default function MyPage() {
     <Field
       label="Bio"
       helperText="Tell us about yourself."
-      errorText="Too short!"
       minLength={10}
-      interactive
     >
       <Textarea placeholder="A short bio" />
     </Field>

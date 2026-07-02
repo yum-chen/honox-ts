@@ -28,10 +28,12 @@
 		"@hono/vite-dev-server": "^0.25.3",
 		"@hono/vite-ssg": "^0.3.3",
 		"@pandacss/dev": "^1.11.3",
+		"@playwright/test": "^1.61.1",
 		"@types/bun": "latest",
 		"autoprefixer": "^10.5.0",
 		"postcss": "^8.5.15",
 		"vite": "^8.0.16",
+		"vitest": "^4.1.9",
 		"wrangler": "^4.101.0"
 	}
 }
