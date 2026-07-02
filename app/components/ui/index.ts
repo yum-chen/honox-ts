@@ -12,13 +12,14 @@ export * as Breadcrumb from "./breadcrumb";
 export {
 	Button,
 	ButtonGroup,
-	CloseButton,
-	IconButton,
 	type ButtonGroupProps,
 	type ButtonProps,
+	CloseButton,
+	IconButton,
 } from "./button";
 export * as Card from "./card";
 export { Checkbox, type CheckboxProps } from "./checkbox";
+export * as Collapsible from "./collapsible";
 export * as Dialog from "./dialog";
 export * as Drawer from "./drawer";
 export {
@@ -26,8 +27,8 @@ export {
 	FieldErrorText,
 	FieldHelperText,
 	FieldLabel,
-	FieldRequiredIndicator,
 	type FieldProps,
+	FieldRequiredIndicator,
 } from "./field";
 export {
 	Fieldset,
@@ -46,9 +47,9 @@ export * as Progress from "./progress";
 export {
 	Skeleton,
 	SkeletonCircle,
-	SkeletonText,
 	type SkeletonCircleProps,
 	type SkeletonProps,
+	SkeletonText,
 	type SkeletonTextProps,
 } from "./skeleton";
 export * as Slider from "./slider";
