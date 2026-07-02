@@ -13,7 +13,10 @@
 		"check": "bun x @biomejs/biome check --fix .",
 		"format": "bun x @biomejs/biome format --fix .",
 		"lint": "bun x @biomejs/biome lint --fix .",
-		"start": "bun run src/main.ts"
+		"start": "bun run src/main.ts",
+		"test": "bun run test:unit && bun run test:integration",
+		"test:unit": "bun test tests/*.test.ts",
+		"test:integration": "bun x playwright test"
 	},
 	"dependencies": {
 		"hono": "^4.12.26",
