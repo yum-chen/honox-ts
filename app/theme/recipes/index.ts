@@ -1,6 +1,4 @@
 import { absoluteCenter } from "./absolute-center";
-import { alert } from "./alert";
-import { badge } from "./badge";
 import { breadcrumb } from "./breadcrumb";
 import { button } from "./button";
 import { card } from "./card";
@@ -26,7 +24,6 @@ import { tooltip } from "./tooltip";
 
 export const recipes = {
 	absoluteCenter,
-	badge,
 	button,
 	group,
 	heading,
@@ -37,7 +34,6 @@ export const recipes = {
 };
 
 export const slotRecipes = {
-	alert,
 	collapsible,
 	progress,
 	table,

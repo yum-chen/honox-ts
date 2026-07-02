@@ -1,6 +1,6 @@
 import { createRoute } from "honox/factory";
 import { css } from "../../styled-system/css";
-import { Badge, Button, Card, Heading, Text } from "../components/ui";
+import { Button, Card, Heading, Text } from "../components/ui";
 
 interface BlogPost {
 	slug: string;
@@ -98,9 +98,9 @@ function BlogPostCard({ post }: { post: BlogPost }) {
 						mb: "2",
 					})}
 				>
-					<Badge variant="subtle" colorPalette={post.categoryColor}>
+					<Text size="xs" class={css({ fontWeight: "medium" })}>
 						{post.category}
-					</Badge>
+					</Text>
 					<Text
 						size="xs"
 						class={css({ color: "fg.muted", whiteSpace: "nowrap" })}
@@ -176,12 +176,12 @@ export default createRoute((c) => {
 								mb: "3",
 							})}
 						>
-							<Badge variant="solid" colorPalette="amber">
+							<Text size="xs" class={css({ fontWeight: "bold" })}>
 								Featured
-							</Badge>
-							<Badge variant="subtle" colorPalette={posts[0].categoryColor}>
+							</Text>
+							<Text size="xs" class={css({ fontWeight: "medium" })}>
 								{posts[0].category}
-							</Badge>
+							</Text>
 						</div>
 						<Card.Title class={css({ fontSize: "2xl", lineHeight: "tight" })}>
 							{posts[0].title}

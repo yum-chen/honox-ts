@@ -2,12 +2,6 @@ export {
 	AbsoluteCenter,
 	type AbsoluteCenterProps,
 } from "./absolute-center";
-export {
-	Alert,
-	AlertIcon,
-	type AlertProps,
-} from "./alert";
-export { Badge, type BadgeProps } from "./badge";
 export * as Breadcrumb from "./breadcrumb";
 export {
 	Button,
