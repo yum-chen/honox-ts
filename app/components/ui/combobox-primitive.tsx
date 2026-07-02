@@ -4,6 +4,7 @@ import {
 	type PropsWithChildren,
 	useContext,
 	useEffect,
+	useLayoutEffect,
 	useId,
 	useRef,
 	useState,
@@ -634,7 +635,7 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 	);
 
 	// Store handlers in refs
-	useEffect(() => {
+	useLayoutEffect(() => {
 		handleToggleRef.current = handleToggle;
 		handleCloseRef.current = handleClose;
 		handleInputChangeRef.current = handleInputChange;
@@ -649,13 +650,13 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 	]);
 
 	// Attach event listeners using event delegation
-	useEffect(() => {
+	useLayoutEffect(() => {
 		const root = document.getElementById(rootId);
-		if (!root) return;
-
-		const positioners = Array.from(
-			root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
-		);
+		if (!root) {
+			console.error("InteractiveCombobox: root element not found:", rootId);
+			return;
+		}
+		console.log("InteractiveCombobox: attaching event listeners for", rootId);
 
 		const handleClick = (e: Event) => {
 			const target = (e.target as HTMLElement).closest(

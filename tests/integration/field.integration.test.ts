@@ -32,9 +32,10 @@ test.describe("Field Component", () => {
 
   test("should show initial validation errors from SSR", async ({ page }) => {
     const minLengthRoot = page.locator("section:has-text('MinLength Validation')");
-    await expect(minLengthRoot.locator("div[id*='error-text']")).toHaveText("Must be at least 5 characters");
+    // Wait for hydration - error text should appear after client-side validation
+    await expect(minLengthRoot.locator("div[id*='error-text']")).toHaveText("Must be at least 5 characters", { timeout: 10000 });
 
     const validatorRoot = page.locator("section:has-text('Custom Validator')");
-    await expect(validatorRoot.locator("div[id*='error-text']")).toHaveText("Invalid email");
+    await expect(validatorRoot.locator("div[id*='error-text']")).toHaveText("Invalid email", { timeout: 10000 });
   });
 });

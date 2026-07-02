@@ -4,6 +4,17 @@ test.describe('Combobox Integration Tests (Draft)', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the combobox test page
     await page.goto('/test-combobox');
+
+    // Wait for the page to be fully loaded
+    await page.waitForLoadState('networkidle');
+
+    // Wait for hydration - wait for the client script to load and hydrate islands
+    await page.waitForTimeout(3000);
+
+    // Capture ALL console messages
+    page.on('console', (msg) => {
+      console.log(`Browser [${msg.type()}]:`, msg.text());
+    });
   });
 
   test('should show options when clicking the trigger', async ({ page }) => {

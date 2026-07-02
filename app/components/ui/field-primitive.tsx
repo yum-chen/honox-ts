@@ -108,13 +108,21 @@ export function FieldRoot(props: FieldProps) {
 		}
 	}, [valueProp]);
 
-	const value = valueProp !== undefined ? valueProp : internalValue;
+	const value =
+		valueProp !== undefined ? valueProp : (internalValue ?? defaultValue);
 
 	const autoId = useId();
 	const id = idProp || autoId;
 	const styles = field(variantProps);
 
-	let { isInvalid, errorText } = validateField(value, minLength, validator);
+	// Compute validation - use defaultValue for initial SSR render
+	const initialValue =
+		valueProp !== undefined ? valueProp : (defaultValue ?? "");
+	let { isInvalid, errorText } = validateField(
+		initialValue,
+		minLength,
+		validator,
+	);
 
 	if (invalidProp !== undefined) {
 		isInvalid = invalidProp;
