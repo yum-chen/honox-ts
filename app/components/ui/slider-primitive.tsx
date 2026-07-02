@@ -23,21 +23,12 @@ interface SliderContextValue {
 
 const SliderContext = createContext<SliderContextValue | null>(null);
 
-interface SliderInteractionContextValue {
-  onControlPointerDown: (e: MouseEvent | TouchEvent) => void;
-  onThumbKeyDown: (index: number) => (e: KeyboardEvent) => void;
-}
-
-const SliderInteractionContext =
-  createContext<SliderInteractionContextValue | null>(null);
+// Note: Event handlers are attached directly via addEventListener in useEffect,
+// not through JSX props, so no interaction context is needed
 
 const useSliderContext = () => {
   const context = useContext(SliderContext);
   return context;
-};
-
-const useSliderInteractionContext = () => {
-  return useContext(SliderInteractionContext);
 };
 
 type SliderValue = number[] | number | string;
@@ -136,15 +127,12 @@ export function Control(
 ) {
   const { children, class: classProp, style, ...rest } = props;
   const context = useSliderContext();
-  const interaction = useSliderInteractionContext();
   return (
     <div
       data-part="control"
       class={cx(context?.styles.control, classProp)}
       data-orientation={context?.orientation}
       style={{ position: "relative", ...style }}
-      onMouseDown={interaction?.onControlPointerDown}
-      onTouchStart={interaction?.onControlPointerDown}
       {...rest}
     >
       {children}
@@ -248,7 +236,6 @@ export function Thumb(
 ) {
   const { children, index, name, class: classProp, style, ...rest } = props;
   const context = useSliderContext();
-  const interaction = useSliderInteractionContext();
 
   const min = context?.min ?? 0;
   const max = context?.max ?? 100;
@@ -279,9 +266,8 @@ export function Thumb(
       data-part="thumb"
       class={cx(context?.styles.thumb, classProp)}
       data-orientation={context?.orientation}
-      tabIndex={interaction ? 0 : undefined}
+      tabIndex={0}
       style={{ ...thumbStyle, ...style }}
-      onKeyDown={interaction?.onThumbKeyDown(index)}
       {...rest}
     >
       <input type="hidden" name={name} value={value} />
@@ -644,28 +630,65 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
     step,
   ]);
 
-  const interactionContextValue: SliderInteractionContextValue = {
-    onControlPointerDown: (e: MouseEvent | TouchEvent) => {
-      handleControlPointerDown.current?.(e);
-    },
-    onThumbKeyDown: (index: number) => (e: KeyboardEvent) => {
-      handleThumbKeyDownFactory.current?.(index)(e);
-    },
-  };
+  useEffect(() => {
+    const root = document.getElementById(rootId);
+    if (!root) return;
+
+    const control = root.querySelector<HTMLElement>('[data-part="control"]');
+    if (!control) return;
+
+    const thumbs = Array.from(
+      root.querySelectorAll<HTMLElement>('[data-part="thumb"]'),
+    );
+
+    // Attach event listeners to control element
+    const handleControlDown = (e: Event) => {
+      if (handleControlPointerDown.current) {
+        handleControlPointerDown.current(e as MouseEvent | TouchEvent);
+      }
+    };
+
+    control.addEventListener("mousedown", handleControlDown);
+    control.addEventListener("touchstart", handleControlDown, {
+      passive: false,
+    });
+
+    // Attach keydown listeners to thumb elements
+    const thumbKeydownListeners: Array<{
+      thumb: HTMLElement;
+      handler: (e: Event) => void;
+    }> = [];
+
+    thumbs.forEach((thumb, index) => {
+      const handler = (e: Event) => {
+        if (handleThumbKeyDownFactory.current) {
+          handleThumbKeyDownFactory.current(index)(e as KeyboardEvent);
+        }
+      };
+      thumb.addEventListener("keydown", handler);
+      thumbKeydownListeners.push({ thumb, handler });
+    });
+
+    return () => {
+      control.removeEventListener("mousedown", handleControlDown);
+      control.removeEventListener("touchstart", handleControlDown);
+      thumbKeydownListeners.forEach(({ thumb, handler }) => {
+        thumb.removeEventListener("keydown", handler);
+      });
+    };
+  }, [rootId]);
 
   return (
-    <SliderInteractionContext.Provider value={interactionContextValue}>
-      <Root
-        {...rootProps}
-        id={rootId}
-        orientation={orientation}
-        value={currentValue}
-        min={min}
-        max={max}
-        step={step}
-      >
-        {children}
-      </Root>
-    </SliderInteractionContext.Provider>
+    <Root
+      {...rootProps}
+      id={rootId}
+      orientation={orientation}
+      value={currentValue}
+      min={min}
+      max={max}
+      step={step}
+    >
+      {children}
+    </Root>
   );
 }
