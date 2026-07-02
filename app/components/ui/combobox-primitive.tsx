@@ -559,19 +559,28 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 	// Attach event listeners using event delegation
 	useEffect(() => {
 		const root = document.getElementById(rootId);
-		if (!root) return;
+		if (!root) {
+			console.log(`[Combobox] Root not found:`, rootId);
+			return;
+		}
+		console.log(`[Combobox] Setting up event listeners for:`, rootId);
 
 		const positioners = Array.from(
 			root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
 		);
 
 		const handleClick = (e: Event) => {
+			console.log(`[Combobox] Click detected`);
 			const target = (e.target as HTMLElement).closest(
 				"[data-part]",
 			) as HTMLElement;
-			if (!target) return;
+			if (!target) {
+				console.log(`[Combobox] No target found`);
+				return;
+			}
 
 			const dataPart = target.getAttribute("data-part");
+			console.log(`[Combobox] dataPart:`, dataPart);
 			const isDisabled = target.hasAttribute("data-disabled");
 
 			const hide = () => {
@@ -684,7 +693,7 @@ export function InteractiveCombobox(props: InteractiveComboboxProps) {
 				inputElement.removeEventListener("input", handleInputEvent);
 			}
 		};
-	}, [rootId, open]);
+	}, [rootId]);
 
 	return (
 		<Root
