@@ -30,7 +30,7 @@ export default function SplitterIsland(props: SplitterIslandProps) {
 		if (!rootRect) return;
 
 		const orientation = rootProps.orientation ?? "horizontal";
-		const totalSize =
+		const _totalSize =
 			orientation === "horizontal" ? rootRect.width : rootRect.height;
 
 		// Find panels adjacent to the trigger
@@ -67,7 +67,7 @@ export default function SplitterIsland(props: SplitterIslandProps) {
 		onSizeChange?.(newSizes);
 	};
 
-	const handleStart = (id: string) => (e: MouseEvent | TouchEvent) => {
+	const handleStart = (id: string) => (_e: MouseEvent | TouchEvent) => {
 		isDragging.current = id;
 		document.addEventListener("mousemove", handleMove);
 		document.addEventListener("mouseup", handleEnd);
@@ -107,7 +107,7 @@ export default function SplitterIsland(props: SplitterIslandProps) {
 
 	const handleKeyDown = (triggerId: string) => (e: KeyboardEvent) => {
 		const step = 5;
-		const [prevId, nextId] = triggerId.split(":");
+		const [prevId, _nextId] = triggerId.split(":");
 		const prevIndex = currentSizes.findIndex((s) => s.id.toString() === prevId);
 		if (prevIndex === -1) return;
 

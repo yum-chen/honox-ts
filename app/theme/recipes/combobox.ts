@@ -37,6 +37,22 @@ export const combobox = defineSlotRecipe({
 			alignItems: "center",
 			width: "full",
 			position: "relative",
+			background: "gray.surface.bg.DEFAULT",
+			borderRadius: "l2",
+			borderWidth: "1px",
+			transitionProperty: "all",
+			transitionDuration: "normal",
+			_focus: {
+				borderColor: "colorPalette.solid",
+				boxShadow: "0 0 0 1px {colors.colorPalette.solid}",
+			},
+			_invalid: {
+				borderColor: "error",
+			},
+			_disabled: {
+				opacity: "0.5",
+				cursor: "not-allowed",
+			},
 		},
 		input: {
 			width: "full",
@@ -46,8 +62,13 @@ export const combobox = defineSlotRecipe({
 			color: "fg.default",
 			textStyle: "md",
 			outline: "none",
+			paddingInline: "3",
+			paddingBlock: "2",
 			_placeholder: {
 				color: "fg.muted",
+			},
+			_disabled: {
+				cursor: "not-allowed",
 			},
 		},
 		trigger: {
@@ -55,11 +76,16 @@ export const combobox = defineSlotRecipe({
 			alignItems: "center",
 			justifyContent: "center",
 			color: "fg.muted",
+			paddingInline: "2",
+			cursor: "pointer",
 			_hover: {
 				color: "fg.default",
 			},
 			_active: {
 				color: "fg.default",
+			},
+			_disabled: {
+				cursor: "not-allowed",
 			},
 		},
 		clearTrigger: {
@@ -74,8 +100,9 @@ export const combobox = defineSlotRecipe({
 		indicatorGroup: {
 			display: "flex",
 			alignItems: "center",
-			gap: "1",
+			gap: "0",
 			flexShrink: "0",
+			paddingInlineEnd: "1",
 		},
 		positioner: {
 			position: "absolute",
@@ -86,7 +113,7 @@ export const combobox = defineSlotRecipe({
 			mt: "1",
 		},
 		content: {
-			background: "gray.surface.bg",
+			background: "gray.surface.bg.DEFAULT",
 			borderRadius: "l3",
 			boxShadow: "lg",
 			outline: "0",
@@ -116,11 +143,17 @@ export const combobox = defineSlotRecipe({
 			textStyle: "sm",
 			color: "fg.default",
 			cursor: "pointer",
+			transitionProperty: "background, color",
+			transitionDuration: "fast",
 			_hover: {
-				background: "gray.surface.hover",
+				background: "gray.surface.bg.hover",
 			},
 			_highlighted: {
-				background: "gray.surface.hover",
+				background: "gray.surface.bg.hover",
+			},
+			_checked: {
+				fontWeight: "semibold",
+				color: "colorPalette.solid",
 			},
 			_disabled: {
 				opacity: "0.4",
