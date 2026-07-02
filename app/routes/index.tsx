@@ -12,6 +12,7 @@ import {
 	Checkbox,
 	CloseButton,
 	Collapsible,
+	Combobox,
 	Dialog,
 	Drawer,
 	Field,
@@ -34,6 +35,14 @@ import {
 	Textarea,
 	Tooltip,
 } from "../components/ui";
+
+const items = [
+	{ label: "React", value: "react" },
+	{ label: "Solid", value: "solid" },
+	{ label: "Svelte", value: "svelte" },
+	{ label: "Vue", value: "vue" },
+	{ label: "Hono", value: "hono" },
+];
 
 export default createRoute((c) => {
 	const name = c.req.query("name") ?? "Hono";
@@ -842,6 +851,29 @@ export default createRoute((c) => {
 				</Popover.Root>
 			</div>
 
+			{/* Combobox Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Combobox Component Examples
+				</Heading>
+				<Combobox
+					interactive
+					items={items}
+					label="Framework"
+					placeholder="Select a Framework"
+				/>
+			</div>
+
 			{/* Splitter Examples */}
 			<div
 				class={css({
@@ -1446,48 +1478,33 @@ export default createRoute((c) => {
 						gap: "8",
 					})}
 				>
-					<Progress.Progress
-						label="Default Progress"
-						value={40}
-						showValueText
-					/>
-					<Progress.Progress
+					<Progress label="Default Progress" value={40} showValueText />
+					<Progress
 						label="Subtle Progress"
 						variant="subtle"
 						colorPalette="amber"
 						value={60}
 						showValueText
 					/>
-					<Progress.Progress label="Indeterminate Progress" value={null} />
+					<Progress label="Indeterminate Progress" value={null} />
 
 					<div
 						class={css({ display: "flex", gap: "8", justifyContent: "center" })}
 					>
-						<Progress.Root value={75} size="lg" class={css({ width: "full" })}>
-							<Progress.Label>Custom Composition</Progress.Label>
-							<Progress.Track>
-								<Progress.Range />
-							</Progress.Track>
-							<Progress.ValueText />
-						</Progress.Root>
+						<Progress
+							label="Circular Progress"
+							value={75}
+							size="lg"
+							type="circular"
+							showValueText
+						/>
 					</div>
 
 					<div
 						class={css({ display: "flex", gap: "8", justifyContent: "center" })}
 					>
-						<Progress.Root value={25} size="sm">
-							<Progress.Circle>
-								<Progress.CircleTrack />
-								<Progress.CircleRange />
-							</Progress.Circle>
-						</Progress.Root>
-
-						<Progress.Root value={null} size="md">
-							<Progress.Circle>
-								<Progress.CircleTrack />
-								<Progress.CircleRange />
-							</Progress.Circle>
-						</Progress.Root>
+						<Progress value={25} size="sm" type="circular" />
+						<Progress value={null} size="md" type="circular" />
 					</div>
 				</div>
 			</div>

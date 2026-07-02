@@ -14,6 +14,10 @@ import {
 
 export interface ProgressProps extends RootProps {
 	/**
+	 * The label to display.
+	 */
+	label?: Child;
+	/**
 	 * Whether to show the value text.
 	 * @default false
 	 */
@@ -23,22 +27,29 @@ export interface ProgressProps extends RootProps {
 	 */
 	valueText?: Child;
 	/**
-	 * The label to display.
+	 * The type of progress to display.
+	 * @default 'linear'
 	 */
-	label?: Child;
+	type?: "linear" | "circular";
 }
 
 export const Progress = (props: ProgressProps) => {
-	const { showValueText, valueText, label, children, ...rest } = props;
+	const { label, showValueText, valueText, type = "linear", ...rest } = props;
 
 	return (
 		<Root {...rest}>
 			{label && <Label>{label}</Label>}
-			<Track>
-				<Range />
-			</Track>
+			{type === "linear" ? (
+				<Track>
+					<Range />
+				</Track>
+			) : (
+				<Circle>
+					<CircleTrack />
+					<CircleRange />
+				</Circle>
+			)}
 			{showValueText && <ValueText>{valueText}</ValueText>}
-			{children}
 		</Root>
 	);
 };

@@ -6,6 +6,7 @@ import { button } from "./button";
 import { card } from "./card";
 import { checkbox } from "./checkbox";
 import { collapsible } from "./collapsible";
+import { combobox } from "./combobox";
 import { dialog } from "./dialog";
 import { drawer } from "./drawer";
 import { field } from "./field";
@@ -47,6 +48,7 @@ export const slotRecipes = {
 	breadcrumb,
 	card,
 	checkbox,
+	combobox,
 	dialog,
 	drawer,
 	field,

@@ -1,8 +1,8 @@
 import type { PropsWithChildren } from "hono/jsx";
 import { createContext, useContext } from "hono/jsx";
 import { cx } from "../../../styled-system/css";
-import type { ProgressVariantProps } from "../../../styled-system/recipes";
-import { progress } from "../../../styled-system/recipes";
+import { progress } from "../../../styled-system/recipes/index.mjs";
+import type { ProgressVariantProps } from "../../../styled-system/recipes/index.mjs";
 
 type ProgressStyles = ReturnType<typeof progress>;
 
@@ -63,6 +63,10 @@ export function Root(props: RootProps) {
 	return (
 		<ProgressContext.Provider value={contextValue}>
 			<div
+				role="progressbar"
+				aria-valuemin={min}
+				aria-valuemax={max}
+				aria-valuenow={value === null ? undefined : value}
 				data-scope="progress"
 				data-part="root"
 				data-state={state}
@@ -166,7 +170,7 @@ export function ValueText(props: PropsWithChildren<{ class?: string }>) {
 			class={cx(styles.valueText, classProp)}
 			{...rest}
 		>
-			{children || `${percent}%`}
+			{children || (value === null ? null : `${percent}%`)}
 		</span>
 	);
 }
@@ -261,8 +265,8 @@ export function CircleRange(
 			r="40"
 			fill="none"
 			stroke-width="10"
-			stroke-dasharray={circumference}
-			stroke-dashoffset={offset}
+			stroke-dasharray={`${circumference}`}
+			stroke-dashoffset={`${offset}`}
 			data-scope="progress"
 			data-part="circle-range"
 			data-state={state}
