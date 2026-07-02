@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Combobox Integration Tests (Draft)', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the home page where Combobox examples are present
-    await page.goto('/');
+    // Navigate to the combobox test page
+    await page.goto('/test-combobox');
   });
 
   test('should show options when clicking the trigger', async ({ page }) => {
