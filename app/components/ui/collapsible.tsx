@@ -14,9 +14,6 @@ export interface CollapsibleProps extends RootProps {
 
 export function Root(props: CollapsibleProps) {
 	const { interactive, onOpenChange, open, ...rest } = props;
-	console.log(
-		`[Wrapper] Collapsible.Root called with interactive=${interactive}`,
-	);
 
 	const isInteractive =
 		interactive !== false &&
@@ -25,10 +22,7 @@ export function Root(props: CollapsibleProps) {
 			open !== undefined ||
 			props.defaultOpen !== undefined);
 
-	console.log(`[Wrapper] Collapsible.Root isInteractive=${isInteractive}`);
-
 	if (isInteractive) {
-		console.log(`[Wrapper] Collapsible.Root returning CollapsibleIsland`);
 		return (
 			<CollapsibleIsland
 				{...rest}
