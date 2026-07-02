@@ -261,17 +261,9 @@ export function InteractivePopoverRoot(props: PopoverRootProps) {
 
 	const fallbackId = useId();
 	const rootId = idProp || `popover-${fallbackId}`;
-
-	console.log(
-		"[Popover] InteractivePopoverRoot rendering with rootId:",
-		rootId,
-	);
-	console.log("[Popover] typeof document:", typeof document);
-
 	const handleOpenChangeRef = useRef<(nextOpen: boolean) => void>(() => {});
 
 	const handleOpenChange = (nextOpen: boolean) => {
-		console.log("[Popover] handleOpenChange called with:", nextOpen);
 		setIsOpen(nextOpen);
 	};
 
@@ -280,59 +272,23 @@ export function InteractivePopoverRoot(props: PopoverRootProps) {
 	}, []);
 
 	useEffect(() => {
-		console.log("[Popover] useEffect running, rootId:", rootId);
-		console.log("[Popover] typeof document:", typeof document);
-
 		if (typeof document === "undefined") {
-			console.log("[Popover] Running on server, skipping");
 			return;
 		}
 
 		const root = document.getElementById(rootId);
-		console.log("[Popover] Found root element:", !!root);
-
 		if (!root) {
-			console.log(
-				"[Popover] Root not found! Looking for any element with id starting with 'popover':",
-			);
-			const allPopovers = document.querySelectorAll('[id^="popover"]');
-			console.log("[Popover] Found", allPopovers.length, "popover elements");
-			allPopovers.forEach((el) =>
-				console.log(
-					"[Popover]   -",
-					el.id,
-					el.tagName,
-					el.innerHTML.substring(0, 50),
-				),
-			);
 			return;
 		}
 
-		const triggers = Array.from(
-			root.querySelectorAll<HTMLElement>('[data-part="trigger"]'),
-		);
-		const closeButtons = Array.from(
-			root.querySelectorAll<HTMLElement>('[data-part="close-trigger"]'),
-		);
 		const positioners = Array.from(
 			root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
 		);
-
-		console.log("[Popover] Found triggers:", triggers.length);
-		console.log("[Popover] Found close buttons:", closeButtons.length);
-		console.log("[Popover] Found positioners:", positioners.length);
-
 		const handleClick = (e: Event) => {
 			const target = e.target as HTMLElement;
-			console.log(
-				"[Popover] Click event triggered on:",
-				target.getAttribute("data-part"),
-			);
-
 			const dataPart = target.getAttribute("data-part");
 
 			if (dataPart === "trigger") {
-				console.log("[Popover] Trigger clicked, toggling");
 				const nextOpen = !isOpen;
 				if (nextOpen) {
 					positioners.forEach((p) => {
@@ -345,7 +301,6 @@ export function InteractivePopoverRoot(props: PopoverRootProps) {
 				}
 				handleOpenChangeRef.current?.(nextOpen);
 			} else if (dataPart === "close-trigger") {
-				console.log("[Popover] Close trigger clicked");
 				positioners.forEach((p) => {
 					p.style.cssText = "display: none !important;";
 				});

@@ -95,8 +95,6 @@ export function Backdrop(props: BackdropProps) {
 	const context = useDrawerContext();
 	const styles = context?.styles || drawer();
 	const open = context?.open;
-	console.log("[Drawer.Backdrop] Rendering with open:", open);
-
 	return (
 		<div
 			class={cx(styles.backdrop, classProp, !open && css({ display: "none" }))}
@@ -145,8 +143,6 @@ export function Content(props: ContentProps) {
 	const styles = context?.styles || drawer();
 	const open = context?.open;
 	const id = context?.id;
-	console.log("[Drawer.Content] Rendering with open:", open);
-
 	return (
 		<div
 			role="dialog"
@@ -340,14 +336,7 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 	const handleOpenChangeRef = useRef<(nextOpen: boolean) => void>(() => {});
 
 	const handleOpenChange = (nextOpen: boolean) => {
-		console.log(
-			"[Drawer] handleOpenChange called with:",
-			nextOpen,
-			"isControlled:",
-			isControlled,
-		);
 		if (!isControlled) {
-			console.log("[Drawer] Calling setIsOpen(", nextOpen, ")");
 			setIsOpen(nextOpen);
 		}
 		onOpenChangeProp?.(nextOpen);
@@ -361,17 +350,7 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 	// Attach event listeners using event delegation
 	useEffect(() => {
 		const root = document.getElementById(rootId);
-		console.log("[Drawer] Attaching listeners to:", rootId, root);
 		if (!root) return;
-
-		console.log("[Drawer] Root innerHTML:", root.innerHTML);
-		console.log("[Drawer] Root children:", root.children);
-		console.log(
-			"[Drawer] All data-part attributes in root:",
-			Array.from(root.querySelectorAll("[data-part]")).map((el: Element) =>
-				el.getAttribute("data-part"),
-			),
-		);
 
 		const positioners = Array.from(
 			root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
@@ -379,21 +358,13 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 		const backdrops = Array.from(
 			root.querySelectorAll<HTMLElement>('[data-part="backdrop"]'),
 		);
-
-		console.log("[Drawer] Found positioners:", positioners.length);
-		console.log("[Drawer] Found backdrops:", backdrops.length);
-
 		// Handle all clicks via event delegation
 		const handleClick = (e: Event) => {
 			const target = (e.target as HTMLElement).closest(
 				"[data-part]",
 			) as HTMLElement;
 			if (!target) return;
-
-			console.log("[Drawer] Click event triggered on:", target);
 			const dataPart = target.getAttribute("data-part");
-			console.log("[Drawer] data-part:", dataPart);
-
 			const hide = () => {
 				root.setAttribute("data-state", "closed");
 				positioners.forEach((p) => {
@@ -437,14 +408,11 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 			};
 
 			if (dataPart === "backdrop") {
-				console.log("[Drawer] Backdrop clicked, closing");
 				hide();
 				handleOpenChangeRef.current?.(false);
 			} else if (dataPart === "trigger") {
-				console.log("[Drawer] Trigger clicked");
 				const currentOpen = root.getAttribute("data-state") === "open";
 				const nextOpen = !currentOpen;
-				console.log("[Drawer] Toggling to:", nextOpen);
 				if (nextOpen) show();
 				else hide();
 				handleOpenChangeRef.current?.(nextOpen);
@@ -452,7 +420,6 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 				dataPart === "close-trigger" ||
 				dataPart === "action-trigger"
 			) {
-				console.log("[Drawer] Close/Action trigger clicked");
 				hide();
 				handleOpenChangeRef.current?.(false);
 			}
