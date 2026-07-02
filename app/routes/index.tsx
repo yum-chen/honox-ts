@@ -11,6 +11,7 @@ import {
 	Card,
 	Checkbox,
 	CloseButton,
+	Collapsible,
 	Combobox,
 	Dialog,
 	Drawer,
@@ -789,6 +790,26 @@ export default createRoute((c) => {
 							</Slider.Track>
 							<Slider.Thumb index={0} />
 							<Slider.Thumb index={1} />
+						</Slider.Control>
+					</Slider.Root>
+
+					<Slider.Root
+						interactive
+						defaultValue={[40]}
+						colorPalette="blue"
+						class={css({ width: "full" })}
+					>
+						<div
+							class={css({ display: "flex", justifyContent: "space-between" })}
+						>
+							<Slider.Label>Blue Slider</Slider.Label>
+							<Slider.ValueText />
+						</div>
+						<Slider.Control>
+							<Slider.Track>
+								<Slider.Range />
+							</Slider.Track>
+							<Slider.Thumb index={0} />
 						</Slider.Control>
 					</Slider.Root>
 				</div>

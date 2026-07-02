@@ -7,7 +7,7 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
+import { css, cx } from "../../../styled-system/css";
 import type { SliderVariantProps } from "../../../styled-system/recipes";
 import { slider } from "../../../styled-system/recipes";
 
@@ -61,6 +61,7 @@ export interface RootProps extends SliderVariantProps, PropsWithChildren {
 	class?: string;
 	id?: string;
 	style?: Record<string, string | number>;
+	colorPalette?: string;
 }
 
 export function Root(props: RootProps) {
@@ -73,6 +74,7 @@ export function Root(props: RootProps) {
 		max = 100,
 		class: classProp,
 		id: idProp,
+		colorPalette = "gray",
 		...restProps
 	} = localProps;
 	const orientation = props.orientation ?? "horizontal";
@@ -95,7 +97,7 @@ export function Root(props: RootProps) {
 				id={id}
 				data-scope="slider"
 				data-part="root"
-				class={cx(styles.root, classProp)}
+				class={cx(styles.root, css({ colorPalette }), classProp)}
 				data-orientation={orientation}
 				style={{
 					...(restProps.style || {}),
@@ -150,7 +152,7 @@ export function Track(
 			data-part="track"
 			class={cx(context?.styles.track, classProp)}
 			data-orientation={context?.orientation}
-			style={{ position: "relative", width: "100%", height: "100%", ...style }}
+			style={{ position: "relative", ...style }}
 			{...rest}
 		>
 			{children}
@@ -172,21 +174,19 @@ export function Range(
 	};
 
 	if (values.length === 1) {
-		const percent = ((values[0] ?? min - min) / (max - min)) * 100;
+		const percent = (((values[0] ?? min) - min) / (max - min)) * 100;
 		if (context?.orientation === "horizontal") {
 			rangeStyle = {
 				...rangeStyle,
-				left: `${percent}%`,
-				width: "0px",
-				height: "100%",
+				left: "0%",
+				width: `${percent}%`,
 				bottom: "0",
 			};
 		} else {
 			rangeStyle = {
 				...rangeStyle,
-				bottom: `${percent}%`,
-				height: "0px",
-				width: "100%",
+				bottom: "0%",
+				height: `${percent}%`,
 				left: "0",
 			};
 		}
@@ -199,7 +199,6 @@ export function Range(
 				...rangeStyle,
 				left: `${startPercent}%`,
 				width: `${endPercent - startPercent}%`,
-				height: "100%",
 				bottom: "0",
 			};
 		} else {
@@ -207,7 +206,6 @@ export function Range(
 				...rangeStyle,
 				bottom: `${startPercent}%`,
 				height: `${endPercent - startPercent}%`,
-				width: "100%",
 				left: "0",
 			};
 		}
@@ -247,12 +245,12 @@ export function Thumb(
 			? {
 					left: `${percent}%`,
 					position: "absolute",
-					transform: "translateX(-50%)",
+					translate: "-50% -50%",
 				}
 			: {
 					bottom: `${percent}%`,
 					position: "absolute",
-					transform: "translateY(50%)",
+					translate: "-50% 50%",
 				};
 
 	return (
@@ -334,12 +332,12 @@ export function Marker(
 			? {
 					left: `${percent}%`,
 					position: "absolute",
-					transform: "translateX(-50%)",
+					translate: "-50% 0",
 				}
 			: {
 					bottom: `${percent}%`,
 					position: "absolute",
-					transform: "translateY(50%)",
+					translate: "0 50%",
 				};
 
 	return (
@@ -484,13 +482,11 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 				if (orientation === "horizontal") {
 					range.style.left = `${start}%`;
 					range.style.width = `${end - start}%`;
-					range.style.height = "100%";
-					range.style.bottom = "";
+					range.style.bottom = "0";
 				} else {
 					range.style.bottom = `${start}%`;
 					range.style.height = `${end - start}%`;
-					range.style.width = "100%";
-					range.style.left = "";
+					range.style.left = "0";
 				}
 				range.style.position = "absolute";
 			}
@@ -510,12 +506,10 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 				thumb.tabIndex = 0;
 				if (orientation === "horizontal") {
 					thumb.style.left = `${percent}%`;
-					thumb.style.bottom = "";
-					thumb.style.transform = "translateX(-50%)";
+					thumb.style.translate = "-50% -50%";
 				} else {
 					thumb.style.bottom = `${percent}%`;
-					thumb.style.left = "";
-					thumb.style.transform = "translateY(50%)";
+					thumb.style.translate = "-50% 50%";
 				}
 				thumb.style.position = "absolute";
 				const input = thumb.querySelector<HTMLInputElement>(
