@@ -1,7 +1,7 @@
 import type { Child } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
-import type { AlertVariantProps } from "../../../styled-system/recipes";
-import { alert } from "../../../styled-system/recipes";
+import { cx } from "styled-system/css";
+import type { AlertVariantProps } from "styled-system/recipes";
+import { alert } from "styled-system/recipes";
 
 export interface AlertProps extends AlertVariantProps {
 	title?: string;

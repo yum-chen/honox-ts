@@ -6,9 +6,9 @@ import {
 	useId,
 	useState,
 } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
-import type { FieldVariantProps } from "../../../styled-system/recipes";
-import { field } from "../../../styled-system/recipes";
+import { cx } from "styled-system/css";
+import type { FieldVariantProps } from "styled-system/recipes";
+import { field } from "styled-system/recipes";
 
 interface FieldContextValue {
 	id: string;

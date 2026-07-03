@@ -8,11 +8,11 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
+import { cx } from "styled-system/css";
 import {
 	type CollapsibleVariantProps,
 	collapsible,
-} from "../../../styled-system/recipes";
+} from "styled-system/recipes";
 
 type CollapsibleStyles = ReturnType<typeof collapsible>;
 

@@ -1,8 +1,8 @@
 import type { JSX, PropsWithChildren } from "hono/jsx";
 import { createContext, useContext } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
-import type { TableVariantProps } from "../../../styled-system/recipes";
-import { table } from "../../../styled-system/recipes";
+import { cx } from "styled-system/css";
+import type { TableVariantProps } from "styled-system/recipes";
+import { table } from "styled-system/recipes";
 
 type TableStyles = ReturnType<typeof table>;
 

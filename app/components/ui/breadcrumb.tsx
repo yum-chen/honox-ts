@@ -1,8 +1,8 @@
 import type { Child, PropsWithChildren } from "hono/jsx";
 import { createContext, useContext } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
-import type { BreadcrumbVariantProps } from "../../../styled-system/recipes";
-import { breadcrumb } from "../../../styled-system/recipes";
+import { cx } from "styled-system/css";
+import type { BreadcrumbVariantProps } from "styled-system/recipes";
+import { breadcrumb } from "styled-system/recipes";
 
 type BreadcrumbStyles = ReturnType<typeof breadcrumb>;
 

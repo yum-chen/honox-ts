@@ -8,9 +8,9 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { css, cx } from "../../../styled-system/css";
-import type { DialogVariantProps } from "../../../styled-system/recipes";
-import { dialog } from "../../../styled-system/recipes";
+import { css, cx } from "styled-system/css";
+import type { DialogVariantProps } from "styled-system/recipes";
+import { dialog } from "styled-system/recipes";
 
 type DialogStyles = ReturnType<typeof dialog>;
 
