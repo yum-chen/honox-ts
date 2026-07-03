@@ -1,14 +1,15 @@
 import { createRoute } from "honox/factory";
-import { Tabs } from "../../components/ui/tabs";
+import { Tabs } from "../../components/ui";
+import { css } from "styled-system/css";
 import { Heading } from "../../components/ui/heading";
 
 export default createRoute((c) => {
 	return c.render(
-		<div style={{ padding: '3rem' }}>
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+		<div class={css({ py: "12" })}>
+			<div class={css({ display: "flex", flexDirection: "column", gap: "12" })}>
+				<div class={css({ display: "flex", flexDirection: "column", gap: "4" })}>
 					<Heading size="2xl">Tabs - Default (Line)</Heading>
-					<Tabs.Root defaultValue="react" interactive>
+					<Tabs.Root defaultValue="react">
 						<Tabs.List>
 							<Tabs.Trigger value="react">React</Tabs.Trigger>
 							<Tabs.Trigger value="solid">Solid</Tabs.Trigger>
@@ -23,9 +24,9 @@ export default createRoute((c) => {
 					</Tabs.Root>
 				</div>
 
-				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<div class={css({ display: "flex", flexDirection: "column", gap: "4" })}>
 					<Heading size="2xl">Tabs - Subtle</Heading>
-					<Tabs.Root defaultValue="react" variant="subtle" interactive>
+					<Tabs.Root defaultValue="react" variant="subtle">
 						<Tabs.List>
 							<Tabs.Trigger value="react">React</Tabs.Trigger>
 							<Tabs.Trigger value="solid">Solid</Tabs.Trigger>
@@ -38,9 +39,9 @@ export default createRoute((c) => {
 					</Tabs.Root>
 				</div>
 
-				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<div class={css({ display: "flex", flexDirection: "column", gap: "4" })}>
 					<Heading size="2xl">Tabs - Enclosed</Heading>
-					<Tabs.Root defaultValue="react" variant="enclosed" interactive>
+					<Tabs.Root defaultValue="react" variant="enclosed">
 						<Tabs.List>
 							<Tabs.Trigger value="react">React</Tabs.Trigger>
 							<Tabs.Trigger value="solid">Solid</Tabs.Trigger>
@@ -53,9 +54,9 @@ export default createRoute((c) => {
 					</Tabs.Root>
 				</div>
 
-				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<div class={css({ display: "flex", flexDirection: "column", gap: "4" })}>
 					<Heading size="2xl">Tabs - Vertical</Heading>
-					<Tabs.Root defaultValue="react" orientation="vertical" interactive>
+					<Tabs.Root defaultValue="react" orientation="vertical">
 						<Tabs.List>
 							<Tabs.Trigger value="react">React</Tabs.Trigger>
 							<Tabs.Trigger value="solid">Solid</Tabs.Trigger>
@@ -68,9 +69,9 @@ export default createRoute((c) => {
 					</Tabs.Root>
 				</div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<div class={css({ display: "flex", flexDirection: "column", gap: "4" })}>
 					<Heading size="2xl">Tabs - Manual Activation</Heading>
-					<Tabs.Root defaultValue="react" activationMode="manual" interactive>
+					<Tabs.Root defaultValue="react" activationMode="manual">
 						<Tabs.List>
 							<Tabs.Trigger value="react">React</Tabs.Trigger>
 							<Tabs.Trigger value="solid">Solid</Tabs.Trigger>
