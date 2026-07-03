@@ -261,7 +261,7 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 			if (openTimerRef.current) clearTimeout(openTimerRef.current);
 			if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
 		};
-	}, []);
+	}, [handleOpen, handleClose, openDelay, closeDelay]);
 
 	return (
 		<div id={rootId} ref={rootRef}>
