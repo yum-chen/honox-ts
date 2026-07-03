@@ -1,3 +1,4 @@
+import { tabs } from "./tabs";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { badge } from "./badge";
@@ -57,6 +58,7 @@ export const slotRecipes = {
 	hoverCard,
 	popover,
 	switchRecipe,
+	tabs,
 	toast,
 	tooltip,
 };
