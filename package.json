@@ -14,6 +14,7 @@
 		"format": "bun x @biomejs/biome format --fix .",
 		"lint": "bun x @biomejs/biome lint --fix .",
 		"start": "bun run src/main.ts",
+		"start:ssg": "bun run src/main.ts --static",
 		"test": "bun run test:unit && bun run test:integration",
 		"test:unit": "bun test tests/*.unit.test.ts",
 		"test:integration": "bun x playwright test"
