@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Combobox Integration Tests (Draft)', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the combobox test page
-    await page.goto('/test-combobox');
+    await page.goto('/tests/combobox');
 
     // Wait for the page to be fully loaded
     await page.waitForLoadState('networkidle');

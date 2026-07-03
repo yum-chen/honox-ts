@@ -3,7 +3,7 @@ import {
 	Positioner,
 	Root,
 	Trigger,
-} from "../components/ui/hover-card";
+} from "../../components/ui/hover-card";
 
 export default function TestHoverCardPage() {
 	return (
