@@ -8,7 +8,7 @@ const config = defineConfig(({ mode }) =>
 	mode === "client" ? clientConfig : mainConfig(mode),
 );
 
-const mainConfig = {
+const mainConfig = (_mode: string) => ({
 	build: {
 		minify: "oxc" as const,
 		emptyOutDir: false,
