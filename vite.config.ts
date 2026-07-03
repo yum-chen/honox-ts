@@ -5,7 +5,7 @@ import { defineConfig, type Plugin } from "vite";
 import pandaConfig from "./panda.config";
 
 const config = defineConfig(({ mode }) =>
-	mode === "client" ? clientConfig : mainConfig,
+	mode === "client" ? clientConfig : mainConfig(mode),
 );
 
 /**
@@ -40,7 +40,26 @@ const bunTranspile = (): Plugin => ({
 	},
 });
 
-const mainConfig = {
+const testRoutesPlugin = (mode: string): Plugin => ({
+	name: "test-routes-plugin",
+	enforce: "pre",
+	transform(code, id) {
+		if (id.endsWith("app/server.ts")) {
+			if (mode !== "test") {
+				return {
+					code: code.replace(
+						"// [TEST_ROUTES]",
+						'"!/app/routes/tests/**/*",',
+					),
+					map: null,
+				};
+			}
+		}
+		return null;
+	},
+});
+
+const mainConfig = (mode: string) => ({
 	build: {
 		emptyOutDir: false,
 	},
@@ -50,6 +69,7 @@ const mainConfig = {
 	},
 	plugins: [
 		bunTranspile(),
+		testRoutesPlugin(mode),
 		honox({
 			devServer: {
 				adapter,
@@ -61,7 +81,7 @@ const mainConfig = {
 		}),
 		ssg({ entry: "app/server.ts" }),
 	],
-};
+});
 
 const clientConfig = {
 	// Vite 8 native Oxc configuration

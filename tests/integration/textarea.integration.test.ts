@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Textarea Integration Tests", () => {
 	test.beforeEach(async ({ page }) => {
-		await page.goto("/test-textarea");
+		await page.goto("/tests/textarea");
         await page.waitForTimeout(1000); // Wait for hydration
 	});
 
