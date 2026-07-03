@@ -1,3 +1,4 @@
+import { createRoute } from "honox/factory";
 import {
 	Content,
 	Positioner,
@@ -5,8 +6,8 @@ import {
 	Trigger,
 } from "../components/ui/hover-card";
 
-export default function TestHoverCardPage() {
-	return (
+export default createRoute((c) => {
+	return c.render(
 		<div style={{ padding: "2rem" }}>
 			<h1>HoverCard Test Page</h1>
 
@@ -35,6 +36,6 @@ export default function TestHoverCardPage() {
 					</Content>
 				</Positioner>
 			</Root>
-		</div>
+		</div>,
 	);
-}
+});

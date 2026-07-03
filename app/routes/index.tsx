@@ -117,9 +117,7 @@ export default createRoute((c) => {
 						Save
 					</Button>
 					<Button loading>Spinner only</Button>
-					<Button interactive onclick="alert('Hello!')">
-						Interactive
-					</Button>
+					<Button>Interactive</Button>
 					<IconButton aria-label="Search">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -425,13 +423,7 @@ export default createRoute((c) => {
 							<Switch interactive colorPalette="blue">
 								Interactive Blue
 							</Switch>
-							<Switch
-								interactive
-								colorPalette="red"
-								onCheckedChange={(details) =>
-									console.log("Switch changed:", details.checked)
-								}
-							>
+							<Switch interactive colorPalette="red">
 								Check Console
 							</Switch>
 						</div>
@@ -522,13 +514,7 @@ export default createRoute((c) => {
 							<Checkbox interactive colorPalette="blue">
 								Interactive Blue
 							</Checkbox>
-							<Checkbox
-								interactive
-								colorPalette="green"
-								onCheckedChange={(details) =>
-									console.log("Checkbox changed:", details.checked)
-								}
-							>
+							<Checkbox interactive colorPalette="green">
 								Check Console
 							</Checkbox>
 						</div>
@@ -1131,17 +1117,7 @@ export default createRoute((c) => {
 					Field Component Examples
 				</Heading>
 
-				<Field
-					label="Email"
-					validator={(value: string) => {
-						if (!value.includes("@")) {
-							return "Please enter a valid email address containing @";
-						}
-						return true;
-					}}
-					type="email"
-					placeholder="Enter your email"
-				/>
+				<Field label="Email" type="email" placeholder="Enter your email" />
 
 				<Field
 					label="Username"
@@ -1451,24 +1427,9 @@ export default createRoute((c) => {
 						justifyContent: "center",
 					})}
 				>
-					<Button
-						variant="outline"
-						onclick="window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Success', description: 'Action completed successfully', closable: true, type: 'success' } }))"
-					>
-						Show Success Toast
-					</Button>
-					<Button
-						variant="outline"
-						onclick="window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Error', description: 'An error occurred', closable: true, type: 'error' } }))"
-					>
-						Show Error Toast
-					</Button>
-					<Button
-						variant="outline"
-						onclick="window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Loading', description: 'Please wait...', type: 'loading' } }))"
-					>
-						Show Loading Toast
-					</Button>
+					<Button variant="outline">Show Success Toast</Button>
+					<Button variant="outline">Show Error Toast</Button>
+					<Button variant="outline">Show Loading Toast</Button>
 				</div>
 			</div>
 
