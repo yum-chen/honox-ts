@@ -1,4 +1,4 @@
-import { Textarea } from "../components/ui";
+import { Textarea } from "../../components/ui";
 
 export default function TestTextareaPage() {
 	return (

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('HoverCard should show content on hover after delay', async ({ page }) => {
-  await page.goto('/test-hover-card');
+  await page.goto('/tests/hover-card');
 
   // Use data-part selectors since the component generates its own IDs
   const trigger = page.locator('[data-part="trigger"]');
