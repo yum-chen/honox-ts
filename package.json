@@ -19,6 +19,7 @@
 		"test:integration": "bun x playwright test"
 	},
 	"dependencies": {
+		"@ark-ui/react": "^5.37.2",
 		"hono": "^4.12.26",
 		"honox": "0.1.56"
 	},

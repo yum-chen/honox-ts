@@ -32,6 +32,7 @@ import {
 	Splitter,
 	Switch,
 	Table,
+	Tabs,
 	Text,
 	Textarea,
 	Toast,
@@ -1665,6 +1666,99 @@ export default createRoute((c) => {
 					<Loader text="Loading..." />
 					<Loader spinnerPlacement="end">Processing</Loader>
 					<Loader spinner={<Spinner color="blue.500" />}>Custom Spinner</Loader>
+				</div>
+			</div>
+
+			{/* Tabs Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Tabs Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "12",
+					})}
+				>
+					<div class={css({ width: "full" })}>
+						<Text size="sm" class={css({ mb: "2", color: "fg.muted" })}>
+							Line Variant (Default)
+						</Text>
+						<Tabs.Root defaultValue="react">
+							<Tabs.List>
+								<Tabs.Trigger value="react">React</Tabs.Trigger>
+								<Tabs.Trigger value="solid">Solid</Tabs.Trigger>
+								<Tabs.Trigger value="vue">Vue</Tabs.Trigger>
+								<Tabs.Indicator />
+							</Tabs.List>
+							<Tabs.Content value="react">React is a JavaScript library for building user interfaces.</Tabs.Content>
+							<Tabs.Content value="solid">Solid is a declarative, efficient, and flexible JavaScript library for building user interfaces.</Tabs.Content>
+							<Tabs.Content value="vue">Vue.js is an open-source model–view–viewmodel front end JavaScript framework for building user interfaces and single-page applications.</Tabs.Content>
+						</Tabs.Root>
+					</div>
+
+					<div class={css({ width: "full" })}>
+						<Text size="sm" class={css({ mb: "2", color: "fg.muted" })}>
+							Subtle Variant
+						</Text>
+						<Tabs.Root defaultValue="account" variant="subtle">
+							<Tabs.List>
+								<Tabs.Trigger value="account">Account</Tabs.Trigger>
+								<Tabs.Trigger value="password">Password</Tabs.Trigger>
+								<Tabs.Trigger value="settings">Settings</Tabs.Trigger>
+								<Tabs.Indicator />
+							</Tabs.List>
+							<Tabs.Content value="account">Manage your account settings and preferences.</Tabs.Content>
+							<Tabs.Content value="password">Change your password and secure your account.</Tabs.Content>
+							<Tabs.Content value="settings">Configure your application settings.</Tabs.Content>
+						</Tabs.Root>
+					</div>
+
+					<div class={css({ width: "full" })}>
+						<Text size="sm" class={css({ mb: "2", color: "fg.muted" })}>
+							Enclosed Variant
+						</Text>
+						<Tabs.Root defaultValue="tab-1" variant="enclosed">
+							<Tabs.List>
+								<Tabs.Trigger value="tab-1">Tab 1</Tabs.Trigger>
+								<Tabs.Trigger value="tab-2">Tab 2</Tabs.Trigger>
+								<Tabs.Trigger value="tab-3">Tab 3</Tabs.Trigger>
+								<Tabs.Indicator />
+							</Tabs.List>
+							<Tabs.Content value="tab-1">Content for Tab 1</Tabs.Content>
+							<Tabs.Content value="tab-2">Content for Tab 2</Tabs.Content>
+							<Tabs.Content value="tab-3">Content for Tab 3</Tabs.Content>
+						</Tabs.Root>
+					</div>
+
+					<div class={css({ width: "full" })}>
+						<Text size="sm" class={css({ mb: "2", color: "fg.muted" })}>
+							Vertical Orientation
+						</Text>
+						<Tabs.Root defaultValue="tab-1" orientation="vertical">
+							<Tabs.List>
+								<Tabs.Trigger value="tab-1">Tab 1</Tabs.Trigger>
+								<Tabs.Trigger value="tab-2">Tab 2</Tabs.Trigger>
+								<Tabs.Trigger value="tab-3">Tab 3</Tabs.Trigger>
+								<Tabs.Indicator />
+							</Tabs.List>
+							<Tabs.Content value="tab-1">Vertical Content 1</Tabs.Content>
+							<Tabs.Content value="tab-2">Vertical Content 2</Tabs.Content>
+							<Tabs.Content value="tab-3">Vertical Content 3</Tabs.Content>
+						</Tabs.Root>
+					</div>
 				</div>
 			</div>
 

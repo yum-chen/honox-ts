@@ -1,3 +1,4 @@
+import { tabs } from "./tabs";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { badge } from "./badge";
@@ -41,6 +42,7 @@ export const recipes = {
 
 export const slotRecipes = {
 	alert,
+	tabs,
 	collapsible,
 	progress,
 	table,
