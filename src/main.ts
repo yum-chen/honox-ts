@@ -20,11 +20,30 @@ const { values } = parseArgs({
 const port = Number.parseInt(values.port ?? "3000", 10);
 
 if (values.static) {
-	console.log("Building for static production...");
-	const build = Bun.spawnSync(["bun", "run", "build"]);
-	if (!build.success) {
-		console.error("Build failed");
-		process.exit(1);
+	const distPath = join(process.cwd(), "dist");
+	if (!existsSync(distPath)) {
+		console.log("Building for static production...");
+		const build = Bun.spawnSync(["bun", "run", "build"]);
+		if (!build.success) {
+			console.error("Build failed");
+			process.exit(1);
+		}
+	} else {
+		console.log("Using existing dist folder...");
+	}
+
+	// Load the Vite manifest for asset mapping
+	let manifest: Record<string, any> = {};
+	const manifestPath = join(process.cwd(), "dist", ".vite", "manifest.json");
+	if (existsSync(manifestPath)) {
+		try {
+			const manifestContent = Bun.file(manifestPath);
+			const manifestText = await manifestContent.text();
+			manifest = JSON.parse(manifestText);
+			console.log("Loaded Vite manifest for asset resolution");
+		} catch (e) {
+			console.warn("Failed to load manifest:", e);
+		}
 	}
 
 	// Map for file extensions to MIME types
@@ -50,7 +69,21 @@ if (values.static) {
 		port,
 		fetch(req) {
 			const url = new URL(req.url);
-			const pathname = url.pathname;
+			let pathname = url.pathname;
+
+			// Handle source file requests by mapping to built assets via manifest
+			if (
+				pathname.startsWith("/app/") ||
+				pathname.startsWith("/node_modules/")
+			) {
+				// Remove leading slash for manifest lookup
+				const manifestKey = pathname.startsWith("/")
+					? pathname.slice(1)
+					: pathname;
+				if (manifest[manifestKey]?.file) {
+					pathname = "/" + manifest[manifestKey].file;
+				}
+			}
 
 			const pathsToTry = [
 				join(process.cwd(), "dist", pathname),
