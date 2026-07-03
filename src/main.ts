@@ -27,6 +27,25 @@ if (values.static) {
 		process.exit(1);
 	}
 
+	// Map for file extensions to MIME types
+	const getMimeType = (filePath: string): string => {
+		if (filePath.endsWith(".js")) return "application/javascript";
+		if (filePath.endsWith(".css")) return "text/css";
+		if (filePath.endsWith(".html")) return "text/html";
+		if (filePath.endsWith(".json")) return "application/json";
+		if (filePath.endsWith(".svg")) return "image/svg+xml";
+		if (filePath.endsWith(".png")) return "image/png";
+		if (filePath.endsWith(".jpg") || filePath.endsWith(".jpeg"))
+			return "image/jpeg";
+		if (filePath.endsWith(".gif")) return "image/gif";
+		if (filePath.endsWith(".ico")) return "image/x-icon";
+		if (filePath.endsWith(".woff")) return "font/woff";
+		if (filePath.endsWith(".woff2")) return "font/woff2";
+		if (filePath.endsWith(".ttf")) return "font/ttf";
+		if (filePath.endsWith(".eot")) return "application/vnd.ms-fontobject";
+		return "application/octet-stream";
+	};
+
 	const server = Bun.serve({
 		port,
 		fetch(req) {
@@ -42,7 +61,10 @@ if (values.static) {
 			for (const path of pathsToTry) {
 				if (existsSync(path) && !path.endsWith("/")) {
 					const file = Bun.file(path);
-					return new Response(file);
+					const mimeType = getMimeType(path);
+					return new Response(file, {
+						headers: { "Content-Type": mimeType },
+					});
 				}
 			}
 
