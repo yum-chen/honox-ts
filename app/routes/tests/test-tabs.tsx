@@ -1,13 +1,13 @@
 import { createRoute } from "honox/factory";
 import { Tabs } from "../../components/ui";
-import { Container, Stack } from "styled-system/jsx";
+import { css } from "styled-system/css";
 import { Heading } from "../../components/ui/heading";
 
 export default createRoute((c) => {
 	return c.render(
-		<Container py="12">
-			<Stack gap="12">
-				<Stack gap="4">
+		<div class={css({ py: "12" })}>
+			<div class={css({ display: "flex", flexDirection: "column", gap: "12" })}>
+				<div class={css({ display: "flex", flexDirection: "column", gap: "4" })}>
 					<Heading size="2xl">Tabs - Default (Line)</Heading>
 					<Tabs.Root defaultValue="react">
 						<Tabs.List>
@@ -22,9 +22,9 @@ export default createRoute((c) => {
 						<Tabs.Content value="svelte">Svelte Content</Tabs.Content>
 						<Tabs.Content value="vue">Vue Content</Tabs.Content>
 					</Tabs.Root>
-				</Stack>
+				</div>
 
-				<Stack gap="4">
+				<div class={css({ display: "flex", flexDirection: "column", gap: "4" })}>
 					<Heading size="2xl">Tabs - Subtle</Heading>
 					<Tabs.Root defaultValue="react" variant="subtle">
 						<Tabs.List>
@@ -37,9 +37,9 @@ export default createRoute((c) => {
 						<Tabs.Content value="solid">Solid Content (Subtle)</Tabs.Content>
 						<Tabs.Content value="svelte">Svelte Content (Subtle)</Tabs.Content>
 					</Tabs.Root>
-				</Stack>
+				</div>
 
-				<Stack gap="4">
+				<div class={css({ display: "flex", flexDirection: "column", gap: "4" })}>
 					<Heading size="2xl">Tabs - Enclosed</Heading>
 					<Tabs.Root defaultValue="react" variant="enclosed">
 						<Tabs.List>
@@ -52,9 +52,9 @@ export default createRoute((c) => {
 						<Tabs.Content value="solid">Solid Content (Enclosed)</Tabs.Content>
 						<Tabs.Content value="svelte">Svelte Content (Enclosed)</Tabs.Content>
 					</Tabs.Root>
-				</Stack>
+				</div>
 
-				<Stack gap="4">
+				<div class={css({ display: "flex", flexDirection: "column", gap: "4" })}>
 					<Heading size="2xl">Tabs - Vertical</Heading>
 					<Tabs.Root defaultValue="react" orientation="vertical">
 						<Tabs.List>
@@ -67,9 +67,9 @@ export default createRoute((c) => {
 						<Tabs.Content value="solid">Solid Content (Vertical)</Tabs.Content>
 						<Tabs.Content value="svelte">Svelte Content (Vertical)</Tabs.Content>
 					</Tabs.Root>
-				</Stack>
+				</div>
 
-                <Stack gap="4">
+                <div class={css({ display: "flex", flexDirection: "column", gap: "4" })}>
 					<Heading size="2xl">Tabs - Manual Activation</Heading>
 					<Tabs.Root defaultValue="react" activationMode="manual">
 						<Tabs.List>
@@ -82,8 +82,8 @@ export default createRoute((c) => {
 						<Tabs.Content value="solid">Solid Content (Manual)</Tabs.Content>
 						<Tabs.Content value="svelte">Svelte Content (Manual)</Tabs.Content>
 					</Tabs.Root>
-				</Stack>
-			</Stack>
-		</Container>,
+				</div>
+			</div>
+		</div>,
 	);
 });
