@@ -1,7 +1,8 @@
+import { createRoute } from "honox/factory";
 import { Field } from "../components/ui";
 
-export default function TestFieldPage() {
-	return (
+export default createRoute((c) => {
+	return c.render(
 		<div style={{ padding: "2rem" }}>
 			<h1>Field Test Page</h1>
 			<div style={{ marginTop: "2rem" }}>
@@ -56,16 +57,10 @@ export default function TestFieldPage() {
 						label="Validator Label"
 						helperText="Email input"
 						placeholder="Validator Placeholder"
-						validator={(value: string) => {
-							if (value && !value.includes("@")) {
-								return "Invalid email";
-							}
-							return true;
-						}}
 						value="invalid-email"
 					/>
 				</section>
 			</div>
-		</div>
+		</div>,
 	);
-}
+});

@@ -1,3 +1,4 @@
+import { createRoute } from "honox/factory";
 import { Combobox } from "../components/ui";
 
 const items = [
@@ -8,11 +9,15 @@ const items = [
 	{ label: "Angular", value: "angular" },
 ];
 
-export default function TestComboboxPage() {
-	return (
+export default createRoute((c) => {
+	return c.render(
 		<div style={{ padding: "2rem" }}>
 			<h1>Combobox Test Page</h1>
-			<Combobox items={items} placeholder="Select a framework..." interactive />
-		</div>
+			<Combobox
+				items={items}
+				placeholder="Select a framework..."
+				interactive
+			/>
+		</div>,
 	);
-}
+});

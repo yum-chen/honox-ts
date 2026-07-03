@@ -1,7 +1,8 @@
+import { createRoute } from "honox/factory";
 import { Textarea } from "../components/ui";
 
-export default function TestTextareaPage() {
-	return (
+export default createRoute((c) => {
+	return c.render(
 		<div
 			style={{
 				padding: "2rem",
@@ -55,10 +56,9 @@ export default function TestTextareaPage() {
 				<Textarea
 					id="custom-validator-textarea"
 					label="Must contain 'hono'"
-					validator={(val) => val.includes("hono") || "Must contain 'hono'"}
 					interactive
 				/>
 			</section>
-		</div>
+		</div>,
 	);
-}
+});
