@@ -1,8 +1,8 @@
 import type { Child, PropsWithChildren } from "hono/jsx";
 import { createContext, useContext, useId } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
-import type { FieldsetVariantProps } from "../../../styled-system/recipes";
-import { fieldset } from "../../../styled-system/recipes";
+import { cx } from "styled-system/css";
+import type { FieldsetVariantProps } from "styled-system/recipes";
+import { fieldset } from "styled-system/recipes";
 
 interface FieldsetContextValue {
 	id: string;

@@ -7,8 +7,8 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
-import { type TabsVariantProps, tabs } from "../../../styled-system/recipes";
+import { cx } from "styled-system/css";
+import { type TabsVariantProps, tabs } from "styled-system/recipes";
 
 type TabsStyles = ReturnType<typeof tabs>;
 

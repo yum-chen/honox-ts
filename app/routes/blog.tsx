@@ -1,5 +1,5 @@
 import { createRoute } from "honox/factory";
-import { css } from "../../styled-system/css";
+import { css } from "styled-system/css";
 import { Badge, Button, Card, Heading, Text } from "../components/ui";
 
 interface BlogPost {

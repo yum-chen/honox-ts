@@ -1,7 +1,7 @@
 import type { Child, ElementType } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
-import type { TextVariantProps } from "../../../styled-system/recipes";
-import { text } from "../../../styled-system/recipes";
+import { cx } from "styled-system/css";
+import type { TextVariantProps } from "styled-system/recipes";
+import { text } from "styled-system/recipes";
 
 export interface TextProps extends TextVariantProps {
 	as?: ElementType;

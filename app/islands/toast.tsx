@@ -1,6 +1,6 @@
 import { useEffect, useState } from "hono/jsx";
-import { css, cx } from "../../styled-system/css";
-import { stack } from "../../styled-system/patterns";
+import { css, cx } from "styled-system/css";
+import { stack } from "styled-system/patterns";
 import { CloseButton } from "../components/ui/button";
 import { Spinner } from "../components/ui/spinner";
 import {

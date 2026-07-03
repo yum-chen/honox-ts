@@ -9,8 +9,8 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
-import { tooltip } from "../../../styled-system/recipes";
+import { cx } from "styled-system/css";
+import { tooltip } from "styled-system/recipes";
 
 type TooltipStyles = ReturnType<typeof tooltip>;
 

@@ -8,8 +8,8 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { css, cx } from "../../../styled-system/css";
-import { hoverCard } from "../../../styled-system/recipes";
+import { css, cx } from "styled-system/css";
+import { hoverCard } from "styled-system/recipes";
 
 type HoverCardStyles = ReturnType<typeof hoverCard>;
 

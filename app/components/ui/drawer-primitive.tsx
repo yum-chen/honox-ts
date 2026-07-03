@@ -8,9 +8,9 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { css, cx } from "../../../styled-system/css";
-import type { DrawerVariantProps } from "../../../styled-system/recipes";
-import { drawer } from "../../../styled-system/recipes";
+import { css, cx } from "styled-system/css";
+import type { DrawerVariantProps } from "styled-system/recipes";
+import { drawer } from "styled-system/recipes";
 
 type DrawerStyles = ReturnType<typeof drawer>;
 

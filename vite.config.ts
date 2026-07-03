@@ -3,12 +3,21 @@ import ssg from "@hono/vite-ssg";
 import honox, { devServerDefaultOptions } from "honox/vite";
 import { defineConfig } from "vite";
 import pandaConfig from "./panda.config";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const config = defineConfig(({ mode }) =>
 	mode === "client" ? clientConfig : mainConfig(mode),
 );
 
 const mainConfig = (_mode: string) => ({
+	resolve: {
+		alias: {
+			"styled-system": path.resolve(__dirname, "styled-system"),
+		},
+	},
 	build: {
 		minify: "oxc" as const,
 		emptyOutDir: false,
@@ -32,6 +41,11 @@ const mainConfig = (_mode: string) => ({
 });
 
 const clientConfig = {
+	resolve: {
+		alias: {
+			"styled-system": path.resolve(__dirname, "styled-system"),
+		},
+	},
 	oxc: {
 		jsxImportSource: "hono/jsx/dom",
 	},
