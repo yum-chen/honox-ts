@@ -1,7 +1,7 @@
 import adapter from "@hono/vite-dev-server/node";
 import ssg from "@hono/vite-ssg";
 import honox, { devServerDefaultOptions } from "honox/vite";
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import pandaConfig from "./panda.config";
 
 const config = defineConfig(({ mode }) =>
@@ -9,8 +9,18 @@ const config = defineConfig(({ mode }) =>
 );
 
 const mainConfig = {
+	oxc: {
+		jsx: {
+			importSource: "hono/jsx",
+		},
+	},
 	build: {
+		minify: "oxc" as const,
 		emptyOutDir: false,
+	},
+	// Vite 8 native Oxc configuration
+	oxc: {
+		jsxImportSource: "hono/jsx",
 	},
 	plugins: [
 		honox({
@@ -27,6 +37,14 @@ const mainConfig = {
 };
 
 const clientConfig = {
+	oxc: {
+		jsx: {
+			importSource: "hono/jsx/dom",
+		},
+	},
+	build: {
+		minify: "oxc" as const,
+	},
 	plugins: [
 		honox({
 			client: { input: ["/app/client.ts", "/app/style.css"] },
