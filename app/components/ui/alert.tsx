@@ -16,24 +16,8 @@ export interface AlertProps extends AlertVariantProps {
 	"aria-live"?: "polite" | "assertive" | "off";
 }
 
-const statusColorMap: Record<string, string> = {
-	info: "blue",
-	success: "green",
-	warning: "orange",
-	error: "red",
-	neutral: "gray",
-};
-
 export function Alert(props: AlertProps) {
-	const { status = "info", colorPalette: colorPaletteProp, ...rest } = props;
-
-	const colorPalette = colorPaletteProp || statusColorMap[status as string];
-
-	const [variantProps, localProps] = alert.splitVariantProps({
-		status,
-		colorPalette,
-		...rest,
-	});
+	const [variantProps, localProps] = alert.splitVariantProps(props);
 	const styles = alert(variantProps);
 	const {
 		title,

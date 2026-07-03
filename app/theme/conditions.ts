@@ -11,5 +11,6 @@ export const conditions = {
 		highlighted: "&:is([data-highlighted])",
 		open: "&:is([data-state=open])",
 		closed: "&:is([data-state=closed])",
+		_icon: "& :where(svg, [data-part=icon])",
 	},
 } as const;

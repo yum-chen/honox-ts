@@ -3,6 +3,7 @@ import { defineSlotRecipe } from "@pandacss/dev";
 export const alert = defineSlotRecipe({
 	className: "alert",
 	slots: ["root", "content", "description", "indicator", "title"],
+	jsx: ["Alert"],
 	base: {
 		root: {
 			alignItems: "flex-start",
@@ -37,6 +38,19 @@ export const alert = defineSlotRecipe({
 	},
 	variants: {
 		size: {
+			sm: {
+				root: {
+					gap: "2",
+					p: "3",
+					textStyle: "xs",
+				},
+				indicator: {
+					_icon: {
+						width: "4",
+						height: "4",
+					},
+				},
+			},
 			md: {
 				root: {
 					gap: "3",
@@ -75,6 +89,7 @@ export const alert = defineSlotRecipe({
 				root: {
 					bg: "colorPalette.surface.bg",
 					borderWidth: "1px",
+					borderStyle: "solid",
 					borderColor: "colorPalette.surface.border",
 					color: "colorPalette.surface.fg",
 				},
@@ -88,6 +103,7 @@ export const alert = defineSlotRecipe({
 			outline: {
 				root: {
 					borderWidth: "1px",
+					borderStyle: "solid",
 					borderColor: "colorPalette.outline.border",
 					color: "colorPalette.outline.fg",
 				},
@@ -106,7 +122,9 @@ export const alert = defineSlotRecipe({
 			error: {
 				root: { colorPalette: "red" },
 			},
-			neutral: {},
+			neutral: {
+				root: { colorPalette: "gray" },
+			},
 		},
 	},
 });
