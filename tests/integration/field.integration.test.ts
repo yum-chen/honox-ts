@@ -6,7 +6,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Field Component", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/test-field");
+    await page.goto("/tests/field");
   });
 
   test("should render basic field with label and helper text", async ({ page }) => {

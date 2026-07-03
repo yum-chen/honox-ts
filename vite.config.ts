@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 import pandaConfig from "./panda.config";
 
 const config = defineConfig(({ mode }) =>
-	mode === "client" ? clientConfig : mainConfig,
+	mode === "client" ? clientConfig : mainConfig(mode),
 );
 
 const mainConfig = {
@@ -29,7 +29,7 @@ const mainConfig = {
 		}),
 		ssg({ entry: "app/server.ts" }),
 	],
-};
+});
 
 const clientConfig = {
 	oxc: {
