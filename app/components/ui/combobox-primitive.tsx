@@ -9,9 +9,9 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
-import type { ComboboxVariantProps } from "../../../styled-system/recipes";
-import { combobox } from "../../../styled-system/recipes";
+import { cx } from "styled-system/css";
+import type { ComboboxVariantProps } from "styled-system/recipes";
+import { combobox } from "styled-system/recipes";
 
 type ComboboxStyles = ReturnType<typeof combobox>;
 

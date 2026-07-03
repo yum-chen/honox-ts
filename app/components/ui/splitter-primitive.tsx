@@ -1,8 +1,8 @@
 import type { PropsWithChildren } from "hono/jsx";
 import { createContext, useContext, useId } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
-import type { SplitterVariantProps } from "../../../styled-system/recipes";
-import { splitter } from "../../../styled-system/recipes";
+import { cx } from "styled-system/css";
+import type { SplitterVariantProps } from "styled-system/recipes";
+import { splitter } from "styled-system/recipes";
 
 type SplitterStyles = ReturnType<typeof splitter>;
 

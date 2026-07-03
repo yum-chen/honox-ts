@@ -1,7 +1,7 @@
 import type { JSX } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
-import type { SpinnerVariantProps } from "../../../styled-system/recipes";
-import { spinner } from "../../../styled-system/recipes";
+import { cx } from "styled-system/css";
+import type { SpinnerVariantProps } from "styled-system/recipes";
+import { spinner } from "styled-system/recipes";
 
 export interface SpinnerProps
 	extends SpinnerVariantProps,

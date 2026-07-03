@@ -8,8 +8,8 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { css, cx } from "../../../styled-system/css";
-import { popover } from "../../../styled-system/recipes";
+import { css, cx } from "styled-system/css";
+import { popover } from "styled-system/recipes";
 
 type PopoverStyles = ReturnType<typeof popover>;
 

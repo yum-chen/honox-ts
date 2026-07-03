@@ -1,5 +1,5 @@
 import { createRoute } from "honox/factory";
-import { css } from "../../styled-system/css";
+import { css } from "styled-system/css";
 import {
 	AbsoluteCenter,
 	Alert,

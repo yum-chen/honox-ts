@@ -1,7 +1,7 @@
 import { useState } from "hono/jsx";
-import { cx } from "../../../styled-system/css";
-import type { TextareaVariantProps } from "../../../styled-system/recipes";
-import { textarea } from "../../../styled-system/recipes";
+import { cx } from "styled-system/css";
+import type { TextareaVariantProps } from "styled-system/recipes";
+import { textarea } from "styled-system/recipes";
 import { FieldRoot, useFieldContext } from "./field-primitive";
 
 export interface TextareaPrimitiveProps extends TextareaVariantProps {
