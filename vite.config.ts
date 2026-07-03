@@ -9,8 +9,18 @@ const config = defineConfig(({ mode }) =>
 );
 
 const mainConfig = {
+	oxc: {
+		jsx: {
+			importSource: "hono/jsx",
+		},
+	},
 	build: {
+		minify: "oxc" as const,
 		emptyOutDir: false,
+	},
+	// Vite 8 native Oxc configuration
+	oxc: {
+		jsxImportSource: "hono/jsx",
 	},
 	plugins: [
 		honox({
@@ -22,6 +32,14 @@ const mainConfig = {
 };
 
 const clientConfig = {
+	oxc: {
+		jsx: {
+			importSource: "hono/jsx/dom",
+		},
+	},
+	build: {
+		minify: "oxc" as const,
+	},
 	plugins: [
 		honox({
 			client: { input: ["/app/client.ts", "/app/style.css"] },
