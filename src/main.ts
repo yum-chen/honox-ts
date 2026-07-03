@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 
@@ -34,7 +34,7 @@ if (values.static) {
 
 	// Map for file extensions to MIME types
 	const getMimeType = (filePath: string): string => {
-		if (filePath.endsWith(".js")) return "application/javascript";
+		if (filePath.endsWith(".js")) return "text/javascript";
 		if (filePath.endsWith(".css")) return "text/css";
 		if (filePath.endsWith(".html")) return "text/html";
 		if (filePath.endsWith(".json")) return "application/json";
@@ -64,15 +64,26 @@ if (values.static) {
 			];
 
 			for (const path of pathsToTry) {
-				if (existsSync(path) && !path.endsWith("/")) {
-					const file = Bun.file(path);
-					const mimeType = getMimeType(path);
-					return new Response(file, {
-						headers: { "Content-Type": mimeType },
-					});
+				if (existsSync(path)) {
+					try {
+						const stats = statSync(path);
+						if (stats.isFile()) {
+							console.log(`[Static] Serving ${pathname} from ${path}`);
+							const file = Bun.file(path);
+							const mimeType = getMimeType(path);
+							return new Response(file, {
+								headers: {
+									"Content-Type": `${mimeType}${mimeType.startsWith("text/") || mimeType === "application/javascript" ? ";charset=utf-8" : ""}`,
+								},
+							});
+						}
+					} catch (e) {
+						// Skip if stat fails
+					}
 				}
 			}
 
+			console.log(`[Static] Not Found: ${pathname}`);
 			return new Response("Not Found", { status: 404 });
 		},
 	});
