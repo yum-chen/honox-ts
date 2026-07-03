@@ -8,7 +8,9 @@ const variants = ["subtle", "solid", "outline", "surface"] as const;
 export default createRoute((c) => {
 	return c.render(
 		<div class={css({ p: "8" })}>
-			<Heading as="h1" mb="8">Alert Visual Test</Heading>
+			<Heading as="h1" mb="8">
+				Alert Visual Test
+			</Heading>
 
 			<div class={css({ display: "flex", flexDirection: "column", gap: "12" })}>
 				{variants.map((variant) => (
@@ -16,7 +18,13 @@ export default createRoute((c) => {
 						<Heading as="h2" mb="4" textTransform="capitalize">
 							Variant: {variant}
 						</Heading>
-						<div class={css({ display: "flex", flexDirection: "column", gap: "4" })}>
+						<div
+							class={css({
+								display: "flex",
+								flexDirection: "column",
+								gap: "4",
+							})}
+						>
 							{statuses.map((status) => (
 								<Alert
 									key={status}

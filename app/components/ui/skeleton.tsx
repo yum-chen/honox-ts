@@ -1,10 +1,7 @@
 import type { PropsWithChildren } from "hono/jsx";
 import { css, cx } from "styled-system/css";
 import { stack } from "styled-system/patterns";
-import {
-	type SkeletonVariantProps,
-	skeleton,
-} from "styled-system/recipes";
+import { type SkeletonVariantProps, skeleton } from "styled-system/recipes";
 
 export interface SkeletonProps
 	extends PropsWithChildren<SkeletonVariantProps>,

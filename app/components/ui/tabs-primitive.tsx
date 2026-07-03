@@ -237,7 +237,10 @@ export function InteractiveRoot(props: InteractiveRootProps) {
 			) as HTMLElement;
 
 			if (activeTrigger && indicator) {
-				indicator.style.setProperty("--width", `${activeTrigger.offsetWidth}px`);
+				indicator.style.setProperty(
+					"--width",
+					`${activeTrigger.offsetWidth}px`,
+				);
 				indicator.style.setProperty(
 					"--height",
 					`${activeTrigger.offsetHeight}px`,
@@ -311,10 +314,7 @@ export function InteractiveRoot(props: InteractiveRootProps) {
 				}
 			}
 
-			if (
-				activationMode === "manual" &&
-				(e.key === "Enter" || e.key === " ")
-			) {
+			if (activationMode === "manual" && (e.key === "Enter" || e.key === " ")) {
 				const val = trigger.getAttribute("data-value");
 				if (val) handleSelection(val);
 				e.preventDefault();
