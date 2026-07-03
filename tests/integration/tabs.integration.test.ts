@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Tabs", () => {
 	test.beforeEach(async ({ page }) => {
-		await page.goto("/test-tabs");
+		await page.goto("/tests/test-tabs");
 	});
 
 	test("should switch tabs on click", async ({ page }) => {

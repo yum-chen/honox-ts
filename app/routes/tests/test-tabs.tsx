@@ -1,7 +1,7 @@
 import { createRoute } from "honox/factory";
-import { Tabs } from "../components/ui";
-import { Container, Stack } from "../../styled-system/jsx";
-import { Heading } from "../components/ui/heading";
+import { Tabs } from "../../components/ui";
+import { Container, Stack } from "../../../styled-system/jsx";
+import { Heading } from "../../components/ui/heading";
 
 export default createRoute((c) => {
 	return c.render(
