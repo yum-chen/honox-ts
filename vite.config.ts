@@ -4,9 +4,35 @@ import honox, { devServerDefaultOptions } from "honox/vite";
 import { defineConfig, type Plugin } from "vite";
 import pandaConfig from "./panda.config";
 
-const config = defineConfig(({ mode }) =>
-	mode === "client" ? clientConfig : mainConfig,
-);
+const config = defineConfig(({ mode }) => {
+	const isTest = mode === "test";
+
+	/**
+	 * Plugin to exclude test routes unless in test mode.
+	 */
+	const excludeTestRoutes = (): Plugin => ({
+		name: "exclude-test-routes",
+		transform(code, id) {
+			if (!isTest && id.includes("node_modules/honox/dist/server/with-defaults.js")) {
+				return {
+					code: code.replace(
+						"/app/routes/**/*.{ts,tsx,md,mdx}",
+						"!/app/routes/tests/**\", \"/app/routes/**/*.{ts,tsx,md,mdx}",
+					),
+					map: null,
+				};
+			}
+			return null;
+		},
+	});
+
+	const currentConfig = mode === "client" ? clientConfig : mainConfig;
+
+	return {
+		...currentConfig,
+		plugins: [excludeTestRoutes(), ...(currentConfig.plugins || [])],
+	};
+});
 
 /**
  * Custom Bun transpiler plugin to satisfy the request for Bun.transpile.
@@ -40,7 +66,7 @@ const bunTranspile = (): Plugin => ({
 	},
 });
 
-const mainConfig = {
+const mainConfig: any = {
 	oxc: {
 		jsx: {
 			importSource: "hono/jsx",
@@ -69,7 +95,7 @@ const mainConfig = {
 	],
 };
 
-const clientConfig = {
+const clientConfig: any = {
 	oxc: {
 		jsx: {
 			importSource: "hono/jsx/dom",

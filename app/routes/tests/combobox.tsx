@@ -1,4 +1,4 @@
-import { Combobox } from "../components/ui";
+import { Combobox } from "../../components/ui";
 
 const items = [
 	{ label: "React", value: "react" },
