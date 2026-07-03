@@ -19,23 +19,23 @@
 		"test:integration": "bun x playwright test"
 	},
 	"dependencies": {
-		"hono": "^4.12.26",
+		"hono": "^4.12.27",
 		"honox": "0.1.56"
 	},
 	"peerDependencies": {
 		"typescript": "^5.9.3"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.5.0",
+		"@biomejs/biome": "^2.5.2",
 		"@hono/vite-build": "^1.11.1",
 		"@hono/vite-dev-server": "^0.25.3",
 		"@hono/vite-ssg": "^0.3.3",
-		"@pandacss/dev": "^1.11.3",
+		"@pandacss/dev": "^1.11.4",
 		"@playwright/test": "^1.61.1",
 		"@types/bun": "latest",
-		"autoprefixer": "^10.5.0",
-		"postcss": "^8.5.15",
-		"vite": "^8.0.16",
-		"wrangler": "^4.101.0"
+		"autoprefixer": "^10.5.2",
+		"postcss": "^8.5.16",
+		"vite": "^8.1.3",
+		"wrangler": "^4.107.0"
 	}
 }
