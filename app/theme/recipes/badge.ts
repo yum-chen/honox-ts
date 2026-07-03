@@ -15,8 +15,22 @@ export const badge = defineRecipe({
 	defaultVariants: {
 		variant: "subtle",
 		size: "md",
+		colorPalette: "gray",
 	},
 	variants: {
+		colorPalette: {
+			success: { colorPalette: "green" },
+			error: { colorPalette: "red" },
+			warning: { colorPalette: "orange" },
+			blue: { colorPalette: "blue" },
+			green: { colorPalette: "green" },
+			red: { colorPalette: "red" },
+			orange: { colorPalette: "orange" },
+			gray: { colorPalette: "gray" },
+			cyan: { colorPalette: "cyan" },
+			amber: { colorPalette: "amber" },
+			purple: { colorPalette: "purple" },
+		},
 		variant: {
 			solid: {
 				bg: "colorPalette.solid.bg",
@@ -26,16 +40,18 @@ export const badge = defineRecipe({
 				bg: "colorPalette.subtle.bg",
 				color: "colorPalette.subtle.fg",
 			},
-			outline: {
-				borderWidth: "1px",
-				borderColor: "colorPalette.outline.border",
-				color: "colorPalette.outline.fg",
-			},
 			surface: {
 				bg: "colorPalette.surface.bg",
-				color: "colorPalette.surface.fg",
 				borderWidth: "1px",
+				borderStyle: "solid",
 				borderColor: "colorPalette.surface.border",
+				color: "colorPalette.surface.fg",
+			},
+			outline: {
+				borderWidth: "1px",
+				borderStyle: "solid",
+				borderColor: "colorPalette.outline.border",
+				color: "colorPalette.outline.fg",
 			},
 		},
 		size: {

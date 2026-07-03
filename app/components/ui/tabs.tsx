@@ -6,13 +6,7 @@ import type {
 	RootProps,
 	TriggerProps,
 } from "./tabs-primitive";
-import {
-	Content,
-	Indicator,
-	List,
-	Root,
-	Trigger,
-} from "./tabs-primitive";
+import { Content, Indicator, List, Root, Trigger } from "./tabs-primitive";
 import InteractiveTabsIsland from "../../islands/tabs";
 
 export interface TabsProps extends InteractiveRootProps {
