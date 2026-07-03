@@ -1,0 +1,101 @@
+# Field
+
+# Introduction
+
+A foundational component for form fields, managing labels, helper text, error messages, and validation state. It follows the "Smart Switcher" pattern, automatically hydrating as an interactive island when needed.
+
+# Props
+
+| Prop            | Type                                 | Description                                                                                   |
+| :-------------- | :----------------------------------- | :-------------------------------------------------------------------------------------------- |
+| `children`      | `any`                                | Content to be rendered inside the component. If provided, the internal input is not rendered. |
+| `class`         | `string`                             | Custom CSS classes.                                                                           |
+| `id`            | `string`                             | Unique identifier. If not provided, one is generated.                                         |
+| `label`         | `Child`                              | The label for the field.                                                                      |
+| `helperText`    | `Child`                              | The helper text for the field.                                                                |
+| `errorText`     | `Child`                              | The error text for the field. If provided as a string, it will be used as the message.        |
+| `disabled`      | `boolean`                            | Whether the field is disabled.                                                                |
+| `invalid`       | `boolean`                            | Whether the field is in an invalid state.                                                     |
+| `required`      | `boolean`                            | Whether the field is required.                                                                |
+| `readOnly`      | `boolean`                            | Whether the field is read-only.                                                               |
+| `value`         | `string`                             | The current value (forces interactive mode).                                                  |
+| `defaultValue`  | `string`                             | The initial value (forces interactive mode).                                                  |
+| `onValueChange` | `(val: string) => void`              | Callback triggered when value changes (forces interactive mode).                              |
+| `minLength`     | `number`                             | Minimum length validation (forces interactive mode).                                          |
+| `validator`     | `(val: string) => boolean \| string` | Custom validation function (forces interactive mode).                                         |
+| `interactive`   | `boolean`                            | Forces hydration as an island.                                                                |
+
+# Usage
+
+## Smart Switcher
+
+The `Field` component automatically determines if it should be interactive. It becomes an island if any of the following props are provided: `interactive`, `onValueChange`, `value`, `defaultValue`, `validator`, or `minLength`.
+
+## Validation
+
+Field supports built-in and custom validation.
+
+### Minimum Length
+
+Using `minLength` will automatically show an error message if the input is too short.
+
+```tsx
+<Field
+  label="Username"
+  minLength={5}
+  placeholder="Enter at least 5 characters"
+/>
+```
+
+### Custom Validator
+
+The `validator` prop accepts a function that returns `true` for valid, `false` for invalid (using default error message), or a `string` as a custom error message.
+
+```tsx
+<Field
+  label="Email"
+  validator={(value) => {
+    if (!value.includes("@")) return "Must be a valid email";
+    return true;
+  }}
+/>
+```
+
+## Flattened API
+
+The simplest way to use Field is with the flattened props. It will automatically render an input.
+
+```tsx
+import { Field } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Field
+      label="Username"
+      helperText="Choose a unique username."
+      placeholder="Type here..."
+      minLength={3}
+    />
+  );
+}
+```
+
+## Composition
+
+For more control, you can wrap other components like `Textarea` or custom inputs. The `Field` provides context to its children.
+
+```tsx
+import { Field, Textarea } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Field
+      label="Bio"
+      helperText="Tell us about yourself."
+      minLength={10}
+    >
+      <Textarea placeholder="A short bio" />
+    </Field>
+  );
+}
+```
