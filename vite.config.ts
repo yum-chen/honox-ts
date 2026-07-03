@@ -1,51 +1,44 @@
 import adapter from "@hono/vite-dev-server/node";
 import ssg from "@hono/vite-ssg";
 import honox, { devServerDefaultOptions } from "honox/vite";
-import { defineConfig, type Plugin } from "vite";
+import { defineConfig, type UserConfig } from "vite";
 import pandaConfig from "./panda.config";
 
-const config = defineConfig(({ mode }) =>
-	mode === "client" ? clientConfig : mainConfig,
-);
+const config = defineConfig(({ mode }) => {
+	const isTest = mode === "test";
 
-/**
- * Custom Bun transpiler plugin to satisfy the request for Bun.transpile.
- */
-const bunTranspile = (): Plugin => ({
-	name: "bun-transpile",
-	enforce: "pre",
-	async transform(code, id) {
-		if (!id.match(/\.(ts|tsx)$/) || id.includes("node_modules")) return null;
+	const currentConfig = mode === "client" ? clientConfig : mainConfig;
 
-		// @ts-ignore - Bun is globally available when running with `bun`
-		if (typeof Bun === "undefined") {
-			return null;
-		}
-
-		const result = await Bun.transpile(code, {
-			loader: id.endsWith("x") ? "tsx" : "ts",
-			target: "browser",
-			tsconfigOverride: {
-				compilerOptions: {
-					jsx: "react-jsx",
-					jsxImportSource: id.includes("client") ? "hono/jsx/dom" : "hono/jsx",
-				},
-			},
-		});
-
-		return {
-			code: result,
-			map: null,
-		};
-	},
+	return {
+		...currentConfig,
+		define: {
+			"import.meta.env.ROUTES_GLOB": isTest
+				? JSON.stringify([
+						"/app/routes/**/*.{ts,tsx,md,mdx}",
+						"/app/routes/.well-known/**/*.{ts,tsx,md,mdx}",
+						"!/app/routes/**/_*.{ts,tsx,md,mdx}",
+						"!/app/routes/**/-*.{ts,tsx,md,mdx}",
+						"!/app/routes/**/$*.{ts,tsx,md,mdx}",
+						"!/app/routes/**/*.test.{ts,tsx}",
+						"!/app/routes/**/*.spec.{ts,tsx}",
+						"!/app/routes/**/-*/**/*",
+					])
+				: JSON.stringify([
+						"/app/routes/**/*.{ts,tsx,md,mdx}",
+						"/app/routes/.well-known/**/*.{ts,tsx,md,mdx}",
+						"!/app/routes/**/_*.{ts,tsx,md,mdx}",
+						"!/app/routes/**/-*.{ts,tsx,md,mdx}",
+						"!/app/routes/**/$*.{ts,tsx,md,mdx}",
+						"!/app/routes/**/*.test.{ts,tsx}",
+						"!/app/routes/**/*.spec.{ts,tsx}",
+						"!/app/routes/**/-*/**/*",
+						"!/app/routes/tests/**",
+					]),
+		},
+	};
 });
 
-const mainConfig = {
-	oxc: {
-		jsx: {
-			importSource: "hono/jsx",
-		},
-	},
+const mainConfig: UserConfig = {
 	build: {
 		minify: "oxc" as const,
 		emptyOutDir: false,
@@ -55,7 +48,6 @@ const mainConfig = {
 		jsxImportSource: "hono/jsx",
 	},
 	plugins: [
-		bunTranspile(),
 		honox({
 			devServer: {
 				adapter,
@@ -69,17 +61,15 @@ const mainConfig = {
 	],
 };
 
-const clientConfig = {
-	oxc: {
-		jsx: {
-			importSource: "hono/jsx/dom",
-		},
-	},
+const clientConfig: UserConfig = {
 	build: {
 		minify: "oxc" as const,
 	},
+	// Vite 8 native Oxc configuration
+	oxc: {
+		jsxImportSource: "hono/jsx/dom",
+	},
 	plugins: [
-		bunTranspile(),
 		honox({
 			client: { input: ["/app/client.ts", "/app/style.css"] },
 		}),

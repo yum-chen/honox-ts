@@ -1,4 +1,4 @@
-import { Field } from "../components/ui";
+import { Field } from "../../components/ui";
 
 export default function TestFieldPage() {
 	return (
