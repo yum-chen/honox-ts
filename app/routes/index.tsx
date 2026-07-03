@@ -19,6 +19,7 @@ import {
 	Fieldset,
 	Group,
 	Heading,
+	HoverCard,
 	IconButton,
 	Loader,
 	Popover,
@@ -850,6 +851,88 @@ export default createRoute((c) => {
 						</Popover.Content>
 					</Popover.Positioner>
 				</Popover.Root>
+			</div>
+
+			{/* HoverCard Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					HoverCard Component Examples
+				</Heading>
+				<div class={css({ display: "flex", gap: "8" })}>
+					<div class={css({ position: "relative" })}>
+						<HoverCard.Root>
+							<HoverCard.Trigger asChild>
+								<Text
+									class={css({
+										cursor: "default",
+										textDecoration: "underline",
+										textDecorationStyle: "dotted",
+									})}
+								>
+									Basic HoverCard
+								</Text>
+							</HoverCard.Trigger>
+							<HoverCard.Positioner>
+								<HoverCard.Content>
+									<Text fontWeight="bold">HoverCard Title</Text>
+									<Text size="sm" class={css({ color: "fg.muted", mt: "1" })}>
+										This is a basic hover card that appears on hover.
+									</Text>
+								</HoverCard.Content>
+							</HoverCard.Positioner>
+						</HoverCard.Root>
+					</div>
+
+					<div class={css({ position: "relative" })}>
+						<HoverCard.Root>
+							<HoverCard.Trigger asChild>
+								<Button variant="outline">Hover with Arrow</Button>
+							</HoverCard.Trigger>
+							<HoverCard.Positioner>
+								<HoverCard.Content>
+									<HoverCard.Arrow>
+										<HoverCard.ArrowTip />
+									</HoverCard.Arrow>
+									<Text fontWeight="bold">HoverCard with Arrow</Text>
+									<Text size="sm" class={css({ color: "fg.muted", mt: "1" })}>
+										This hover card includes an arrow pointing to the trigger.
+									</Text>
+								</HoverCard.Content>
+							</HoverCard.Positioner>
+						</HoverCard.Root>
+					</div>
+
+					<div class={css({ position: "relative" })}>
+						<HoverCard.Root interactive openDelay={100} closeDelay={100}>
+							<HoverCard.Trigger asChild>
+								<Badge variant="outline" colorPalette="blue" cursor="default">
+									Interactive
+								</Badge>
+							</HoverCard.Trigger>
+							<HoverCard.Positioner>
+								<HoverCard.Content>
+									<Text fontWeight="bold">Interactive HoverCard</Text>
+									<Text size="sm" class={css({ color: "fg.muted", mt: "1" })}>
+										This hover card is interactive and has custom delays.
+									</Text>
+									<Button size="xs" variant="solid" class={css({ mt: "3" })}>
+										Action
+									</Button>
+								</HoverCard.Content>
+							</HoverCard.Positioner>
+						</HoverCard.Root>
+					</div>
+				</div>
 			</div>
 
 			{/* Combobox Examples */}

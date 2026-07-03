@@ -1,8 +1,8 @@
 import {
+	Content,
+	Positioner,
 	Root,
 	Trigger,
-	Positioner,
-	Content,
 } from "../components/ui/hover-card";
 
 export default function TestHoverCardPage() {

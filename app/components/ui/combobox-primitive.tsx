@@ -4,8 +4,8 @@ import {
 	type PropsWithChildren,
 	useContext,
 	useEffect,
-	useLayoutEffect,
 	useId,
+	useLayoutEffect,
 	useRef,
 	useState,
 } from "hono/jsx";
