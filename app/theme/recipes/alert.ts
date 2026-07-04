@@ -45,10 +45,7 @@ export const alert = defineSlotRecipe({
 					textStyle: "xs",
 				},
 				indicator: {
-					_icon: {
-						width: "4",
-						height: "4",
-					},
+					_icon: { boxSize: "4" },
 				},
 			},
 			md: {
@@ -58,10 +55,7 @@ export const alert = defineSlotRecipe({
 					textStyle: "sm",
 				},
 				indicator: {
-					_icon: {
-						width: "5",
-						height: "5",
-					},
+					_icon: { boxSize: "5" },
 				},
 			},
 			lg: {
@@ -71,10 +65,7 @@ export const alert = defineSlotRecipe({
 					textStyle: "md",
 				},
 				indicator: {
-					_icon: {
-						width: "6",
-						height: "6",
-					},
+					_icon: { boxSize: "6" },
 				},
 			},
 		},
