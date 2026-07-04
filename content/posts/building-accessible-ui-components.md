@@ -1,14 +1,17 @@
 ---
-title: "Building Accessible UI Components"
-date: "2026-06-10"
-description: "Best practices for creating accessible, keyboard-navigable components that work for everyone. WCAG 2.1 AA compliance made practical."
-tags: ["accessibility", "ui", "best-practices"]
+title: Building Accessible UI Components
+date: 2026-06-10
+description: Best practices for creating accessible, keyboard-navigable components that work for everyone. WCAG 2.1 AA compliance made practical.
+tags:
+  - accessibility
+  - ui
+  - best-practices
 draft: false
 ---
 
 # Building Accessible UI Components
 
-Accessibility is not optional—it's essential for creating inclusive web applications.
+Accessibility is not _optional_—it's essential for creating inclusive web applications.
 
 ## Why Accessibility Matters
 
@@ -96,6 +99,7 @@ function Modal({ isOpen, onClose }) {
 ## Testing Accessibility
 
 Use these tools:
+
 - **axe DevTools**: Browser extension
 - **Lighthouse**: Built into Chrome DevTools
 - **NVDA/JAWS**: Screen readers for testing
