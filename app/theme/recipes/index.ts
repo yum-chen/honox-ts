@@ -1,4 +1,3 @@
-import { tabs } from "./tabs";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { badge } from "./badge";
@@ -15,6 +14,7 @@ import { fieldset } from "./fieldset";
 import { group } from "./group";
 import { heading } from "./heading";
 import { hoverCard } from "./hover-card";
+import { menu } from "./menu";
 import { popover } from "./popover";
 import { progress } from "./progress";
 import { skeleton } from "./skeleton";
@@ -23,6 +23,7 @@ import { spinner } from "./spinner";
 import { splitter } from "./splitter";
 import { switchRecipe } from "./switch";
 import { table } from "./table";
+import { tabs } from "./tabs";
 import { text } from "./text";
 import { textarea } from "./textarea";
 import { toast } from "./toast";
@@ -42,22 +43,23 @@ export const recipes = {
 
 export const slotRecipes = {
 	alert,
-	collapsible,
-	progress,
-	table,
-	slider,
-	splitter,
 	breadcrumb,
 	card,
 	checkbox,
+	collapsible,
 	combobox,
 	dialog,
 	drawer,
 	field,
 	fieldset,
 	hoverCard,
+	menu,
 	popover,
+	progress,
+	slider,
+	splitter,
 	switchRecipe,
+	table,
 	tabs,
 	toast,
 	tooltip,
