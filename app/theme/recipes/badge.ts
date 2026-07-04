@@ -28,14 +28,16 @@ export const badge = defineRecipe({
 			},
 			outline: {
 				borderWidth: "1px",
+				borderStyle: "solid",
 				borderColor: "colorPalette.outline.border",
 				color: "colorPalette.outline.fg",
 			},
 			surface: {
 				bg: "colorPalette.surface.bg",
-				color: "colorPalette.surface.fg",
 				borderWidth: "1px",
+				borderStyle: "solid",
 				borderColor: "colorPalette.surface.border",
+				color: "colorPalette.surface.fg",
 			},
 		},
 		size: {
