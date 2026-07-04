@@ -17,9 +17,6 @@ interface BlogPost {
 }
 
 export default createRoute(async (c) => {
-	// Get tag filter from URL query params
-	const tagFilter = c.req.query("tag");
-
 	// Load and parse all blog posts
 	const blogPosts: BlogPost[] = [];
 
@@ -35,11 +32,7 @@ export default createRoute(async (c) => {
 
 			const slug = path.replace("/content/posts/", "").replace(".md", "");
 
-			// Filter by tag if specified
 			const postTags = Array.isArray(data.tags) ? data.tags : [];
-			if (tagFilter && !postTags.includes(tagFilter)) {
-				continue;
-			}
 
 			blogPosts.push({
 				slug,
@@ -101,11 +94,12 @@ export default createRoute(async (c) => {
 					</span>
 					<a
 						href="/blog"
+						data-tag-btn="all"
 						style={{
 							padding: "0.5rem 1rem",
 							borderRadius: "20px",
-							backgroundColor: !tagFilter ? "#1976d2" : "#e0e0e0",
-							color: !tagFilter ? "white" : "#333",
+							backgroundColor: "#1976d2",
+							color: "white",
 							textDecoration: "none",
 							fontSize: "0.875rem",
 						}}
@@ -115,12 +109,13 @@ export default createRoute(async (c) => {
 					{tags.map((tag) => (
 						<a
 							key={tag}
-							href={`/blog?tag=${tag}`}
+							href={`/blog/tag/${tag}`}
+							data-tag-btn={tag}
 							style={{
 								padding: "0.5rem 1rem",
 								borderRadius: "20px",
-								backgroundColor: tagFilter === tag ? "#1976d2" : "#e0e0e0",
-								color: tagFilter === tag ? "white" : "#333",
+								backgroundColor: "#e0e0e0",
+								color: "#333",
 								textDecoration: "none",
 								fontSize: "0.875rem",
 							}}
