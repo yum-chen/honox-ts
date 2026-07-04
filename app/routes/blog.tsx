@@ -233,7 +233,7 @@ export default createRoute(async (c) => {
 											Search Articles
 										</Text>
 										<form
-											action={c.req.url.split("?")[0]}
+											action="/blog"
 											method="GET"
 											class={css({
 												display: "flex",
@@ -309,7 +309,7 @@ export default createRoute(async (c) => {
 												{searchQuery && (
 													<a
 														href={
-															c.req.url.split("?")[0] +
+															"/blog" +
 															(categoryFilter !== "All"
 																? `?category=${categoryFilter}`
 																: "")
@@ -355,7 +355,7 @@ export default createRoute(async (c) => {
 											Filter by Category
 										</Text>
 										<form
-											action={c.req.url.split("?")[0]}
+											action="/blog"
 											method="GET"
 											class={css({
 												display: "flex",
@@ -453,10 +453,7 @@ export default createRoute(async (c) => {
 														Category: {categoryFilter}
 													</Badge>
 												)}
-												<a
-													href={c.req.url.split("?")[0]}
-													style={{ textDecoration: "none" }}
-												>
+												<a href="/blog" style={{ textDecoration: "none" }}>
 													<Button variant="link" size="sm" colorPalette="red">
 														Clear all
 													</Button>
