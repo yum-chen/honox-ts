@@ -17,6 +17,15 @@ export default defineConfig({
 	// The output directory for your css system
 	outdir: "styled-system",
 
+	// Force-generate the `colorPalette` utility for every palette.
+	// Components (Badge, Button, ...) pass `colorPalette` as a runtime value to
+	// `css()`, so the PostCSS extractor cannot statically discover which palettes
+	// are used and would only emit the gray default. Without this, every badge
+	// renders with the same fallback color regardless of its colorPalette prop.
+	staticCss: {
+		utilities: ["colorPalette"],
+	},
+
 	// Disable JSX framework (using Hono JSX instead)
 	jsxFramework: undefined,
 
