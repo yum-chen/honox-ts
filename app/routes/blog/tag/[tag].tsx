@@ -1,5 +1,7 @@
 import { createRoute } from "honox/factory";
 import { ssgParams } from "hono/ssg";
+import { css } from "styled-system/css";
+import { Badge, Button, Card, Heading, Text } from "../../../components/ui";
 import { parseFrontmatter } from "../../../utils/markdown";
 
 // Use Vite's import.meta.glob to import all markdown files at build time
@@ -15,6 +17,9 @@ interface BlogPost {
 	description: string;
 	tags: string[];
 	draft: boolean;
+	author?: string;
+	readTime?: string;
+	cover?: string;
 }
 
 export default createRoute(
@@ -78,6 +83,9 @@ export default createRoute(
 					description: data.description || "",
 					tags: postTags,
 					draft: data.draft === true,
+					author: data.author || "Artefact Team",
+					readTime: data.readTime || "5 min read",
+					cover: data.cover || null,
 				});
 			} catch (error) {
 				console.error(`Error loading ${path}:`, error);
@@ -112,159 +120,668 @@ export default createRoute(
 		const tags = Array.from(allTags).sort();
 
 		return c.render(
-			<div style={{ maxWidth: "800px", margin: "0 auto", padding: "2rem" }}>
-				<h1 style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>
-					Posts tagged: "{tagFilter}"
-				</h1>
-				<a
-					href="/blog"
-					style={{
-						display: "inline-block",
-						marginBottom: "2rem",
-						color: "#1976d2",
-						textDecoration: "none",
-					}}
+			<div
+				class={css({
+					py: { base: "8", md: "12" },
+					px: { base: "4", md: "6", lg: "8" },
+					maxWidth: "7xl",
+					mx: "auto",
+				})}
+			>
+				<title>Posts tagged: {tagFilter} - Artefact Blog</title>
+
+				{/* Decorative background element */}
+				<div
+					class={css({
+						position: "fixed",
+						top: "0",
+						left: "0",
+						right: "0",
+						height: "500px",
+						bgGradient: "to-b",
+						gradientFrom: "blue.50",
+						gradientTo: "transparent",
+						opacity: "0.5",
+						pointerEvents: "none",
+						zIndex: "-1",
+					})}
+				/>
+
+				{/* Header Section */}
+				<header
+					class={css({ textAlign: "center", mb: "12", position: "relative" })}
 				>
-					← All posts
-				</a>
+					{/* Back Button */}
+					<div class={css({ mb: "6", textAlign: "left" })}>
+						<a href="/blog" style={{ textDecoration: "none" }}>
+							<Button
+								variant="ghost"
+								colorPalette="blue"
+								class={css({
+									px: "4",
+									_hover: { bg: "blue.50" },
+								})}
+							>
+								<svg
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									style={{ marginRight: "8px" }}
+								>
+									<title>Back</title>
+									<path d="M19 12H5M12 19l-7-7 7-7" />
+								</svg>
+								All Posts
+							</Button>
+						</a>
+					</div>
+
+					{/* Tag Icon */}
+					<div
+						class={css({
+							w: "20",
+							h: "20",
+							mx: "auto",
+							mb: "6",
+							bgGradient: "to-r",
+							gradientFrom: "blue.500",
+							gradientTo: "purple.500",
+							borderRadius: "2xl",
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
+							shadow: "lg",
+							position: "relative",
+							"&::before": {
+								content: '""',
+								position: "absolute",
+								inset: "0",
+								borderRadius: "2xl",
+								bgGradient: "to-r",
+								gradientFrom: "blue.400",
+								gradientTo: "purple.400",
+								opacity: "0",
+								transition: "opacity 0.3s",
+							},
+							_hover: {
+								"&::before": {
+									opacity: "1",
+								},
+							},
+						})}
+					>
+						<svg
+							width="36"
+							height="36"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="white"
+							stroke-width="2"
+							style={{ position: "relative", zIndex: "1" }}
+						>
+							<title>Tag</title>
+							<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+							<line x1="7" y1="7" x2="7.01" y2="7" />
+						</svg>
+					</div>
+
+					<Badge
+						variant="subtle"
+						colorPalette="blue"
+						class={css({
+							mb: "4",
+							px: "4",
+							py: "1.5",
+							borderRadius: "full",
+							fontSize: "sm",
+							fontWeight: "medium",
+						})}
+					>
+						🏷️ Tagged Posts
+					</Badge>
+
+					<Heading
+						as="h1"
+						size={{ base: "3xl", md: "4xl", lg: "5xl" }}
+						class={css({
+							fontWeight: "extrabold",
+							mb: "4",
+							letterSpacing: "tight",
+							lineHeight: "tight",
+							bgGradient: "to-r",
+							gradientFrom: "blue.600",
+							gradientTo: "purple.600",
+							bgClip: "text",
+							color: "transparent",
+						})}
+					>
+						{tagFilter}
+					</Heading>
+
+					<Text
+						size={{ base: "md", md: "lg" }}
+						class={css({
+							color: "fg.muted",
+							maxWidth: "2xl",
+							mx: "auto",
+							lineHeight: "relaxed",
+						})}
+					>
+						Showing {blogPosts.length} article
+						{blogPosts.length !== 1 ? "s" : ""} tagged with "{tagFilter}"
+					</Text>
+				</header>
 
 				{/* Tag Filter UI */}
 				{tags.length > 0 && (
-					<div
-						style={{
-							marginBottom: "2rem",
-							display: "flex",
-							gap: "0.5rem",
-							flexWrap: "wrap",
-							alignItems: "center",
-						}}
-					>
-						<span style={{ fontWeight: "bold", marginRight: "0.5rem" }}>
-							Filter by:
-						</span>
-						<a
-							href="/blog"
-							style={{
-								padding: "0.5rem 1rem",
-								borderRadius: "20px",
-								backgroundColor: "#e0e0e0",
-								color: "#333",
-								textDecoration: "none",
-								fontSize: "0.875rem",
-							}}
+					<section class={css({ mb: "10" })}>
+						<Text
+							size="sm"
+							class={css({
+								color: "fg.muted",
+								mb: "4",
+								fontWeight: "semibold",
+								letterSpacing: "wide",
+								textTransform: "uppercase",
+							})}
 						>
-							All
-						</a>
-						{tags.map((tag) => (
-							<a
-								key={tag}
-								href={`/blog/tag/${tag}`}
-								style={{
-									padding: "0.5rem 1rem",
-									borderRadius: "20px",
-									backgroundColor: tag === tagFilter ? "#1976d2" : "#e0e0e0",
-									color: tag === tagFilter ? "white" : "#333",
-									textDecoration: "none",
-									fontSize: "0.875rem",
-								}}
-							>
-								{tag}
+							Filter by tag
+						</Text>
+						<div
+							class={css({
+								display: "flex",
+								gap: "3",
+								flexWrap: "wrap",
+								alignItems: "center",
+							})}
+						>
+							<a href="/blog" style={{ textDecoration: "none" }}>
+								<Badge
+									variant="subtle"
+									colorPalette="gray"
+									class={css({
+										px: "4",
+										py: "2",
+										borderRadius: "full",
+										fontSize: "sm",
+										cursor: "pointer",
+										transition: "all 0.2s",
+										_hover: {
+											bg: "gray.200",
+											transform: "translateY(-1px)",
+										},
+										_active: {
+											transform: "translateY(0)",
+										},
+									})}
+								>
+									All Tags
+								</Badge>
 							</a>
-						))}
+							{tags.map((tag) => (
+								<a
+									key={tag}
+									href={`/blog/tag/${tag}`}
+									style={{ textDecoration: "none" }}
+								>
+									<Badge
+										variant={tag === tagFilter ? "solid" : "subtle"}
+										colorPalette={tag === tagFilter ? "blue" : "gray"}
+										class={css({
+											px: "4",
+											py: "2",
+											borderRadius: "full",
+											fontSize: "sm",
+											cursor: "pointer",
+											transition: "all 0.2s",
+											_hover: {
+												bg: tag === tagFilter ? "blue.600" : "blue.50",
+												transform: "translateY(-1px)",
+												shadow: "sm",
+											},
+											_active: {
+												transform: "translateY(0)",
+											},
+										})}
+									>
+										{tag === tagFilter && (
+											<svg
+												width="14"
+												height="14"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												stroke-width="2.5"
+												style={{ marginRight: "6px", verticalAlign: "middle" }}
+											>
+												<title>Selected</title>
+												<polyline points="20 6 9 17 4 12" />
+											</svg>
+										)}
+										{tag}
+									</Badge>
+								</a>
+							))}
+						</div>
+					</section>
+				)}
+
+				{/* Empty State */}
+				{blogPosts.length === 0 && (
+					<div
+						class={css({
+							textAlign: "center",
+							py: "24",
+							px: "4",
+						})}
+					>
+						<div
+							class={css({
+								w: "28",
+								h: "28",
+								mx: "auto",
+								mb: "8",
+								bgGradient: "to-r",
+								gradientFrom: "blue.50",
+								gradientTo: "purple.50",
+								borderRadius: "full",
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								animation: "pulse",
+								shadow: "lg",
+							})}
+						>
+							<svg
+								width="48"
+								height="48"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="1.5"
+								class={css({ color: "fg.muted" })}
+							>
+								<title>Search</title>
+								<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+								<line x1="7" y1="7" x2="7.01" y2="7" />
+							</svg>
+						</div>
+						<Heading
+							as="h3"
+							size="2xl"
+							class={css({
+								mb: "4",
+								fontWeight: "bold",
+								color: "fg.subtle",
+							})}
+						>
+							No articles found
+						</Heading>
+						<Text
+							class={css({
+								color: "fg.muted",
+								maxWidth: "md",
+								mx: "auto",
+								lineHeight: "relaxed",
+								fontSize: "lg",
+							})}
+						>
+							No posts found with tag "<strong>{tagFilter}</strong>". Try
+							browsing all tags or check back later.
+						</Text>
+						<div class={css({ mt: "8" })}>
+							<a href="/blog" style={{ textDecoration: "none" }}>
+								<Button variant="solid" colorPalette="blue" size="lg">
+									Browse All Posts
+								</Button>
+							</a>
+						</div>
 					</div>
 				)}
 
-				{blogPosts.length === 0 && (
-					<p style={{ color: "#666", fontSize: "1.125rem" }}>
-						No posts found with tag "{tagFilter}".
-					</p>
-				)}
-
-				<div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-					{blogPosts.map((post) => (
-						<article
+				{/* Posts Grid */}
+				<div
+					class={css({
+						display: "grid",
+						gridTemplateColumns: {
+							base: "1fr",
+							md: "repeat(2, 1fr)",
+							lg: "repeat(3, 1fr)",
+						},
+						gap: "8",
+					})}
+				>
+					{blogPosts.map((post, index) => (
+						<Card.Root
 							key={post.slug}
-							style={{
-								border: "1px solid #e0e0e0",
-								borderRadius: "8px",
-								padding: "1.5rem",
-								backgroundColor: "#fafafa",
-							}}
+							variant="outline"
+							class={css({
+								transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+								_hover: {
+									transform: "translateY(-8px)",
+									shadow: "2xl",
+									borderColor: "blue.300",
+								},
+								overflow: "hidden",
+								position: "relative",
+								animation: "fade-in-up",
+								animationDelay: `${index * 0.1}s`,
+								animationFillMode: "both",
+								bg: "bg",
+								rounded: "xl",
+								borderWidth: "1px",
+								borderColor: "border",
+							})}
 						>
-							<h2 style={{ fontSize: "1.75rem", marginBottom: "0.5rem" }}>
-								<a
-									href={`/blog/${post.slug}`}
-									style={{ color: "#333", textDecoration: "none" }}
-								>
-									{post.title}
-									{post.draft && (
-										<span
-											style={{
-												fontSize: "0.75rem",
-												backgroundColor: "#ff9800",
-												color: "white",
-												padding: "0.25rem 0.5rem",
-												borderRadius: "4px",
-												marginLeft: "0.5rem",
-											}}
-										>
-											Draft
-										</span>
-									)}
-								</a>
-							</h2>
-
-							<time
-								datetime={post.date}
-								style={{
-									color: "#666",
-									fontSize: "0.875rem",
-									display: "block",
-									marginBottom: "0.75rem",
-								}}
-							>
-								{new Date(post.date).toLocaleDateString("en-US", {
-									year: "numeric",
-									month: "long",
-									day: "numeric",
-								})}
-							</time>
-
-							{post.description && (
-								<p
-									style={{
-										color: "#555",
-										lineHeight: 1.6,
-										marginBottom: "1rem",
-									}}
-								>
-									{post.description}
-								</p>
-							)}
-
-							{post.tags.length > 0 && (
+							{post.draft && (
 								<div
-									style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}
+									class={css({
+										position: "absolute",
+										top: "4",
+										right: "4",
+										zIndex: "10",
+									})}
 								>
-									{post.tags.map((tag) => (
-										<span
-											key={tag}
-											style={{
-												backgroundColor: "#e3f2fd",
-												color: "#1976d2",
-												padding: "0.25rem 0.75rem",
-												borderRadius: "16px",
-												fontSize: "0.875rem",
-											}}
-										>
-											{tag}
-										</span>
-									))}
+									<Badge
+										variant="solid"
+										colorPalette="orange"
+										size="sm"
+										class={css({
+											borderRadius: "full",
+											px: "3",
+											py: "1",
+										})}
+									>
+										Draft
+									</Badge>
 								</div>
 							)}
-						</article>
+
+							{/* Cover Image */}
+							{post.cover && (
+								<div
+									class={css({
+										w: "full",
+										h: "52",
+										overflow: "hidden",
+										position: "relative",
+									})}
+								>
+									<img
+										src={post.cover}
+										alt={post.title}
+										class={css({
+											w: "full",
+											h: "full",
+											objectFit: "cover",
+											transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+											_cardRootHover: {
+												transform: "scale(1.1)",
+											},
+										})}
+									/>
+									<div
+										class={css({
+											position: "absolute",
+											bottom: "0",
+											left: "0",
+											right: "0",
+											h: "60%",
+											bgGradient: "to-t",
+											gradientFrom: "blackAlpha.600",
+											gradientTo: "transparent",
+											pointerEvents: "none",
+										})}
+									/>
+								</div>
+							)}
+
+							<Card.Body class={css({ p: "7" })}>
+								{/* Tags */}
+								{post.tags.length > 0 && (
+									<div
+										class={css({
+											display: "flex",
+											flexWrap: "wrap",
+											gap: "2",
+											mb: "4",
+										})}
+									>
+										{post.tags.slice(0, 3).map((tag) => (
+											<Badge
+												key={tag}
+												variant="subtle"
+												colorPalette="blue"
+												size="sm"
+												class={css({
+													borderRadius: "full",
+													px: "3",
+													py: "1",
+													fontSize: "xs",
+													fontWeight: "medium",
+													transition: "all 0.2s",
+													_hover: {
+														bg: "blue.200",
+													},
+												})}
+											>
+												{tag}
+											</Badge>
+										))}
+										{post.tags.length > 3 && (
+											<Badge
+												variant="subtle"
+												colorPalette="gray"
+												size="sm"
+												class={css({
+													borderRadius: "full",
+													px: "3",
+													py: "1",
+													fontSize: "xs",
+													fontWeight: "medium",
+												})}
+											>
+												+{post.tags.length - 3}
+											</Badge>
+										)}
+									</div>
+								)}
+
+								{/* Title */}
+								<Card.Title
+									class={css({
+										mb: "3",
+										lineHeight: "tight",
+										fontSize: "xl",
+										fontWeight: "bold",
+										_hover: { color: "blue.600" },
+									})}
+								>
+									<a
+										href={`/blog/${post.slug}`}
+										class={css({
+											color: "fg",
+											textDecoration: "none",
+											transition: "color 0.2s",
+											_hover: { color: "blue.600" },
+										})}
+									>
+										{post.title}
+									</a>
+								</Card.Title>
+
+								{/* Description */}
+								<Card.Description
+									class={css({
+										mb: "5",
+										lineHeight: "relaxed",
+										fontSize: "sm",
+										color: "fg.muted",
+										display: "-webkit-box",
+										webkitLineClamp: "3",
+										webkitBoxOrient: "vertical",
+										overflow: "hidden",
+									})}
+								>
+									{post.description}
+								</Card.Description>
+
+								{/* Footer */}
+								<div
+									class={css({
+										display: "flex",
+										alignItems: "center",
+										justifyContent: "space-between",
+										pt: "5",
+										borderTopWidth: "1px",
+										borderColor: "border.subtle",
+										mt: "auto",
+									})}
+								>
+									<div
+										class={css({
+											display: "flex",
+											alignItems: "center",
+											gap: "3",
+										})}
+									>
+										{/* Author Avatar */}
+										<div
+											class={css({
+												w: "10",
+												h: "10",
+												borderRadius: "full",
+												bgGradient: "to-r",
+												gradientFrom: "blue.500",
+												gradientTo: "purple.500",
+												display: "flex",
+												alignItems: "center",
+												justifyContent: "center",
+												color: "white",
+												fontSize: "sm",
+												fontWeight: "bold",
+												flexShrink: "0",
+												shadow: "sm",
+											})}
+										>
+											{post.author?.charAt(0).toUpperCase() || "A"}
+										</div>
+										<div>
+											<Text
+												size="sm"
+												class={css({
+													fontWeight: "semibold",
+													lineHeight: "tight",
+													display: "block",
+													color: "fg",
+												})}
+											>
+												{post.author}
+											</Text>
+											<div
+												class={css({
+													display: "flex",
+													gap: "2",
+													alignItems: "center",
+													mt: "0.5",
+												})}
+											>
+												<Text size="xs" class={css({ color: "fg.muted" })}>
+													{new Date(post.date).toLocaleDateString("en-US", {
+														month: "short",
+														day: "numeric",
+														year: "numeric",
+													})}
+												</Text>
+												<Text size="xs" class={css({ color: "fg.muted" })}>
+													· {post.readTime}
+												</Text>
+											</div>
+										</div>
+									</div>
+
+									{/* Read More Button */}
+									<a
+										href={`/blog/${post.slug}`}
+										class={css({
+											textDecoration: "none",
+											display: "inline-flex",
+											alignItems: "center",
+											gap: "1.5",
+											transition: "all 0.2s",
+										})}
+									>
+										<Button
+											variant="ghost"
+											size="sm"
+											colorPalette="blue"
+											class={css({
+												px: "3",
+												_hover: {
+													bg: "blue.50",
+													transform: "translateX(2px)",
+												},
+											})}
+										>
+											Read more
+											<svg
+												width="16"
+												height="16"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												stroke-width="2"
+											>
+												<title>Arrow</title>
+												<path d="M5 12h14M12 5l7 7-7 7" />
+											</svg>
+										</Button>
+									</a>
+								</div>
+							</Card.Body>
+						</Card.Root>
 					))}
 				</div>
+
+				{/* Footer with back button */}
+				{blogPosts.length > 0 && (
+					<div class={css({ mt: "16", textAlign: "center" })}>
+						<a href="/blog" style={{ textDecoration: "none" }}>
+							<Button
+								variant="outline"
+								colorPalette="blue"
+								size="lg"
+								class={css({
+									px: "8",
+									py: "3",
+									_hover: {
+										bg: "blue.50",
+										transform: "translateY(-2px)",
+										shadow: "md",
+									},
+									transition: "all 0.2s",
+								})}
+							>
+								<svg
+									width="18"
+									height="18"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									style={{ marginRight: "8px" }}
+								>
+									<title>Back</title>
+									<path d="M19 12H5M12 19l-7-7 7-7" />
+								</svg>
+								Back to All Posts
+							</Button>
+						</a>
+					</div>
+				)}
 			</div>,
 		);
 	},
