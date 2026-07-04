@@ -700,51 +700,19 @@ export default createRoute((c) => {
 					Drawer Component Examples
 				</Heading>
 
-				<Text size="sm" class={css({ color: "fg.muted", mb: "2" })}>
-					Flattened API (Interactive)
-				</Text>
 				<Drawer
 					interactive
-					trigger={<Button variant="outline">Open Flattened Drawer</Button>}
-					title="Flattened Drawer"
+					trigger={<Button variant="outline">Open Drawer</Button>}
+					title="Drawer Title"
 					description="This drawer uses the simplified flattened API."
 					body="This is the main content of the drawer, passed via the body prop."
 					footer={
 						<div class={css({ display: "flex", gap: "3" })}>
-							<Drawer.CloseTrigger asChild>
-								<Button variant="outline">Close</Button>
-							</Drawer.CloseTrigger>
+							<Button variant="outline">Close</Button>
 							<Button>Action</Button>
 						</div>
 					}
 				/>
-
-				<Text size="sm" class={css({ color: "fg.muted", mt: "6", mb: "2" })}>
-					Primitive API (Interactive)
-				</Text>
-				<Drawer.Root interactive>
-					<Drawer.Trigger asChild>
-						<Button variant="outline">Open Primitive Drawer</Button>
-					</Drawer.Trigger>
-					<Drawer.Backdrop />
-					<Drawer.Positioner>
-						<Drawer.Content>
-							<Drawer.Header>
-								<Drawer.Title>Drawer Title</Drawer.Title>
-								<Drawer.Description>Drawer Description</Drawer.Description>
-							</Drawer.Header>
-							<Drawer.Body>This is the drawer body content.</Drawer.Body>
-							<Drawer.Footer>
-								<Drawer.CloseTrigger asChild>
-									<Button variant="outline">Cancel</Button>
-								</Drawer.CloseTrigger>
-								<Drawer.ActionTrigger asChild>
-									<Button>Confirm</Button>
-								</Drawer.ActionTrigger>
-							</Drawer.Footer>
-						</Drawer.Content>
-					</Drawer.Positioner>
-				</Drawer.Root>
 			</div>
 
 			{/* Menu Examples (Flattened API) */}

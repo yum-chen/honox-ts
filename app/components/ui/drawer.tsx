@@ -1,10 +1,8 @@
 import type { JSX } from "hono/jsx";
 import DrawerIsland from "../../islands/drawer";
 import {
-	ActionTrigger,
 	Backdrop,
 	Body,
-	CloseTrigger,
 	Content,
 	Description,
 	Root as DrawerPrimitiveRoot,
@@ -16,11 +14,11 @@ import {
 	Trigger,
 } from "./drawer-primitive";
 
-export interface RootProps extends DrawerPrimitiveRootProps {
+interface RootProps extends DrawerPrimitiveRootProps {
 	interactive?: boolean;
 }
 
-export function Root(props: RootProps) {
+function Root(props: RootProps) {
 	const { interactive, ...rest } = props;
 	if (interactive) {
 		return <DrawerIsland {...rest} />;
@@ -36,7 +34,7 @@ export interface DrawerProps extends RootProps {
 	footer?: string | JSX.Element;
 }
 
-export const Drawer = (props: DrawerProps) => {
+export function Drawer(props: DrawerProps) {
 	const { trigger, title, description, body, footer, children, ...rest } = props;
 
 	return (
@@ -56,33 +54,6 @@ export const Drawer = (props: DrawerProps) => {
 			</Positioner>
 		</Root>
 	);
-};
+}
 
-Object.assign(Drawer, {
-	Root,
-	Trigger,
-	Backdrop,
-	Positioner,
-	Content,
-	Header,
-	Title,
-	Description,
-	Body,
-	Footer,
-	CloseTrigger,
-	ActionTrigger,
-});
-
-export {
-	ActionTrigger,
-	Backdrop,
-	Body,
-	CloseTrigger,
-	Content,
-	Description,
-	Footer,
-	Header,
-	Positioner,
-	Title,
-	Trigger,
-};
+export default Drawer;

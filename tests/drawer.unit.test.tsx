@@ -21,28 +21,4 @@ describe("Drawer Unit Tests", () => {
 		expect(html).toContain("Body content");
 		expect(html).toContain("Close");
 	});
-
-	test("should render primitive API correctly via namespace", () => {
-		const html = (
-			<Drawer.Root>
-				<Drawer.Trigger>Open</Drawer.Trigger>
-				<Drawer.Backdrop />
-				<Drawer.Positioner>
-					<Drawer.Content>
-						<Drawer.Header>
-							<Drawer.Title>Title</Drawer.Title>
-						</Drawer.Header>
-						<Drawer.Body>Content</Drawer.Body>
-					</Drawer.Content>
-				</Drawer.Positioner>
-			</Drawer.Root>
-		).toString();
-
-		expect(html).toContain('data-part="trigger"');
-		expect(html).toContain("Open");
-		expect(html).toContain('data-part="backdrop"');
-		expect(html).toContain('data-part="content"');
-		expect(html).toContain("Title");
-		expect(html).toContain("Content");
-	});
 });
