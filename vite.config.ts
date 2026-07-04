@@ -5,28 +5,42 @@ import { defineConfig } from "vite";
 import pandaConfig from "./panda.config";
 import path from "path";
 import { fileURLToPath } from "url";
-import { renameSync, existsSync, mkdirSync } from "fs";
+import { renameSync, existsSync, mkdirSync, readdirSync, statSync } from "fs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// After SSG build, rename dist/blog.html → dist/blog/index.html
-// so /blog serves index.html inside the blog/ directory
-// and /blog/xxxxx.html can coexist without conflict.
-function fixBlogRoutingPlugin() {
+// After SSG build, for any route X where both X.html and X/ directory exist,
+// move X.html → X/index.html so the static server can serve /X as X/index.html
+// and /X/slug as X/slug.html without conflict.
+function fixSsgRoutingPlugin() {
 	return {
-		name: "fix-blog-routing",
+		name: "fix-ssg-routing",
 		closeBundle: async () => {
 			const distDir = path.resolve(__dirname, "dist");
-			const blogHtml = path.join(distDir, "blog.html");
-			const blogDir = path.join(distDir, "blog");
-			const blogIndex = path.join(blogDir, "index.html");
 
-			if (existsSync(blogHtml)) {
-				mkdirSync(blogDir, { recursive: true });
-				renameSync(blogHtml, blogIndex);
-				console.log(
-					"[fix-blog-routing] ✓ dist/blog.html → dist/blog/index.html",
-				);
+			// Read top-level entries in dist/
+			const entries = readdirSync(distDir, { withFileTypes: true });
+
+			for (const entry of entries) {
+				// Skip if not a .html file at the top level
+				if (!entry.isFile() || !entry.name.endsWith(".html")) {
+					continue;
+				}
+
+				const htmlFile = entry.name; // e.g., "blog.html"
+				const routeName = htmlFile.replace(/\.html$/, ""); // e.g., "blog"
+				const htmlPath = path.join(distDir, htmlFile); // e.g., "dist/blog.html"
+				const dirPath = path.join(distDir, routeName); // e.g., "dist/blog"
+				const indexPath = path.join(dirPath, "index.html"); // e.g., "dist/blog/index.html"
+
+				// Check if a directory with the same name exists
+				if (existsSync(dirPath) && statSync(dirPath).isDirectory()) {
+					mkdirSync(dirPath, { recursive: true });
+					renameSync(htmlPath, indexPath);
+					console.log(
+						`[fix-ssg-routing] ✓ dist/${htmlFile} → dist/${routeName}/index.html`,
+					);
+				}
 			}
 		},
 	};
@@ -60,7 +74,7 @@ const mainConfig = (_mode: string) => ({
 			},
 		}),
 		ssg({ entry: "app/server.ts" }),
-		fixBlogRoutingPlugin(),
+		fixSsgRoutingPlugin(),
 	],
 });
 
