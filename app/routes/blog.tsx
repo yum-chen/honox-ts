@@ -116,6 +116,16 @@ const categories = [
 	...Array.from(new Set(posts.map((p) => p.category))),
 ];
 
+const categoryColorMap: Record<string, string> = {
+	Tutorial: "blue",
+	Design: "purple",
+	Architecture: "green",
+	Accessibility: "orange",
+	TypeScript: "cyan",
+	Performance: "red",
+	Testing: "amber",
+};
+
 function formatDate(dateStr: string): string {
 	const date = new Date(dateStr);
 	return date.toLocaleDateString("en-US", {
@@ -125,6 +135,14 @@ function formatDate(dateStr: string): string {
 	});
 }
 
+function getInitials(name: string): string {
+	return name
+		.split(" ")
+		.map((n) => n[0])
+		.join("")
+		.toUpperCase();
+}
+
 function BlogPostCard({
 	post,
 	featured = false,
@@ -132,9 +150,12 @@ function BlogPostCard({
 	post: BlogPost;
 	featured?: boolean;
 }) {
+	const initials = post.author ? getInitials(post.author) : "?";
+
 	return (
 		<Card.Root
 			class={css({
+				position: "relative",
 				transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
 				cursor: "pointer",
 				height: "100%",
@@ -142,10 +163,14 @@ function BlogPostCard({
 				flexDirection: "column",
 				borderWidth: "1px",
 				borderColor: "border",
+				bg: "bg",
 				_hover: {
 					shadow: featured ? "xl" : "lg",
 					translateY: "-2px",
 					borderColor: "blue.300",
+					"& article": {
+						borderTopColor: "blue.200",
+					},
 				},
 				_active: {
 					translateY: "0",
@@ -165,7 +190,12 @@ function BlogPostCard({
 					<Badge
 						variant="subtle"
 						colorPalette={post.categoryColor}
-						class={css({ fontSize: "xs" })}
+						class={css({
+							fontSize: "xs",
+							px: "2.5",
+							py: "0.5",
+							borderRadius: "full",
+						})}
 					>
 						{post.category}
 					</Badge>
@@ -201,6 +231,7 @@ function BlogPostCard({
 						mb: "2",
 						color: "fg",
 						_hover: { color: "blue.600" },
+						transition: "color 0.2s",
 					})}
 				>
 					{post.title}
@@ -231,18 +262,48 @@ function BlogPostCard({
 					borderColor: "border.subtle",
 				})}
 			>
-				<div
-					class={css({ display: "flex", flexDirection: "column", gap: "1" })}
-				>
-					<Text
-						size="xs"
-						class={css({ color: "fg.subtle", fontWeight: "medium" })}
+				<div class={css({ display: "flex", alignItems: "center", gap: "2.5" })}>
+					<div
+						class={css({
+							width: "8",
+							height: "8",
+							borderRadius: "full",
+							bg: "blue.500",
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
+							color: "white",
+							fontSize: "xs",
+							fontWeight: "bold",
+							flexShrink: "0",
+						})}
 					>
-						{post.author}
-					</Text>
-					<Text size="xs" class={css({ color: "fg.muted" })}>
-						{formatDate(post.date)}
-					</Text>
+						{initials}
+					</div>
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "0.5",
+						})}
+					>
+						<Text
+							size="xs"
+							class={css({
+								color: "fg.subtle",
+								fontWeight: "medium",
+								lineHeight: "tight",
+							})}
+						>
+							{post.author}
+						</Text>
+						<Text
+							size="xs"
+							class={css({ color: "fg.muted", lineHeight: "tight" })}
+						>
+							{formatDate(post.date)}
+						</Text>
+					</div>
 				</div>
 				<Button
 					variant="ghost"
@@ -250,9 +311,22 @@ function BlogPostCard({
 					colorPalette="blue"
 					class={css({
 						_hover: { bg: "blue.50" },
+						fontWeight: "medium",
 					})}
 				>
-					Read more →
+					Read more
+					<svg
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						style={{ marginLeft: "4px", display: "inline" }}
+					>
+						<title>Arrow</title>
+						<path d="M5 12h14M12 5l7 7-7 7" />
+					</svg>
 				</Button>
 			</Card.Footer>
 		</Card.Root>
@@ -293,19 +367,56 @@ export default createRoute((c) => {
 		>
 			<title>Blog - Artefact</title>
 
-			{/* Header Section */}
-			<header class={css({ textAlign: "center", mb: "12" })}>
-				<Badge
-					variant="subtle"
-					colorPalette="blue"
-					class={css({ mb: "4", px: "4", py: "1" })}
+			{/* Hero Header Section */}
+			<header
+				class={css({ textAlign: "center", mb: "12", position: "relative" })}
+			>
+				<div
+					class={css({
+						display: "inline-flex",
+						alignItems: "center",
+						gap: "2",
+						mb: "4",
+						px: "4",
+						py: "1.5",
+						bg: "blue.50",
+						borderRadius: "full",
+						borderWidth: "1px",
+						borderColor: "blue.100",
+					})}
 				>
-					Latest Articles
-				</Badge>
+					<svg
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						class={css({ color: "blue.500" })}
+					>
+						<title>Latest</title>
+						<path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+					</svg>
+					<Text
+						size="sm"
+						class={css({ color: "blue.600", fontWeight: "medium" })}
+					>
+						Latest Articles
+					</Text>
+				</div>
 				<Heading
 					as="h1"
 					size={{ base: "3xl", md: "4xl", lg: "5xl" }}
-					class={css({ fontWeight: "bold", mb: "4", letterSpacing: "tight" })}
+					class={css({
+						fontWeight: "bold",
+						mb: "4",
+						letterSpacing: "tight",
+						bgGradient: "to-r",
+						gradientFrom: "blue.600",
+						gradientTo: "purple.600",
+						bgClip: "text",
+						css: { WebkitTextFillColor: "transparent" },
+					})}
 				>
 					Blog
 				</Heading>
@@ -674,7 +785,31 @@ export default createRoute((c) => {
 							Featured Post
 						</Text>
 					</div>
-					<BlogPostCard post={featuredPost} featured />
+					<div
+						class={css({
+							position: "relative",
+							"&::before": {
+								content: '""',
+								position: "absolute",
+								inset: "-3px",
+								borderRadius: "2xl",
+								bgGradient: "to-r",
+								gradientFrom: "blue.200",
+								gradientTo: "purple.200",
+								opacity: "0.5",
+								zIndex: "0",
+							},
+						})}
+					>
+						<div
+							class={css({
+								position: "relative",
+								zIndex: "1",
+							})}
+						>
+							<BlogPostCard post={featuredPost} featured />
+						</div>
+					</div>
 				</section>
 			)}
 
@@ -717,16 +852,21 @@ export default createRoute((c) => {
 				>
 					<div
 						class={css({
-							width: "16",
-							height: "16",
+							width: "20",
+							height: "20",
 							mx: "auto",
-							mb: "4",
+							mb: "6",
 							color: "fg.muted",
+							bg: "gray.50",
+							borderRadius: "full",
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
 						})}
 					>
 						<svg
-							width="64"
-							height="64"
+							width="32"
+							height="32"
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="currentColor"
@@ -752,50 +892,147 @@ export default createRoute((c) => {
 			<section
 				class={css({
 					mt: "16",
-					p: { base: "6", md: "8" },
-					bg: "blue.50",
-					borderRadius: "2xl",
+					p: { base: "8", md: "10" },
+					bgGradient: "to-br",
+					gradientFrom: "blue.50",
+					gradientTo: "purple.50",
+					borderRadius: "3xl",
 					textAlign: "center",
+					borderWidth: "1px",
+					borderColor: "blue.100",
+					position: "relative",
+					overflow: "hidden",
 				})}
 			>
-				<Heading as="h3" size="lg" class={css({ mb: "2" })}>
-					Stay Updated
-				</Heading>
-				<Text size="md" class={css({ color: "fg.muted", mb: "4" })}>
-					Get the latest articles delivered to your inbox.
-				</Text>
-				<form
+				<div
 					class={css({
-						display: "flex",
-						gap: "2",
-						maxWidth: "md",
-						mx: "auto",
-						flexDirection: { base: "column", sm: "row" },
+						position: "absolute",
+						top: "0",
+						left: "0",
+						right: "0",
+						bottom: "0",
+						opacity: "0.03",
+						bgGradient: "to-r",
+						gradientFrom: "blue.500",
+						gradientTo: "purple.500",
 					})}
-				>
-					<input
-						type="email"
-						name="email"
-						placeholder="Enter your email"
-						required
+				/>
+				<div class={css({ position: "relative", zIndex: "1" })}>
+					<div
 						class={css({
-							flex: "1",
-							px: "4",
-							py: "2.5",
-							borderWidth: "1px",
-							borderRadius: "lg",
-							bg: "white",
-							borderColor: "border",
-							_focus: {
-								outline: "none",
-								borderColor: "blue.500",
-							},
+							display: "inline-flex",
+							alignItems: "center",
+							justifyContent: "center",
+							width: "12",
+							height: "12",
+							borderRadius: "full",
+							bg: "blue.100",
+							color: "blue.600",
+							mb: "4",
 						})}
-					/>
-					<Button type="submit" variant="solid" colorPalette="blue">
-						Subscribe
-					</Button>
-				</form>
+					>
+						<svg
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+						>
+							<title>Newsletter</title>
+							<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+							<polyline points="22,6 12,13 2,6" />
+						</svg>
+					</div>
+					<Heading as="h3" size="xl" class={css({ mb: "2" })}>
+						Stay Updated
+					</Heading>
+					<Text
+						size="md"
+						class={css({
+							color: "fg.muted",
+							mb: "6",
+							maxWidth: "md",
+							mx: "auto",
+						})}
+					>
+						Get the latest articles delivered to your inbox. No spam,
+						unsubscribe at any time.
+					</Text>
+					<form
+						class={css({
+							display: "flex",
+							gap: "2",
+							maxWidth: "md",
+							mx: "auto",
+							flexDirection: { base: "column", sm: "row" },
+						})}
+					>
+						<div
+							class={css({
+								position: "relative",
+								flex: "1",
+							})}
+						>
+							<div
+								class={css({
+									position: "absolute",
+									left: "3",
+									top: "50%",
+									transform: "translateY(-50%)",
+									color: "fg.muted",
+									pointerEvents: "none",
+								})}
+							>
+								<svg
+									width="18"
+									height="18"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+								>
+									<title>Email</title>
+									<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+									<polyline points="22,6 12,13 2,6" />
+								</svg>
+							</div>
+							<input
+								type="email"
+								name="email"
+								placeholder="Enter your email"
+								required
+								class={css({
+									width: "full",
+									pl: "10",
+									pr: "4",
+									py: "3",
+									borderWidth: "2px",
+									borderRadius: "lg",
+									bg: "white",
+									color: "fg",
+									borderColor: "blue.200",
+									fontSize: "md",
+									_focus: {
+										outline: "none",
+										borderColor: "blue.500",
+										shadow: "0 0 0 3px var(--colors-blue-100)",
+									},
+									_placeholder: { color: "fg.muted" },
+								})}
+							/>
+						</div>
+						<Button
+							type="submit"
+							variant="solid"
+							colorPalette="blue"
+							size="md"
+							class={css({ px: "6" })}
+						>
+							Subscribe
+						</Button>
+					</form>
+				</div>
 			</section>
 		</div>,
 	);
