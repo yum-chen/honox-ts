@@ -1,4 +1,5 @@
 import type { JSX } from "hono/jsx";
+import { useRef } from "hono/jsx";
 import DialogIsland from "../../islands/dialog";
 import {
 	ActionTrigger,
@@ -68,11 +69,15 @@ export function Dialog(props: DialogProps) {
 		confirm,
 		closable = true,
 		children,
+		rootRef: rootRefProp,
 		...rest
 	} = props;
 
+	const localRef = useRef<HTMLElement>(null);
+	const rootRef = rootRefProp || localRef;
+
 	return (
-		<Root {...rest}>
+		<Root {...rest} rootRef={rootRef}>
 			{trigger && <Trigger asChild>{trigger}</Trigger>}
 			<Backdrop />
 			<Positioner>

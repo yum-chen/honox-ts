@@ -32,11 +32,12 @@ export interface RootProps extends DialogVariantProps, PropsWithChildren {
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 	id?: string;
+	rootRef?: any;
 }
 
 export function Root(props: RootProps) {
 	const [variantProps, localProps] = dialog.splitVariantProps(props);
-	const { children, open, onOpenChange, id: idProp } = localProps;
+	const { children, open, onOpenChange, id: idProp, rootRef } = localProps;
 	const styles = dialog(variantProps);
 	const generatedId = useId();
 	const id = idProp || generatedId;
@@ -49,7 +50,7 @@ export function Root(props: RootProps) {
 	};
 
 	return (
-		<div id={id}>
+		<div id={id} ref={rootRef}>
 			<DialogContext.Provider value={value}>{children}</DialogContext.Provider>
 		</div>
 	);
@@ -333,6 +334,7 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 
 	const fallbackId = useId();
 	const rootId = idProp || `dialog-${fallbackId}`;
+	const rootRef = useRef<HTMLElement>(null);
 
 	const handleOpenChangeRef = useRef<(nextOpen: boolean) => void>(() => {});
 
@@ -350,15 +352,9 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 
 	// Attach event listeners using event delegation
 	useEffect(() => {
-		const root = document.getElementById(rootId);
+		const root = rootRef.current;
 		if (!root) return;
 
-		const positioners = Array.from(
-			root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
-		);
-		const backdrops = Array.from(
-			root.querySelectorAll<HTMLElement>('[data-part="backdrop"]'),
-		);
 		// Handle all clicks via event delegation
 		const handleClick = (e: Event) => {
 			const target = (e.target as HTMLElement).closest(
@@ -366,7 +362,23 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 			) as HTMLElement;
 			if (!target) return;
 			const dataPart = target.getAttribute("data-part");
+
+			const getElements = () => {
+				return {
+					positioners: Array.from(
+						root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
+					),
+					backdrops: Array.from(
+						root.querySelectorAll<HTMLElement>('[data-part="backdrop"]'),
+					),
+					contents: Array.from(
+						root.querySelectorAll<HTMLElement>('[data-part="content"]'),
+					),
+				};
+			};
+
 			const hide = () => {
+				const { positioners, backdrops, contents } = getElements();
 				root.setAttribute("data-state", "closed");
 				positioners.forEach((p) => {
 					p.style.cssText =
@@ -378,16 +390,15 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 						"display: none !important; visibility: hidden !important;";
 					b.setAttribute("data-state", "closed");
 				});
-				root
-					.querySelectorAll<HTMLElement>('[data-part="content"]')
-					.forEach((c) => {
-						c.setAttribute("data-state", "closed");
-						c.style.cssText =
-							"display: none !important; visibility: hidden !important;";
-					});
+				contents.forEach((c) => {
+					c.setAttribute("data-state", "closed");
+					c.style.cssText =
+						"display: none !important; visibility: hidden !important;";
+				});
 			};
 
 			const show = () => {
+				const { positioners, backdrops, contents } = getElements();
 				root.setAttribute("data-state", "open");
 				positioners.forEach((p) => {
 					p.style.cssText =
@@ -399,13 +410,11 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 						"display: block !important; visibility: visible !important;";
 					b.setAttribute("data-state", "open");
 				});
-				root
-					.querySelectorAll<HTMLElement>('[data-part="content"]')
-					.forEach((c) => {
-						c.setAttribute("data-state", "open");
-						c.style.cssText =
-							"display: flex !important; visibility: visible !important;";
-					});
+				contents.forEach((c) => {
+					c.setAttribute("data-state", "open");
+					c.style.cssText =
+						"display: flex !important; visibility: visible !important;";
+				});
 			};
 
 			if (dataPart === "backdrop") {
@@ -432,9 +441,15 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 		return () => {
 			root.removeEventListener("click", handleClick);
 		};
-	}, [rootId, open]);
+	}, []);
 
 	return (
-		<Root {...rest} id={rootId} open={open} onOpenChange={handleOpenChange} />
+		<Root
+			{...rest}
+			id={rootId}
+			open={open}
+			onOpenChange={handleOpenChange}
+			rootRef={rootRef}
+		/>
 	);
 }
