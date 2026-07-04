@@ -17,6 +17,47 @@ export default defineConfig({
 	// The output directory for your css system
 	outdir: "styled-system",
 
+	// Force-generate the `colorPalette` utility for every palette.
+	// Components (Badge, Button, ...) pass `colorPalette` as a runtime value to
+	// `css()`, so the PostCSS extractor cannot statically discover which palettes
+	// are used and would only emit the gray default. Without this, every badge
+	// renders with the same fallback color regardless of its colorPalette prop.
+	staticCss: {
+		// utilities: ["colorPalette"],
+		recipes: {
+			absoluteCenter: ["*"],
+			alert: ["*"],
+			badge: ["*"],
+			breadcrumb: ["*"],
+			button: ["*"],
+			card: ["*"],
+			checkbox: ["*"],
+			collapsible: ["*"],
+			combobox: ["*"],
+			dialog: ["*"],
+			drawer: ["*"],
+			field: ["*"],
+			fieldset: ["*"],
+			group: ["*"],
+			heading: ["*"],
+			hoverCard: ["*"],
+			input: ["*"],
+			popover: ["*"],
+			progress: ["*"],
+			skeleton: ["*"],
+			slider: ["*"],
+			spinner: ["*"],
+			splitter: ["*"],
+			switch: ["*"],
+			table: ["*"],
+			text: ["*"],
+			textarea: ["*"],
+			toast: ["*"],
+			tooltip: ["*"],
+			tabs: ["*"],
+		},
+	},
+
 	// Disable JSX framework (using Hono JSX instead)
 	jsxFramework: undefined,
 
@@ -37,51 +78,4 @@ export default defineConfig({
 
 	globalCss: theme.globalCss,
 	conditions: theme.conditions,
-
-	staticCss: {
-		recipes: {
-			badge: [
-				{
-					variant: ["solid", "subtle", "outline", "surface"],
-					size: ["sm", "md", "lg", "xl", "2xl"],
-					colorPalette: [
-						"success",
-						"error",
-						"warning",
-						"blue",
-						"green",
-						"red",
-						"orange",
-						"gray",
-						"cyan",
-						"amber",
-						"purple",
-					],
-				},
-			],
-			alert: [
-				{
-					variant: ["solid", "subtle", "outline", "surface"],
-					status: ["info", "success", "error", "warning", "neutral"],
-				},
-				{ colorPalette: ["blue", "green", "red", "orange", "gray"] },
-			],
-			button: [
-				{
-					variant: ["solid", "surface", "subtle", "outline", "plain"],
-					size: ["2xs", "xs", "sm", "md", "lg", "xl", "2xl"],
-					colorPalette: [
-						"blue",
-						"green",
-						"red",
-						"orange",
-						"gray",
-						"cyan",
-						"amber",
-						"purple",
-					],
-				},
-			],
-		},
-	},
 });
