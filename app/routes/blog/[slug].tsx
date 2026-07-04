@@ -1,26 +1,10 @@
 import { createRoute } from "honox/factory";
 import { parseFrontmatter, markdownToHtml } from "../../utils/markdown";
-import { ssgParams } from "hono/ssg";
 
 // Use Vite's import.meta.glob to import all markdown files at build time
 const posts = import.meta.glob("/content/posts/*.md", {
 	query: "?raw",
 	import: "default",
-});
-
-// Export ssgParams middleware to tell SSG which dynamic routes to pre-render
-// Dynamically read all markdown files
-export const middleware = ssgParams(async () => {
-	const slugs = Object.keys(posts).map((path: string) =>
-		path.replace("/content/posts/", "").replace(".md", ""),
-	);
-
-	console.log(
-		`[ssgParams] Generating static pages for ${slugs.length} blog posts:`,
-		slugs,
-	);
-
-	return slugs.map((slug: string) => ({ slug }));
 });
 
 export default createRoute(async (c) => {
