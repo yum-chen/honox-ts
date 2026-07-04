@@ -32,11 +32,12 @@ export interface RootProps extends DrawerVariantProps, PropsWithChildren {
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 	id?: string;
+	rootRef?: any;
 }
 
 export function Root(props: RootProps) {
 	const [variantProps, localProps] = drawer.splitVariantProps(props);
-	const { children, open, onOpenChange, id: idProp } = localProps;
+	const { children, open, onOpenChange, id: idProp, rootRef } = localProps;
 	const styles = drawer(variantProps);
 	const generatedId = useId();
 	const id = idProp || generatedId;
@@ -49,7 +50,7 @@ export function Root(props: RootProps) {
 	};
 
 	return (
-		<div id={id}>
+		<div id={id} ref={rootRef}>
 			<DrawerContext.Provider value={value}>{children}</DrawerContext.Provider>
 		</div>
 	);
@@ -98,7 +99,12 @@ export function Backdrop(props: BackdropProps) {
 	const open = context?.open;
 	return (
 		<div
-			class={cx(styles.backdrop, classProp, !open && css({ display: "none" }))}
+			class={cx(
+				styles.backdrop,
+				"drawer__backdrop",
+				classProp,
+				!open && css({ display: "none" }),
+			)}
 			data-state={open ? "open" : "closed"}
 			data-part="backdrop"
 			{...restProps}
@@ -122,6 +128,7 @@ export function Positioner(props: PositionerProps) {
 		<div
 			class={cx(
 				styles.positioner,
+				"drawer__positioner",
 				classProp,
 				!open && css({ display: "none" }),
 			)}
@@ -151,7 +158,12 @@ export function Content(props: ContentProps) {
 			aria-modal="true"
 			aria-labelledby={id ? `${id}-title` : undefined}
 			aria-describedby={id ? `${id}-description` : undefined}
-			class={cx(styles.content, classProp, !open && css({ display: "none" }))}
+			class={cx(
+				styles.content,
+				"drawer__content",
+				classProp,
+				!open && css({ display: "none" }),
+			)}
 			data-state={open ? "open" : "closed"}
 			{...restProps}
 		>
@@ -167,10 +179,10 @@ export interface HeaderProps extends PropsWithChildren {
 export function Header(props: HeaderProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDrawerContext();
-	const styles = context?.styles;
+	const styles = context?.styles || drawer();
 
 	return (
-		<div class={cx(styles?.header, classProp)} {...restProps}>
+		<div class={cx(styles.header, "drawer__header", classProp)} {...restProps}>
 			{children}
 		</div>
 	);
@@ -183,10 +195,10 @@ export interface BodyProps extends PropsWithChildren {
 export function Body(props: BodyProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDrawerContext();
-	const styles = context?.styles;
+	const styles = context?.styles || drawer();
 
 	return (
-		<div class={cx(styles?.body, classProp)} {...restProps}>
+		<div class={cx(styles.body, "drawer__body", classProp)} {...restProps}>
 			{children}
 		</div>
 	);
@@ -199,10 +211,10 @@ export interface FooterProps extends PropsWithChildren {
 export function Footer(props: FooterProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDrawerContext();
-	const styles = context?.styles;
+	const styles = context?.styles || drawer();
 
 	return (
-		<div class={cx(styles?.footer, classProp)} {...restProps}>
+		<div class={cx(styles.footer, "drawer__footer", classProp)} {...restProps}>
 			{children}
 		</div>
 	);
@@ -215,13 +227,13 @@ export interface TitleProps extends PropsWithChildren {
 export function Title(props: TitleProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDrawerContext();
-	const styles = context?.styles;
+	const styles = context?.styles || drawer();
 	const id = context?.id;
 
 	return (
 		<h2
 			id={id ? `${id}-title` : undefined}
-			class={cx(styles?.title, classProp)}
+			class={cx(styles.title, "drawer__title", classProp)}
 			{...restProps}
 		>
 			{children}
@@ -236,13 +248,13 @@ export interface DescriptionProps extends PropsWithChildren {
 export function Description(props: DescriptionProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDrawerContext();
-	const styles = context?.styles;
+	const styles = context?.styles || drawer();
 	const id = context?.id;
 
 	return (
 		<div
 			id={id ? `${id}-description` : undefined}
-			class={cx(styles?.description, classProp)}
+			class={cx(styles.description, "drawer__description", classProp)}
 			{...restProps}
 		>
 			{children}
@@ -253,12 +265,13 @@ export function Description(props: DescriptionProps) {
 export interface CloseTriggerProps extends PropsWithChildren {
 	class?: string;
 	asChild?: boolean;
+	unstyled?: boolean;
 }
 
 export function CloseTrigger(props: CloseTriggerProps) {
-	const { children, class: classProp, asChild, ...restProps } = props;
+	const { children, class: classProp, asChild, unstyled, ...restProps } = props;
 	const context = useDrawerContext();
-	const styles = context?.styles;
+	const styles = context?.styles || drawer();
 
 	const triggerProps = {
 		"data-part": "close-trigger",
@@ -269,7 +282,12 @@ export function CloseTrigger(props: CloseTriggerProps) {
 		const child = children as any;
 		return cloneElement(child, {
 			...triggerProps,
-			class: cx(styles?.closeTrigger, classProp, child.props?.class),
+			class: cx(
+				!unstyled && styles.closeTrigger,
+				!unstyled && "drawer__closeTrigger",
+				classProp,
+				child.props?.class,
+			),
 		});
 	}
 
@@ -277,7 +295,11 @@ export function CloseTrigger(props: CloseTriggerProps) {
 		<button
 			type="button"
 			aria-label="Close"
-			class={cx(styles?.closeTrigger, classProp)}
+			class={cx(
+				!unstyled && styles.closeTrigger,
+				!unstyled && "drawer__closeTrigger",
+				classProp,
+			)}
 			{...triggerProps}
 		>
 			{children}
@@ -333,6 +355,7 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 
 	const fallbackId = useId();
 	const rootId = idProp || `drawer-${fallbackId}`;
+	const rootRef = useRef<HTMLElement>(null);
 
 	const handleOpenChangeRef = useRef<(nextOpen: boolean) => void>(() => {});
 
@@ -350,15 +373,9 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 
 	// Attach event listeners using event delegation
 	useEffect(() => {
-		const root = document.getElementById(rootId);
+		const root = rootRef.current;
 		if (!root) return;
 
-		const positioners = Array.from(
-			root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
-		);
-		const backdrops = Array.from(
-			root.querySelectorAll<HTMLElement>('[data-part="backdrop"]'),
-		);
 		// Handle all clicks via event delegation
 		const handleClick = (e: Event) => {
 			const target = (e.target as HTMLElement).closest(
@@ -366,7 +383,23 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 			) as HTMLElement;
 			if (!target) return;
 			const dataPart = target.getAttribute("data-part");
+
+			const getElements = () => {
+				return {
+					positioners: Array.from(
+						root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
+					),
+					backdrops: Array.from(
+						root.querySelectorAll<HTMLElement>('[data-part="backdrop"]'),
+					),
+					contents: Array.from(
+						root.querySelectorAll<HTMLElement>('[data-part="content"]'),
+					),
+				};
+			};
+
 			const hide = () => {
+				const { positioners, backdrops, contents } = getElements();
 				root.setAttribute("data-state", "closed");
 				positioners.forEach((p) => {
 					p.style.cssText =
@@ -378,16 +411,15 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 						"display: none !important; visibility: hidden !important;";
 					b.setAttribute("data-state", "closed");
 				});
-				root
-					.querySelectorAll<HTMLElement>('[data-part="content"]')
-					.forEach((c) => {
-						c.setAttribute("data-state", "closed");
-						c.style.cssText =
-							"display: none !important; visibility: hidden !important;";
-					});
+				contents.forEach((c) => {
+					c.setAttribute("data-state", "closed");
+					c.style.cssText =
+						"display: none !important; visibility: hidden !important;";
+				});
 			};
 
 			const show = () => {
+				const { positioners, backdrops, contents } = getElements();
 				root.setAttribute("data-state", "open");
 				positioners.forEach((p) => {
 					p.style.cssText =
@@ -399,13 +431,11 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 						"display: block !important; visibility: visible !important;";
 					b.setAttribute("data-state", "open");
 				});
-				root
-					.querySelectorAll<HTMLElement>('[data-part="content"]')
-					.forEach((c) => {
-						c.setAttribute("data-state", "open");
-						c.style.cssText =
-							"display: flex !important; visibility: visible !important;";
-					});
+				contents.forEach((c) => {
+					c.setAttribute("data-state", "open");
+					c.style.cssText =
+						"display: flex !important; visibility: visible !important;";
+				});
 			};
 
 			if (dataPart === "backdrop") {
@@ -432,9 +462,15 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 		return () => {
 			root.removeEventListener("click", handleClick);
 		};
-	}, [rootId, open]);
+	}, []);
 
 	return (
-		<Root {...rest} id={rootId} open={open} onOpenChange={handleOpenChange} />
+		<Root
+			{...rest}
+			id={rootId}
+			open={open}
+			onOpenChange={handleOpenChange}
+			rootRef={rootRef}
+		/>
 	);
 }

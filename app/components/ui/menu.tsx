@@ -1,34 +1,25 @@
 import type { JSX } from "hono/jsx";
-import { css, cx } from "styled-system/css";
+import { cx } from "styled-system/css";
 import { type MenuVariantProps, menu } from "styled-system/recipes";
-
+import InteractiveMenuRoot from "../../islands/menu";
 // Import primitive components from menu-primitive
 import {
-	MenuArrow as Arrow,
-	MenuArrowTip as ArrowTip,
 	MenuCheckboxItem as CheckboxItem,
 	MenuContent as Content,
-	MenuContextTrigger as ContextTrigger,
-	MenuIndicator as Indicator,
 	MenuItem as Item,
-	MenuItemGroup as ItemGroup,
 	MenuItemGroupLabel as ItemGroupLabel,
 	MenuItemIndicator as ItemIndicator,
 	MenuItemText as ItemText,
 	MenuPositioner as Positioner,
-	MenuRadioItem as RadioItem,
 	MenuRadioItemGroup as RadioItemGroup,
 	MenuRoot as RootPrimitive,
 	MenuSeparator as Separator,
 	MenuTrigger as Trigger,
-	MenuTriggerItem as TriggerItem,
 } from "./menu-primitive";
-
-import InteractiveMenuRoot from "../../islands/menu";
 
 // ============= Flattened API Types =============
 
-export type MenuItemType =
+type MenuItemType =
 	| "item"
 	| "separator"
 	| "checkbox"
@@ -37,13 +28,13 @@ export type MenuItemType =
 	| "submenu"
 	| "group";
 
-export interface BaseMenuItem {
+interface BaseMenuItem {
 	type?: MenuItemType;
 	disabled?: boolean;
 	class?: string;
 }
 
-export interface MenuItemItem extends BaseMenuItem {
+interface MenuItemItem extends BaseMenuItem {
 	type?: "item";
 	label: string;
 	value: string;
@@ -51,11 +42,11 @@ export interface MenuItemItem extends BaseMenuItem {
 	indicator?: JSX.Element;
 }
 
-export interface MenuSeparatorItem extends BaseMenuItem {
+interface MenuSeparatorItem extends BaseMenuItem {
 	type: "separator";
 }
 
-export interface MenuCheckboxItem extends BaseMenuItem {
+interface MenuCheckboxItem extends BaseMenuItem {
 	type: "checkbox";
 	label: string;
 	value: string;
@@ -63,7 +54,7 @@ export interface MenuCheckboxItem extends BaseMenuItem {
 	icon?: JSX.Element;
 }
 
-export interface MenuRadioItem extends BaseMenuItem {
+interface MenuRadioItem extends BaseMenuItem {
 	type: "radio";
 	label: string;
 	value: string;
@@ -71,21 +62,21 @@ export interface MenuRadioItem extends BaseMenuItem {
 	icon?: JSX.Element;
 }
 
-export interface MenuRadioGroupItem extends BaseMenuItem {
+interface MenuRadioGroupItem extends BaseMenuItem {
 	type: "radio-group";
 	value: string;
 	label?: string;
 	items: MenuRadioItem[];
 }
 
-export interface MenuSubmenuItem extends BaseMenuItem {
+interface MenuSubmenuItem extends BaseMenuItem {
 	type: "submenu";
 	label: string;
 	icon?: JSX.Element;
 	items: (MenuItemItem | MenuSeparatorItem | MenuCheckboxItem)[];
 }
 
-export type MenuItem =
+type MenuItem =
 	| MenuItemItem
 	| MenuSeparatorItem
 	| MenuCheckboxItem
@@ -93,14 +84,15 @@ export type MenuItem =
 	| MenuRadioGroupItem
 	| MenuSubmenuItem;
 
-export interface MenuProps extends MenuVariantProps {
+interface MenuProps extends MenuVariantProps {
 	trigger?: JSX.Element;
-	items: MenuItem[];
+	items?: MenuItem[];
 	defaultOpen?: boolean;
 	interactive?: boolean;
 	class?: string;
 	contentClass?: string;
 	positionerClass?: string;
+	children?: any;
 }
 
 // ============= Rendering Functions =============
@@ -142,9 +134,6 @@ function renderMenuItem(item: MenuItem, index: number): JSX.Element {
 		}
 
 		case "submenu": {
-			// Note: Submenu rendering is complex and requires nested MenuRoot
-			// For now, we'll skip submenu support in the simplified API
-			// Users can use the primitive API for submenus
 			const submenuItem = item as MenuSubmenuItem;
 			return (
 				<div key={index}>
@@ -156,7 +145,6 @@ function renderMenuItem(item: MenuItem, index: number): JSX.Element {
 		}
 
 		default: {
-			// type: "item" or undefined
 			const menuItem = item as MenuItemItem;
 			return (
 				<Item
@@ -175,7 +163,7 @@ function renderMenuItem(item: MenuItem, index: number): JSX.Element {
 
 // ============= Flattened Menu Component =============
 
-export function Menu(props: MenuProps) {
+function MenuRoot(props: MenuProps) {
 	const {
 		trigger,
 		items,
@@ -184,23 +172,24 @@ export function Menu(props: MenuProps) {
 		class: classProp,
 		contentClass,
 		positionerClass,
+		children,
 		...variantProps
 	} = props;
 
 	const styles = menu(variantProps);
 
-	// Use InteractiveMenuRoot for interactive mode (client-side only)
-	// Use RootPrimitive for non-interactive mode (server-side rendering)
 	if (interactive) {
 		return (
 			<InteractiveMenuRoot open={defaultOpen}>
 				{trigger && <Trigger asChild>{trigger}</Trigger>}
-
-				<Positioner class={cx(styles.positioner, positionerClass)}>
-					<Content class={cx(styles.content, contentClass)}>
-						{items.map((item, index) => renderMenuItem(item, index))}
-					</Content>
-				</Positioner>
+				{children}
+				{items && (
+					<Positioner class={cx(styles.positioner, positionerClass)}>
+						<Content class={cx(styles.content, contentClass)}>
+							{items.map((item, index) => renderMenuItem(item, index))}
+						</Content>
+					</Positioner>
+				)}
 			</InteractiveMenuRoot>
 		);
 	}
@@ -208,17 +197,44 @@ export function Menu(props: MenuProps) {
 	return (
 		<RootPrimitive open={defaultOpen}>
 			{trigger && <Trigger asChild>{trigger}</Trigger>}
-
-			<Positioner class={cx(styles.positioner, positionerClass)}>
-				<Content class={cx(styles.content, contentClass)}>
-					{items.map((item, index) => renderMenuItem(item, index))}
-				</Content>
-			</Positioner>
+			{children}
+			{items && (
+				<Positioner class={cx(styles.positioner, positionerClass)}>
+					<Content class={cx(styles.content, contentClass)}>
+						{items.map((item, index) => renderMenuItem(item, index))}
+					</Content>
+				</Positioner>
+			)}
 		</RootPrimitive>
 	);
 }
 
 // ============= Exports =============
 
-// Export the flattened Menu component
-export { Menu as default };
+export const Menu = Object.assign(MenuRoot, {
+	Root: MenuRoot,
+	Trigger: Trigger,
+	Positioner: Positioner,
+	Content: Content,
+	Item: Item,
+	CheckboxItem: CheckboxItem,
+	Separator: Separator,
+	ItemText: ItemText,
+	ItemIndicator: ItemIndicator,
+	ItemGroupLabel: ItemGroupLabel,
+	RadioItemGroup: RadioItemGroup,
+});
+
+export {
+	type BaseMenuItem,
+	Menu as default,
+	type MenuCheckboxItem,
+	type MenuItem,
+	type MenuItemItem,
+	type MenuItemType,
+	type MenuProps,
+	type MenuRadioGroupItem,
+	type MenuRadioItem,
+	type MenuSeparatorItem,
+	type MenuSubmenuItem,
+};

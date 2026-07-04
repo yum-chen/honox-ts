@@ -1,3 +1,5 @@
+import type { JSX } from "hono/jsx";
+import { css, cx } from "styled-system/css";
 import SliderIsland from "../../islands/slider";
 import {
 	Control,
@@ -7,57 +9,185 @@ import {
 	MarkerIndicator,
 	Range,
 	Root as SliderPrimitiveRoot,
-	type RootProps as SliderPrimitiveRootProps,
 	Thumb,
 	Track,
+	toValueArray,
 	ValueText,
 } from "./slider-primitive";
 
-type SliderRootValue = SliderPrimitiveRootProps["value"];
+interface SliderProps {
+	// Value
+	value?: number | number[];
+	defaultValue?: number | number[];
+	min?: number;
+	max?: number;
+	step?: number;
 
-const serializeValue = (value: SliderRootValue) => {
-	if (Array.isArray(value)) return value.join(",");
-	return value;
-};
+	// Event
+	onChange?: (details: { value: number[] }) => void;
+	onDraggingChange?: (details: { dragging: boolean }) => void;
 
-export interface RootProps extends SliderPrimitiveRootProps {
-	interactive?: boolean;
-	onValueChange?: (details: { value: number[] }) => void;
+	// Display
+	label?: string | JSX.Element;
+	showValueText?: boolean;
+	formatValue?: (value: number) => string;
+
+	// Marks
+	marks?: { value: number; label: string | JSX.Element }[];
+
+	// Orientation
+	orientation?: "horizontal" | "vertical";
+	height?: string; // Required for vertical
+
+	// State
+	disabled?: boolean;
+	readOnly?: boolean;
+	interactive?: boolean; // For SSG compatibility
+
+	// Styling
+	class?: string;
+	trackClass?: string;
+	rangeClass?: string;
+	thumbClass?: string;
+	labelClass?: string;
+	valueTextClass?: string;
+	markClass?: string;
+
+	// Size
+	size?: "sm" | "md" | "lg";
+	colorPalette?: string;
 }
 
-export function Root(props: RootProps) {
-	const { interactive, onValueChange, value, defaultValue, ...rest } = props;
+const serializeValue = (v: any) => {
+	if (Array.isArray(v)) return v.join(",");
+	if (typeof v === "number" || typeof v === "string") return String(v);
+	return undefined;
+};
+
+function Slider(props: SliderProps) {
+	const {
+		label,
+		showValueText,
+		formatValue,
+		marks,
+		value,
+		defaultValue,
+		onChange,
+		onDraggingChange,
+		interactive,
+		orientation = "horizontal",
+		height,
+		class: classProp,
+		trackClass,
+		rangeClass,
+		thumbClass,
+		labelClass,
+		valueTextClass,
+		markClass,
+		size,
+		colorPalette,
+		min,
+		max,
+		step,
+		disabled,
+		readOnly,
+		...rest
+	} = props;
 
 	const isInteractive =
 		interactive !== false &&
 		(interactive ||
-			onValueChange !== undefined ||
+			onChange !== undefined ||
+			onDraggingChange !== undefined ||
 			value !== undefined ||
 			defaultValue !== undefined);
+
+	const values = toValueArray(value, toValueArray(defaultValue, [min ?? 0]));
+
+	const rootProps = {
+		min,
+		max,
+		step,
+		disabled,
+		readOnly,
+		orientation,
+		size,
+		colorPalette,
+		class: classProp,
+		style: orientation === "vertical" && height ? { height } : undefined,
+		...rest,
+	};
+
+	const content = (
+		<>
+			{(label || showValueText) && (
+				<div
+					class={cx(
+						css({
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
+							gap: "2",
+							mb: orientation === "horizontal" ? "1" : "0",
+						}),
+					)}
+				>
+					{label && <Label class={labelClass}>{label}</Label>}
+					{showValueText && (
+						<ValueText class={valueTextClass}>
+							{formatValue
+								? values.map(formatValue).join(", ")
+								: values.join(", ")}
+						</ValueText>
+					)}
+				</div>
+			)}
+			<Control>
+				<Track class={trackClass}>
+					<Range class={rangeClass} />
+				</Track>
+				{values.map((_, index) => (
+					<Thumb key={index} index={index} class={thumbClass} />
+				))}
+				{marks && marks.length > 0 && (
+					<MarkerGroup>
+						{marks.map((mark) => (
+							<Marker key={mark.value} value={mark.value} class={markClass}>
+								<MarkerIndicator />
+								<span>{mark.label}</span>
+							</Marker>
+						))}
+					</MarkerGroup>
+				)}
+			</Control>
+		</>
+	);
 
 	if (isInteractive) {
 		return (
 			<SliderIsland
-				{...props}
+				{...rootProps}
 				value={serializeValue(value)}
 				defaultValue={serializeValue(defaultValue)}
-			/>
+				onValueChange={onChange}
+				onDraggingChange={onDraggingChange}
+				formatValue={formatValue}
+			>
+				{content}
+			</SliderIsland>
 		);
 	}
 
 	return (
-		<SliderPrimitiveRoot {...rest} value={value} defaultValue={defaultValue} />
+		<SliderPrimitiveRoot
+			{...rootProps}
+			value={value}
+			defaultValue={defaultValue}
+		>
+			{content}
+		</SliderPrimitiveRoot>
 	);
 }
 
-export {
-	Control,
-	Label,
-	Marker,
-	MarkerGroup,
-	MarkerIndicator,
-	Range,
-	Thumb,
-	Track,
-	ValueText,
-};
+export { Slider, type SliderProps };
+export default Slider;

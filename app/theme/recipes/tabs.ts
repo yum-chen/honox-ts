@@ -1,7 +1,8 @@
+import { tabsAnatomy } from "@ark-ui/react/anatomy";
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const tabs = defineSlotRecipe({
-	slots: ["root", "list", "trigger", "content", "indicator"],
+	slots: tabsAnatomy.keys(),
 	className: "tabs",
 	base: {
 		root: {
@@ -54,9 +55,15 @@ export const tabs = defineSlotRecipe({
 			},
 		},
 		indicator: {
+			position: "absolute",
 			width: "var(--width)",
 			height: "var(--height)",
+			left: "var(--left)",
+			top: "var(--top)",
 			zIndex: -1,
+			transitionDuration: "normal",
+			transitionProperty: "all",
+			transitionTimingFunction: "default",
 		},
 	},
 

@@ -25,6 +25,7 @@ import {
 	Menu,
 	Popover,
 	Progress,
+	SegmentGroup,
 	Skeleton,
 	SkeletonCircle,
 	SkeletonText,
@@ -33,9 +34,11 @@ import {
 	Splitter,
 	Switch,
 	Table,
+	Tabs,
 	Text,
 	Textarea,
 	Toast,
+	ToggleGroup,
 	Tooltip,
 } from "../components/ui";
 
@@ -598,7 +601,7 @@ export default createRoute((c) => {
 					flexDirection: "column",
 					gap: "4",
 					alignItems: "center",
-					maxWidth: "xl",
+					maxWidth: "5xl",
 					mx: "auto",
 				})}
 			>
@@ -659,29 +662,15 @@ export default createRoute((c) => {
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
 					Dialog Component Examples
 				</Heading>
-				<Dialog.Root interactive>
-					<Dialog.Trigger asChild>
-						<Button variant="outline">Open Dialog</Button>
-					</Dialog.Trigger>
-					<Dialog.Backdrop />
-					<Dialog.Positioner>
-						<Dialog.Content>
-							<Dialog.Header>
-								<Dialog.Title>Dialog Title</Dialog.Title>
-								<Dialog.Description>Dialog Description</Dialog.Description>
-							</Dialog.Header>
-							<Dialog.Body>This is the dialog body content.</Dialog.Body>
-							<Dialog.Footer>
-								<Dialog.CloseTrigger asChild>
-									<Button variant="outline">Cancel</Button>
-								</Dialog.CloseTrigger>
-								<Dialog.ActionTrigger asChild>
-									<Button>Confirm</Button>
-								</Dialog.ActionTrigger>
-							</Dialog.Footer>
-						</Dialog.Content>
-					</Dialog.Positioner>
-				</Dialog.Root>
+				<Dialog
+					interactive
+					trigger={<Button variant="outline">Open Dialog</Button>}
+					title="Dialog Title"
+					description="This dialog uses the simplified flattened API."
+					body="This is the dialog body content."
+					cancel={<Button variant="outline">Cancel</Button>}
+					confirm={<Button>Confirm</Button>}
+				/>
 			</div>
 
 			{/* Drawer Examples */}
@@ -699,29 +688,16 @@ export default createRoute((c) => {
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
 					Drawer Component Examples
 				</Heading>
-				<Drawer.Root interactive>
-					<Drawer.Trigger asChild>
-						<Button variant="outline">Open Drawer</Button>
-					</Drawer.Trigger>
-					<Drawer.Backdrop />
-					<Drawer.Positioner>
-						<Drawer.Content>
-							<Drawer.Header>
-								<Drawer.Title>Drawer Title</Drawer.Title>
-								<Drawer.Description>Drawer Description</Drawer.Description>
-							</Drawer.Header>
-							<Drawer.Body>This is the drawer body content.</Drawer.Body>
-							<Drawer.Footer>
-								<Drawer.CloseTrigger asChild>
-									<Button variant="outline">Cancel</Button>
-								</Drawer.CloseTrigger>
-								<Drawer.ActionTrigger asChild>
-									<Button>Confirm</Button>
-								</Drawer.ActionTrigger>
-							</Drawer.Footer>
-						</Drawer.Content>
-					</Drawer.Positioner>
-				</Drawer.Root>
+
+				<Drawer
+					interactive
+					trigger={<Button variant="outline">Open Drawer</Button>}
+					title="Drawer Title"
+					description="This drawer uses the simplified flattened API."
+					body="This is the main content of the drawer, passed via the body prop."
+					cancel={<Button variant="outline">Close</Button>}
+					confirm={<Button>Action</Button>}
+				/>
 			</div>
 
 			{/* Menu Examples (Flattened API) */}
@@ -800,54 +776,79 @@ export default createRoute((c) => {
 						gap: "8",
 					})}
 				>
-					<Slider.Root defaultValue={[30]} class={css({ width: "full" })}>
-						<Slider.Label>Basic Slider</Slider.Label>
-						<Slider.Control>
-							<Slider.Track>
-								<Slider.Range />
-							</Slider.Track>
-							<Slider.Thumb index={0} />
-						</Slider.Control>
-					</Slider.Root>
-
-					<Slider.Root
-						interactive
-						defaultValue={[50]}
+					{/* Basic Slider */}
+					<Slider
+						label="Basic Slider"
+						defaultValue={30}
 						class={css({ width: "full" })}
-					>
-						<div
-							class={css({ display: "flex", justifyContent: "space-between" })}
-						>
-							<Slider.Label>Interactive Slider</Slider.Label>
-							<Slider.ValueText />
-						</div>
-						<Slider.Control>
-							<Slider.Track>
-								<Slider.Range />
-							</Slider.Track>
-							<Slider.Thumb index={0} />
-						</Slider.Control>
-					</Slider.Root>
+					/>
 
-					<Slider.Root
+					{/* Interactive Slider with Value Text */}
+					<Slider
 						interactive
+						label="Interactive Slider"
+						defaultValue={50}
+						showValueText
+						formatValue={(v) => `${v}%`}
+						class={css({ width: "full" })}
+						onChange={(details) =>
+							console.log("Slider changed:", details.value)
+						}
+					/>
+
+					{/* Range Slider */}
+					<Slider
+						interactive
+						label="Range Slider"
 						defaultValue={[20, 80]}
+						showValueText
 						class={css({ width: "full" })}
+					/>
+
+					{/* Slider with Marks */}
+					<Slider
+						interactive
+						label="Slider with Marks"
+						defaultValue={2}
+						min={0}
+						max={4}
+						step={1}
+						marks={[
+							{ value: 0, label: "0" },
+							{ value: 1, label: "1" },
+							{ value: 2, label: "2" },
+							{ value: 3, label: "3" },
+							{ value: 4, label: "4" },
+						]}
+						class={css({ width: "full" })}
+					/>
+
+					{/* Vertical Slider */}
+					<div
+						class={css({
+							display: "flex",
+							justifyContent: "center",
+							gap: "12",
+							height: "200px",
+						})}
 					>
-						<div
-							class={css({ display: "flex", justifyContent: "space-between" })}
-						>
-							<Slider.Label>Range Slider</Slider.Label>
-							<Slider.ValueText />
-						</div>
-						<Slider.Control>
-							<Slider.Track>
-								<Slider.Range />
-							</Slider.Track>
-							<Slider.Thumb index={0} />
-							<Slider.Thumb index={1} />
-						</Slider.Control>
-					</Slider.Root>
+						<Slider
+							interactive
+							orientation="vertical"
+							label="Vertical"
+							defaultValue={70}
+							height="200px"
+							showValueText
+						/>
+						<Slider
+							interactive
+							orientation="vertical"
+							label="Range"
+							defaultValue={[30, 70]}
+							height="200px"
+							showValueText
+						/>
+					</div>
 				</div>
 			</div>
 
@@ -866,45 +867,12 @@ export default createRoute((c) => {
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
 					Popover Component Examples
 				</Heading>
-				<Popover.Root interactive>
-					<Popover.Trigger asChild>
-						<Button variant="outline">Open Popover</Button>
-					</Popover.Trigger>
-					<Popover.Positioner>
-						<Popover.Content>
-							<Popover.Arrow>
-								<Popover.ArrowTip />
-							</Popover.Arrow>
-							<Popover.Header>
-								<Popover.Title>Popover Title</Popover.Title>
-							</Popover.Header>
-							<Popover.Body>This is the popover body content.</Popover.Body>
-							<Popover.CloseTrigger asChild>
-								<IconButton
-									aria-label="Close"
-									variant="ghost"
-									size="sm"
-									class={css({ position: "absolute", top: "2", right: "2" })}
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="20"
-										height="20"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									>
-										<title>Close</title>
-										<path d="M18 6 6 18M6 6l12 12" />
-									</svg>
-								</IconButton>
-							</Popover.CloseTrigger>
-						</Popover.Content>
-					</Popover.Positioner>
-				</Popover.Root>
+				<Popover
+					interactive
+					trigger={<Button variant="outline">Open Popover</Button>}
+					title="Popover Title"
+					body="This is the popover body content."
+				/>
 			</div>
 
 			{/* HoverCard Examples */}
@@ -924,8 +892,8 @@ export default createRoute((c) => {
 				</Heading>
 				<div class={css({ display: "flex", gap: "8" })}>
 					<div class={css({ position: "relative" })}>
-						<HoverCard.Root>
-							<HoverCard.Trigger asChild>
+						<HoverCard
+							trigger={
 								<Text
 									class={css({
 										cursor: "default",
@@ -935,46 +903,33 @@ export default createRoute((c) => {
 								>
 									Basic HoverCard
 								</Text>
-							</HoverCard.Trigger>
-							<HoverCard.Positioner>
-								<HoverCard.Content>
-									<Text fontWeight="bold">HoverCard Title</Text>
-									<Text size="sm" class={css({ color: "fg.muted", mt: "1" })}>
-										This is a basic hover card that appears on hover.
-									</Text>
-								</HoverCard.Content>
-							</HoverCard.Positioner>
-						</HoverCard.Root>
+							}
+							title="HoverCard Title"
+							description="This is a basic hover card that appears on hover."
+						/>
 					</div>
 
 					<div class={css({ position: "relative" })}>
-						<HoverCard.Root>
-							<HoverCard.Trigger asChild>
-								<Button variant="outline">Hover with Arrow</Button>
-							</HoverCard.Trigger>
-							<HoverCard.Positioner>
-								<HoverCard.Content>
-									<HoverCard.Arrow>
-										<HoverCard.ArrowTip />
-									</HoverCard.Arrow>
-									<Text fontWeight="bold">HoverCard with Arrow</Text>
-									<Text size="sm" class={css({ color: "fg.muted", mt: "1" })}>
-										This hover card includes an arrow pointing to the trigger.
-									</Text>
-								</HoverCard.Content>
-							</HoverCard.Positioner>
-						</HoverCard.Root>
+						<HoverCard
+							showArrow
+							trigger={<Button variant="outline">Hover with Arrow</Button>}
+							title="HoverCard with Arrow"
+							description="This hover card includes an arrow pointing to the trigger."
+						/>
 					</div>
 
 					<div class={css({ position: "relative" })}>
-						<HoverCard.Root interactive openDelay={100} closeDelay={100}>
-							<HoverCard.Trigger asChild>
+						<HoverCard
+							interactive
+							openDelay={100}
+							closeDelay={100}
+							trigger={
 								<Badge variant="outline" colorPalette="blue" cursor="default">
 									Interactive
 								</Badge>
-							</HoverCard.Trigger>
-							<HoverCard.Positioner>
-								<HoverCard.Content>
+							}
+							content={
+								<>
 									<Text fontWeight="bold">Interactive HoverCard</Text>
 									<Text size="sm" class={css({ color: "fg.muted", mt: "1" })}>
 										This hover card is interactive and has custom delays.
@@ -982,9 +937,9 @@ export default createRoute((c) => {
 									<Button size="xs" variant="solid" class={css({ mt: "3" })}>
 										Action
 									</Button>
-								</HoverCard.Content>
-							</HoverCard.Positioner>
-						</HoverCard.Root>
+								</>
+							}
+						/>
 					</div>
 				</div>
 			</div>
@@ -1010,76 +965,6 @@ export default createRoute((c) => {
 					label="Framework"
 					placeholder="Select a Framework"
 				/>
-			</div>
-
-			{/* Splitter Examples */}
-			<div
-				class={css({
-					mt: "8",
-					display: "flex",
-					flexDirection: "column",
-					gap: "4",
-					alignItems: "center",
-					maxWidth: "xl",
-					mx: "auto",
-				})}
-			>
-				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
-					Splitter Component Examples
-				</Heading>
-				<div
-					class={css({
-						width: "full",
-						display: "flex",
-						flexDirection: "column",
-						gap: "8",
-					})}
-				>
-					<Splitter.Root
-						interactive
-						defaultSize={[
-							{ id: "left", size: 50 },
-							{ id: "right", size: 50 },
-						]}
-						class={css({
-							width: "full",
-							height: "200px",
-							borderWidth: "1px",
-							borderRadius: "md",
-						})}
-					>
-						<Splitter.Panel id="left">
-							<AbsoluteCenter>Left Panel</AbsoluteCenter>
-						</Splitter.Panel>
-						<Splitter.ResizeTrigger id="left:right" />
-						<Splitter.Panel id="right">
-							<AbsoluteCenter>Right Panel</AbsoluteCenter>
-						</Splitter.Panel>
-					</Splitter.Root>
-
-					<Splitter.Root
-						interactive
-						orientation="vertical"
-						defaultSize={[
-							{ id: "top", size: 50 },
-							{ id: "bottom", size: 50 },
-						]}
-						class={css({
-							width: "full",
-							height: "300px",
-							borderWidth: "1px",
-							borderRadius: "md",
-						})}
-					>
-						<Splitter.Panel id="top">
-							<AbsoluteCenter>Top Panel</AbsoluteCenter>
-						</Splitter.Panel>
-						<Splitter.ResizeTrigger id="top:bottom" />
-						<Splitter.Panel id="bottom">
-							<AbsoluteCenter>Bottom Panel</AbsoluteCenter>
-						</Splitter.Panel>
-					</Splitter.Root>
-				</div>
 			</div>
 
 			{/* Group Examples */}
@@ -1321,23 +1206,140 @@ export default createRoute((c) => {
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
 					Breadcrumb Component Examples
 				</Heading>
-				<Breadcrumb.Root>
-					<Breadcrumb.List>
-						<Breadcrumb.Item>
-							<Breadcrumb.Link href="/">Home</Breadcrumb.Link>
-						</Breadcrumb.Item>
-						<Breadcrumb.Separator />
-						<Breadcrumb.Item>
-							<Breadcrumb.Link href="/components">Components</Breadcrumb.Link>
-						</Breadcrumb.Item>
-						<Breadcrumb.Separator />
-						<Breadcrumb.Item>
-							<Breadcrumb.Link href="/components/breadcrumb" current>
-								Breadcrumb
-							</Breadcrumb.Link>
-						</Breadcrumb.Item>
-					</Breadcrumb.List>
-				</Breadcrumb.Root>
+
+				<div
+					class={css({
+						display: "flex",
+						flexDirection: "column",
+						gap: "6",
+						width: "full",
+						alignItems: "center",
+					})}
+				>
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							width: "full",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic Breadcrumb (Flattened API)
+						</Text>
+						<Breadcrumb
+							items={[
+								{ label: "Home", href: "/" },
+								{ label: "Components", href: "/components" },
+								{ label: "Breadcrumb" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							width: "full",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Underline Variant
+						</Text>
+						<Breadcrumb
+							variant="underline"
+							items={[
+								{ label: "Docs", href: "/docs" },
+								{ label: "Guides", href: "/docs/guides" },
+								{ label: "Getting Started" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							width: "full",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Custom Separator
+						</Text>
+						<Breadcrumb
+							separator="/"
+							items={[
+								{ label: "Products", href: "/products" },
+								{ label: "Electronics", href: "/products/electronics" },
+								{ label: "Smartphones" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							width: "full",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Custom Separator as JSX
+						</Text>
+						<Breadcrumb
+							separator={
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<title>Slash</title>
+									<path d="M22 2 2 22" />
+								</svg>
+							}
+							items={[
+								{ label: "Archive", href: "/archive" },
+								{ label: "2024", href: "/archive/2024" },
+								{ label: "Reports" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							width: "full",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Custom Separator (Slash)
+						</Text>
+						<Breadcrumb
+							separator="/"
+							items={[
+								{ label: "Account", href: "/account" },
+								{ label: "Settings", href: "/account/settings" },
+								{ label: "Security" },
+							]}
+						/>
+					</div>
+				</div>
 			</div>
 
 			{/* Card Examples */}
@@ -1357,36 +1359,96 @@ export default createRoute((c) => {
 				</Heading>
 				<div
 					class={css({
-						display: "flex",
+						display: "grid",
+						gridTemplateColumns: { base: "1fr", md: "repeat(2, 1fr)" },
 						gap: "6",
-						flexWrap: "wrap",
-						justifyContent: "center",
+						width: "full",
 					})}
 				>
-					<Card.Root class={css({ width: "sm" })}>
-						<Card.Header>
-							<Card.Title>Team Members</Card.Title>
-							<Card.Description>
-								Add new members to your organization.
-							</Card.Description>
-						</Card.Header>
-						<Card.Body>
-							<Text size="sm">Invite your colleagues to collaborate.</Text>
-						</Card.Body>
-						<Card.Footer>
-							<Button variant="outline">Cancel</Button>
-							<Button>Invite</Button>
-						</Card.Footer>
-					</Card.Root>
+					{/* Basic Flattened Card */}
+					<Card
+						title="Team Members"
+						description="Add new members to your organization."
+						footer={
+							<>
+								<Button variant="outline">Cancel</Button>
+								<Button>Invite</Button>
+							</>
+						}
+					>
+						<Text size="sm">Invite your colleagues to collaborate.</Text>
+					</Card>
 
-					<Card.Root class={css({ width: "sm" })} variant="subtle">
-						<Card.Header>
-							<Card.Title>Subtle Card</Card.Title>
-						</Card.Header>
-						<Card.Body>
-							<Text size="sm">This card uses the subtle variant.</Text>
-						</Card.Body>
-					</Card.Root>
+					{/* Card with Avatar and Action */}
+					<Card
+						title="John Doe"
+						description="Software Engineer"
+						avatar={
+							<div
+								class={css({
+									w: "10",
+									h: "10",
+									bg: "blue.500",
+									rounded: "full",
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "center",
+									color: "white",
+									fontWeight: "bold",
+								})}
+							>
+								JD
+							</div>
+						}
+						headerAction={
+							<IconButton variant="ghost" size="sm" aria-label="Settings">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+								>
+									<title>Settings</title>
+									<circle cx="12" cy="12" r="3" />
+									<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+								</svg>
+							</IconButton>
+						}
+					>
+						<Text size="sm">
+							Specializes in building high-performance web applications with
+							Hono and React.
+						</Text>
+					</Card>
+
+					{/* Card with Image */}
+					<Card
+						title="Mountain Retreat"
+						description="A peaceful getaway in the heart of nature."
+						image="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80"
+						imagePosition="top"
+					>
+						<Text size="sm">
+							Experience the beauty of the mountains from our cozy cabin.
+						</Text>
+					</Card>
+
+					{/* Interactive Card */}
+					<Card
+						interactive
+						clickable
+						title="Interactive Card"
+						description="Click this card to see it in action."
+						variant="elevated"
+						onclick="alert('Card clicked!')"
+					>
+						<Text size="sm">
+							This card is interactive and handles click events via the island.
+						</Text>
+					</Card>
 				</div>
 			</div>
 
@@ -1564,77 +1626,114 @@ export default createRoute((c) => {
 					flexDirection: "column",
 					gap: "4",
 					alignItems: "center",
-					maxWidth: "2xl",
+					maxWidth: "3xl",
 					mx: "auto",
 				})}
 			>
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
-					Table Component Examples
+					Table Component Examples (Flattened API)
 				</Heading>
 
-				<Table.Root variant="plain" interactive>
-					<Table.Caption>Product Inventory</Table.Caption>
-					<Table.Head>
-						<Table.Row>
-							<Table.Header>Name</Table.Header>
-							<Table.Header>Category</Table.Header>
-							<Table.Header>Price</Table.Header>
-						</Table.Row>
-					</Table.Head>
-					<Table.Body>
-						<Table.Row>
-							<Table.Cell>Laptop</Table.Cell>
-							<Table.Cell>Electronics</Table.Cell>
-							<Table.Cell>$999.00</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>Coffee Mug</Table.Cell>
-							<Table.Cell>Home & Kitchen</Table.Cell>
-							<Table.Cell>$15.00</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>Ergonomic Chair</Table.Cell>
-							<Table.Cell>Furniture</Table.Cell>
-							<Table.Cell>$250.00</Table.Cell>
-						</Table.Row>
-					</Table.Body>
-					<Table.Foot>
-						<Table.Row>
-							<Table.Cell colSpan={2}>Total</Table.Cell>
-							<Table.Cell>$1,264.00</Table.Cell>
-						</Table.Row>
-					</Table.Foot>
-				</Table.Root>
+				<Text size="sm" class={css({ mb: "2", color: "fg.muted" })}>
+					Basic Table with Caption and Footer
+				</Text>
+				<Table
+					variant="plain"
+					caption="Product Inventory"
+					columns={[
+						{ header: "Name", key: "name" },
+						{ header: "Category", key: "category" },
+						{ header: "Price", key: "price", align: "end" },
+					]}
+					rows={[
+						{ name: "Laptop", category: "Electronics", price: "$999.00" },
+						{ name: "Coffee Mug", category: "Home & Kitchen", price: "$15.00" },
+						{
+							name: "Ergonomic Chair",
+							category: "Furniture",
+							price: "$250.00",
+						},
+					]}
+					footer={
+						<tr>
+							<td colSpan={2}>Total</td>
+							<td style={{ textAlign: "end" }}>$1,264.00</td>
+						</tr>
+					}
+				/>
 
 				<Text size="sm" class={css({ mt: "8", mb: "2", color: "fg.muted" })}>
-					Surface Variant with Striped Rows
+					Surface Variant with Striped Rows and Custom Cell Rendering
 				</Text>
-				<Table.Root variant="surface" striped>
-					<Table.Head>
-						<Table.Row>
-							<Table.Header>Member</Table.Header>
-							<Table.Header>Role</Table.Header>
-							<Table.Header>Status</Table.Header>
-						</Table.Row>
-					</Table.Head>
-					<Table.Body>
-						<Table.Row>
-							<Table.Cell>Alice Johnson</Table.Cell>
-							<Table.Cell>Designer</Table.Cell>
-							<Table.Cell>Active</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>Bob Smith</Table.Cell>
-							<Table.Cell>Developer</Table.Cell>
-							<Table.Cell>Away</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>Charlie Brown</Table.Cell>
-							<Table.Cell>Manager</Table.Cell>
-							<Table.Cell>Offline</Table.Cell>
-						</Table.Row>
-					</Table.Body>
-				</Table.Root>
+				<Table
+					variant="surface"
+					striped
+					columns={[
+						{ header: "Member", key: "name" },
+						{ header: "Role", key: "role" },
+						{
+							header: "Status",
+							key: "status",
+							render: (row) => (
+								<Badge colorPalette={row.statusColor}>{row.status}</Badge>
+							),
+						},
+					]}
+					rows={[
+						{
+							name: "Alice Johnson",
+							role: "Designer",
+							status: "Active",
+							statusColor: "green",
+						},
+						{
+							name: "Bob Smith",
+							role: "Developer",
+							status: "Away",
+							statusColor: "amber",
+						},
+						{
+							name: "Charlie Brown",
+							role: "Manager",
+							status: "Offline",
+							statusColor: "gray",
+						},
+					]}
+				/>
+
+				<Text size="sm" class={css({ mt: "8", mb: "2", color: "fg.muted" })}>
+					Interactive Table with Row Click Handlers
+				</Text>
+				<Table
+					interactive
+					columns={[
+						{ header: "Project", key: "name" },
+						{ header: "Owner", key: "owner" },
+						{ header: "Actions", key: "actions", align: "center" },
+					]}
+					rows={[
+						{
+							name: "Project Alpha",
+							owner: "Alice",
+							onClick: () => alert("Clicked Project Alpha"),
+							actions: (
+								<Button size="xs" variant="outline">
+									View
+								</Button>
+							),
+						},
+						{
+							name: "Project Beta",
+							owner: "Bob",
+							onClick: () => alert("Clicked Project Beta"),
+							actions: (
+								<Button size="xs" variant="outline">
+									View
+								</Button>
+							),
+						},
+					]}
+				/>
 			</div>
 
 			{/* Progress Examples */}
@@ -1722,6 +1821,314 @@ export default createRoute((c) => {
 				</div>
 			</div>
 
+			{/* SegmentGroup Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					SegmentGroup Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+					})}
+				>
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic SegmentGroup (Interactive)
+						</Text>
+						<SegmentGroup
+							defaultValue="react"
+							items={[
+								{ label: "React", value: "react" },
+								{ label: "Solid", value: "solid" },
+								{ label: "Svelte", value: "svelte" },
+								{ label: "Vue", value: "vue" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Vertical SegmentGroup
+						</Text>
+						<SegmentGroup
+							orientation="vertical"
+							defaultValue="react"
+							items={[
+								{ label: "React", value: "react" },
+								{ label: "Solid", value: "solid" },
+								{ label: "Svelte", value: "svelte" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Fitted SegmentGroup
+						</Text>
+						<SegmentGroup
+							fitted
+							defaultValue="react"
+							items={[
+								{ label: "React", value: "react" },
+								{ label: "Solid", value: "solid" },
+							]}
+						/>
+					</div>
+				</div>
+			</div>
+
+			{/* ToggleGroup Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					ToggleGroup Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+					})}
+				>
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic ToggleGroup (Single Selection)
+						</Text>
+						<ToggleGroup
+							variant="outline"
+							defaultValue={["bold"]}
+							items={[
+								{ label: "B", value: "bold" },
+								{ label: "I", value: "italic" },
+								{ label: "U", value: "underline" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Multiple Selection
+						</Text>
+						<ToggleGroup
+							multiple
+							variant="outline"
+							defaultValue={["bold", "italic"]}
+							items={[
+								{ label: "B", value: "bold" },
+								{ label: "I", value: "italic" },
+								{ label: "U", value: "underline" },
+							]}
+						/>
+					</div>
+				</div>
+			</div>
+
+			{/* Tabs Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Tabs Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+					})}
+				>
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic Tabs (Interactive)
+						</Text>
+						<Tabs
+							colorPalette="blue"
+							defaultValue="react"
+							items={[
+								{ value: "react", label: "React", content: "React Content" },
+								{ value: "solid", label: "Solid", content: "Solid Content" },
+								{ value: "svelte", label: "Svelte", content: "Svelte Content" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Subtle Variant
+						</Text>
+						<Tabs
+							variant="subtle"
+							defaultValue="react"
+							items={[
+								{ value: "react", label: "React", content: "React Content" },
+								{ value: "solid", label: "Solid", content: "Solid Content" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Enclosed Variant
+						</Text>
+						<Tabs
+							variant="enclosed"
+							defaultValue="react"
+							items={[
+								{ value: "react", label: "React", content: "React Content" },
+								{ value: "solid", label: "Solid", content: "Solid Content" },
+							]}
+						/>
+					</div>
+				</div>
+			</div>
+
+			{/* Splitter Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Splitter Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+					})}
+				>
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Horizontal Splitter (Static)
+						</Text>
+						<Splitter
+							panels={[
+								{
+									id: "left",
+									content: <div class={css({ p: "4" })}>Left Panel</div>,
+								},
+								{
+									id: "right",
+									content: <div class={css({ p: "4" })}>Right Panel</div>,
+								},
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Vertical Splitter (Interactive)
+						</Text>
+						<div class={css({ height: "300px", width: "full" })}>
+							<Splitter
+								interactive
+								orientation="vertical"
+								panels={[
+									{
+										id: "top",
+										content: <div class={css({ p: "4" })}>Top Panel</div>,
+									},
+									{
+										id: "bottom",
+										content: <div class={css({ p: "4" })}>Bottom Panel</div>,
+									},
+								]}
+							/>
+						</div>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Three Panels (Interactive)
+						</Text>
+						<Splitter
+							interactive
+							panels={[
+								{
+									id: "p1",
+									content: <div class={css({ p: "4" })}>Panel 1</div>,
+								},
+								{
+									id: "p2",
+									content: <div class={css({ p: "4" })}>Panel 2</div>,
+								},
+								{
+									id: "p3",
+									content: <div class={css({ p: "4" })}>Panel 3</div>,
+								},
+							]}
+							defaultSize={[
+								{ id: "p1", size: 20 },
+								{ id: "p2", size: 60 },
+								{ id: "p3", size: 20 },
+							]}
+						/>
+					</div>
+				</div>
+			</div>
+
 			{/* Collapsible Examples */}
 			<div
 				class={css({
@@ -1746,28 +2153,105 @@ export default createRoute((c) => {
 						gap: "8",
 					})}
 				>
-					<Collapsible.Root
-						interactive
+					<Text size="sm" class={css({ color: "fg.muted" })}>
+						Basic Collapsible (String trigger)
+					</Text>
+					<Collapsible
+						trigger="Click to expand"
+						content={
+							<div class={css({ bg: "bg.subtle", p: "4", borderRadius: "md" })}>
+								<Text>This content is collapsed by default.</Text>
+							</div>
+						}
 						class={css({ width: "full", border: "1px solid border", p: "4" })}
-					>
-						<Collapsible.Trigger asChild>
-							<Button variant="outline">Click to Toggle</Button>
-						</Collapsible.Trigger>
-						<Collapsible.Content class={css({ mt: "4" })}>
-							<div
+						triggerClass={css({
+							cursor: "pointer",
+							width: "full",
+							textAlign: "start",
+						})}
+						contentClass={css({ mt: "4" })}
+					/>
+
+					<Text size="sm" class={css({ color: "fg.muted" })}>
+						With Indicator (Button trigger)
+					</Text>
+					<Collapsible
+						trigger={<Button variant="outline">Toggle Content</Button>}
+						indicator={
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
 								class={css({
-									bg: "bg.subtle",
-									p: "4",
-									borderRadius: "md",
+									transition: "transform 0.2s",
+									"[data-state=open] &": { transform: "rotate(180deg)" },
 								})}
 							>
+								<title>Chevron Down</title>
+								<path d="m6 9 6 6 6-6" />
+							</svg>
+						}
+						content={
+							<div class={css({ bg: "bg.subtle", p: "4", borderRadius: "md" })}>
 								<Text>
-									This is the collapsible content. It can contain any elements
-									and will expand/collapse when the trigger is clicked.
+									This collapsible uses a custom indicator that rotates when
+									open.
 								</Text>
 							</div>
-						</Collapsible.Content>
-					</Collapsible.Root>
+						}
+						class={css({ width: "full", border: "1px solid border", p: "4" })}
+						contentClass={css({ mt: "4" })}
+					/>
+
+					<Text size="sm" class={css({ color: "fg.muted" })}>
+						Default Open & Start Indicator
+					</Text>
+					<Collapsible
+						defaultOpen
+						indicatorPlacement="start"
+						trigger="Settings"
+						indicator={
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class={css({
+									mr: "2",
+									transition: "transform 0.2s",
+									"[data-state=open] &": { transform: "rotate(90deg)" },
+								})}
+							>
+								<title>Chevron Right</title>
+								<path d="m9 18 6-6-6-6" />
+							</svg>
+						}
+						content={
+							<div class={css({ bg: "bg.subtle", p: "4", borderRadius: "md" })}>
+								<Text>Advanced configuration options go here.</Text>
+							</div>
+						}
+						class={css({ width: "full", border: "1px solid border", p: "4" })}
+						triggerClass={css({
+							cursor: "pointer",
+							width: "full",
+							textAlign: "start",
+							display: "flex",
+							alignItems: "center",
+						})}
+						contentClass={css({ mt: "4" })}
+					/>
 				</div>
 			</div>
 		</div>,

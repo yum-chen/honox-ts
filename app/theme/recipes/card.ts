@@ -2,7 +2,18 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const card = defineSlotRecipe({
 	className: "card",
-	slots: ["root", "header", "body", "footer", "title", "description"],
+	slots: [
+		"root",
+		"header",
+		"body",
+		"footer",
+		"title",
+		"description",
+		"image",
+		"avatar",
+		"action",
+		"content",
+	],
 	base: {
 		root: {
 			borderRadius: "l3",
@@ -10,12 +21,20 @@ export const card = defineSlotRecipe({
 			flexDirection: "column",
 			overflow: "hidden",
 			position: "relative",
+			transition: "all 0.2s ease-in-out",
 		},
 		header: {
 			display: "flex",
+			flexDirection: "row",
+			alignItems: "flex-start",
+			gap: "3",
+			p: "6",
+		},
+		content: {
+			display: "flex",
 			flexDirection: "column",
 			gap: "1",
-			p: "6",
+			flex: "1",
 		},
 		body: {
 			display: "flex",
@@ -40,9 +59,21 @@ export const card = defineSlotRecipe({
 			color: "fg.muted",
 			textStyle: "sm",
 		},
+		image: {
+			width: "full",
+			objectFit: "cover",
+		},
+		avatar: {
+			flexShrink: 0,
+		},
+		action: {
+			flexShrink: 0,
+			ml: "auto",
+		},
 	},
 	defaultVariants: {
 		variant: "outline",
+		size: "md",
 	},
 	variants: {
 		variant: {
@@ -61,6 +92,52 @@ export const card = defineSlotRecipe({
 			subtle: {
 				root: {
 					bg: "gray.subtle.bg",
+				},
+			},
+		},
+		size: {
+			sm: {
+				title: { textStyle: "md" },
+				description: { textStyle: "xs" },
+				header: { p: "4" },
+				body: { px: "4", pb: "4" },
+				footer: { px: "4", pb: "4" },
+			},
+			md: {
+				title: { textStyle: "lg" },
+				description: { textStyle: "sm" },
+				header: { p: "6" },
+				body: { px: "6", pb: "6" },
+				footer: { px: "6", pb: "6" },
+			},
+			lg: {
+				title: { textStyle: "xl" },
+				description: { textStyle: "md" },
+				header: { p: "8" },
+				body: { px: "8", pb: "8" },
+				footer: { px: "8", pb: "8" },
+			},
+		},
+		clickable: {
+			true: {
+				root: {
+					cursor: "pointer",
+					_hover: {
+						borderColor: "border.emphasized",
+						bg: "bg.subtle",
+					},
+					_active: {
+						transform: "scale(0.98)",
+					},
+				},
+			},
+		},
+		selected: {
+			true: {
+				root: {
+					borderColor: "colorPalette.default",
+					ringWidth: "1px",
+					ringColor: "colorPalette.default",
 				},
 			},
 		},

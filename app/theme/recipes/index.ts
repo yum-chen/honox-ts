@@ -1,3 +1,5 @@
+import { toggleGroup } from "./toggle-group";
+import { segmentGroup } from "./segment-group";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { badge } from "./badge";
@@ -30,19 +32,22 @@ import { toast } from "./toast";
 import { tooltip } from "./tooltip";
 
 export const recipes = {
-	absoluteCenter,
-	badge,
-	button,
-	group,
-	heading,
-	spinner,
-	text,
-	textarea,
-	skeleton,
+    absoluteCenter,
+    badge,
+    button,
+    group,
+    heading,
+    spinner,
+    text,
+    textarea,
+    skeleton,
 };
 
 export const slotRecipes = {
+	toggleGroup,
+	segmentGroup,
 	alert,
+	splitter,
 	breadcrumb,
 	card,
 	checkbox,
@@ -57,7 +62,6 @@ export const slotRecipes = {
 	popover,
 	progress,
 	slider,
-	splitter,
 	switchRecipe,
 	table,
 	tabs,

@@ -31,9 +31,12 @@ const useSliderContext = () => {
 	return context;
 };
 
-type SliderValue = number[] | number | string;
+export type SliderValue = number[] | number | string;
 
-const toValueArray = (value: SliderValue | undefined, fallback: number[]) => {
+export const toValueArray = (
+	value: SliderValue | undefined,
+	fallback: number[],
+) => {
 	if (Array.isArray(value)) {
 		const parsed = value.map(Number).filter(Number.isFinite);
 		return parsed.length > 0 ? parsed : fallback;
@@ -112,13 +115,13 @@ export function Label(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSliderContext();
 	return (
-		<label
+		<span
 			data-part="label"
 			class={cx(context?.styles.label, classProp)}
 			{...rest}
 		>
 			{children}
-		</label>
+		</span>
 	);
 }
 
@@ -369,6 +372,8 @@ export function MarkerIndicator(props: PropsWithChildren<{ class?: string }>) {
 
 export interface InteractiveSliderProps extends RootProps {
 	onValueChange?: (details: { value: number[] }) => void;
+	onDraggingChange?: (details: { dragging: boolean }) => void;
+	formatValue?: (value: number) => string;
 }
 
 export function InteractiveSlider(props: InteractiveSliderProps) {
@@ -377,6 +382,8 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 		value: valueProp,
 		defaultValue,
 		onValueChange,
+		onDraggingChange,
+		formatValue,
 		children,
 		min = 0,
 		max = 100,
@@ -471,7 +478,11 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 
 			const valueText = root.querySelector('[data-part="value-text"]');
 			addClass(valueText, styles.valueText);
-			if (valueText) valueText.textContent = values.join(", ");
+			if (valueText) {
+				valueText.textContent = formatValue
+					? values.map(formatValue).join(", ")
+					: values.join(", ");
+			}
 
 			const range = root.querySelector<HTMLElement>('[data-part="range"]');
 			addClass(range, styles.range);
@@ -576,6 +587,7 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 		};
 		const handleEnd = () => {
 			activeThumbIndex.current = null;
+			onDraggingChange?.({ dragging: false });
 			document.removeEventListener("mousemove", handleMove);
 			document.removeEventListener("mouseup", handleEnd);
 			document.removeEventListener("touchmove", handleMove);
@@ -601,6 +613,7 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 			}
 
 			activeThumbIndex.current = closestIndex;
+			onDraggingChange?.({ dragging: true });
 			updateThumbValue(closestIndex, newValue);
 			document.addEventListener("mousemove", handleMove);
 			document.addEventListener("mouseup", handleEnd);

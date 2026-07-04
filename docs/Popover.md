@@ -12,8 +12,10 @@ An interactive element that displays additional content in a layer over its anch
 | :------------- | :-------- | :------------------------------------------------- |
 | `children`     | `any`     | Popover sub-components.                            |
 | `open`         | `boolean` | Whether the popover is open (controlled).          |
-| `interactable` | `boolean` | Forces hydration as an island. Defaults to `true`. |
+| `interactive`  | `boolean` | Forces hydration as an island. Defaults to `true`. |
 | `id`           | `string`  | Unique identifier for the popover.                 |
+| `onClose`      | `() => void` | Callback triggered when the popover closes.      |
+| `onToggle`     | `() => void` | Callback triggered when the popover toggles.     |
 
 ## Trigger
 

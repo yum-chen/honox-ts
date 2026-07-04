@@ -5,7 +5,6 @@ import {
 	useContext,
 	useEffect,
 	useId,
-	useLayoutEffect,
 	useRef,
 	useState,
 } from "hono/jsx";
@@ -380,6 +379,14 @@ export function Item(
 			onClick={() => {
 				if (!disabled) {
 					context?.onItemSelect?.(value);
+				}
+			}}
+			onKeyDown={(e) => {
+				if (e.key === "Enter" || e.key === " ") {
+					if (!disabled) {
+						context?.onItemSelect?.(value);
+					}
+					e.preventDefault();
 				}
 			}}
 			{...rest}

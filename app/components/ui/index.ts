@@ -2,67 +2,59 @@ export {
 	AbsoluteCenter,
 	type AbsoluteCenterProps,
 } from "./absolute-center";
-export {
-	Alert,
-	AlertIcon,
-	type AlertProps,
-} from "./alert";
+export { Alert, AlertIcon, type AlertProps } from "./alert";
 export { Badge, type BadgeProps } from "./badge";
-export * as Breadcrumb from "./breadcrumb";
+export {
+	Breadcrumb,
+	type BreadcrumbItem,
+	type BreadcrumbProps,
+} from "./breadcrumb";
 export {
 	Button,
 	ButtonGroup,
-	type ButtonGroupProps,
-	type ButtonProps,
 	CloseButton,
 	IconButton,
+	type ButtonGroupProps,
+	type ButtonProps,
 } from "./button";
-export * as Card from "./card";
+export { Card, type CardProps } from "./card";
 export { Checkbox, type CheckboxProps } from "./checkbox";
-export * as Collapsible from "./collapsible";
+export { Collapsible, type CollapsibleProps } from "./collapsible";
 export { Combobox, type ComboboxProps } from "./combobox";
-export * as Dialog from "./dialog";
-export * as Drawer from "./drawer";
-export {
-	Field,
-	FieldErrorText,
-	FieldHelperText,
-	FieldLabel,
-	type FieldProps,
-	FieldRequiredIndicator,
-} from "./field";
-export {
-	Fieldset,
-	FieldsetContent,
-	FieldsetControl,
-	FieldsetErrorText,
-	FieldsetHelperText,
-	FieldsetLegend,
-	type FieldsetProps,
-} from "./fieldset";
+export { Dialog, type DialogProps } from "./dialog";
+export { Drawer, type DrawerProps } from "./drawer";
+export { Field, type FieldProps } from "./field";
+export { Fieldset, type FieldsetProps } from "./fieldset";
 export { Group, type GroupProps } from "./group";
 export { Heading, type HeadingProps } from "./heading";
-export * as HoverCard from "./hover-card";
+export { HoverCard, type HoverCardProps } from "./hover-card";
 export { Loader, type LoaderProps } from "./loader";
 export { Menu, type MenuItem, type MenuProps } from "./menu";
 export * as MenuPrimitive from "./menu-primitive";
-export * as Popover from "./popover";
+export { Popover, type PopoverProps } from "./popover";
 export { Progress, type ProgressProps } from "./progress";
+export { SegmentGroup, type SegmentGroupProps } from "./segment-group";
 export {
 	Skeleton,
 	SkeletonCircle,
+	SkeletonText,
 	type SkeletonCircleProps,
 	type SkeletonProps,
-	SkeletonText,
 	type SkeletonTextProps,
 } from "./skeleton";
-export * as Slider from "./slider";
+export { Slider, type SliderProps } from "./slider";
 export { Spinner, type SpinnerProps } from "./spinner";
-export * as Splitter from "./splitter";
+export { Splitter, type PanelConfig, type SplitterProps } from "./splitter";
 export { Switch, type SwitchProps } from "./switch";
-export * as Table from "./table";
-export * as Tabs from "./tabs";
+export {
+	Table,
+	type TableColumn,
+	type TableProps,
+	type TableRow,
+} from "./table";
+export { Tabs, type TabsItem, type TabsProps } from "./tabs";
 export { Text, type TextProps } from "./text";
 export { Textarea, type TextareaProps } from "./textarea";
 export * as Toast from "./toast";
+export { ToggleGroup, type ToggleGroupProps } from "./toggle-group";
 export { Tooltip, type TooltipProps } from "./tooltip";

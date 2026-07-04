@@ -4,7 +4,7 @@ import { Menu } from "../app/components/ui/menu";
 describe("Menu Unit Tests", () => {
 	test("should render correctly", () => {
 		const html = (
-			<Menu.Root>
+			<Menu.Root interactive={false}>
 				<Menu.Trigger>Open</Menu.Trigger>
 				<Menu.Positioner>
 					<Menu.Content>
@@ -21,7 +21,7 @@ describe("Menu Unit Tests", () => {
 
 	test("should render items correctly", () => {
 		const html = (
-			<Menu.Root>
+			<Menu.Root interactive={false}>
 				<Menu.Positioner>
 					<Menu.Content>
 						<Menu.Item value="item-1">Item 1</Menu.Item>

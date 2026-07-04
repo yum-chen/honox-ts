@@ -14,9 +14,9 @@ interface FieldsetContextValue {
 
 const FieldsetContext = createContext<FieldsetContextValue | null>(null);
 
-export const useFieldsetContext = () => useContext(FieldsetContext);
+const useFieldsetContext = () => useContext(FieldsetContext);
 
-export interface FieldsetProps extends FieldsetVariantProps, PropsWithChildren {
+interface FieldsetProps extends FieldsetVariantProps, PropsWithChildren {
 	class?: string;
 	id?: string;
 	disabled?: boolean;
@@ -28,7 +28,7 @@ export interface FieldsetProps extends FieldsetVariantProps, PropsWithChildren {
 	[key: string]: unknown;
 }
 
-export function Fieldset(props: FieldsetProps) {
+function Fieldset(props: FieldsetProps) {
 	const [variantProps, localProps] = fieldset.splitVariantProps(props);
 	const {
 		children,
@@ -83,7 +83,7 @@ export function Fieldset(props: FieldsetProps) {
 	);
 }
 
-export function FieldsetLegend(props: PropsWithChildren<{ class?: string }>) {
+function FieldsetLegend(props: PropsWithChildren<{ class?: string }>) {
 	const context = useFieldsetContext();
 	const styles = fieldset();
 	return (
@@ -97,7 +97,7 @@ export function FieldsetLegend(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function FieldsetHelperText(
+function FieldsetHelperText(
 	props: PropsWithChildren<{
 		class?: string;
 	}>,
@@ -116,9 +116,7 @@ export function FieldsetHelperText(
 	);
 }
 
-export function FieldsetErrorText(
-	props: PropsWithChildren<{ class?: string }>,
-) {
+function FieldsetErrorText(props: PropsWithChildren<{ class?: string }>) {
 	const context = useFieldsetContext();
 	const styles = fieldset();
 	if (context?.invalid) {
@@ -136,7 +134,7 @@ export function FieldsetErrorText(
 	return null;
 }
 
-export function FieldsetContent(
+function FieldsetContent(
 	props: PropsWithChildren<{
 		class?: string;
 		[key: string]: unknown;
@@ -151,7 +149,7 @@ export function FieldsetContent(
 	);
 }
 
-export function FieldsetControl(
+function FieldsetControl(
 	props: PropsWithChildren<{
 		class?: string;
 		[key: string]: unknown;
@@ -165,3 +163,6 @@ export function FieldsetControl(
 		</div>
 	);
 }
+
+export { Fieldset, type FieldsetProps };
+export default Fieldset;

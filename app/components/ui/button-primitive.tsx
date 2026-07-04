@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from "hono/jsx";
+import type { Child, PropsWithChildren } from "hono/jsx";
 import { createContext, useContext } from "hono/jsx";
 import { cx } from "styled-system/css";
 import type { ButtonVariantProps } from "styled-system/recipes";
@@ -8,14 +8,14 @@ import { Loader } from "./loader";
 
 const ButtonContext = createContext<ButtonVariantProps>({});
 
-export interface ButtonLoadingProps {
+interface ButtonLoadingProps {
 	loading?: boolean;
-	loadingText?: any;
-	spinner?: any;
+	loadingText?: Child;
+	spinner?: Child;
 	spinnerPlacement?: "start" | "end";
 }
 
-export interface ButtonProps
+interface ButtonProps
 	extends ButtonVariantProps,
 		ButtonLoadingProps,
 		PropsWithChildren<{
@@ -26,7 +26,7 @@ export interface ButtonProps
 			[key: string]: unknown;
 		}> {}
 
-export function Button(props: ButtonProps) {
+function Button(props: ButtonProps) {
 	const groupVariantProps = useContext(ButtonContext);
 	const mergedProps = { ...groupVariantProps, ...props };
 	const [variantProps, localProps] = button.splitVariantProps(mergedProps);
@@ -68,9 +68,9 @@ export function Button(props: ButtonProps) {
 	);
 }
 
-export interface ButtonGroupProps extends GroupProps, ButtonVariantProps {}
+interface ButtonGroupProps extends GroupProps, ButtonVariantProps {}
 
-export function ButtonGroup(props: ButtonGroupProps) {
+function ButtonGroup(props: ButtonGroupProps) {
 	const [variantProps, localProps] = button.splitVariantProps(props);
 	const { children, ...rest } = localProps;
 
@@ -80,3 +80,11 @@ export function ButtonGroup(props: ButtonGroupProps) {
 		</ButtonContext.Provider>
 	);
 }
+
+export {
+	Button,
+	ButtonGroup,
+	type ButtonGroupProps,
+	type ButtonLoadingProps,
+	type ButtonProps,
+};

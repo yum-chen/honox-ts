@@ -13,7 +13,7 @@ Displays a brief, important message in a way that attracts the user's attention 
 | `indicator`   | `Child`                                       | An icon or element to be rendered as an indicator.        |
 | `children`    | `Child`                                       | Additional content to be rendered inside the component.   |
 | `class`       | `string`                                      | Custom CSS classes.                                       |
-| `status`      | `"info" \| "success" \| "warning" \| "error"` | The status color palette of the alert.                    |
+| `status`      | `"info" \| "success" \| "warning" \| "error" \| "neutral"` | The status color palette of the alert.                    |
 | `variant`     | `"subtle" \| "solid" \| "outline"`            | The visual style of the alert.                            |
 | `aria-live`   | `"polite" \| "assertive" \| "off"`            | The aria-live setting of the alert. Defaults to "polite". |
 
