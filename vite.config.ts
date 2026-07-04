@@ -5,8 +5,32 @@ import { defineConfig } from "vite";
 import pandaConfig from "./panda.config";
 import path from "path";
 import { fileURLToPath } from "url";
+import { renameSync, existsSync, mkdirSync } from "fs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// After SSG build, rename dist/blog.html → dist/blog/index.html
+// so /blog serves index.html inside the blog/ directory
+// and /blog/xxxxx.html can coexist without conflict.
+function fixBlogRoutingPlugin() {
+	return {
+		name: "fix-blog-routing",
+		closeBundle: async () => {
+			const distDir = path.resolve(__dirname, "dist");
+			const blogHtml = path.join(distDir, "blog.html");
+			const blogDir = path.join(distDir, "blog");
+			const blogIndex = path.join(blogDir, "index.html");
+
+			if (existsSync(blogHtml)) {
+				mkdirSync(blogDir, { recursive: true });
+				renameSync(blogHtml, blogIndex);
+				console.log(
+					"[fix-blog-routing] ✓ dist/blog.html → dist/blog/index.html",
+				);
+			}
+		},
+	};
+}
 
 const config = defineConfig(({ mode }) =>
 	mode === "client" ? clientConfig : mainConfig(mode),
@@ -22,7 +46,6 @@ const mainConfig = (_mode: string) => ({
 		minify: "oxc" as const,
 		emptyOutDir: false,
 	},
-	// Vite 8 native Oxc configuration
 	oxc: {
 		jsxImportSource: "hono/jsx",
 	},
@@ -37,6 +60,7 @@ const mainConfig = (_mode: string) => ({
 			},
 		}),
 		ssg({ entry: "app/server.ts" }),
+		fixBlogRoutingPlugin(),
 	],
 });
 
