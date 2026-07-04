@@ -23,6 +23,13 @@ export const badge = defineRecipe({
 				bg: "colorPalette.solid.bg",
 				color: "colorPalette.solid.fg",
 			},
+			surface: {
+				bg: "colorPalette.surface.bg",
+				borderWidth: "1px",
+				borderStyle: "solid",
+				borderColor: "colorPalette.surface.border",
+				color: "colorPalette.surface.fg",
+			},
 			subtle: {
 				bg: "colorPalette.subtle.bg",
 				color: "colorPalette.subtle.fg",
@@ -32,13 +39,6 @@ export const badge = defineRecipe({
 				borderStyle: "solid",
 				borderColor: "colorPalette.outline.border",
 				color: "colorPalette.outline.fg",
-			},
-			surface: {
-				bg: "colorPalette.surface.bg",
-				color: "colorPalette.surface.fg",
-				borderWidth: "1px",
-				borderStyle: "solid",
-				borderColor: "colorPalette.surface.border",
 			},
 		},
 		size: {
