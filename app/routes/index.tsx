@@ -22,6 +22,7 @@ import {
 	HoverCard,
 	IconButton,
 	Loader,
+	Menu,
 	Popover,
 	Progress,
 	Skeleton,
@@ -721,6 +722,59 @@ export default createRoute((c) => {
 						</Drawer.Content>
 					</Drawer.Positioner>
 				</Drawer.Root>
+			</div>
+
+			{/* Menu Examples (Flattened API) */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Menu Component Examples (Flattened API)
+				</Heading>
+
+				<Text size="sm" class={css({ color: "fg.muted", mb: "2" })}>
+					Basic Menu with Items (Interactive)
+				</Text>
+				<Menu
+					trigger={<Button variant="outline">Open Menu</Button>}
+					items={[
+						{ type: "item", label: "New Tab", value: "new-tab" },
+						{ type: "item", label: "New Window", value: "new-window" },
+						{ type: "separator" },
+						{ type: "item", label: "Print", value: "print" },
+						{
+							type: "checkbox",
+							label: "Show Bookmarks",
+							value: "show-bookmarks",
+							checked: true,
+						},
+					]}
+				/>
+
+				<Text size="sm" class={css({ color: "fg.muted", mt: "4", mb: "2" })}>
+					Menu with Disabled Items (Interactive)
+				</Text>
+				<Menu
+					trigger={
+						<Button variant="outline" colorPalette="blue">
+							Options
+						</Button>
+					}
+					items={[
+						{ type: "item", label: "Edit", value: "edit" },
+						{ type: "item", label: "Duplicate", value: "duplicate" },
+						{ type: "separator" },
+						{ type: "item", label: "Delete", value: "delete", disabled: true },
+					]}
+				/>
 			</div>
 
 			{/* Slider Examples */}
