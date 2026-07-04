@@ -95,7 +95,7 @@ export default createRoute(
 							bgGradient: "to-br",
 							gradientFrom: "blue.600",
 							gradientTo: "purple.600",
-							py: { base: "12", md: "16" },
+							py: { base: "8", md: "10" },
 							px: { base: "4", md: "6", lg: "8" },
 							position: "relative",
 							_overflow: "hidden",
@@ -356,13 +356,46 @@ export default createRoute(
 						</div>
 					</section>
 
+					{/* Cover Image (only if provided) */}
+					{data.cover && (
+						<section
+							class={css({
+								maxWidth: "6xl",
+								mx: "auto",
+								px: { base: "4", md: "6", lg: "8" },
+								mt: "-8",
+								position: "relative",
+								zIndex: "1",
+							})}
+						>
+							<div
+								class={css({
+									borderRadius: "2xl",
+									overflow: "hidden",
+									shadow: "2xl",
+								})}
+							>
+								<img
+									src={data.cover}
+									alt={data.title || "Post cover"}
+									class={css({
+										width: "full",
+										height: { base: "200px", md: "300px" },
+										objectFit: "cover",
+										display: "block",
+									})}
+								/>
+							</div>
+						</section>
+					)}
+
 					{/* Article Content */}
 					<section
 						class={css({
 							maxWidth: "4xl",
 							mx: "auto",
 							px: { base: "4", md: "6", lg: "8" },
-							py: { base: "8", md: "12" },
+							py: { base: "6", md: "8" },
 						})}
 					>
 						<div
