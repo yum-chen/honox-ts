@@ -1,14 +1,12 @@
 import type { PropsWithChildren } from "hono/jsx";
 import { createContext, useContext } from "hono/jsx";
-import { css, cx } from "styled-system/css";
+import { cx } from "styled-system/css";
 import type { ButtonVariantProps } from "styled-system/recipes";
 import { button } from "styled-system/recipes";
 import { Group, type GroupProps } from "./group";
 import { Loader } from "./loader";
 
-const ButtonContext = createContext<
-	ButtonVariantProps & { colorPalette?: string }
->({});
+const ButtonContext = createContext<ButtonVariantProps>({});
 
 export interface ButtonLoadingProps {
 	loading?: boolean;
@@ -25,7 +23,6 @@ export interface ButtonProps
 			type?: "button" | "submit" | "reset";
 			disabled?: boolean;
 			interactive?: boolean;
-			colorPalette?: string;
 			[key: string]: unknown;
 		}> {}
 
@@ -42,7 +39,6 @@ export function Button(props: ButtonProps) {
 		class: classProp,
 		type = "button",
 		disabled,
-		colorPalette,
 		interactive,
 		...rest
 	} = localProps;
@@ -50,13 +46,7 @@ export function Button(props: ButtonProps) {
 	return (
 		<button
 			type={type}
-			class={cx(
-				button(variantProps),
-				css({
-					colorPalette: colorPalette || mergedProps.colorPalette || "gray",
-				}),
-				classProp,
-			)}
+			class={cx(button(variantProps), classProp)}
 			disabled={loading || disabled}
 			aria-busy={loading}
 			aria-disabled={loading || disabled}
@@ -78,16 +68,14 @@ export function Button(props: ButtonProps) {
 	);
 }
 
-export interface ButtonGroupProps extends GroupProps, ButtonVariantProps {
-	colorPalette?: string;
-}
+export interface ButtonGroupProps extends GroupProps, ButtonVariantProps {}
 
 export function ButtonGroup(props: ButtonGroupProps) {
 	const [variantProps, localProps] = button.splitVariantProps(props);
-	const { children, colorPalette, ...rest } = localProps;
+	const { children, ...rest } = localProps;
 
 	return (
-		<ButtonContext.Provider value={{ ...variantProps, colorPalette }}>
+		<ButtonContext.Provider value={variantProps}>
 			<Group {...(rest as any)}>{children}</Group>
 		</ButtonContext.Provider>
 	);

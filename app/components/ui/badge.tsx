@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "hono/jsx";
-import { css, cx } from "styled-system/css";
+import { cx } from "styled-system/css";
 import type { BadgeVariantProps } from "styled-system/recipes";
 import { badge } from "styled-system/recipes";
 
@@ -8,31 +8,14 @@ export interface BadgeProps
 		PropsWithChildren<{
 			class?: string;
 			interactive?: boolean;
-			colorPalette?: string;
 		}> {}
 
 export function Badge(props: BadgeProps) {
 	const [variantProps, localProps] = badge.splitVariantProps(props);
-	const { children, class: classProp, colorPalette, ...restProps } = localProps;
-
-	const colorPaletteMap: Record<string, string> = {
-		success: "green",
-		error: "red",
-		warning: "orange",
-	};
-
-	const resolvedColorPalette =
-		(colorPalette && colorPaletteMap[colorPalette]) || colorPalette || "gray";
+	const { children, class: classProp, ...restProps } = localProps;
 
 	return (
-		<div
-			class={cx(
-				badge(variantProps),
-				css({ colorPalette: resolvedColorPalette }),
-				classProp,
-			)}
-			{...restProps}
-		>
+		<div class={cx(badge(variantProps), classProp)} {...restProps}>
 			{children}
 		</div>
 	);

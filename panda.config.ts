@@ -41,12 +41,46 @@ export default defineConfig({
 	staticCss: {
 		recipes: {
 			badge: [
-				{ variant: ["subtle", "solid", "outline", "surface"], size: ["sm", "md", "lg", "xl", "2xl"] },
-				{ colorPalette: ["green", "red", "orange", "blue", "gray"] },
+				{
+					variant: ["solid", "subtle", "outline", "surface"],
+					size: ["sm", "md", "lg", "xl", "2xl"],
+					colorPalette: [
+						"success",
+						"error",
+						"warning",
+						"blue",
+						"green",
+						"red",
+						"orange",
+						"gray",
+						"cyan",
+						"amber",
+						"purple",
+					],
+				},
 			],
 			alert: [
-				{ variant: ["solid", "subtle", "outline", "surface"], status: ["info", "success", "error", "warning", "neutral"] },
+				{
+					variant: ["solid", "subtle", "outline", "surface"],
+					status: ["info", "success", "error", "warning", "neutral"],
+				},
 				{ colorPalette: ["blue", "green", "red", "orange", "gray"] },
+			],
+			button: [
+				{
+					variant: ["solid", "surface", "subtle", "outline", "plain"],
+					size: ["2xs", "xs", "sm", "md", "lg", "xl", "2xl"],
+					colorPalette: [
+						"blue",
+						"green",
+						"red",
+						"orange",
+						"gray",
+						"cyan",
+						"amber",
+						"purple",
+					],
+				},
 			],
 		},
 	},
