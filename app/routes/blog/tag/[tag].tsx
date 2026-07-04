@@ -1,5 +1,5 @@
-import { createRoute } from "honox/factory";
 import { ssgParams } from "hono/ssg";
+import { createRoute } from "honox/factory";
 import { css } from "styled-system/css";
 import { Badge, Button, Card, Heading, Text } from "../../../components/ui";
 import { parseFrontmatter } from "../../../utils/markdown";
@@ -32,7 +32,7 @@ export default createRoute(
 
 		const allTags = new Set<string>();
 
-		for (const [path, loader] of Object.entries(posts)) {
+		for (const [_path, loader] of Object.entries(posts)) {
 			try {
 				const markdown = await (loader as () => Promise<string>)();
 				const { data } = parseFrontmatter(markdown);
@@ -42,8 +42,10 @@ export default createRoute(
 				}
 
 				const postTags = Array.isArray(data.tags) ? data.tags : [];
-				postTags.forEach((tag: string) => allTags.add(tag));
-			} catch (error) {
+				postTags.forEach((tag: string) => {
+					allTags.add(tag);
+				});
+			} catch (_error) {
 				// Ignore errors
 			}
 		}
@@ -101,7 +103,7 @@ export default createRoute(
 
 		// Get unique tags for filter UI
 		const allTags = new Set<string>();
-		for (const [path, loader] of Object.entries(posts)) {
+		for (const [_path, loader] of Object.entries(posts)) {
 			try {
 				const markdown = await (loader as () => Promise<string>)();
 				const { data } = parseFrontmatter(markdown);
@@ -111,8 +113,10 @@ export default createRoute(
 				}
 
 				const postTags = Array.isArray(data.tags) ? data.tags : [];
-				postTags.forEach((tag: string) => allTags.add(tag));
-			} catch (error) {
+				postTags.forEach((tag: string) => {
+					allTags.add(tag);
+				});
+			} catch (_error) {
 				// Ignore errors
 			}
 		}
@@ -455,7 +459,7 @@ export default createRoute(
 					})}
 				>
 					{blogPosts.map((post, index) => (
-						<Card.Root
+						<Card
 							key={post.slug}
 							variant="outline"
 							class={css({
@@ -475,161 +479,64 @@ export default createRoute(
 								borderWidth: "1px",
 								borderColor: "border",
 							})}
-						>
-							{post.draft && (
-								<div
-									class={css({
-										position: "absolute",
-										top: "4",
-										right: "4",
-										zIndex: "10",
-									})}
-								>
-									<Badge
-										variant="solid"
-										colorPalette="orange"
-										size="sm"
-										class={css({
-											borderRadius: "full",
-											px: "3",
-											py: "1",
-										})}
-									>
-										Draft
-									</Badge>
-								</div>
-							)}
-
-							{/* Cover Image */}
-							{post.cover && (
-								<div
-									class={css({
-										w: "full",
-										h: "52",
-										overflow: "hidden",
-										position: "relative",
-									})}
-								>
-									<img
-										src={post.cover}
-										alt={post.title}
+							image={
+								post.cover ? (
+									<div
 										class={css({
 											w: "full",
-											h: "full",
-											objectFit: "cover",
-											transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-											_cardRootHover: {
-												transform: "scale(1.1)",
-											},
-										})}
-									/>
-									<div
-										class={css({
-											position: "absolute",
-											bottom: "0",
-											left: "0",
-											right: "0",
-											h: "60%",
-											bgGradient: "to-t",
-											gradientFrom: "blackAlpha.600",
-											gradientTo: "transparent",
-											pointerEvents: "none",
-										})}
-									/>
-								</div>
-							)}
-
-							<Card.Body class={css({ p: "7" })}>
-								{/* Tags */}
-								{post.tags.length > 0 && (
-									<div
-										class={css({
-											display: "flex",
-											flexWrap: "wrap",
-											gap: "2",
-											mb: "4",
+											h: "52",
+											overflow: "hidden",
+											position: "relative",
 										})}
 									>
-										{post.tags.slice(0, 3).map((tag) => (
-											<Badge
-												key={tag}
-												variant="subtle"
-												colorPalette="blue"
-												size="sm"
-												class={css({
-													borderRadius: "full",
-													px: "3",
-													py: "1",
-													fontSize: "xs",
-													fontWeight: "medium",
-													transition: "all 0.2s",
-													_hover: {
-														bg: "blue.200",
-													},
-												})}
-											>
-												{tag}
-											</Badge>
-										))}
-										{post.tags.length > 3 && (
-											<Badge
-												variant="subtle"
-												colorPalette="gray"
-												size="sm"
-												class={css({
-													borderRadius: "full",
-													px: "3",
-													py: "1",
-													fontSize: "xs",
-													fontWeight: "medium",
-												})}
-											>
-												+{post.tags.length - 3}
-											</Badge>
-										)}
+										<img
+											src={post.cover}
+											alt={post.title}
+											class={css({
+												w: "full",
+												h: "full",
+												objectFit: "cover",
+												transition:
+													"transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+												_cardRootHover: {
+													transform: "scale(1.1)",
+												},
+											})}
+										/>
+										<div
+											class={css({
+												position: "absolute",
+												bottom: "0",
+												left: "0",
+												right: "0",
+												h: "60%",
+												bgGradient: "to-t",
+												gradientFrom: "blackAlpha.600",
+												gradientTo: "transparent",
+												pointerEvents: "none",
+											})}
+										/>
 									</div>
-								)}
-
-								{/* Title */}
-								<Card.Title
+								) : undefined
+							}
+							title={
+								<a
+									href={`/blog/${post.slug}`}
 									class={css({
-										mb: "3",
-										lineHeight: "tight",
-										fontSize: "xl",
-										fontWeight: "bold",
+										color: "fg",
+										textDecoration: "none",
+										transition: "color 0.2s",
 										_hover: { color: "blue.600" },
 									})}
 								>
-									<a
-										href={`/blog/${post.slug}`}
-										class={css({
-											color: "fg",
-											textDecoration: "none",
-											transition: "color 0.2s",
-											_hover: { color: "blue.600" },
-										})}
-									>
-										{post.title}
-									</a>
-								</Card.Title>
-
-								{/* Description */}
-								<Card.Description
-									class={css({
-										mb: "5",
-										lineHeight: "relaxed",
-										fontSize: "sm",
-										color: "fg.muted",
-										display: "-webkit-box",
-										webkitLineClamp: "3",
-										webkitBoxOrient: "vertical",
-										overflow: "hidden",
-									})}
-								>
-									{post.description}
-								</Card.Description>
-
-								{/* Footer */}
+									{post.title}
+								</a>
+							}
+							description={post.description}
+							headerClass={css({ p: "7", pb: "0" })}
+							bodyClass={css({ p: "7", pt: "4" })}
+							footerClass={css({ p: "7", pt: "0" })}
+							footer={
 								<div
 									class={css({
 										display: "flex",
@@ -638,7 +545,7 @@ export default createRoute(
 										pt: "5",
 										borderTopWidth: "1px",
 										borderColor: "border.subtle",
-										mt: "auto",
+										width: "full",
 									})}
 								>
 									<div
@@ -741,8 +648,84 @@ export default createRoute(
 										</Button>
 									</a>
 								</div>
-							</Card.Body>
-						</Card.Root>
+							}
+						>
+							<div>
+								{post.draft && (
+									<div
+										class={css({
+											position: "absolute",
+											top: "4",
+											right: "4",
+											zIndex: "10",
+										})}
+									>
+										<Badge
+											variant="solid"
+											colorPalette="orange"
+											size="sm"
+											class={css({
+												borderRadius: "full",
+												px: "3",
+												py: "1",
+											})}
+										>
+											Draft
+										</Badge>
+									</div>
+								)}
+
+								{/* Tags */}
+								{post.tags.length > 0 && (
+									<div
+										class={css({
+											display: "flex",
+											flexWrap: "wrap",
+											gap: "2",
+											mb: "4",
+										})}
+									>
+										{post.tags.slice(0, 3).map((tag) => (
+											<Badge
+												key={tag}
+												variant="subtle"
+												colorPalette="blue"
+												size="sm"
+												class={css({
+													borderRadius: "full",
+													px: "3",
+													py: "1",
+													fontSize: "xs",
+													fontWeight: "medium",
+													transition: "all 0.2s",
+													_hover: {
+														bg: "blue.200",
+													},
+												})}
+											>
+												{tag}
+											</Badge>
+										))}
+										{post.tags.length > 3 && (
+											<Badge
+												variant="subtle"
+												colorPalette="gray"
+												size="sm"
+												class={css({
+													borderRadius: "full",
+													px: "3",
+													py: "1",
+													fontSize: "xs",
+													fontWeight: "medium",
+												})}
+											>
+												+{post.tags.length - 3}
+											</Badge>
+										)}
+									</div>
+								)}
+							</div>
+						</Card>
 					))}
 				</div>
 

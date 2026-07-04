@@ -1,7 +1,7 @@
 // Simple frontmatter parser for markdown files
 // No external dependencies required
 
-export interface BlogPost {
+interface BlogPost {
 	slug: string;
 	title: string;
 	date: string;
@@ -111,3 +111,5 @@ export function markdownToHtml(markdown: string): string {
 
 	return processedLines.join("\n");
 }
+
+export type { BlogPost };

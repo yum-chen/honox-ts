@@ -27,13 +27,21 @@ const Stack = ({ children, gap, align }: any) => (
 	</div>
 );
 
-const Box = ({ children, p, bg, borderRadius, border, onContextMenu }: any) => (
-	<div
-		class={css({ p, bg, borderRadius, border })}
+const _Box = ({
+	children,
+	p,
+	bg,
+	borderRadius,
+	border,
+	onContextMenu,
+}: any) => (
+	<button
+		type="button"
+		class={css({ p, bg, borderRadius, border, textAlign: "left" })}
 		onContextMenu={onContextMenu}
 	>
 		{children}
-	</div>
+	</button>
 );
 
 export default function MenuTestPage() {

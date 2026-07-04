@@ -16,9 +16,11 @@
 		"start": "bun run src/main.ts",
 		"start:ssg": "bun run src/main.ts --static",
 		"test": "bun run test:unit",
-		"test:unit": "bun test tests/*.unit.test.ts"
+		"test:unit": "bun test tests/*.unit.test.ts",
+		"scan": "uvx semgrep@latest scan --config=p/typescript,p/javascript,p/nodejs --include='*.ts,*.tsx,*.js,*.jsx,*.mjs,*.cjs' --error"
 	},
 	"dependencies": {
+		"@ark-ui/react": "^5.37.2",
 		"hono": "^4.12.27",
 		"honox": "0.1.56"
 	},

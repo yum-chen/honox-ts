@@ -264,15 +264,14 @@ export function MenuItemGroup(props: MenuItemGroupProps) {
 	const context = useMenuContext();
 
 	return (
-		<div
+		<fieldset
 			id={id}
-			role="group"
 			data-part="item-group"
 			class={cx(context.styles.itemGroup, classProp)}
 			{...restProps}
 		>
 			{children}
-		</div>
+		</fieldset>
 	);
 }
 

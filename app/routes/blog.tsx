@@ -64,7 +64,7 @@ export default createRoute(async (c) => {
 
 	// Get unique tags for filter UI
 	const allTags = new Set<string>();
-	for (const [path, loader] of Object.entries(posts)) {
+	for (const [_path, loader] of Object.entries(posts)) {
 		try {
 			const markdown = await (loader as () => Promise<string>)();
 			const { data } = parseFrontmatter(markdown);
@@ -74,8 +74,10 @@ export default createRoute(async (c) => {
 			}
 
 			const postTags = Array.isArray(data.tags) ? data.tags : [];
-			postTags.forEach((tag: string) => allTags.add(tag));
-		} catch (error) {
+			postTags.forEach((tag: string) => {
+				allTags.add(tag);
+			});
+		} catch (_error) {
 			// Ignore errors
 		}
 	}
@@ -287,8 +289,9 @@ export default createRoute(async (c) => {
 					</Text>
 
 					{/* Filter Button */}
-					<Drawer.Root interactive>
-						<Drawer.Trigger asChild>
+					<Drawer
+						interactive
+						trigger={
 							<Button
 								variant="outline"
 								class={css({
@@ -333,233 +336,221 @@ export default createRoute(async (c) => {
 								)}
 								{searchQuery ? `"${searchQuery}"` : "Filter articles..."}
 							</Button>
-						</Drawer.Trigger>
-						<Drawer.Backdrop />
-						<Drawer.Positioner>
-							<Drawer.Content>
-								<Drawer.Header>
-									<Drawer.Title>Search & Filter</Drawer.Title>
-									<Drawer.Description>
-										Find articles by keyword or browse by tag
-									</Drawer.Description>
-								</Drawer.Header>
-								<Drawer.Body>
-									{/* Search Section */}
-									<div class={css({ mb: "6" })}>
-										<Text
-											size="sm"
-											class={css({
-												fontWeight: "semibold",
-												mb: "3",
-												display: "block",
-												color: "fg",
-											})}
-										>
-											Search Articles
-										</Text>
-										<form
-											action="/blog"
-											method="GET"
-											class={css({
-												display: "flex",
-												flexDirection: "column",
-												gap: "3",
-											})}
-										>
-											<div class={css({ position: "relative" })}>
-												<div
-													class={css({
-														position: "absolute",
-														left: "3",
-														top: "50%",
-														transform: "translateY(-50%)",
-														color: "fg.muted",
-														pointerEvents: "none",
-														zIndex: "1",
-													})}
-												>
-													<svg
-														width="20"
-														height="20"
-														viewBox="0 0 24 24"
-														fill="none"
-														stroke="currentColor"
-														stroke-width="2"
-													>
-														<title>Search</title>
-														<circle cx="11" cy="11" r="8" />
-														<path d="m21 21-4.3-4.3" />
-													</svg>
-												</div>
-												<input
-													type="search"
-													name="q"
-													placeholder="Type to search..."
-													value={searchQuery}
-													autofocus
-													class={css({
-														width: "full",
-														pl: "10",
-														pr: "4",
-														py: "3",
-														borderWidth: "2px",
-														borderRadius: "lg",
-														bg: "bg",
-														color: "fg",
-														borderColor: "border",
-														fontSize: "lg",
-														transition: "all 0.2s",
-														_focus: {
-															outline: "none",
-															borderColor: "blue.500",
-															shadow: "0 0 0 3px var(--colors-blue-100)",
-														},
-														_placeholder: { color: "fg.muted" },
-													})}
-												/>
-											</div>
+						}
+						title="Search & Filter"
+						description="Find articles by keyword or browse by tag"
+						body={
+							<div>
+								{/* Search Section */}
+								<div class={css({ mb: "6" })}>
+									<Text
+										size="sm"
+										class={css({
+											fontWeight: "semibold",
+											mb: "3",
+											display: "block",
+											color: "fg",
+										})}
+									>
+										Search Articles
+									</Text>
+									<form
+										action="/blog"
+										method="GET"
+										class={css({
+											display: "flex",
+											flexDirection: "column",
+											gap: "3",
+										})}
+									>
+										<div class={css({ position: "relative" })}>
 											<div
 												class={css({
-													display: "flex",
-													gap: "2",
-													justifyContent: "flex-end",
+													position: "absolute",
+													left: "3",
+													top: "50%",
+													transform: "translateY(-50%)",
+													color: "fg.muted",
+													pointerEvents: "none",
+													zIndex: "1",
 												})}
 											>
-												{searchQuery && (
-													<a href="/blog" style={{ textDecoration: "none" }}>
-														<Button variant="ghost" size="sm">
-															Clear
-														</Button>
-													</a>
-												)}
-												<Button
-													type="submit"
-													variant="solid"
-													colorPalette="blue"
+												<svg
+													width="20"
+													height="20"
+													viewBox="0 0 24 24"
+													fill="none"
+													stroke="currentColor"
+													stroke-width="2"
 												>
-													Apply
-												</Button>
+													<title>Search</title>
+													<circle cx="11" cy="11" r="8" />
+													<path d="m21 21-4.3-4.3" />
+												</svg>
 											</div>
-										</form>
-									</div>
+											<input
+												type="search"
+												name="q"
+												placeholder="Type to search..."
+												value={searchQuery}
+												autofocus
+												class={css({
+													width: "full",
+													pl: "10",
+													pr: "4",
+													py: "3",
+													borderWidth: "2px",
+													borderRadius: "lg",
+													bg: "bg",
+													color: "fg",
+													borderColor: "border",
+													fontSize: "lg",
+													transition: "all 0.2s",
+													_focus: {
+														outline: "none",
+														borderColor: "blue.500",
+														shadow: "0 0 0 3px var(--colors-blue-100)",
+													},
+													_placeholder: { color: "fg.muted" },
+												})}
+											/>
+										</div>
+										<div
+											class={css({
+												display: "flex",
+												gap: "2",
+												justifyContent: "flex-end",
+											})}
+										>
+											{searchQuery && (
+												<a href="/blog" style={{ textDecoration: "none" }}>
+													<Button variant="ghost" size="sm">
+														Clear
+													</Button>
+												</a>
+											)}
+											<Button type="submit" variant="solid" colorPalette="blue">
+												Apply
+											</Button>
+										</div>
+									</form>
+								</div>
 
-									{/* Divider */}
+								{/* Divider */}
+								<div
+									class={css({
+										my: "6",
+										borderTopWidth: "1px",
+										borderColor: "border.subtle",
+									})}
+								/>
+
+								{/* Tag Filter Section */}
+								<div>
+									<Text
+										size="sm"
+										class={css({
+											fontWeight: "semibold",
+											mb: "3",
+											display: "block",
+											color: "fg",
+										})}
+									>
+										Filter by Tag
+									</Text>
 									<div
 										class={css({
-											my: "6",
+											display: "flex",
+											flexDirection: "column",
+											gap: "1",
+										})}
+									>
+										{["All", ...tags].map((tag) => {
+											const href = tag === "All" ? "/blog" : `/blog/tag/${tag}`;
+
+											return (
+												<a
+													href={href}
+													class={css({
+														width: "full",
+														display: "flex",
+														justifyContent: "space-between",
+														alignItems: "center",
+														px: "4",
+														py: "2.5",
+														borderRadius: "md",
+														textDecoration: "none",
+														fontSize: "sm",
+														fontWeight: "normal",
+														transition: "all 0.2s",
+														bg: "transparent",
+														color: "fg.muted",
+														_hover: {
+															bg: "gray.subtle.bg",
+															color: "fg",
+														},
+													})}
+												>
+													<span>{tag}</span>
+												</a>
+											);
+										})}
+									</div>
+								</div>
+
+								{/* Active Filters */}
+								{searchQuery && (
+									<div
+										class={css({
+											mt: "6",
+											pt: "6",
 											borderTopWidth: "1px",
 											borderColor: "border.subtle",
 										})}
-									/>
-
-									{/* Tag Filter Section */}
-									<div>
+									>
 										<Text
 											size="sm"
 											class={css({
-												fontWeight: "semibold",
+												color: "fg.muted",
 												mb: "3",
-												display: "block",
-												color: "fg",
+												fontWeight: "medium",
+												textTransform: "uppercase",
+												letterSpacing: "wide",
+												fontSize: "xs",
 											})}
 										>
-											Filter by Tag
+											Active Filters
 										</Text>
 										<div
 											class={css({
 												display: "flex",
-												flexDirection: "column",
-												gap: "1",
+												flexWrap: "wrap",
+												gap: "2",
+												alignItems: "center",
 											})}
 										>
-											{["All", ...tags].map((tag) => {
-												const href =
-													tag === "All" ? "/blog" : `/blog/tag/${tag}`;
-
-												return (
-													<a
-														href={href}
-														class={css({
-															width: "full",
-															display: "flex",
-															justifyContent: "space-between",
-															alignItems: "center",
-															px: "4",
-															py: "2.5",
-															borderRadius: "md",
-															textDecoration: "none",
-															fontSize: "sm",
-															fontWeight: "normal",
-															transition: "all 0.2s",
-															bg: "transparent",
-															color: "fg.muted",
-															_hover: {
-																bg: "gray.subtle.bg",
-																color: "fg",
-															},
-														})}
-													>
-														<span>{tag}</span>
-													</a>
-												);
-											})}
+											<Badge
+												variant="subtle"
+												colorPalette="blue"
+												class={css({
+													px: "3",
+													py: "1.5",
+													borderRadius: "full",
+												})}
+											>
+												Search: "{searchQuery}"
+											</Badge>
+											<a href="/blog" style={{ textDecoration: "none" }}>
+												<Button variant="link" size="sm" colorPalette="red">
+													Clear all
+												</Button>
+											</a>
 										</div>
 									</div>
-
-									{/* Active Filters */}
-									{searchQuery && (
-										<div
-											class={css({
-												mt: "6",
-												pt: "6",
-												borderTopWidth: "1px",
-												borderColor: "border.subtle",
-											})}
-										>
-											<Text
-												size="sm"
-												class={css({
-													color: "fg.muted",
-													mb: "3",
-													fontWeight: "medium",
-													textTransform: "uppercase",
-													letterSpacing: "wide",
-													fontSize: "xs",
-												})}
-											>
-												Active Filters
-											</Text>
-											<div
-												class={css({
-													display: "flex",
-													flexWrap: "wrap",
-													gap: "2",
-													alignItems: "center",
-												})}
-											>
-												<Badge
-													variant="subtle"
-													colorPalette="blue"
-													class={css({
-														px: "3",
-														py: "1.5",
-														borderRadius: "full",
-													})}
-												>
-													Search: "{searchQuery}"
-												</Badge>
-												<a href="/blog" style={{ textDecoration: "none" }}>
-													<Button variant="link" size="sm" colorPalette="red">
-														Clear all
-													</Button>
-												</a>
-											</div>
-										</div>
-									)}
-								</Drawer.Body>
-							</Drawer.Content>
-						</Drawer.Positioner>
-					</Drawer.Root>
+								)}
+							</div>
+						}
+					/>
 				</div>
 			</section>
 
@@ -628,7 +619,7 @@ export default createRoute(async (c) => {
 				})}
 			>
 				{filteredPosts.map((post, index) => (
-					<Card.Root
+					<Card
 						key={post.slug}
 						variant="outline"
 						class={css({
@@ -644,144 +635,63 @@ export default createRoute(async (c) => {
 							animationDelay: `${index * 0.1}s`,
 							animationFillMode: "both",
 						})}
-					>
-						{post.draft && (
-							<div
-								class={css({
-									position: "absolute",
-									top: "3",
-									right: "3",
-									zIndex: "10",
-								})}
-							>
-								<Badge variant="solid" colorPalette="orange" size="sm">
-									Draft
-								</Badge>
-							</div>
-						)}
-
-						{/* Cover Image */}
-						{post.cover && (
-							<div
-								class={css({
-									w: "full",
-									h: "48",
-									overflow: "hidden",
-									position: "relative",
-								})}
-							>
-								<img
-									src={post.cover}
-									alt={post.title}
+						image={
+							post.cover ? (
+								<div
 									class={css({
 										w: "full",
-										h: "full",
-										objectFit: "cover",
-										transition: "transform 0.3s",
-										_cardRootHover: {
-											transform: "scale(1.05)",
-										},
-									})}
-								/>
-								<div
-									class={css({
-										position: "absolute",
-										bottom: "0",
-										left: "0",
-										right: "0",
-										h: "50%",
-										bgGradient: "to-t",
-										gradientFrom: "blackAlpha.50",
-										gradientTo: "transparent",
-										pointerEvents: "none",
-									})}
-								/>
-							</div>
-						)}
-
-						<Card.Body class={css({ p: "6" })}>
-							{/* Tags */}
-							{post.tags.length > 0 && (
-								<div
-									class={css({
-										display: "flex",
-										flexWrap: "wrap",
-										gap: "2",
-										mb: "3",
+										h: "48",
+										overflow: "hidden",
+										position: "relative",
 									})}
 								>
-									{post.tags.slice(0, 3).map((tag) => (
-										<Badge
-											key={tag}
-											variant="subtle"
-											colorPalette="blue"
-											size="sm"
-											class={css({
-												borderRadius: "full",
-												px: "2.5",
-												py: "0.5",
-												fontSize: "xs",
-											})}
-										>
-											{tag}
-										</Badge>
-									))}
-									{post.tags.length > 3 && (
-										<Badge
-											variant="subtle"
-											colorPalette="gray"
-											size="sm"
-											class={css({
-												borderRadius: "full",
-												px: "2.5",
-												py: "0.5",
-												fontSize: "xs",
-											})}
-										>
-											+{post.tags.length - 3}
-										</Badge>
-									)}
+									<img
+										src={post.cover}
+										alt={post.title}
+										class={css({
+											w: "full",
+											h: "full",
+											objectFit: "cover",
+											transition: "transform 0.3s",
+											_cardRootHover: {
+												transform: "scale(1.05)",
+											},
+										})}
+									/>
+									<div
+										class={css({
+											position: "absolute",
+											bottom: "0",
+											left: "0",
+											right: "0",
+											h: "50%",
+											bgGradient: "to-t",
+											gradientFrom: "blackAlpha.50",
+											gradientTo: "transparent",
+											pointerEvents: "none",
+										})}
+									/>
 								</div>
-							)}
-
-							{/* Title */}
-							<Card.Title
+							) : undefined
+						}
+						title={
+							<a
+								href={`/blog/${post.slug}`}
 								class={css({
-									mb: "3",
-									lineHeight: "tight",
-									fontSize: "lg",
+									color: "fg",
+									textDecoration: "none",
+									transition: "color 0.2s",
 									_hover: { color: "blue.600" },
 								})}
 							>
-								<a
-									href={`/blog/${post.slug}`}
-									class={css({
-										color: "fg",
-										textDecoration: "none",
-										transition: "color 0.2s",
-										_hover: { color: "blue.600" },
-									})}
-								>
-									{post.title}
-								</a>
-							</Card.Title>
-
-							{/* Description */}
-							<Card.Description
-								class={css({
-									mb: "4",
-									lineHeight: "relaxed",
-									fontSize: "sm",
-									display: "-webkit-box",
-									webkitLineClamp: "3",
-									webkitBoxOrient: "vertical",
-									overflow: "hidden",
-								})}
-							>
-								{post.description}
-							</Card.Description>
-
-							{/* Footer */}
+								{post.title}
+							</a>
+						}
+						description={post.description}
+						headerClass={css({ p: "6", pb: "0" })}
+						bodyClass={css({ p: "6", pt: "3" })}
+						footerClass={css({ p: "6", pt: "0" })}
+						footer={
 							<div
 								class={css({
 									display: "flex",
@@ -790,7 +700,7 @@ export default createRoute(async (c) => {
 									pt: "4",
 									borderTopWidth: "1px",
 									borderColor: "border.subtle",
-									mt: "auto",
+									width: "full",
 								})}
 							>
 								<div
@@ -888,8 +798,69 @@ export default createRoute(async (c) => {
 									</Button>
 								</a>
 							</div>
-						</Card.Body>
-					</Card.Root>
+						}
+					>
+						<div>
+							{post.draft && (
+								<div
+									class={css({
+										position: "absolute",
+										top: "3",
+										right: "3",
+										zIndex: "10",
+									})}
+								>
+									<Badge variant="solid" colorPalette="orange" size="sm">
+										Draft
+									</Badge>
+								</div>
+							)}
+
+							{/* Tags */}
+							{post.tags.length > 0 && (
+								<div
+									class={css({
+										display: "flex",
+										flexWrap: "wrap",
+										gap: "2",
+										mb: "3",
+									})}
+								>
+									{post.tags.slice(0, 3).map((tag) => (
+										<Badge
+											key={tag}
+											variant="subtle"
+											colorPalette="blue"
+											size="sm"
+											class={css({
+												borderRadius: "full",
+												px: "2.5",
+												py: "0.5",
+												fontSize: "xs",
+											})}
+										>
+											{tag}
+										</Badge>
+									))}
+									{post.tags.length > 3 && (
+										<Badge
+											variant="subtle"
+											colorPalette="gray"
+											size="sm"
+											class={css({
+												borderRadius: "full",
+												px: "2.5",
+												py: "0.5",
+												fontSize: "xs",
+											})}
+										>
+											+{post.tags.length - 3}
+										</Badge>
+									)}
+								</div>
+							)}
+						</div>
+					</Card>
 				))}
 			</div>
 

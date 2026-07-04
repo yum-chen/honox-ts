@@ -6,12 +6,11 @@ A component used to indicate a loading state.
 
 # Props
 
-| Prop       | Type                                                         | Description                                  |
-| :--------- | :----------------------------------------------------------- | :------------------------------------------- |
-| `children` | `any`                                                        | Content to be rendered inside the component. |
-| `class`    | `string`                                                     | Custom CSS classes.                          |
-| `size`     | `"xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "inherit"` | The size of the spinner.                     |
-| `label`    | `string`                                                     | An accessible label for screen readers.      |
+| Prop    | Type                                                         | Description                                  |
+| :------ | :----------------------------------------------------------- | :------------------------------------------- |
+| `class` | `string`                                                     | Custom CSS classes.                          |
+| `size`  | `"xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl" \| "inherit"` | The size of the spinner.                     |
+| `label` | `string`                                                     | An accessible label for screen readers.      |
 
 # Usage
 

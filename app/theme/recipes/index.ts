@@ -43,6 +43,7 @@ export const recipes = {
 
 export const slotRecipes = {
 	alert,
+	splitter,
 	breadcrumb,
 	card,
 	checkbox,
@@ -57,7 +58,6 @@ export const slotRecipes = {
 	popover,
 	progress,
 	slider,
-	splitter,
 	switchRecipe,
 	table,
 	tabs,

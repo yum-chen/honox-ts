@@ -158,10 +158,10 @@ function Indicator(props: IndicatorProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useCollapsibleContext();
 	const styles = context?.styles;
-	const open = context?.open;
+	const open = !!context?.open;
 
 	return (
-		<div
+		<span
 			data-scope="collapsible"
 			data-part="indicator"
 			data-state={open ? "open" : "closed"}
@@ -169,7 +169,7 @@ function Indicator(props: IndicatorProps) {
 			{...restProps}
 		>
 			{children}
-		</div>
+		</span>
 	);
 }
 

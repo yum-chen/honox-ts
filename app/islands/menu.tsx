@@ -71,7 +71,7 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 			// Submenu positioning
 			const rect = trigger.getBoundingClientRect();
 			let x = rect.right;
-			let y = rect.top;
+			const y = rect.top;
 
 			const menuWidth = content?.offsetWidth || 200;
 			if (x + menuWidth > window.innerWidth) {
