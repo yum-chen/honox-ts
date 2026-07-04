@@ -21,17 +21,6 @@ Live demo: [https://honox.chen.so](https://honox.chen.so)
 
 ## Architecture
 
-### Component-Only API
-
-All UI components live in `app/components/ui/` and serve as the primary entry points.
-
-**Smart Switcher pattern:**
-1. **Public Component** (`app/components/ui/*.tsx`) — decides whether to render a static primitive or an interactive island based on props (e.g. `onValueChange` or `interactive={true}`).
-2. **Primitive** (`app/components/ui/*-primitive.tsx`) — stateless, server-side compatible.
-3. **Island** (`app/islands/*.tsx`) — client-side state management. Never imported directly by routes.
-
-Setting `interactive={true}` forces hydration as an island.
-
 ### Routes
 
 | Route | File | Purpose |
