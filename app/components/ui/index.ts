@@ -22,7 +22,7 @@ export { Checkbox, type CheckboxProps } from "./checkbox";
 export * as Collapsible from "./collapsible";
 export { Combobox, type ComboboxProps } from "./combobox";
 export * as Dialog from "./dialog";
-export * as Drawer from "./drawer";
+export { Drawer, type DrawerProps } from "./drawer";
 export {
 	Field,
 	FieldErrorText,

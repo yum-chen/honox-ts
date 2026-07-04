@@ -699,9 +699,32 @@ export default createRoute((c) => {
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
 					Drawer Component Examples
 				</Heading>
+
+				<Text size="sm" class={css({ color: "fg.muted", mb: "2" })}>
+					Flattened API (Interactive)
+				</Text>
+				<Drawer
+					interactive
+					trigger={<Button variant="outline">Open Flattened Drawer</Button>}
+					title="Flattened Drawer"
+					description="This drawer uses the simplified flattened API."
+					body="This is the main content of the drawer, passed via the body prop."
+					footer={
+						<div class={css({ display: "flex", gap: "3" })}>
+							<Drawer.CloseTrigger asChild>
+								<Button variant="outline">Close</Button>
+							</Drawer.CloseTrigger>
+							<Button>Action</Button>
+						</div>
+					}
+				/>
+
+				<Text size="sm" class={css({ color: "fg.muted", mt: "6", mb: "2" })}>
+					Primitive API (Interactive)
+				</Text>
 				<Drawer.Root interactive>
 					<Drawer.Trigger asChild>
-						<Button variant="outline">Open Drawer</Button>
+						<Button variant="outline">Open Primitive Drawer</Button>
 					</Drawer.Trigger>
 					<Drawer.Backdrop />
 					<Drawer.Positioner>
