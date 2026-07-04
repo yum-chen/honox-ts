@@ -6,7 +6,7 @@
 	"scripts": {
 		"prepare": "panda codegen",
 		"dev": "vite",
-		"build": "vite build --mode client && vite build",
+		"build": "vite build --mode client && vite build && bun run scripts/generate-blog-posts.ts",
 		"preview": "wrangler dev",
 		"deploy": "bun run build && wrangler pages deploy ./dist",
 		"fix": "bun run check",
