@@ -12,7 +12,6 @@ const app = createApp({
 			"!/app/routes/**/*.test.{ts,tsx}",
 			"!/app/routes/**/*.spec.{ts,tsx}",
 			"!/app/routes/**/-*/**/*",
-			// [TEST_ROUTES]
 		],
 		{ eager: true },
 	),

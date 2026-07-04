@@ -37,6 +37,3 @@ lerna-debug.log*
 styled-system
 styled-system-studio
 
-# tests
-test-results/
-playwright-report/
