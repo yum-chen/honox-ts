@@ -37,4 +37,17 @@ export default defineConfig({
 
 	globalCss: theme.globalCss,
 	conditions: theme.conditions,
+
+	staticCss: {
+		recipes: {
+			badge: [
+				{ variant: ["subtle", "solid", "outline", "surface"], size: ["sm", "md", "lg", "xl", "2xl"] },
+				{ colorPalette: ["green", "red", "orange", "blue", "gray"] },
+			],
+			alert: [
+				{ variant: ["solid", "subtle", "outline", "surface"], status: ["info", "success", "error", "warning", "neutral"] },
+				{ colorPalette: ["blue", "green", "red", "orange", "gray"] },
+			],
+		},
+	},
 });

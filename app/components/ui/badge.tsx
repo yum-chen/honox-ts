@@ -8,21 +8,7 @@ export interface BadgeProps
 		PropsWithChildren<{
 			class?: string;
 			interactive?: boolean;
-			colorPalette?:
-				| "blue"
-				| "green"
-				| "red"
-				| "purple"
-				| "orange"
-				| "cyan"
-				| "yellow"
-				| "pink"
-				| "teal"
-				| "indigo"
-				| "gray"
-				| "success"
-				| "error"
-				| "warning";
+			colorPalette?: string;
 		}> {}
 
 export function Badge(props: BadgeProps) {
