@@ -70,7 +70,12 @@ export default createRoute((c) => {
 						})}
 					>
 						{sizes.map((size) => (
-							<Badge key={size} size={size} variant="subtle" colorPalette="blue">
+							<Badge
+								key={size}
+								size={size}
+								variant="subtle"
+								colorPalette="blue"
+							>
 								{size}
 							</Badge>
 						))}
