@@ -9,7 +9,7 @@ describe("Dialog Unit Tests", () => {
 				title="Dialog Title"
 				description="Dialog Description"
 				body="Body content"
-				footer={<button type="button">Close</button>}
+				cancel={<button type="button">Close</button>}
 			/>
 		).toString();
 
@@ -20,5 +20,6 @@ describe("Dialog Unit Tests", () => {
 		expect(html).toContain("Dialog Description");
 		expect(html).toContain("Body content");
 		expect(html).toContain("Close");
+		expect(html).toContain('data-part="close-trigger"');
 	});
 });

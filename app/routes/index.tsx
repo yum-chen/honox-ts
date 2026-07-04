@@ -665,12 +665,8 @@ export default createRoute((c) => {
 					title="Dialog Title"
 					description="This dialog uses the simplified flattened API."
 					body="This is the dialog body content."
-					footer={
-						<div class={css({ display: "flex", gap: "3" })}>
-							<Button variant="outline">Cancel</Button>
-							<Button>Confirm</Button>
-						</div>
-					}
+					cancel={<Button variant="outline">Cancel</Button>}
+					confirm={<Button>Confirm</Button>}
 				/>
 			</div>
 
@@ -696,12 +692,8 @@ export default createRoute((c) => {
 					title="Drawer Title"
 					description="This drawer uses the simplified flattened API."
 					body="This is the main content of the drawer, passed via the body prop."
-					footer={
-						<div class={css({ display: "flex", gap: "3" })}>
-							<Button variant="outline">Close</Button>
-							<Button>Action</Button>
-						</div>
-					}
+					cancel={<Button variant="outline">Close</Button>}
+					confirm={<Button>Action</Button>}
 				/>
 			</div>
 
