@@ -21,7 +21,7 @@ export * as Card from "./card";
 export { Checkbox, type CheckboxProps } from "./checkbox";
 export * as Collapsible from "./collapsible";
 export { Combobox, type ComboboxProps } from "./combobox";
-export * as Dialog from "./dialog";
+export { Dialog, type DialogProps } from "./dialog";
 export { Drawer, type DrawerProps } from "./drawer";
 export {
 	Field,

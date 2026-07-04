@@ -659,29 +659,19 @@ export default createRoute((c) => {
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
 					Dialog Component Examples
 				</Heading>
-				<Dialog.Root interactive>
-					<Dialog.Trigger asChild>
-						<Button variant="outline">Open Dialog</Button>
-					</Dialog.Trigger>
-					<Dialog.Backdrop />
-					<Dialog.Positioner>
-						<Dialog.Content>
-							<Dialog.Header>
-								<Dialog.Title>Dialog Title</Dialog.Title>
-								<Dialog.Description>Dialog Description</Dialog.Description>
-							</Dialog.Header>
-							<Dialog.Body>This is the dialog body content.</Dialog.Body>
-							<Dialog.Footer>
-								<Dialog.CloseTrigger asChild>
-									<Button variant="outline">Cancel</Button>
-								</Dialog.CloseTrigger>
-								<Dialog.ActionTrigger asChild>
-									<Button>Confirm</Button>
-								</Dialog.ActionTrigger>
-							</Dialog.Footer>
-						</Dialog.Content>
-					</Dialog.Positioner>
-				</Dialog.Root>
+				<Dialog
+					interactive
+					trigger={<Button variant="outline">Open Dialog</Button>}
+					title="Dialog Title"
+					description="This dialog uses the simplified flattened API."
+					body="This is the dialog body content."
+					footer={
+						<div class={css({ display: "flex", gap: "3" })}>
+							<Button variant="outline">Cancel</Button>
+							<Button>Confirm</Button>
+						</div>
+					}
+				/>
 			</div>
 
 			{/* Drawer Examples */}
