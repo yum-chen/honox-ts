@@ -12,10 +12,10 @@ export * as Breadcrumb from "./breadcrumb";
 export {
 	Button,
 	ButtonGroup,
-	CloseButton,
-	IconButton,
 	type ButtonGroupProps,
 	type ButtonProps,
+	CloseButton,
+	IconButton,
 } from "./button";
 export * as Card from "./card";
 export { Checkbox, type CheckboxProps } from "./checkbox";
@@ -28,8 +28,8 @@ export {
 	FieldErrorText,
 	FieldHelperText,
 	FieldLabel,
-	FieldRequiredIndicator,
 	type FieldProps,
+	FieldRequiredIndicator,
 } from "./field";
 export {
 	Fieldset,
@@ -44,14 +44,16 @@ export { Group, type GroupProps } from "./group";
 export { Heading, type HeadingProps } from "./heading";
 export * as HoverCard from "./hover-card";
 export { Loader, type LoaderProps } from "./loader";
+export { Menu, type MenuItem, type MenuProps } from "./menu";
+export * as MenuPrimitive from "./menu-primitive";
 export * as Popover from "./popover";
 export { Progress, type ProgressProps } from "./progress";
 export {
 	Skeleton,
 	SkeletonCircle,
-	SkeletonText,
 	type SkeletonCircleProps,
 	type SkeletonProps,
+	SkeletonText,
 	type SkeletonTextProps,
 } from "./skeleton";
 export * as Slider from "./slider";

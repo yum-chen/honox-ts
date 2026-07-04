@@ -42,6 +42,7 @@ export default defineConfig({
 			heading: ["*"],
 			hoverCard: ["*"],
 			input: ["*"],
+			menu: ["*"],
 			popover: ["*"],
 			progress: ["*"],
 			skeleton: ["*"],
