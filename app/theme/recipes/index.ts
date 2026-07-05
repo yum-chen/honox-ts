@@ -20,7 +20,6 @@ import { progress } from "./progress";
 import { skeleton } from "./skeleton";
 import { slider } from "./slider";
 import { spinner } from "./spinner";
-import { splitter } from "./splitter";
 import { switchRecipe } from "./switch";
 import { table } from "./table";
 import { tabs } from "./tabs";
@@ -57,7 +56,6 @@ export const slotRecipes = {
 	popover,
 	progress,
 	slider,
-	splitter,
 	switchRecipe,
 	table,
 	tabs,

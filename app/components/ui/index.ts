@@ -58,7 +58,6 @@ export {
 } from "./skeleton";
 export * as Slider from "./slider";
 export { Spinner, type SpinnerProps } from "./spinner";
-export * as Splitter from "./splitter";
 export { Switch, type SwitchProps } from "./switch";
 export * as Table from "./table";
 export { Tabs, type TabsItem, type TabsProps } from "./tabs";
