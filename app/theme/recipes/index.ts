@@ -23,6 +23,7 @@ import { spinner } from "./spinner";
 import { splitter } from "./splitter";
 import { switchRecipe } from "./switch";
 import { table } from "./table";
+import { tabs } from "./tabs";
 import { text } from "./text";
 import { textarea } from "./textarea";
 import { toast } from "./toast";
@@ -59,6 +60,7 @@ export const slotRecipes = {
 	splitter,
 	switchRecipe,
 	table,
+	tabs,
 	toast,
 	tooltip,
 };

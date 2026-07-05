@@ -33,6 +33,7 @@ import {
 	Splitter,
 	Switch,
 	Table,
+	Tabs,
 	Text,
 	Textarea,
 	Toast,
@@ -1692,6 +1693,80 @@ export default createRoute((c) => {
 					<Loader text="Loading..." />
 					<Loader spinnerPlacement="end">Processing</Loader>
 					<Loader spinner={<Spinner color="blue.500" />}>Custom Spinner</Loader>
+				</div>
+			</div>
+
+			{/* Tabs Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Tabs Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+					})}
+				>
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic Tabs (Interactive)
+						</Text>
+						<Tabs
+							colorPalette="blue"
+							defaultValue="react"
+							items={[
+								{ value: "react", label: "React", content: "React Content" },
+								{ value: "solid", label: "Solid", content: "Solid Content" },
+								{ value: "svelte", label: "Svelte", content: "Svelte Content" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Subtle Variant
+						</Text>
+						<Tabs
+							variant="subtle"
+							defaultValue="react"
+							items={[
+								{ value: "react", label: "React", content: "React Content" },
+								{ value: "solid", label: "Solid", content: "Solid Content" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Enclosed Variant
+						</Text>
+						<Tabs
+							variant="enclosed"
+							defaultValue="react"
+							items={[
+								{ value: "react", label: "React", content: "React Content" },
+								{ value: "solid", label: "Solid", content: "Solid Content" },
+							]}
+						/>
+					</div>
 				</div>
 			</div>
 
