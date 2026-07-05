@@ -24,6 +24,12 @@ export default function SplitterIsland(props: SplitterIslandProps) {
 
 	const rootRef = useRef<HTMLDivElement>(null);
 	const isDragging = useRef<string | null>(null);
+	const currentSizesRef = useRef(currentSizes);
+
+	// Keep ref in sync with state
+	useEffect(() => {
+		currentSizesRef.current = currentSizes;
+	}, [currentSizes]);
 
 	const updateSizes = (triggerId: string, newRatio: number) => {
 		const rootRect = rootRef.current?.getBoundingClientRect();
@@ -36,13 +42,17 @@ export default function SplitterIsland(props: SplitterIslandProps) {
 		// Find panels adjacent to the trigger
 		// A trigger with id 'a:b' is between panel 'a' and panel 'b'
 		const [prevId, nextId] = triggerId.split(":");
-		const prevIndex = currentSizes.findIndex((s) => s.id.toString() === prevId);
-		const nextIndex = currentSizes.findIndex((s) => s.id.toString() === nextId);
+		const prevIndex = currentSizesRef.current.findIndex(
+			(s) => s.id.toString() === prevId,
+		);
+		const nextIndex = currentSizesRef.current.findIndex(
+			(s) => s.id.toString() === nextId,
+		);
 
 		if (prevIndex === -1 || nextIndex === -1) return;
 
-		const prevSize = currentSizes[prevIndex].size;
-		const nextSize = currentSizes[nextIndex].size;
+		const prevSize = currentSizesRef.current[prevIndex].size;
+		const nextSize = currentSizesRef.current[nextIndex].size;
 		const combinedSize = prevSize + nextSize;
 
 		// Calculate new sizes for the two panels
@@ -50,14 +60,14 @@ export default function SplitterIsland(props: SplitterIslandProps) {
 		// We need to find what percentage of the root element the previous panels took
 		let offset = 0;
 		for (let i = 0; i < prevIndex; i++) {
-			offset += currentSizes[i].size;
+			offset += currentSizesRef.current[i].size;
 		}
 
 		let newPrevSize = newRatio - offset;
 		newPrevSize = Math.max(0, Math.min(combinedSize, newPrevSize));
 		const newNextSize = combinedSize - newPrevSize;
 
-		const newSizes = [...currentSizes];
+		const newSizes = [...currentSizesRef.current];
 		newSizes[prevIndex] = { ...newSizes[prevIndex], size: newPrevSize };
 		newSizes[nextIndex] = { ...newSizes[nextIndex], size: newNextSize };
 
@@ -67,53 +77,63 @@ export default function SplitterIsland(props: SplitterIslandProps) {
 		onSizeChange?.(newSizes);
 	};
 
-	const handleStart = (id: string) => (e: MouseEvent | TouchEvent) => {
-		isDragging.current = id;
-		document.addEventListener("mousemove", handleMove);
-		document.addEventListener("mouseup", handleEnd);
-		document.addEventListener("touchmove", handleMove, { passive: false });
-		document.addEventListener("touchend", handleEnd);
-	};
+	const handleMove = useRef<(e: MouseEvent | TouchEvent) => void>();
+	const handleEnd = useRef<() => void>();
 
-	const handleMove = (e: MouseEvent | TouchEvent) => {
-		if (!isDragging.current || !rootRef.current) return;
+	// Initialize handlers once
+	useEffect(() => {
+		const moveHandler = (e: MouseEvent | TouchEvent) => {
+			if (!isDragging.current || !rootRef.current) return;
 
-		const rootRect = rootRef.current.getBoundingClientRect();
-		const orientation = rootProps.orientation ?? "horizontal";
+			const rootRect = rootRef.current.getBoundingClientRect();
+			const orientation = rootProps.orientation ?? "horizontal";
 
-		const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
-		const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+			const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+			const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
 
-		let newRatio: number;
-		if (orientation === "horizontal") {
-			newRatio = ((clientX - rootRect.left) / rootRect.width) * 100;
-		} else {
-			newRatio = ((clientY - rootRect.top) / rootRect.height) * 100;
-		}
+			let newRatio: number;
+			if (orientation === "horizontal") {
+				newRatio = ((clientX - rootRect.left) / rootRect.width) * 100;
+			} else {
+				newRatio = ((clientY - rootRect.top) / rootRect.height) * 100;
+			}
 
-		newRatio = Math.max(0, Math.min(100, newRatio));
-		updateSizes(isDragging.current, newRatio);
+			newRatio = Math.max(0, Math.min(100, newRatio));
+			updateSizes(isDragging.current, newRatio);
 
-		if ("touches" in e) e.preventDefault();
-	};
+			if ("touches" in e) e.preventDefault();
+		};
 
-	const handleEnd = () => {
-		isDragging.current = null;
-		document.removeEventListener("mousemove", handleMove);
-		document.removeEventListener("mouseup", handleEnd);
-		document.removeEventListener("touchmove", handleMove);
-		document.removeEventListener("touchend", handleEnd);
-	};
+		const endHandler = () => {
+			isDragging.current = null;
+			document.removeEventListener("mousemove", moveHandler);
+			document.removeEventListener("mouseup", endHandler);
+			document.removeEventListener("touchmove", moveHandler);
+			document.removeEventListener("touchend", endHandler);
+		};
+
+		handleMove.current = moveHandler;
+		handleEnd.current = endHandler;
+
+		return () => {
+			document.removeEventListener("mousemove", moveHandler);
+			document.removeEventListener("mouseup", endHandler);
+			document.removeEventListener("touchmove", moveHandler);
+			document.removeEventListener("touchend", endHandler);
+		};
+	}, [rootProps.orientation]);
 
 	const handleKeyDown = (triggerId: string) => (e: KeyboardEvent) => {
 		const step = 5;
 		const [prevId, nextId] = triggerId.split(":");
-		const prevIndex = currentSizes.findIndex((s) => s.id.toString() === prevId);
+		const prevIndex = currentSizesRef.current.findIndex(
+			(s) => s.id.toString() === prevId,
+		);
 		if (prevIndex === -1) return;
 
 		let offset = 0;
 		for (let i = 0; i <= prevIndex; i++) {
-			offset += currentSizes[i].size;
+			offset += currentSizesRef.current[i].size;
 		}
 
 		let newRatio = offset;
@@ -134,17 +154,9 @@ export default function SplitterIsland(props: SplitterIslandProps) {
 		updateSizes(triggerId, newRatio);
 	};
 
+	// Attach listeners to triggers
 	useEffect(() => {
-		return () => {
-			document.removeEventListener("mousemove", handleMove);
-			document.removeEventListener("mouseup", handleEnd);
-			document.removeEventListener("touchmove", handleMove);
-			document.removeEventListener("touchend", handleEnd);
-		};
-	}, []);
-
-	useEffect(() => {
-		if (rootRef.current) {
+		if (rootRef.current && handleMove.current && handleEnd.current) {
 			const triggers = rootRef.current.querySelectorAll(
 				'[data-part="resize-trigger"]',
 			);
@@ -152,17 +164,28 @@ export default function SplitterIsland(props: SplitterIslandProps) {
 
 			triggers.forEach((trigger) => {
 				const triggerId = trigger.id.replace("splitter-trigger-", "");
-				const startListener = (e: MouseEvent | TouchEvent) =>
-					handleStart(triggerId)(e);
-				const keyListener = (e: KeyboardEvent) => handleKeyDown(triggerId)(e);
 
-				trigger.addEventListener("mousedown", startListener as any);
-				trigger.addEventListener("touchstart", startListener as any);
-				trigger.addEventListener("keydown", keyListener as any);
+				const startHandler = (e: MouseEvent | TouchEvent) => {
+					isDragging.current = triggerId;
+					document.addEventListener("mousemove", handleMove.current!);
+					document.addEventListener("mouseup", handleEnd.current!);
+					document.addEventListener("touchmove", handleMove.current!, {
+						passive: false,
+					});
+					document.addEventListener("touchend", handleEnd.current!);
+				};
+
+				const keyHandler = handleKeyDown(triggerId);
+
+				trigger.addEventListener("mousedown", startHandler as any);
+				trigger.addEventListener("touchstart", startHandler as any);
+				trigger.addEventListener("keydown", keyHandler as any);
 
 				// Update aria attributes
 				const [prevId] = triggerId.split(":");
-				const prevPanel = currentSizes.find((s) => s.id.toString() === prevId);
+				const prevPanel = currentSizesRef.current.find(
+					(s) => s.id.toString() === prevId,
+				);
 				if (prevPanel) {
 					trigger.setAttribute("aria-valuenow", prevPanel.size.toFixed(0));
 					trigger.setAttribute("aria-valuemin", "0");
@@ -170,15 +193,17 @@ export default function SplitterIsland(props: SplitterIslandProps) {
 				}
 
 				cleanups.push(() => {
-					trigger.removeEventListener("mousedown", startListener as any);
-					trigger.removeEventListener("touchstart", startListener as any);
-					trigger.removeEventListener("keydown", keyListener as any);
+					trigger.removeEventListener("mousedown", startHandler as any);
+					trigger.removeEventListener("touchstart", startHandler as any);
+					trigger.removeEventListener("keydown", keyHandler as any);
 				});
 			});
 
-			return () => cleanups.forEach((c) => c());
+			return () => {
+				cleanups.forEach((c) => c());
+			};
 		}
-	}, [children, currentSizes]);
+	}, []);
 
 	const styleVars = currentSizes.reduce(
 		(acc, curr) => {
