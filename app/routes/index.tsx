@@ -30,6 +30,7 @@ import {
 	SkeletonText,
 	Slider,
 	Spinner,
+	Splitter,
 	Switch,
 	Table,
 	Tabs,
@@ -1693,6 +1694,84 @@ export default createRoute((c) => {
 							items={[
 								{ value: "react", label: "React", content: "React Content" },
 								{ value: "solid", label: "Solid", content: "Solid Content" },
+							]}
+						/>
+					</div>
+				</div>
+			</div>
+
+			{/* Splitter Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Splitter Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+					})}
+				>
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Horizontal Splitter (Static)
+						</Text>
+						<Splitter
+							panels={[
+								{ id: "left", content: <div class={css({ p: "4" })}>Left Panel</div> },
+								{ id: "right", content: <div class={css({ p: "4" })}>Right Panel</div> },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Vertical Splitter (Interactive)
+						</Text>
+						<div class={css({ height: "300px", width: "full" })}>
+							<Splitter
+								interactive
+								orientation="vertical"
+								panels={[
+									{ id: "top", content: <div class={css({ p: "4" })}>Top Panel</div> },
+									{ id: "bottom", content: <div class={css({ p: "4" })}>Bottom Panel</div> },
+								]}
+							/>
+						</div>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Three Panels (Interactive)
+						</Text>
+						<Splitter
+							interactive
+							panels={[
+								{ id: "p1", content: <div class={css({ p: "4" })}>Panel 1</div> },
+								{ id: "p2", content: <div class={css({ p: "4" })}>Panel 2</div> },
+								{ id: "p3", content: <div class={css({ p: "4" })}>Panel 3</div> },
+							]}
+							defaultSize={[
+								{ id: "p1", size: 20 },
+								{ id: "p2", size: 60 },
+								{ id: "p3", size: 20 },
 							]}
 						/>
 					</div>
