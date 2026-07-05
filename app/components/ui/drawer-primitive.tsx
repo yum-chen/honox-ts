@@ -270,7 +270,12 @@ export function CloseTrigger(props: CloseTriggerProps) {
 		const child = children as any;
 		return cloneElement(child, {
 			...triggerProps,
-			class: cx(styles?.closeTrigger, classProp, child.props?.class),
+			class: cx(
+				styles?.closeTrigger,
+				"drawer__closeTrigger",
+				classProp,
+				child.props?.class,
+			),
 		});
 	}
 
@@ -278,7 +283,7 @@ export function CloseTrigger(props: CloseTriggerProps) {
 		<button
 			type="button"
 			aria-label="Close"
-			class={cx(styles?.closeTrigger, classProp)}
+			class={cx(styles?.closeTrigger, "drawer__closeTrigger", classProp)}
 			{...triggerProps}
 		>
 			{children}
