@@ -57,6 +57,7 @@ export function Root(props: RootProps) {
 		id: idProp,
 		orientation = "horizontal",
 		rootRef,
+		...rest
 	} = localProps;
 
 	const styles = tabs(variantProps);
@@ -80,6 +81,7 @@ export function Root(props: RootProps) {
 				data-orientation={orientation}
 				data-scope="tabs"
 				data-part="root"
+				{...rest}
 			>
 				{children}
 			</div>

@@ -111,3 +111,32 @@ export function Drawer(props: DrawerProps) {
 
 export { ActionTrigger, CloseTrigger };
 export default Drawer;
+
+// Attach sub-components to the Drawer component
+Object.assign(Drawer, {
+	Root,
+	Trigger,
+	Backdrop,
+	Positioner,
+	Content,
+	Header,
+	Title,
+	Description,
+	Body,
+	Footer,
+	CloseTrigger,
+	ActionTrigger,
+});
+
+export const DrawerRoot = Root;
+export const DrawerTrigger = Trigger;
+export const DrawerBackdrop = Backdrop;
+export const DrawerPositioner = Positioner;
+export const DrawerContent = Content;
+export const DrawerHeader = Header;
+export const DrawerTitle = Title;
+export const DrawerDescription = Description;
+export const DrawerBody = Body;
+export const DrawerFooter = Footer;
+export const DrawerCloseTrigger = CloseTrigger;
+export const DrawerActionTrigger = ActionTrigger;

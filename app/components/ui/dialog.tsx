@@ -122,3 +122,32 @@ export function Dialog(props: DialogProps) {
 
 export { ActionTrigger, CloseTrigger };
 export default Dialog;
+
+// Attach sub-components to the Dialog component
+Object.assign(Dialog, {
+	Root,
+	Trigger,
+	Backdrop,
+	Positioner,
+	Content,
+	Header,
+	Title,
+	Description,
+	Body,
+	Footer,
+	CloseTrigger,
+	ActionTrigger,
+});
+
+export const DialogRoot = Root;
+export const DialogTrigger = Trigger;
+export const DialogBackdrop = Backdrop;
+export const DialogPositioner = Positioner;
+export const DialogContent = Content;
+export const DialogHeader = Header;
+export const DialogTitle = Title;
+export const DialogDescription = Description;
+export const DialogBody = Body;
+export const DialogFooter = Footer;
+export const DialogCloseTrigger = CloseTrigger;
+export const DialogActionTrigger = ActionTrigger;
