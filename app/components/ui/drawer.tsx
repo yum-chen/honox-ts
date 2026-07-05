@@ -1,6 +1,7 @@
 import type { JSX } from "hono/jsx";
 import { useRef } from "hono/jsx";
 import DrawerIsland from "../../islands/drawer";
+import { IconButton } from "./button";
 import {
 	ActionTrigger,
 	Backdrop,
@@ -83,22 +84,10 @@ export function Drawer(props: DrawerProps) {
 			<Positioner>
 				<Content>
 					{closable && (
-						<CloseTrigger
-							asChild
-							class="drawer__closeTrigger drawer__closeTrigger--size_sm"
-						>
-							<button
-								type="button"
-								aria-label="Close"
-								style={{
-									position: "absolute",
-									top: "12px",
-									right: "12px",
-									cursor: "pointer",
-								}}
-							>
+						<CloseTrigger asChild>
+							<IconButton variant="plain" size="sm" aria-label="Close">
 								<CloseIcon />
-							</button>
+							</IconButton>
 						</CloseTrigger>
 					)}
 					<Header>

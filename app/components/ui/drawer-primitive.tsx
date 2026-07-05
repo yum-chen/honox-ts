@@ -171,7 +171,7 @@ export function Header(props: HeaderProps) {
 	const styles = context?.styles;
 
 	return (
-		<div class={cx(styles?.header, classProp)} {...restProps}>
+		<div class={cx(styles?.header, "drawer__header", classProp)} {...restProps}>
 			{children}
 		</div>
 	);
@@ -187,7 +187,7 @@ export function Body(props: BodyProps) {
 	const styles = context?.styles;
 
 	return (
-		<div class={cx(styles?.body, classProp)} {...restProps}>
+		<div class={cx(styles?.body, "drawer__body", classProp)} {...restProps}>
 			{children}
 		</div>
 	);
@@ -203,7 +203,7 @@ export function Footer(props: FooterProps) {
 	const styles = context?.styles;
 
 	return (
-		<div class={cx(styles?.footer, classProp)} {...restProps}>
+		<div class={cx(styles?.footer, "drawer__footer", classProp)} {...restProps}>
 			{children}
 		</div>
 	);
@@ -222,7 +222,7 @@ export function Title(props: TitleProps) {
 	return (
 		<h2
 			id={id ? `${id}-title` : undefined}
-			class={cx(styles?.title, classProp)}
+			class={cx(styles?.title, "drawer__title", classProp)}
 			{...restProps}
 		>
 			{children}
@@ -243,7 +243,7 @@ export function Description(props: DescriptionProps) {
 	return (
 		<div
 			id={id ? `${id}-description` : undefined}
-			class={cx(styles?.description, classProp)}
+			class={cx(styles?.description, "drawer__description", classProp)}
 			{...restProps}
 		>
 			{children}

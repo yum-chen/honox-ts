@@ -54,6 +54,8 @@ export const drawer = defineSlotRecipe({
 			color: "inherit",
 			bg: "gray.surface.bg",
 			boxShadow: "lg",
+			textAlign: "start",
+			textStyle: "sm",
 			_open: {
 				animationDuration: "slowest",
 				animationTimingFunction: "cubic-bezier(0.05, 0.7, 0.1, 1.0)",
