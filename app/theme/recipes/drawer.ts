@@ -54,6 +54,7 @@ export const drawer = defineSlotRecipe({
 			color: "inherit",
 			bg: "gray.surface.bg",
 			boxShadow: "lg",
+			textAlign: "left",
 			_open: {
 				animationDuration: "slowest",
 				animationTimingFunction: "cubic-bezier(0.05, 0.7, 0.1, 1.0)",
@@ -71,6 +72,7 @@ export const drawer = defineSlotRecipe({
 			pb: "4",
 			px: { base: "4", md: "6" },
 			flex: "0",
+			textAlign: "left",
 		},
 		body: {
 			display: "flex",
@@ -78,7 +80,11 @@ export const drawer = defineSlotRecipe({
 			alignItems: "flex-start",
 			flex: "1",
 			overflow: "auto",
-			p: { base: "4", md: "6" },
+			py: "2",
+			px: { base: "4", md: "6" },
+			textAlign: "left",
+			gap: "4",
+			textStyle: "sm",
 		},
 		footer: {
 			display: "flex",
@@ -86,8 +92,10 @@ export const drawer = defineSlotRecipe({
 			justifyContent: "flex-end",
 			flex: "0",
 			gap: "3",
-			py: "4",
+			pt: "4",
+			pb: { base: "4", md: "6" },
 			px: { base: "4", md: "6" },
+			textAlign: "left",
 		},
 		title: {
 			color: "fg.default",

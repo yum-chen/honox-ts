@@ -1,6 +1,7 @@
 import type { JSX } from "hono/jsx";
 import { useRef } from "hono/jsx";
 import DrawerIsland from "../../islands/drawer";
+import { CloseButton } from "./close-button";
 import {
 	ActionTrigger,
 	Backdrop,
@@ -29,23 +30,6 @@ function Root(props: RootProps) {
 	return <DrawerPrimitiveRoot {...rest} />;
 }
 
-const CloseIcon = () => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="24"
-		height="24"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		stroke-width="2"
-		stroke-linecap="round"
-		stroke-linejoin="round"
-	>
-		<title>Close</title>
-		<path d="M18 6 6 18" />
-		<path d="m6 6 12 12" />
-	</svg>
-);
 
 export interface DrawerProps extends RootProps {
 	trigger?: JSX.Element;
@@ -83,22 +67,8 @@ export function Drawer(props: DrawerProps) {
 			<Positioner>
 				<Content>
 					{closable && (
-						<CloseTrigger
-							asChild
-							class="drawer__closeTrigger drawer__closeTrigger--size_sm"
-						>
-							<button
-								type="button"
-								aria-label="Close"
-								style={{
-									position: "absolute",
-									top: "12px",
-									right: "12px",
-									cursor: "pointer",
-								}}
-							>
-								<CloseIcon />
-							</button>
+						<CloseTrigger asChild>
+							<CloseButton />
 						</CloseTrigger>
 					)}
 					<Header>
