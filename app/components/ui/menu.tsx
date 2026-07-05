@@ -1,7 +1,7 @@
 import type { JSX } from "hono/jsx";
 import { css, cx } from "styled-system/css";
 import { type MenuVariantProps, menu } from "styled-system/recipes";
-
+import InteractiveMenuRoot from "../../islands/menu";
 // Import primitive components from menu-primitive
 import {
 	MenuArrow as Arrow,
@@ -23,8 +23,6 @@ import {
 	MenuTrigger as Trigger,
 	MenuTriggerItem as TriggerItem,
 } from "./menu-primitive";
-
-import InteractiveMenuRoot from "../../islands/menu";
 
 // ============= Flattened API Types =============
 
@@ -175,7 +173,7 @@ function renderMenuItem(item: MenuItem, index: number): JSX.Element {
 
 // ============= Flattened Menu Component =============
 
-export function Menu(props: MenuProps) {
+const MenuRoot = (props: MenuProps) => {
 	const {
 		trigger,
 		items,
@@ -216,9 +214,30 @@ export function Menu(props: MenuProps) {
 			</Positioner>
 		</RootPrimitive>
 	);
-}
+};
 
 // ============= Exports =============
 
-// Export the flattened Menu component
-export { Menu as default };
+export const Menu = Object.assign(MenuRoot, {
+	Root: RootPrimitive,
+	Arrow,
+	ArrowTip,
+	CheckboxItem,
+	Content,
+	ContextTrigger,
+	Indicator,
+	Item,
+	ItemGroup,
+	ItemGroupLabel,
+	ItemIndicator,
+	ItemText,
+	Positioner,
+	RadioItem,
+	RadioItemGroup,
+	Separator,
+	Trigger,
+	TriggerItem,
+});
+
+// Export the flattened Menu component as default
+export default Menu;
