@@ -68,7 +68,7 @@ export const drawer = defineSlotRecipe({
 		header: {
 			display: "flex",
 			flexDirection: "column",
-			gap: "1",
+			gap: "1.5",
 			pt: { base: "4", md: "6" },
 			pb: "4",
 			px: { base: "4", md: "6" },
@@ -104,6 +104,7 @@ export const drawer = defineSlotRecipe({
 			pos: "absolute",
 			top: "3",
 			insetEnd: "3",
+			zIndex: "modal",
 		},
 	},
 	defaultVariants: {
