@@ -30,7 +30,6 @@ import {
 	SkeletonText,
 	Slider,
 	Spinner,
-	Splitter,
 	Switch,
 	Table,
 	Tabs,
@@ -984,76 +983,6 @@ export default createRoute((c) => {
 					label="Framework"
 					placeholder="Select a Framework"
 				/>
-			</div>
-
-			{/* Splitter Examples */}
-			<div
-				class={css({
-					mt: "8",
-					display: "flex",
-					flexDirection: "column",
-					gap: "4",
-					alignItems: "center",
-					maxWidth: "xl",
-					mx: "auto",
-				})}
-			>
-				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
-					Splitter Component Examples
-				</Heading>
-				<div
-					class={css({
-						width: "full",
-						display: "flex",
-						flexDirection: "column",
-						gap: "8",
-					})}
-				>
-					<Splitter.Root
-						interactive
-						defaultSize={[
-							{ id: "left", size: 50 },
-							{ id: "right", size: 50 },
-						]}
-						class={css({
-							width: "full",
-							height: "200px",
-							borderWidth: "1px",
-							borderRadius: "md",
-						})}
-					>
-						<Splitter.Panel id="left">
-							<AbsoluteCenter>Left Panel</AbsoluteCenter>
-						</Splitter.Panel>
-						<Splitter.ResizeTrigger id="left:right" />
-						<Splitter.Panel id="right">
-							<AbsoluteCenter>Right Panel</AbsoluteCenter>
-						</Splitter.Panel>
-					</Splitter.Root>
-
-					<Splitter.Root
-						interactive
-						orientation="vertical"
-						defaultSize={[
-							{ id: "top", size: 50 },
-							{ id: "bottom", size: 50 },
-						]}
-						class={css({
-							width: "full",
-							height: "300px",
-							borderWidth: "1px",
-							borderRadius: "md",
-						})}
-					>
-						<Splitter.Panel id="top">
-							<AbsoluteCenter>Top Panel</AbsoluteCenter>
-						</Splitter.Panel>
-						<Splitter.ResizeTrigger id="top:bottom" />
-						<Splitter.Panel id="bottom">
-							<AbsoluteCenter>Bottom Panel</AbsoluteCenter>
-						</Splitter.Panel>
-					</Splitter.Root>
-				</div>
 			</div>
 
 			{/* Group Examples */}
