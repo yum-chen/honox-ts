@@ -33,6 +33,7 @@ import {
 	Splitter,
 	Switch,
 	Table,
+	Tabs,
 	Text,
 	Textarea,
 	Toast,
@@ -1692,6 +1693,73 @@ export default createRoute((c) => {
 					<Loader text="Loading..." />
 					<Loader spinnerPlacement="end">Processing</Loader>
 					<Loader spinner={<Spinner color="blue.500" />}>Custom Spinner</Loader>
+				</div>
+			</div>
+
+			{/* Tabs Examples */}
+			<div class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Tabs Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+					})}
+				>
+					<Tabs
+						defaultValue="react"
+						items={[
+							{
+								value: "react",
+								label: "React",
+								content:
+									"React is a JavaScript library for building user interfaces.",
+							},
+							{
+								value: "solid",
+								label: "Solid",
+								content:
+									"Solid is a declarative, efficient, and flexible JavaScript library for building user interfaces.",
+							},
+							{
+								value: "svelte",
+								label: "Svelte",
+								content:
+									"Svelte is a radical new approach to building user interfaces.",
+							},
+						]}
+						indicator
+					/>
+
+					<Tabs
+						defaultValue="enclosed"
+						variant="enclosed"
+						items={[
+							{
+								value: "enclosed",
+								label: "Enclosed",
+								content: "This is the enclosed variant.",
+							},
+							{
+								value: "subtle",
+								label: "Subtle",
+								content: "This is the subtle variant.",
+							},
+						]}
+						indicator
+					/>
 				</div>
 			</div>
 
