@@ -99,7 +99,12 @@ export function Backdrop(props: BackdropProps) {
 	const open = context?.open;
 	return (
 		<div
-			class={cx(styles.backdrop, classProp, !open && css({ display: "none" }))}
+			class={cx(
+				styles.backdrop,
+				"drawer__backdrop",
+				classProp,
+				!open && css({ display: "none" }),
+			)}
 			data-state={open ? "open" : "closed"}
 			data-part="backdrop"
 			{...restProps}
@@ -123,6 +128,7 @@ export function Positioner(props: PositionerProps) {
 		<div
 			class={cx(
 				styles.positioner,
+				"drawer__positioner",
 				classProp,
 				!open && css({ display: "none" }),
 			)}
@@ -152,7 +158,12 @@ export function Content(props: ContentProps) {
 			aria-modal="true"
 			aria-labelledby={id ? `${id}-title` : undefined}
 			aria-describedby={id ? `${id}-description` : undefined}
-			class={cx(styles.content, classProp, !open && css({ display: "none" }))}
+			class={cx(
+				styles.content,
+				"drawer__content",
+				classProp,
+				!open && css({ display: "none" }),
+			)}
 			data-state={open ? "open" : "closed"}
 			{...restProps}
 		>
@@ -168,10 +179,10 @@ export interface HeaderProps extends PropsWithChildren {
 export function Header(props: HeaderProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDrawerContext();
-	const styles = context?.styles;
+	const styles = context?.styles || drawer();
 
 	return (
-		<div class={cx(styles?.header, "drawer__header", classProp)} {...restProps}>
+		<div class={cx(styles.header, "drawer__header", classProp)} {...restProps}>
 			{children}
 		</div>
 	);
@@ -184,10 +195,10 @@ export interface BodyProps extends PropsWithChildren {
 export function Body(props: BodyProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDrawerContext();
-	const styles = context?.styles;
+	const styles = context?.styles || drawer();
 
 	return (
-		<div class={cx(styles?.body, "drawer__body", classProp)} {...restProps}>
+		<div class={cx(styles.body, "drawer__body", classProp)} {...restProps}>
 			{children}
 		</div>
 	);
@@ -200,10 +211,10 @@ export interface FooterProps extends PropsWithChildren {
 export function Footer(props: FooterProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDrawerContext();
-	const styles = context?.styles;
+	const styles = context?.styles || drawer();
 
 	return (
-		<div class={cx(styles?.footer, "drawer__footer", classProp)} {...restProps}>
+		<div class={cx(styles.footer, "drawer__footer", classProp)} {...restProps}>
 			{children}
 		</div>
 	);
@@ -216,13 +227,13 @@ export interface TitleProps extends PropsWithChildren {
 export function Title(props: TitleProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDrawerContext();
-	const styles = context?.styles;
+	const styles = context?.styles || drawer();
 	const id = context?.id;
 
 	return (
 		<h2
 			id={id ? `${id}-title` : undefined}
-			class={cx(styles?.title, "drawer__title", classProp)}
+			class={cx(styles.title, "drawer__title", classProp)}
 			{...restProps}
 		>
 			{children}
@@ -237,13 +248,13 @@ export interface DescriptionProps extends PropsWithChildren {
 export function Description(props: DescriptionProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDrawerContext();
-	const styles = context?.styles;
+	const styles = context?.styles || drawer();
 	const id = context?.id;
 
 	return (
 		<div
 			id={id ? `${id}-description` : undefined}
-			class={cx(styles?.description, "drawer__description", classProp)}
+			class={cx(styles.description, "drawer__description", classProp)}
 			{...restProps}
 		>
 			{children}
@@ -254,12 +265,13 @@ export function Description(props: DescriptionProps) {
 export interface CloseTriggerProps extends PropsWithChildren {
 	class?: string;
 	asChild?: boolean;
+	unstyled?: boolean;
 }
 
 export function CloseTrigger(props: CloseTriggerProps) {
-	const { children, class: classProp, asChild, ...restProps } = props;
+	const { children, class: classProp, asChild, unstyled, ...restProps } = props;
 	const context = useDrawerContext();
-	const styles = context?.styles;
+	const styles = context?.styles || drawer();
 
 	const triggerProps = {
 		"data-part": "close-trigger",
@@ -271,8 +283,8 @@ export function CloseTrigger(props: CloseTriggerProps) {
 		return cloneElement(child, {
 			...triggerProps,
 			class: cx(
-				styles?.closeTrigger,
-				"drawer__closeTrigger",
+				!unstyled && styles.closeTrigger,
+				!unstyled && "drawer__closeTrigger",
 				classProp,
 				child.props?.class,
 			),
@@ -283,7 +295,11 @@ export function CloseTrigger(props: CloseTriggerProps) {
 		<button
 			type="button"
 			aria-label="Close"
-			class={cx(styles?.closeTrigger, "drawer__closeTrigger", classProp)}
+			class={cx(
+				!unstyled && styles.closeTrigger,
+				!unstyled && "drawer__closeTrigger",
+				classProp,
+			)}
 			{...triggerProps}
 		>
 			{children}

@@ -1,6 +1,8 @@
 import type { JSX } from "hono/jsx";
 import { useRef } from "hono/jsx";
+import { css } from "styled-system/css";
 import DialogIsland from "../../islands/dialog";
+import { IconButton } from "./button";
 import {
 	ActionTrigger,
 	Backdrop,
@@ -83,22 +85,10 @@ export function Dialog(props: DialogProps) {
 			<Positioner>
 				<Content>
 					{closable && (
-						<CloseTrigger
-							asChild
-							class="dialog__closeTrigger dialog__closeTrigger--size_sm"
-						>
-							<button
-								type="button"
-								aria-label="Close"
-								style={{
-									position: "absolute",
-									top: "12px",
-									right: "12px",
-									cursor: "pointer",
-								}}
-							>
+						<CloseTrigger asChild>
+							<IconButton variant="plain" size="sm" aria-label="Close">
 								<CloseIcon />
-							</button>
+							</IconButton>
 						</CloseTrigger>
 					)}
 					<Header>
@@ -109,7 +99,11 @@ export function Dialog(props: DialogProps) {
 					{children}
 					{(footer || cancel || confirm) && (
 						<Footer>
-							{cancel && <CloseTrigger asChild>{cancel}</CloseTrigger>}
+							{cancel && (
+								<CloseTrigger asChild unstyled>
+									{cancel}
+								</CloseTrigger>
+							)}
 							{confirm && <ActionTrigger asChild>{confirm}</ActionTrigger>}
 							{footer}
 						</Footer>

@@ -49,15 +49,17 @@ export const dialog = defineSlotRecipe({
 		title: {
 			fontWeight: "semibold",
 			textStyle: "lg",
+			textAlign: "start",
 		},
 		description: {
 			color: "fg.muted",
 			textStyle: "sm",
+			textAlign: "start",
 		},
 		closeTrigger: {
-			pos: "absolute",
-			top: "3",
-			insetEnd: "3",
+			pos: "absolute !important",
+			top: "4",
+			insetEnd: "4",
 		},
 		content: {
 			"--dialog-z-index": "zIndex.modal",
@@ -72,8 +74,8 @@ export const dialog = defineSlotRecipe({
 			textStyle: "sm",
 			width: "100%",
 			zIndex: "calc(var(--dialog-z-index) + var(--layer-index, 0))",
-			py: { base: "4", md: "6" },
 			gap: { base: "4", md: "6" },
+			textAlign: "start",
 			_open: {
 				animationDuration: "slowest",
 			},
@@ -84,9 +86,13 @@ export const dialog = defineSlotRecipe({
 		header: {
 			display: "flex",
 			flexDirection: "column",
-			gap: "0.5",
+			gap: "1",
 			px: { base: "4", md: "6" },
+			pt: { base: "4", md: "6" },
+			pb: "0",
 			flex: "0",
+			textAlign: "start",
+			alignItems: "flex-start",
 		},
 		body: {
 			display: "flex",
@@ -94,6 +100,8 @@ export const dialog = defineSlotRecipe({
 			flexDirection: "column",
 			alignItems: "flex-start",
 			px: { base: "4", md: "6" },
+			py: { base: "4", md: "6" },
+			textAlign: "start",
 		},
 		footer: {
 			display: "flex",
@@ -102,6 +110,9 @@ export const dialog = defineSlotRecipe({
 			flex: "0",
 			gap: "3",
 			px: { base: "4", md: "6" },
+			pt: "0",
+			pb: { base: "4", md: "6" },
+			textAlign: "start",
 		},
 	},
 	defaultVariants: {

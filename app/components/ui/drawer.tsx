@@ -1,5 +1,6 @@
 import type { JSX } from "hono/jsx";
 import { useRef } from "hono/jsx";
+import { css } from "styled-system/css";
 import DrawerIsland from "../../islands/drawer";
 import { IconButton } from "./button";
 import {
@@ -98,7 +99,11 @@ export function Drawer(props: DrawerProps) {
 					{children}
 					{(footer || cancel || confirm) && (
 						<Footer>
-							{cancel && <CloseTrigger asChild>{cancel}</CloseTrigger>}
+							{cancel && (
+								<CloseTrigger asChild unstyled>
+									{cancel}
+								</CloseTrigger>
+							)}
 							{confirm && <ActionTrigger asChild>{confirm}</ActionTrigger>}
 							{footer}
 						</Footer>
