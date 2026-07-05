@@ -48,6 +48,7 @@ export default defineConfig({
 			skeleton: ["*"],
 			slider: ["*"],
 			spinner: ["*"],
+			splitter: ["*"],
 			switch: ["*"],
 			table: ["*"],
 			text: ["*"],

@@ -30,6 +30,7 @@ import {
 	SkeletonText,
 	Slider,
 	Spinner,
+	Splitter,
 	Switch,
 	Table,
 	Tabs,
@@ -983,6 +984,108 @@ export default createRoute((c) => {
 					label="Framework"
 					placeholder="Select a Framework"
 				/>
+			</div>
+
+			{/* Splitter Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Splitter Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+					})}
+				>
+					<Text size="sm" class={css({ color: "fg.muted" })}>
+						Basic Splitter
+					</Text>
+					<Splitter
+						panels={[
+							{
+								id: "left",
+								content: <AbsoluteCenter>Left Panel</AbsoluteCenter>,
+							},
+							{
+								id: "right",
+								content: <AbsoluteCenter>Right Panel</AbsoluteCenter>,
+							},
+						]}
+						class={css({
+							width: "full",
+							height: "200px",
+							borderWidth: "1px",
+							borderRadius: "md",
+						})}
+					/>
+
+					<Text size="sm" class={css({ color: "fg.muted" })}>
+						Interactive Horizontal Splitter
+					</Text>
+					<Splitter
+						interactive
+						panels={[
+							{
+								id: "left",
+								content: <AbsoluteCenter>Left Panel</AbsoluteCenter>,
+							},
+							{
+								id: "right",
+								content: <AbsoluteCenter>Right Panel</AbsoluteCenter>,
+							},
+						]}
+						defaultSize={[
+							{ id: "left", size: 30 },
+							{ id: "right", size: 70 },
+						]}
+						class={css({
+							width: "full",
+							height: "200px",
+							borderWidth: "1px",
+							borderRadius: "md",
+						})}
+					/>
+
+					<Text size="sm" class={css({ color: "fg.muted" })}>
+						Interactive Vertical Splitter
+					</Text>
+					<Splitter
+						interactive
+						orientation="vertical"
+						panels={[
+							{
+								id: "top",
+								content: <AbsoluteCenter>Top Panel</AbsoluteCenter>,
+							},
+							{
+								id: "bottom",
+								content: <AbsoluteCenter>Bottom Panel</AbsoluteCenter>,
+							},
+						]}
+						defaultSize={[
+							{ id: "top", size: 50 },
+							{ id: "bottom", size: 50 },
+						]}
+						class={css({
+							width: "full",
+							height: "300px",
+							borderWidth: "1px",
+							borderRadius: "md",
+						})}
+					/>
+				</div>
 			</div>
 
 			{/* Group Examples */}
