@@ -61,7 +61,6 @@ export { Spinner, type SpinnerProps } from "./spinner";
 export * as Splitter from "./splitter";
 export { Switch, type SwitchProps } from "./switch";
 export * as Table from "./table";
-export * as Tabs from "./tabs";
 export { Text, type TextProps } from "./text";
 export { Textarea, type TextareaProps } from "./textarea";
 export * as Toast from "./toast";

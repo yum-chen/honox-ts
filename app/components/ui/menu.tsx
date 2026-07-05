@@ -1,7 +1,7 @@
 import type { JSX } from "hono/jsx";
 import { css, cx } from "styled-system/css";
 import { type MenuVariantProps, menu } from "styled-system/recipes";
-
+import InteractiveMenuRoot from "../../islands/menu";
 // Import primitive components from menu-primitive
 import {
 	MenuArrow as Arrow,
@@ -23,8 +23,6 @@ import {
 	MenuTrigger as Trigger,
 	MenuTriggerItem as TriggerItem,
 } from "./menu-primitive";
-
-import InteractiveMenuRoot from "../../islands/menu";
 
 // ============= Flattened API Types =============
 

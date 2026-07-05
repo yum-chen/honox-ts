@@ -71,7 +71,7 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 			// Submenu positioning
 			const rect = trigger.getBoundingClientRect();
 			let x = rect.right;
-			let y = rect.top;
+			const y = rect.top;
 
 			const menuWidth = content?.offsetWidth || 200;
 			if (x + menuWidth > window.innerWidth) {
@@ -84,7 +84,7 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 			// Regular menu positioning (dropdown)
 			const rect = trigger.getBoundingClientRect();
 			let x = rect.left;
-			let y = rect.bottom;
+			const y = rect.bottom;
 
 			const menuWidth = content?.offsetWidth || 200;
 			const menuHeight = content?.offsetHeight || 200;

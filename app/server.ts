@@ -1,8 +1,8 @@
-import { showRoutes } from "hono/dev";
-import { createApp } from "honox/server";
-import { readFileSync, existsSync, statSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { showRoutes } from "hono/dev";
+import { createApp } from "honox/server";
 
 const __dirname = join(fileURLToPath(import.meta.url), "..");
 

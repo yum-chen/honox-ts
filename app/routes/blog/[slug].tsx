@@ -1,8 +1,8 @@
-import { createRoute } from "honox/factory";
 import { ssgParams } from "hono/ssg";
+import { createRoute } from "honox/factory";
 import { css } from "styled-system/css";
 import { Badge, Button, Heading, Text } from "../../components/ui";
-import { parseFrontmatter, markdownToHtml } from "../../utils/markdown";
+import { markdownToHtml, parseFrontmatter } from "../../utils/markdown";
 
 // Use Vite's import.meta.glob to import all markdown files at build time
 const posts = import.meta.glob("/content/posts/*.md", {
