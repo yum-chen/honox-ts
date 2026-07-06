@@ -49,7 +49,7 @@ export {
     SkeletonCircle, SkeletonText, type SkeletonCircleProps,
     type SkeletonProps, type SkeletonTextProps
 } from "./skeleton";
-export * as Slider from "./slider";
+export { Slider, type SliderProps } from "./slider";
 export { Spinner, type SpinnerProps } from "./spinner";
 export {
     Splitter,

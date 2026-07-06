@@ -19,6 +19,7 @@ interface SliderContextValue {
 	value: number[];
 	min: number;
 	max: number;
+	formatValue?: (value: number) => string;
 }
 
 const SliderContext = createContext<SliderContextValue | null>(null);
@@ -51,19 +52,38 @@ const toValueArray = (value: SliderValue | undefined, fallback: number[]) => {
 	return fallback;
 };
 
-export interface RootProps extends SliderVariantProps, PropsWithChildren {
-	orientation?: "horizontal" | "vertical";
-	value?: SliderValue;
-	defaultValue?: SliderValue;
+export interface SliderProps extends SliderVariantProps {
+	children?: any;
+	value?: number | number[];
+	defaultValue?: number | number[];
 	min?: number;
 	max?: number;
 	step?: number;
+	orientation?: "horizontal" | "vertical";
+	height?: string;
+	label?: string;
+	showValueText?: boolean;
+	formatValue?: (value: number) => string;
+	marks?: { value: number; label: string }[];
+	disabled?: boolean;
+	readOnly?: boolean;
+	interactive?: boolean;
+	onChange?: (value: number | number[]) => void;
+	onDraggingChange?: (dragging: boolean) => void;
 	class?: string;
+	trackClass?: string;
+	rangeClass?: string;
+	thumbClass?: string;
+	labelClass?: string;
+	valueTextClass?: string;
+	markClass?: string;
 	id?: string;
 	style?: Record<string, string | number>;
 }
 
-export function Root(props: RootProps) {
+export type RootProps = SliderProps;
+
+export function Root(props: SliderProps) {
 	const [variantProps, localProps] = slider.splitVariantProps(props);
 	const {
 		children,
@@ -73,10 +93,15 @@ export function Root(props: RootProps) {
 		max = 100,
 		class: classProp,
 		id: idProp,
+		height,
+		formatValue,
 		...restProps
 	} = localProps;
 	const orientation = props.orientation ?? "horizontal";
-	const value = toValueArray(valueProp, toValueArray(defaultValue, [min]));
+	const value = toValueArray(
+		valueProp as SliderValue,
+		toValueArray(defaultValue as SliderValue, [min]),
+	);
 	const styles = slider(variantProps);
 	const fallbackId = useId();
 	const id = idProp || `slider-root-${fallbackId}`;
@@ -87,6 +112,7 @@ export function Root(props: RootProps) {
 		value,
 		min,
 		max,
+		formatValue,
 	};
 
 	return (
@@ -98,6 +124,7 @@ export function Root(props: RootProps) {
 				class={cx(styles.root, classProp)}
 				data-orientation={orientation}
 				style={{
+					height: orientation === "vertical" ? height : undefined,
 					...(restProps.style || {}),
 				}}
 				{...restProps}
@@ -150,7 +177,12 @@ export function Track(
 			data-part="track"
 			class={cx(context?.styles.track, classProp)}
 			data-orientation={context?.orientation}
-			style={{ position: "relative", width: "100%", height: "100%", ...style }}
+			style={{
+				position: "relative",
+				width: context?.orientation === "horizontal" ? "100%" : undefined,
+				height: context?.orientation === "vertical" ? "100%" : undefined,
+				...style,
+			}}
 			{...rest}
 		>
 			{children}
@@ -172,20 +204,20 @@ export function Range(
 	};
 
 	if (values.length === 1) {
-		const percent = ((values[0] ?? min - min) / (max - min)) * 100;
+		const percent = (((values[0] ?? min) - min) / (max - min)) * 100;
 		if (context?.orientation === "horizontal") {
 			rangeStyle = {
 				...rangeStyle,
-				left: `${percent}%`,
-				width: "0px",
+				left: "0%",
+				width: `${percent}%`,
 				height: "100%",
 				bottom: "0",
 			};
 		} else {
 			rangeStyle = {
 				...rangeStyle,
-				bottom: `${percent}%`,
-				height: "0px",
+				bottom: "0%",
+				height: `${percent}%`,
 				width: "100%",
 				left: "0",
 			};
@@ -279,13 +311,17 @@ export function Thumb(
 export function ValueText(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSliderContext();
+	const formattedValue = context?.formatValue
+		? context.value.map(context.formatValue).join(", ")
+		: context?.value.join(", ");
+
 	return (
 		<span
 			data-part="value-text"
 			class={cx(context?.styles.valueText, classProp)}
 			{...rest}
 		>
-			{children || context?.value.join(", ")}
+			{children || formattedValue}
 		</span>
 	);
 }
@@ -367,21 +403,85 @@ export function MarkerIndicator(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export interface InteractiveSliderProps extends RootProps {
-	onValueChange?: (details: { value: number[] }) => void;
+export function SliderStructure(props: SliderProps) {
+	const {
+		label,
+		showValueText,
+		marks,
+		value: valueProp,
+		defaultValue,
+		min = 0,
+		max = 100,
+		formatValue,
+		labelClass,
+		valueTextClass,
+		trackClass,
+		rangeClass,
+		thumbClass,
+		markClass,
+	} = props;
+
+	const context = useSliderContext();
+	const value =
+		context?.value ??
+		toValueArray(valueProp as SliderValue, toValueArray(defaultValue as SliderValue, [min]));
+
+	return (
+		<>
+			{(label || showValueText) && (
+				<div
+					style={{
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+						width: "100%",
+					}}
+				>
+					{label && <Label class={labelClass}>{label}</Label>}
+					{showValueText && (
+						<ValueText class={valueTextClass}>
+							{formatValue ? value.map(formatValue).join(", ") : value.join(", ")}
+						</ValueText>
+					)}
+				</div>
+			)}
+			<Control>
+				<Track class={trackClass}>
+					<Range class={rangeClass} />
+				</Track>
+				{marks && marks.length > 0 && (
+					<MarkerGroup>
+						{marks.map((mark) => (
+							<Marker key={mark.value} value={mark.value} class={markClass}>
+								<MarkerIndicator />
+								{mark.label}
+							</Marker>
+						))}
+					</MarkerGroup>
+				)}
+				{value.map((_, index) => (
+					<Thumb key={index} index={index} class={thumbClass} />
+				))}
+			</Control>
+		</>
+	);
 }
+
+export type InteractiveSliderProps = SliderProps;
 
 export function InteractiveSlider(props: InteractiveSliderProps) {
 	console.log(`[Slider] InteractiveSlider component rendering`);
 	const {
 		value: valueProp,
 		defaultValue,
-		onValueChange,
+		onChange,
+		onDraggingChange,
 		children,
 		min = 0,
 		max = 100,
 		step = 1,
 		orientation = "horizontal",
+		formatValue,
 		...rootProps
 	} = props;
 
@@ -391,13 +491,13 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 	const rootId = rootProps.id || `slider-${fallbackId}`;
 	console.log(`[Slider] rootId: ${rootId}`);
 	const initialValue = toValueArray(
-		valueProp,
-		toValueArray(defaultValue, [min]),
+		valueProp as SliderValue,
+		toValueArray(defaultValue as SliderValue, [min]),
 	);
 	const [value, setValue] = useState<number[]>(initialValue);
 	const isControlled = valueProp !== undefined;
 	const currentValue = isControlled
-		? toValueArray(valueProp, toValueArray(defaultValue, [min]))
+		? toValueArray(valueProp as SliderValue, toValueArray(defaultValue as SliderValue, [min]))
 		: value;
 	const valueRef = useRef<number[]>(currentValue);
 	const activeThumbIndex = useRef<number | null>(null);
@@ -422,6 +522,7 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 		const [variantProps] = slider.splitVariantProps({
 			...rootProps,
 			orientation,
+			colorPalette: props.colorPalette,
 		});
 		const styles = slider(variantProps);
 		const addClass = (element: Element | null, className?: string) => {
@@ -471,7 +572,11 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 
 			const valueText = root.querySelector('[data-part="value-text"]');
 			addClass(valueText, styles.valueText);
-			if (valueText) valueText.textContent = values.join(", ");
+			if (valueText) {
+				valueText.textContent = formatValue
+					? values.map(formatValue).join(", ")
+					: values.join(", ");
+			}
 
 			const range = root.querySelector<HTMLElement>('[data-part="range"]');
 			addClass(range, styles.range);
@@ -563,7 +668,16 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 			valueRef.current = newValues;
 			syncDom(newValues);
 			if (!isControlled) setValue(newValues);
-			onValueChange?.({ value: newValues });
+
+			if (onChange) {
+				const returnValue =
+					Array.isArray(valueProp) || Array.isArray(defaultValue)
+						? newValues
+						: newValues.length === 1
+							? newValues[0]
+							: newValues;
+				onChange(returnValue as number | number[]);
+			}
 		};
 		const handleMove = (e: MouseEvent | TouchEvent) => {
 			if (activeThumbIndex.current === null) return;
@@ -576,6 +690,7 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 		};
 		const handleEnd = () => {
 			activeThumbIndex.current = null;
+			onDraggingChange?.(false);
 			document.removeEventListener("mousemove", handleMove);
 			document.removeEventListener("mouseup", handleEnd);
 			document.removeEventListener("touchmove", handleMove);
@@ -583,6 +698,7 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 		};
 		const handleControlPointerDownImpl = (e: MouseEvent | TouchEvent) => {
 			console.log(`[Slider] handleControlPointerDown called`);
+			onDraggingChange?.(true);
 			const point = "touches" in e ? e.touches[0] : e;
 			if (!point) return;
 			const newValue = getValueFromPoint(point.clientX, point.clientY);
@@ -638,7 +754,7 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 		isControlled,
 		max,
 		min,
-		onValueChange,
+		onChange,
 		orientation,
 		rootId,
 		rootProps,
@@ -716,8 +832,9 @@ export function InteractiveSlider(props: InteractiveSliderProps) {
 			min={min}
 			max={max}
 			step={step}
+			formatValue={formatValue}
 		>
-			{children}
+			{children || <SliderStructure {...props} value={currentValue} />}
 		</Root>
 	);
 }

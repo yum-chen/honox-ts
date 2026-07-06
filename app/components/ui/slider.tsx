@@ -20,18 +20,51 @@ const serializeValue = (value: SliderRootValue) => {
 	return value;
 };
 
-export interface RootProps extends SliderPrimitiveRootProps {
-	interactive?: boolean;
-	onValueChange?: (details: { value: number[] }) => void;
-}
+export type SliderProps = SliderPrimitiveRootProps;
 
-export function Root(props: RootProps) {
-	const { interactive, onValueChange, value, defaultValue, ...rest } = props;
+export function Slider(props: SliderProps) {
+	const {
+		interactive,
+		onChange,
+		onDraggingChange,
+		value,
+		defaultValue,
+		children,
+		...rest
+	} = props;
 
 	const isInteractive =
 		interactive !== false &&
 		(interactive ||
-			onValueChange !== undefined ||
+			onChange !== undefined ||
+			onDraggingChange !== undefined ||
+			value !== undefined ||
+			defaultValue !== undefined);
+
+	if (isInteractive) {
+		return (
+			<SliderIsland
+				{...props}
+				value={serializeValue(value)}
+				defaultValue={serializeValue(defaultValue)}
+			/>
+		);
+	}
+
+	return (
+		<SliderPrimitiveRoot {...rest} value={value} defaultValue={defaultValue}>
+			{children || <SliderPrimitiveRoot.SliderStructure {...props} />}
+		</SliderPrimitiveRoot>
+	);
+}
+
+const Root = (props: SliderProps) => {
+	const { interactive, onChange, value, defaultValue, ...rest } = props;
+
+	const isInteractive =
+		interactive !== false &&
+		(interactive ||
+			onChange !== undefined ||
 			value !== undefined ||
 			defaultValue !== undefined);
 
@@ -48,9 +81,25 @@ export function Root(props: RootProps) {
 	return (
 		<SliderPrimitiveRoot {...rest} value={value} defaultValue={defaultValue} />
 	);
-}
+};
+
+// Attach sub-components to the Slider component
+Object.assign(Slider, {
+	Root,
+	Control,
+	Label,
+	Marker,
+	MarkerGroup,
+	MarkerIndicator,
+	Range,
+	Thumb,
+	Track,
+	ValueText,
+	SliderStructure: SliderPrimitiveRoot.SliderStructure,
+});
 
 export {
+	Root,
 	Control,
 	Label,
 	Marker,
@@ -61,3 +110,5 @@ export {
 	Track,
 	ValueText,
 };
+
+export default Slider;

@@ -774,54 +774,76 @@ export default createRoute((c) => {
 						gap: "8",
 					})}
 				>
-					<Slider.Root defaultValue={[30]} class={css({ width: "full" })}>
-						<Slider.Label>Basic Slider</Slider.Label>
-						<Slider.Control>
-							<Slider.Track>
-								<Slider.Range />
-							</Slider.Track>
-							<Slider.Thumb index={0} />
-						</Slider.Control>
-					</Slider.Root>
+					<div class={css({ textAlign: "left", width: "full" })}>
+						<Text size="sm" color="fg.muted" mb="2">
+							Basic Slider
+						</Text>
+						<Slider defaultValue={30} />
+					</div>
 
-					<Slider.Root
-						interactive
-						defaultValue={[50]}
-						class={css({ width: "full" })}
-					>
-						<div
-							class={css({ display: "flex", justifyContent: "space-between" })}
-						>
-							<Slider.Label>Interactive Slider</Slider.Label>
-							<Slider.ValueText />
-						</div>
-						<Slider.Control>
-							<Slider.Track>
-								<Slider.Range />
-							</Slider.Track>
-							<Slider.Thumb index={0} />
-						</Slider.Control>
-					</Slider.Root>
+					<div class={css({ textAlign: "left", width: "full" })}>
+						<Text size="sm" color="fg.muted" mb="2">
+							With Label and Value (Interactive)
+						</Text>
+						<Slider
+							interactive
+							label="Quantity"
+							defaultValue={50}
+							min={0}
+							max={100}
+							showValueText
+						/>
+					</div>
 
-					<Slider.Root
-						interactive
-						defaultValue={[20, 80]}
-						class={css({ width: "full" })}
-					>
-						<div
-							class={css({ display: "flex", justifyContent: "space-between" })}
-						>
-							<Slider.Label>Range Slider</Slider.Label>
-							<Slider.ValueText />
-						</div>
-						<Slider.Control>
-							<Slider.Track>
-								<Slider.Range />
-							</Slider.Track>
-							<Slider.Thumb index={0} />
-							<Slider.Thumb index={1} />
-						</Slider.Control>
-					</Slider.Root>
+					<div class={css({ textAlign: "left", width: "full" })}>
+						<Text size="sm" color="fg.muted" mb="2">
+							Range Slider (Interactive)
+						</Text>
+						<Slider
+							interactive
+							label="Price Range"
+							defaultValue={[20, 80]}
+							min={0}
+							max={100}
+							showValueText
+							formatValue={(v) => `$${v}`}
+						/>
+					</div>
+
+					<div class={css({ textAlign: "left", width: "full" })}>
+						<Text size="sm" color="fg.muted" mb="2">
+							With Marks
+						</Text>
+						<Slider
+							label="Rating"
+							defaultValue={3}
+							min={0}
+							max={5}
+							step={1}
+							marks={[
+								{ value: 0, label: "0" },
+								{ value: 1, label: "1" },
+								{ value: 2, label: "2" },
+								{ value: 3, label: "3" },
+								{ value: 4, label: "4" },
+								{ value: 5, label: "5" },
+							]}
+						/>
+					</div>
+
+					<div class={css({ textAlign: "left", width: "full" })}>
+						<Text size="sm" color="fg.muted" mb="2">
+							Vertical Orientation
+						</Text>
+						<Slider
+							interactive
+							label="Volume"
+							defaultValue={75}
+							orientation="vertical"
+							height="200px"
+							showValueText
+						/>
+					</div>
 				</div>
 			</div>
 
