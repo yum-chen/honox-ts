@@ -17,7 +17,7 @@ export {
 	CloseButton,
 	IconButton,
 } from "./button";
-export * as Card from "./card";
+export { Card, type CardProps } from "./card";
 export { Checkbox, type CheckboxProps } from "./checkbox";
 export * as Collapsible from "./collapsible";
 export { Combobox, type ComboboxProps } from "./combobox";

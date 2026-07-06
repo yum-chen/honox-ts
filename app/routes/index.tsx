@@ -599,7 +599,7 @@ export default createRoute((c) => {
 					flexDirection: "column",
 					gap: "4",
 					alignItems: "center",
-					maxWidth: "xl",
+					maxWidth: "5xl",
 					mx: "auto",
 				})}
 			>
@@ -1286,36 +1286,96 @@ export default createRoute((c) => {
 				</Heading>
 				<div
 					class={css({
-						display: "flex",
+						display: "grid",
+						gridTemplateColumns: { base: "1fr", md: "repeat(2, 1fr)" },
 						gap: "6",
-						flexWrap: "wrap",
-						justifyContent: "center",
+						width: "full",
 					})}
 				>
-					<Card.Root class={css({ width: "sm" })}>
-						<Card.Header>
-							<Card.Title>Team Members</Card.Title>
-							<Card.Description>
-								Add new members to your organization.
-							</Card.Description>
-						</Card.Header>
-						<Card.Body>
-							<Text size="sm">Invite your colleagues to collaborate.</Text>
-						</Card.Body>
-						<Card.Footer>
-							<Button variant="outline">Cancel</Button>
-							<Button>Invite</Button>
-						</Card.Footer>
-					</Card.Root>
+					{/* Basic Flattened Card */}
+					<Card
+						title="Team Members"
+						description="Add new members to your organization."
+						footer={
+							<>
+								<Button variant="outline">Cancel</Button>
+								<Button>Invite</Button>
+							</>
+						}
+					>
+						<Text size="sm">Invite your colleagues to collaborate.</Text>
+					</Card>
 
-					<Card.Root class={css({ width: "sm" })} variant="subtle">
-						<Card.Header>
-							<Card.Title>Subtle Card</Card.Title>
-						</Card.Header>
-						<Card.Body>
-							<Text size="sm">This card uses the subtle variant.</Text>
-						</Card.Body>
-					</Card.Root>
+					{/* Card with Avatar and Action */}
+					<Card
+						title="John Doe"
+						description="Software Engineer"
+						avatar={
+							<div
+								class={css({
+									w: "10",
+									h: "10",
+									bg: "blue.500",
+									rounded: "full",
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "center",
+									color: "white",
+									fontWeight: "bold",
+								})}
+							>
+								JD
+							</div>
+						}
+						headerAction={
+							<IconButton variant="ghost" size="sm" aria-label="Settings">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+								>
+									<title>Settings</title>
+									<circle cx="12" cy="12" r="3" />
+									<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+								</svg>
+							</IconButton>
+						}
+					>
+						<Text size="sm">
+							Specializes in building high-performance web applications with
+							Hono and React.
+						</Text>
+					</Card>
+
+					{/* Card with Image */}
+					<Card
+						title="Mountain Retreat"
+						description="A peaceful getaway in the heart of nature."
+						image="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80"
+						imagePosition="top"
+					>
+						<Text size="sm">
+							Experience the beauty of the mountains from our cozy cabin.
+						</Text>
+					</Card>
+
+					{/* Interactive Card */}
+					<Card
+						interactive
+						clickable
+						title="Interactive Card"
+						description="Click this card to see it in action."
+						variant="elevated"
+						onclick="alert('Card clicked!')"
+					>
+						<Text size="sm">
+							This card is interactive and handles click events via the island.
+						</Text>
+					</Card>
 				</div>
 			</div>
 

@@ -617,7 +617,7 @@ export default createRoute(async (c) => {
 				})}
 			>
 				{filteredPosts.map((post, index) => (
-					<Card.Root
+					<Card
 						key={post.slug}
 						variant="outline"
 						class={css({
@@ -633,144 +633,63 @@ export default createRoute(async (c) => {
 							animationDelay: `${index * 0.1}s`,
 							animationFillMode: "both",
 						})}
-					>
-						{post.draft && (
-							<div
-								class={css({
-									position: "absolute",
-									top: "3",
-									right: "3",
-									zIndex: "10",
-								})}
-							>
-								<Badge variant="solid" colorPalette="orange" size="sm">
-									Draft
-								</Badge>
-							</div>
-						)}
-
-						{/* Cover Image */}
-						{post.cover && (
-							<div
-								class={css({
-									w: "full",
-									h: "48",
-									overflow: "hidden",
-									position: "relative",
-								})}
-							>
-								<img
-									src={post.cover}
-									alt={post.title}
+						image={
+							post.cover ? (
+								<div
 									class={css({
 										w: "full",
-										h: "full",
-										objectFit: "cover",
-										transition: "transform 0.3s",
-										_cardRootHover: {
-											transform: "scale(1.05)",
-										},
-									})}
-								/>
-								<div
-									class={css({
-										position: "absolute",
-										bottom: "0",
-										left: "0",
-										right: "0",
-										h: "50%",
-										bgGradient: "to-t",
-										gradientFrom: "blackAlpha.50",
-										gradientTo: "transparent",
-										pointerEvents: "none",
-									})}
-								/>
-							</div>
-						)}
-
-						<Card.Body class={css({ p: "6" })}>
-							{/* Tags */}
-							{post.tags.length > 0 && (
-								<div
-									class={css({
-										display: "flex",
-										flexWrap: "wrap",
-										gap: "2",
-										mb: "3",
+										h: "48",
+										overflow: "hidden",
+										position: "relative",
 									})}
 								>
-									{post.tags.slice(0, 3).map((tag) => (
-										<Badge
-											key={tag}
-											variant="subtle"
-											colorPalette="blue"
-											size="sm"
-											class={css({
-												borderRadius: "full",
-												px: "2.5",
-												py: "0.5",
-												fontSize: "xs",
-											})}
-										>
-											{tag}
-										</Badge>
-									))}
-									{post.tags.length > 3 && (
-										<Badge
-											variant="subtle"
-											colorPalette="gray"
-											size="sm"
-											class={css({
-												borderRadius: "full",
-												px: "2.5",
-												py: "0.5",
-												fontSize: "xs",
-											})}
-										>
-											+{post.tags.length - 3}
-										</Badge>
-									)}
+									<img
+										src={post.cover}
+										alt={post.title}
+										class={css({
+											w: "full",
+											h: "full",
+											objectFit: "cover",
+											transition: "transform 0.3s",
+											_cardRootHover: {
+												transform: "scale(1.05)",
+											},
+										})}
+									/>
+									<div
+										class={css({
+											position: "absolute",
+											bottom: "0",
+											left: "0",
+											right: "0",
+											h: "50%",
+											bgGradient: "to-t",
+											gradientFrom: "blackAlpha.50",
+											gradientTo: "transparent",
+											pointerEvents: "none",
+										})}
+									/>
 								</div>
-							)}
-
-							{/* Title */}
-							<Card.Title
+							) : undefined
+						}
+						title={
+							<a
+								href={`/blog/${post.slug}`}
 								class={css({
-									mb: "3",
-									lineHeight: "tight",
-									fontSize: "lg",
+									color: "fg",
+									textDecoration: "none",
+									transition: "color 0.2s",
 									_hover: { color: "blue.600" },
 								})}
 							>
-								<a
-									href={`/blog/${post.slug}`}
-									class={css({
-										color: "fg",
-										textDecoration: "none",
-										transition: "color 0.2s",
-										_hover: { color: "blue.600" },
-									})}
-								>
-									{post.title}
-								</a>
-							</Card.Title>
-
-							{/* Description */}
-							<Card.Description
-								class={css({
-									mb: "4",
-									lineHeight: "relaxed",
-									fontSize: "sm",
-									display: "-webkit-box",
-									webkitLineClamp: "3",
-									webkitBoxOrient: "vertical",
-									overflow: "hidden",
-								})}
-							>
-								{post.description}
-							</Card.Description>
-
-							{/* Footer */}
+								{post.title}
+							</a>
+						}
+						description={post.description}
+						headerClass={css({ p: "6", pb: "0" })}
+						bodyClass={css({ p: "6", pt: "3" })}
+						footerClass={css({ p: "6", pt: "0" })}
+						footer={
 							<div
 								class={css({
 									display: "flex",
@@ -779,7 +698,7 @@ export default createRoute(async (c) => {
 									pt: "4",
 									borderTopWidth: "1px",
 									borderColor: "border.subtle",
-									mt: "auto",
+									width: "full",
 								})}
 							>
 								<div
@@ -877,8 +796,69 @@ export default createRoute(async (c) => {
 									</Button>
 								</a>
 							</div>
-						</Card.Body>
-					</Card.Root>
+						}
+					>
+						<div>
+							{post.draft && (
+								<div
+									class={css({
+										position: "absolute",
+										top: "3",
+										right: "3",
+										zIndex: "10",
+									})}
+								>
+									<Badge variant="solid" colorPalette="orange" size="sm">
+										Draft
+									</Badge>
+								</div>
+							)}
+
+							{/* Tags */}
+							{post.tags.length > 0 && (
+								<div
+									class={css({
+										display: "flex",
+										flexWrap: "wrap",
+										gap: "2",
+										mb: "3",
+									})}
+								>
+									{post.tags.slice(0, 3).map((tag) => (
+										<Badge
+											key={tag}
+											variant="subtle"
+											colorPalette="blue"
+											size="sm"
+											class={css({
+												borderRadius: "full",
+												px: "2.5",
+												py: "0.5",
+												fontSize: "xs",
+											})}
+										>
+											{tag}
+										</Badge>
+									))}
+									{post.tags.length > 3 && (
+										<Badge
+											variant="subtle"
+											colorPalette="gray"
+											size="sm"
+											class={css({
+												borderRadius: "full",
+												px: "2.5",
+												py: "0.5",
+												fontSize: "xs",
+											})}
+										>
+											+{post.tags.length - 3}
+										</Badge>
+									)}
+								</div>
+							)}
+						</div>
+					</Card>
 				))}
 			</div>
 
