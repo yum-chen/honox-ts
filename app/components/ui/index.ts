@@ -19,7 +19,7 @@ export {
 } from "./button";
 export { Card, type CardProps } from "./card";
 export { Checkbox, type CheckboxProps } from "./checkbox";
-export * as Collapsible from "./collapsible";
+export { Collapsible, type CollapsibleProps } from "./collapsible";
 export { Combobox, type ComboboxProps } from "./combobox";
 export { Dialog, type DialogProps } from "./dialog";
 export { Drawer, type DrawerProps } from "./drawer";
