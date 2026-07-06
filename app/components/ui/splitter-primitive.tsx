@@ -1,4 +1,4 @@
-import type { JSX, PropsWithChildren } from "hono/jsx";
+import type { PropsWithChildren } from "hono/jsx";
 import {
 	createContext,
 	useContext,

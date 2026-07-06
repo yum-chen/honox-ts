@@ -27,7 +27,14 @@ const Stack = ({ children, gap, align }: any) => (
 	</div>
 );
 
-const Box = ({ children, p, bg, borderRadius, border, onContextMenu }: any) => (
+const _Box = ({
+	children,
+	p,
+	bg,
+	borderRadius,
+	border,
+	onContextMenu,
+}: any) => (
 	<div
 		class={css({ p, bg, borderRadius, border })}
 		onContextMenu={onContextMenu}

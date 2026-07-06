@@ -67,7 +67,7 @@ export default createRoute(
 							tags: Array.isArray(postData.tags) ? postData.tags : [],
 						});
 					}
-				} catch (error) {
+				} catch (_error) {
 					// Ignore errors
 				}
 			}

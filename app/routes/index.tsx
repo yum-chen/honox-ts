@@ -1908,28 +1908,105 @@ export default createRoute((c) => {
 						gap: "8",
 					})}
 				>
-					<Collapsible.Root
-						interactive
+					<Text size="sm" class={css({ color: "fg.muted" })}>
+						Basic Collapsible (String trigger)
+					</Text>
+					<Collapsible
+						trigger="Click to expand"
+						content={
+							<div class={css({ bg: "bg.subtle", p: "4", borderRadius: "md" })}>
+								<Text>This content is collapsed by default.</Text>
+							</div>
+						}
 						class={css({ width: "full", border: "1px solid border", p: "4" })}
-					>
-						<Collapsible.Trigger asChild>
-							<Button variant="outline">Click to Toggle</Button>
-						</Collapsible.Trigger>
-						<Collapsible.Content class={css({ mt: "4" })}>
-							<div
+						triggerClass={css({
+							cursor: "pointer",
+							width: "full",
+							textAlign: "start",
+						})}
+						contentClass={css({ mt: "4" })}
+					/>
+
+					<Text size="sm" class={css({ color: "fg.muted" })}>
+						With Indicator (Button trigger)
+					</Text>
+					<Collapsible
+						trigger={<Button variant="outline">Toggle Content</Button>}
+						indicator={
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
 								class={css({
-									bg: "bg.subtle",
-									p: "4",
-									borderRadius: "md",
+									transition: "transform 0.2s",
+									"[data-state=open] &": { transform: "rotate(180deg)" },
 								})}
 							>
+								<title>Chevron Down</title>
+								<path d="m6 9 6 6 6-6" />
+							</svg>
+						}
+						content={
+							<div class={css({ bg: "bg.subtle", p: "4", borderRadius: "md" })}>
 								<Text>
-									This is the collapsible content. It can contain any elements
-									and will expand/collapse when the trigger is clicked.
+									This collapsible uses a custom indicator that rotates when
+									open.
 								</Text>
 							</div>
-						</Collapsible.Content>
-					</Collapsible.Root>
+						}
+						class={css({ width: "full", border: "1px solid border", p: "4" })}
+						contentClass={css({ mt: "4" })}
+					/>
+
+					<Text size="sm" class={css({ color: "fg.muted" })}>
+						Default Open & Start Indicator
+					</Text>
+					<Collapsible
+						defaultOpen
+						indicatorPlacement="start"
+						trigger="Settings"
+						indicator={
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class={css({
+									mr: "2",
+									transition: "transform 0.2s",
+									"[data-state=open] &": { transform: "rotate(90deg)" },
+								})}
+							>
+								<title>Chevron Right</title>
+								<path d="m9 18 6-6-6-6" />
+							</svg>
+						}
+						content={
+							<div class={css({ bg: "bg.subtle", p: "4", borderRadius: "md" })}>
+								<Text>Advanced configuration options go here.</Text>
+							</div>
+						}
+						class={css({ width: "full", border: "1px solid border", p: "4" })}
+						triggerClass={css({
+							cursor: "pointer",
+							width: "full",
+							textAlign: "start",
+							display: "flex",
+							alignItems: "center",
+						})}
+						contentClass={css({ mt: "4" })}
+					/>
 				</div>
 			</div>
 		</div>,

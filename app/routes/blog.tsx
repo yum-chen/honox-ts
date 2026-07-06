@@ -64,7 +64,7 @@ export default createRoute(async (c) => {
 
 	// Get unique tags for filter UI
 	const allTags = new Set<string>();
-	for (const [path, loader] of Object.entries(posts)) {
+	for (const [_path, loader] of Object.entries(posts)) {
 		try {
 			const markdown = await (loader as () => Promise<string>)();
 			const { data } = parseFrontmatter(markdown);
@@ -75,7 +75,7 @@ export default createRoute(async (c) => {
 
 			const postTags = Array.isArray(data.tags) ? data.tags : [];
 			postTags.forEach((tag: string) => allTags.add(tag));
-		} catch (error) {
+		} catch (_error) {
 			// Ignore errors
 		}
 	}

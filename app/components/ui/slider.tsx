@@ -179,7 +179,11 @@ export function Slider(props: SliderProps) {
 	}
 
 	return (
-		<SliderPrimitiveRoot {...rootProps} value={value} defaultValue={defaultValue}>
+		<SliderPrimitiveRoot
+			{...rootProps}
+			value={value}
+			defaultValue={defaultValue}
+		>
 			{content}
 		</SliderPrimitiveRoot>
 	);

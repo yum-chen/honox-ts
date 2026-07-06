@@ -71,7 +71,7 @@ export const Splitter = (props: SplitterProps) => {
 
 	const panelSizesMap =
 		size || defaultSize
-			? Object.fromEntries((size || defaultSize)!.map((s) => [s.id, s.size]))
+			? Object.fromEntries((size || defaultSize)?.map((s) => [s.id, s.size]))
 			: Object.fromEntries(panels.map((p) => [p.id, 100 / panels.length]));
 
 	return (

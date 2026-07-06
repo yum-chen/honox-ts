@@ -5,7 +5,6 @@ import {
 	useContext,
 	useEffect,
 	useId,
-	useLayoutEffect,
 	useRef,
 	useState,
 } from "hono/jsx";
