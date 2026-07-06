@@ -1,4 +1,3 @@
-import { splitter } from "./splitter";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { badge } from "./badge";
@@ -21,6 +20,7 @@ import { progress } from "./progress";
 import { skeleton } from "./skeleton";
 import { slider } from "./slider";
 import { spinner } from "./spinner";
+import { splitter } from "./splitter";
 import { switchRecipe } from "./switch";
 import { table } from "./table";
 import { tabs } from "./tabs";
@@ -30,15 +30,15 @@ import { toast } from "./toast";
 import { tooltip } from "./tooltip";
 
 export const recipes = {
-    absoluteCenter,
-    badge,
-    button,
-    group,
-    heading,
-    spinner,
-    text,
-    textarea,
-    skeleton,
+	absoluteCenter,
+	badge,
+	button,
+	group,
+	heading,
+	spinner,
+	text,
+	textarea,
+	skeleton,
 };
 
 export const slotRecipes = {

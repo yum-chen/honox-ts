@@ -774,54 +774,79 @@ export default createRoute((c) => {
 						gap: "8",
 					})}
 				>
-					<Slider.Root defaultValue={[30]} class={css({ width: "full" })}>
-						<Slider.Label>Basic Slider</Slider.Label>
-						<Slider.Control>
-							<Slider.Track>
-								<Slider.Range />
-							</Slider.Track>
-							<Slider.Thumb index={0} />
-						</Slider.Control>
-					</Slider.Root>
-
-					<Slider.Root
-						interactive
-						defaultValue={[50]}
+					{/* Basic Slider */}
+					<Slider
+						label="Basic Slider"
+						defaultValue={30}
 						class={css({ width: "full" })}
-					>
-						<div
-							class={css({ display: "flex", justifyContent: "space-between" })}
-						>
-							<Slider.Label>Interactive Slider</Slider.Label>
-							<Slider.ValueText />
-						</div>
-						<Slider.Control>
-							<Slider.Track>
-								<Slider.Range />
-							</Slider.Track>
-							<Slider.Thumb index={0} />
-						</Slider.Control>
-					</Slider.Root>
+					/>
 
-					<Slider.Root
+					{/* Interactive Slider with Value Text */}
+					<Slider
 						interactive
+						label="Interactive Slider"
+						defaultValue={50}
+						showValueText
+						formatValue={(v) => `${v}%`}
+						class={css({ width: "full" })}
+						onChange={(details) =>
+							console.log("Slider changed:", details.value)
+						}
+					/>
+
+					{/* Range Slider */}
+					<Slider
+						interactive
+						label="Range Slider"
 						defaultValue={[20, 80]}
+						showValueText
 						class={css({ width: "full" })}
+					/>
+
+					{/* Slider with Marks */}
+					<Slider
+						interactive
+						label="Slider with Marks"
+						defaultValue={2}
+						min={0}
+						max={4}
+						step={1}
+						marks={[
+							{ value: 0, label: "0" },
+							{ value: 1, label: "1" },
+							{ value: 2, label: "2" },
+							{ value: 3, label: "3" },
+							{ value: 4, label: "4" },
+						]}
+						class={css({ width: "full" })}
+					/>
+
+					{/* Vertical Slider */}
+					<div
+						class={css({
+							display: "flex",
+							justifyContent: "center",
+							gap: "12",
+							height: "200px",
+						})}
 					>
-						<div
-							class={css({ display: "flex", justifyContent: "space-between" })}
-						>
-							<Slider.Label>Range Slider</Slider.Label>
-							<Slider.ValueText />
-						</div>
-						<Slider.Control>
-							<Slider.Track>
-								<Slider.Range />
-							</Slider.Track>
-							<Slider.Thumb index={0} />
-							<Slider.Thumb index={1} />
-						</Slider.Control>
-					</Slider.Root>
+						<Slider
+							interactive
+							orientation="vertical"
+							label="Vertical"
+							defaultValue={70}
+							height="200px"
+							showValueText
+						/>
+						<Slider
+							interactive
+							orientation="vertical"
+							label="Range"
+							defaultValue={[30, 70]}
+							height="200px"
+							showValueText
+						/>
+					</div>
 				</div>
 			</div>
 
@@ -1731,8 +1756,14 @@ export default createRoute((c) => {
 						</Text>
 						<Splitter
 							panels={[
-								{ id: "left", content: <div class={css({ p: "4" })}>Left Panel</div> },
-								{ id: "right", content: <div class={css({ p: "4" })}>Right Panel</div> },
+								{
+									id: "left",
+									content: <div class={css({ p: "4" })}>Left Panel</div>,
+								},
+								{
+									id: "right",
+									content: <div class={css({ p: "4" })}>Right Panel</div>,
+								},
 							]}
 						/>
 					</div>
@@ -1748,8 +1779,14 @@ export default createRoute((c) => {
 								interactive
 								orientation="vertical"
 								panels={[
-									{ id: "top", content: <div class={css({ p: "4" })}>Top Panel</div> },
-									{ id: "bottom", content: <div class={css({ p: "4" })}>Bottom Panel</div> },
+									{
+										id: "top",
+										content: <div class={css({ p: "4" })}>Top Panel</div>,
+									},
+									{
+										id: "bottom",
+										content: <div class={css({ p: "4" })}>Bottom Panel</div>,
+									},
 								]}
 							/>
 						</div>
@@ -1764,9 +1801,18 @@ export default createRoute((c) => {
 						<Splitter
 							interactive
 							panels={[
-								{ id: "p1", content: <div class={css({ p: "4" })}>Panel 1</div> },
-								{ id: "p2", content: <div class={css({ p: "4" })}>Panel 2</div> },
-								{ id: "p3", content: <div class={css({ p: "4" })}>Panel 3</div> },
+								{
+									id: "p1",
+									content: <div class={css({ p: "4" })}>Panel 1</div>,
+								},
+								{
+									id: "p2",
+									content: <div class={css({ p: "4" })}>Panel 2</div>,
+								},
+								{
+									id: "p3",
+									content: <div class={css({ p: "4" })}>Panel 3</div>,
+								},
 							]}
 							defaultSize={[
 								{ id: "p1", size: 20 },
