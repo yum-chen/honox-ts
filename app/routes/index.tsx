@@ -1908,28 +1908,94 @@ export default createRoute((c) => {
 						gap: "8",
 					})}
 				>
-					<Collapsible.Root
-						interactive
-						class={css({ width: "full", border: "1px solid border", p: "4" })}
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
 					>
-						<Collapsible.Trigger asChild>
-							<Button variant="outline">Click to Toggle</Button>
-						</Collapsible.Trigger>
-						<Collapsible.Content class={css({ mt: "4" })}>
-							<div
-								class={css({
-									bg: "bg.subtle",
-									p: "4",
-									borderRadius: "md",
-								})}
-							>
-								<Text>
-									This is the collapsible content. It can contain any elements
-									and will expand/collapse when the trigger is clicked.
-								</Text>
-							</div>
-						</Collapsible.Content>
-					</Collapsible.Root>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic Collapsible (Interactive)
+						</Text>
+						<Collapsible
+							interactive
+							trigger={<Button variant="outline">Toggle Content</Button>}
+							content={
+								<div class={css({ p: "4", bg: "bg.subtle", borderRadius: "md" })}>
+									<Text>
+										This is a basic collapsible component with a JSX trigger.
+									</Text>
+								</div>
+							}
+						/>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							With String Trigger & Indicator
+						</Text>
+						<Collapsible
+							interactive
+							trigger="Click to Expand"
+							indicator={
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<title>Chevron Down</title>
+									<path d="m6 9 6 6 6-6" />
+								</svg>
+							}
+							content={
+								<div class={css({ p: "4", bg: "bg.subtle", borderRadius: "md" })}>
+									<Text>
+										When trigger is a string, it's auto-wrapped in a button.
+									</Text>
+								</div>
+							}
+						/>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Default Open & Indicator Start
+						</Text>
+						<Collapsible
+							interactive
+							defaultOpen
+							indicatorPlacement="start"
+							trigger="Settings"
+							indicator={
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<title>Chevron Right</title>
+									<path d="m9 18 6-6-6-6" />
+								</svg>
+							}
+							content={
+								<div class={css({ p: "4", bg: "bg.subtle", borderRadius: "md" })}>
+									<Text>This collapsible is open by default.</Text>
+								</div>
+							}
+						/>
+					</div>
 				</div>
 			</div>
 		</div>,
