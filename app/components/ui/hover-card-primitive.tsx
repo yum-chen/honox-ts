@@ -31,6 +31,8 @@ export interface HoverCardRootProps extends PropsWithChildren {
 	open?: boolean;
 	openDelay?: number;
 	closeDelay?: number;
+	onOpenChange?: (open: boolean) => void;
+	class?: string;
 }
 
 export function HoverCardRoot(props: HoverCardRootProps) {
@@ -170,6 +172,7 @@ export function HoverCardArrowTip(props: { class?: string }) {
 export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 	const {
 		open: openProp,
+		onOpenChange,
 		children,
 		id: idProp,
 		openDelay = 600,
@@ -184,6 +187,28 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 	const openTimerRef = useRef<number | null>(null);
 	const closeTimerRef = useRef<number | null>(null);
 
+	// Sync internal state with prop if controlled
+	useEffect(() => {
+		if (openProp !== undefined) {
+			setIsOpen(openProp);
+		}
+	}, [openProp]);
+
+	const toggleOpen = (value: boolean) => {
+		if (openProp === undefined) {
+			setIsOpen(value);
+		}
+		onOpenChange?.(value);
+
+		// Manual style update for immediate visibility in Hono islands
+		const positioner = rootRef.current?.querySelector(
+			'[data-part="positioner"]',
+		) as HTMLElement | null;
+		if (positioner) {
+			positioner.style.display = value ? "block" : "none";
+		}
+	};
+
 	const handleOpen = () => {
 		if (closeTimerRef.current) {
 			clearTimeout(closeTimerRef.current);
@@ -192,16 +217,8 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 		if (openTimerRef.current) return;
 
 		openTimerRef.current = window.setTimeout(() => {
-			setIsOpen(true);
+			toggleOpen(true);
 			openTimerRef.current = null;
-
-			// Manual style update for immediate visibility in Hono islands
-			const positioner = rootRef.current?.querySelector(
-				'[data-part="positioner"]',
-			) as HTMLElement | null;
-			if (positioner) {
-				positioner.style.display = "block";
-			}
 		}, openDelay);
 	};
 
@@ -213,15 +230,8 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 		if (closeTimerRef.current) return;
 
 		closeTimerRef.current = window.setTimeout(() => {
-			setIsOpen(false);
+			toggleOpen(false);
 			closeTimerRef.current = null;
-
-			const positioner = rootRef.current?.querySelector(
-				'[data-part="positioner"]',
-			) as HTMLElement | null;
-			if (positioner) {
-				positioner.style.display = "none";
-			}
 		}, closeDelay);
 	};
 
@@ -264,7 +274,7 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 	}, [handleOpen, handleClose, openDelay, closeDelay]);
 
 	return (
-		<div id={rootId} ref={rootRef}>
+		<div id={rootId} ref={rootRef} class={props.class}>
 			<HoverCardRoot {...rest} open={isOpen}>
 				{children}
 			</HoverCardRoot>
