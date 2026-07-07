@@ -59,7 +59,12 @@ interface LinkProps
 	}> {}
 
 function Link(props: LinkProps) {
-	const { class: classProp, children, as: Component = "a", ...restProps } = props;
+	const {
+		class: classProp,
+		children,
+		as: Component = "a",
+		...restProps
+	} = props;
 	const styles = useBreadcrumbContext();
 	return (
 		<Component class={cx(styles.link, classProp)} {...restProps}>

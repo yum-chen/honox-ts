@@ -84,14 +84,19 @@ function Description(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-function Image(props: { src?: string; alt?: string; class?: string; children?: JSX.Element }) {
-    const { src, alt, class: classProp, children, ...rest } = props;
-    const styles = useCardContext();
-    return (
-        <div class={cx(styles.image, classProp)} {...rest}>
-            {children || <img src={src} alt={alt} class={cx(styles.image)} />}
-        </div>
-    );
+function Image(props: {
+	src?: string;
+	alt?: string;
+	class?: string;
+	children?: JSX.Element;
+}) {
+	const { src, alt, class: classProp, children, ...rest } = props;
+	const styles = useCardContext();
+	return (
+		<div class={cx(styles.image, classProp)} {...rest}>
+			{children || <img src={src} alt={alt} class={cx(styles.image)} />}
+		</div>
+	);
 }
 
 export interface CardBaseProps extends RootProps {
