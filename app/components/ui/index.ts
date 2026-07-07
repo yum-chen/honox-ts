@@ -67,7 +67,12 @@ export {
 	type SplitterProps,
 } from "./splitter";
 export { Switch, type SwitchProps } from "./switch";
-export * as Table from "./table";
+export {
+	Table,
+	type TableProps,
+	type TableColumn,
+	type TableRow,
+} from "./table";
 export { Tabs, type TabsItem, type TabsProps } from "./tabs";
 export { Text, type TextProps } from "./text";
 export { Textarea, type TextareaProps } from "./textarea";

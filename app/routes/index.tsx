@@ -1553,77 +1553,114 @@ export default createRoute((c) => {
 					flexDirection: "column",
 					gap: "4",
 					alignItems: "center",
-					maxWidth: "2xl",
+					maxWidth: "3xl",
 					mx: "auto",
 				})}
 			>
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
-					Table Component Examples
+					Table Component Examples (Flattened API)
 				</Heading>
 
-				<Table.Root variant="plain" interactive>
-					<Table.Caption>Product Inventory</Table.Caption>
-					<Table.Head>
-						<Table.Row>
-							<Table.Header>Name</Table.Header>
-							<Table.Header>Category</Table.Header>
-							<Table.Header>Price</Table.Header>
-						</Table.Row>
-					</Table.Head>
-					<Table.Body>
-						<Table.Row>
-							<Table.Cell>Laptop</Table.Cell>
-							<Table.Cell>Electronics</Table.Cell>
-							<Table.Cell>$999.00</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>Coffee Mug</Table.Cell>
-							<Table.Cell>Home & Kitchen</Table.Cell>
-							<Table.Cell>$15.00</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>Ergonomic Chair</Table.Cell>
-							<Table.Cell>Furniture</Table.Cell>
-							<Table.Cell>$250.00</Table.Cell>
-						</Table.Row>
-					</Table.Body>
-					<Table.Foot>
+				<Text size="sm" class={css({ mb: "2", color: "fg.muted" })}>
+					Basic Table with Caption and Footer
+				</Text>
+				<Table
+					variant="plain"
+					caption="Product Inventory"
+					columns={[
+						{ header: "Name", key: "name" },
+						{ header: "Category", key: "category" },
+						{ header: "Price", key: "price", align: "end" },
+					]}
+					rows={[
+						{ name: "Laptop", category: "Electronics", price: "$999.00" },
+						{ name: "Coffee Mug", category: "Home & Kitchen", price: "$15.00" },
+						{
+							name: "Ergonomic Chair",
+							category: "Furniture",
+							price: "$250.00",
+						},
+					]}
+					footer={
 						<Table.Row>
 							<Table.Cell colSpan={2}>Total</Table.Cell>
-							<Table.Cell>$1,264.00</Table.Cell>
+							<Table.Cell style={{ textAlign: "end" }}>$1,264.00</Table.Cell>
 						</Table.Row>
-					</Table.Foot>
-				</Table.Root>
+					}
+				/>
 
 				<Text size="sm" class={css({ mt: "8", mb: "2", color: "fg.muted" })}>
-					Surface Variant with Striped Rows
+					Surface Variant with Striped Rows and Custom Cell Rendering
 				</Text>
-				<Table.Root variant="surface" striped>
-					<Table.Head>
-						<Table.Row>
-							<Table.Header>Member</Table.Header>
-							<Table.Header>Role</Table.Header>
-							<Table.Header>Status</Table.Header>
-						</Table.Row>
-					</Table.Head>
-					<Table.Body>
-						<Table.Row>
-							<Table.Cell>Alice Johnson</Table.Cell>
-							<Table.Cell>Designer</Table.Cell>
-							<Table.Cell>Active</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>Bob Smith</Table.Cell>
-							<Table.Cell>Developer</Table.Cell>
-							<Table.Cell>Away</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>Charlie Brown</Table.Cell>
-							<Table.Cell>Manager</Table.Cell>
-							<Table.Cell>Offline</Table.Cell>
-						</Table.Row>
-					</Table.Body>
-				</Table.Root>
+				<Table
+					variant="surface"
+					striped
+					columns={[
+						{ header: "Member", key: "name" },
+						{ header: "Role", key: "role" },
+						{
+							header: "Status",
+							key: "status",
+							render: (row) => (
+								<Badge colorPalette={row.statusColor}>{row.status}</Badge>
+							),
+						},
+					]}
+					rows={[
+						{
+							name: "Alice Johnson",
+							role: "Designer",
+							status: "Active",
+							statusColor: "green",
+						},
+						{
+							name: "Bob Smith",
+							role: "Developer",
+							status: "Away",
+							statusColor: "amber",
+						},
+						{
+							name: "Charlie Brown",
+							role: "Manager",
+							status: "Offline",
+							statusColor: "gray",
+						},
+					]}
+				/>
+
+				<Text size="sm" class={css({ mt: "8", mb: "2", color: "fg.muted" })}>
+					Interactive Table with Row Click Handlers
+				</Text>
+				<Table
+					interactive
+					columns={[
+						{ header: "Project", key: "name" },
+						{ header: "Owner", key: "owner" },
+						{ header: "Actions", key: "actions", align: "center" },
+					]}
+					rows={[
+						{
+							name: "Project Alpha",
+							owner: "Alice",
+							onClick: () => alert("Clicked Project Alpha"),
+							actions: (
+								<Button size="xs" variant="outline">
+									View
+								</Button>
+							),
+						},
+						{
+							name: "Project Beta",
+							owner: "Bob",
+							onClick: () => alert("Clicked Project Beta"),
+							actions: (
+								<Button size="xs" variant="outline">
+									View
+								</Button>
+							),
+						},
+					]}
+				/>
 			</div>
 
 			{/* Progress Examples */}
