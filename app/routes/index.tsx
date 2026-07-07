@@ -1702,10 +1702,10 @@ export default createRoute((c) => {
 						},
 					]}
 					footer={
-						<Table.Row>
-							<Table.Cell colSpan={2}>Total</Table.Cell>
-							<Table.Cell style={{ textAlign: "end" }}>$1,264.00</Table.Cell>
-						</Table.Row>
+						<tr>
+							<td colSpan={2}>Total</td>
+							<td style={{ textAlign: "end" }}>$1,264.00</td>
+						</tr>
 					}
 				/>
 
