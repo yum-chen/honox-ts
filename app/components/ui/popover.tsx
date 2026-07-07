@@ -16,7 +16,7 @@ import {
 	PopoverRoot as RootPrimitive,
 	PopoverTitle as Title,
 	PopoverTrigger as Trigger,
-} from "./popover-base";
+} from "./popover-primitive";
 
 interface PopoverProps extends PopoverRootProps {
 	interactive?: boolean; // keep — forces island hydration (default true)

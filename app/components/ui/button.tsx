@@ -1,10 +1,10 @@
 import ButtonIsland from "../../islands/button";
 import {
-	Button as ButtonBase,
-	ButtonGroup as ButtonGroupBase,
+	Button as ButtonPrimitive,
+	ButtonGroup as ButtonGroupPrimitive,
 	type ButtonGroupProps,
 	type ButtonProps,
-} from "./button-base";
+} from "./button-primitive";
 
 const CloseIcon = () => (
 	<svg
@@ -29,9 +29,9 @@ export function IconButton(props: ButtonProps) {
 		return <ButtonIsland {...props} px="0" />;
 	}
 	return (
-		<ButtonBase px="0" {...props}>
+		<ButtonPrimitive px="0" {...props}>
 			{props.children}
-		</ButtonBase>
+		</ButtonPrimitive>
 	);
 }
 
@@ -44,9 +44,9 @@ export function CloseButton(props: ButtonProps) {
 		);
 	}
 	return (
-		<ButtonBase variant="plain" aria-label="Close" {...props} px="0">
+		<ButtonPrimitive variant="plain" aria-label="Close" {...props} px="0">
 			<CloseIcon />
-		</ButtonBase>
+		</ButtonPrimitive>
 	);
 }
 
@@ -54,11 +54,11 @@ export function Button(props: ButtonProps) {
 	if (props.interactive) {
 		return <ButtonIsland {...props} />;
 	}
-	return <ButtonBase {...props} />;
+	return <ButtonPrimitive {...props} />;
 }
 
 export function ButtonGroup(props: ButtonGroupProps) {
-	return <ButtonGroupBase {...props} />;
+	return <ButtonGroupPrimitive {...props} />;
 }
 
 export type { ButtonGroupProps, ButtonProps };

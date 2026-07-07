@@ -1,10 +1,10 @@
 import SwitchIsland from "../../islands/switch";
 import {
-	type SwitchProps as BaseSwitchProps,
+	type SwitchProps as SwitchPrimitiveProps,
 	Switch as SwitchPrimitive,
 } from "./switch-primitive";
 
-export interface SwitchProps extends BaseSwitchProps {
+export interface SwitchProps extends SwitchPrimitiveProps {
 	interactive?: boolean;
 	defaultChecked?: boolean;
 }
