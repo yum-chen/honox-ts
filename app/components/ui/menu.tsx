@@ -86,12 +86,13 @@ type MenuItem =
 
 interface MenuProps extends MenuVariantProps {
 	trigger?: JSX.Element;
-	items: MenuItem[];
+	items?: MenuItem[];
 	defaultOpen?: boolean;
 	interactive?: boolean;
 	class?: string;
 	contentClass?: string;
 	positionerClass?: string;
+	children?: any;
 }
 
 // ============= Rendering Functions =============
@@ -133,9 +134,6 @@ function renderMenuItem(item: MenuItem, index: number): JSX.Element {
 		}
 
 		case "submenu": {
-			// Note: Submenu rendering is complex and requires nested MenuRoot
-			// For now, we'll skip submenu support in the simplified API
-			// Users can use the primitive API for submenus
 			const submenuItem = item as MenuSubmenuItem;
 			return (
 				<div key={index}>
@@ -147,7 +145,6 @@ function renderMenuItem(item: MenuItem, index: number): JSX.Element {
 		}
 
 		default: {
-			// type: "item" or undefined
 			const menuItem = item as MenuItemItem;
 			return (
 				<Item
@@ -166,7 +163,7 @@ function renderMenuItem(item: MenuItem, index: number): JSX.Element {
 
 // ============= Flattened Menu Component =============
 
-function Menu(props: MenuProps) {
+function MenuRoot(props: MenuProps) {
 	const {
 		trigger,
 		items,
@@ -175,23 +172,24 @@ function Menu(props: MenuProps) {
 		class: classProp,
 		contentClass,
 		positionerClass,
+		children,
 		...variantProps
 	} = props;
 
 	const styles = menu(variantProps);
 
-	// Use InteractiveMenuRoot for interactive mode (client-side only)
-	// Use RootPrimitive for non-interactive mode (server-side rendering)
 	if (interactive) {
 		return (
 			<InteractiveMenuRoot open={defaultOpen}>
 				{trigger && <Trigger asChild>{trigger}</Trigger>}
-
-				<Positioner class={cx(styles.positioner, positionerClass)}>
-					<Content class={cx(styles.content, contentClass)}>
-						{items.map((item, index) => renderMenuItem(item, index))}
-					</Content>
-				</Positioner>
+				{children}
+				{items && (
+					<Positioner class={cx(styles.positioner, positionerClass)}>
+						<Content class={cx(styles.content, contentClass)}>
+							{items.map((item, index) => renderMenuItem(item, index))}
+						</Content>
+					</Positioner>
+				)}
 			</InteractiveMenuRoot>
 		);
 	}
@@ -199,22 +197,36 @@ function Menu(props: MenuProps) {
 	return (
 		<RootPrimitive open={defaultOpen}>
 			{trigger && <Trigger asChild>{trigger}</Trigger>}
-
-			<Positioner class={cx(styles.positioner, positionerClass)}>
-				<Content class={cx(styles.content, contentClass)}>
-					{items.map((item, index) => renderMenuItem(item, index))}
-				</Content>
-			</Positioner>
+			{children}
+			{items && (
+				<Positioner class={cx(styles.positioner, positionerClass)}>
+					<Content class={cx(styles.content, contentClass)}>
+						{items.map((item, index) => renderMenuItem(item, index))}
+					</Content>
+				</Positioner>
+			)}
 		</RootPrimitive>
 	);
 }
 
 // ============= Exports =============
 
-// Export the flattened Menu component
+export const Menu = Object.assign(MenuRoot, {
+	Root: MenuRoot,
+	Trigger: Trigger,
+	Positioner: Positioner,
+	Content: Content,
+	Item: Item,
+	CheckboxItem: CheckboxItem,
+	Separator: Separator,
+	ItemText: ItemText,
+	ItemIndicator: ItemIndicator,
+	ItemGroupLabel: ItemGroupLabel,
+	RadioItemGroup: RadioItemGroup,
+});
+
 export {
 	type BaseMenuItem,
-	Menu,
 	Menu as default,
 	type MenuCheckboxItem,
 	type MenuItem,

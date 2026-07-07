@@ -25,6 +25,7 @@ import {
 	Menu,
 	Popover,
 	Progress,
+	SegmentGroup,
 	Skeleton,
 	SkeletonCircle,
 	SkeletonText,
@@ -37,6 +38,7 @@ import {
 	Text,
 	Textarea,
 	Toast,
+	ToggleGroup,
 	Tooltip,
 } from "../components/ui";
 
@@ -1816,6 +1818,141 @@ export default createRoute((c) => {
 					<Loader text="Loading..." />
 					<Loader spinnerPlacement="end">Processing</Loader>
 					<Loader spinner={<Spinner color="blue.500" />}>Custom Spinner</Loader>
+				</div>
+			</div>
+
+			{/* SegmentGroup Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					SegmentGroup Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+					})}
+				>
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic SegmentGroup (Interactive)
+						</Text>
+						<SegmentGroup
+							defaultValue="react"
+							items={[
+								{ label: "React", value: "react" },
+								{ label: "Solid", value: "solid" },
+								{ label: "Svelte", value: "svelte" },
+								{ label: "Vue", value: "vue" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Vertical SegmentGroup
+						</Text>
+						<SegmentGroup
+							orientation="vertical"
+							defaultValue="react"
+							items={[
+								{ label: "React", value: "react" },
+								{ label: "Solid", value: "solid" },
+								{ label: "Svelte", value: "svelte" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Fitted SegmentGroup
+						</Text>
+						<SegmentGroup
+							fitted
+							defaultValue="react"
+							items={[
+								{ label: "React", value: "react" },
+								{ label: "Solid", value: "solid" },
+							]}
+						/>
+					</div>
+				</div>
+			</div>
+
+			{/* ToggleGroup Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					ToggleGroup Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+					})}
+				>
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic ToggleGroup (Single Selection)
+						</Text>
+						<ToggleGroup
+							variant="outline"
+							defaultValue={["bold"]}
+							items={[
+								{ label: "B", value: "bold" },
+								{ label: "I", value: "italic" },
+								{ label: "U", value: "underline" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Multiple Selection
+						</Text>
+						<ToggleGroup
+							multiple
+							variant="outline"
+							defaultValue={["bold", "italic"]}
+							items={[
+								{ label: "B", value: "bold" },
+								{ label: "I", value: "italic" },
+								{ label: "U", value: "underline" },
+							]}
+						/>
+					</div>
 				</div>
 			</div>
 

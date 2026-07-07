@@ -2,11 +2,7 @@ export {
 	AbsoluteCenter,
 	type AbsoluteCenterProps,
 } from "./absolute-center";
-export {
-	Alert,
-	AlertIcon,
-	type AlertProps,
-} from "./alert";
+export { Alert, AlertIcon, type AlertProps } from "./alert";
 export { Badge, type BadgeProps } from "./badge";
 export {
 	Breadcrumb,
@@ -16,17 +12,14 @@ export {
 export {
 	Button,
 	ButtonGroup,
-	type ButtonGroupProps,
-	type ButtonProps,
 	CloseButton,
 	IconButton,
+	type ButtonGroupProps,
+	type ButtonProps,
 } from "./button";
 export { Card, type CardProps } from "./card";
 export { Checkbox, type CheckboxProps } from "./checkbox";
-export {
-	Collapsible,
-	type CollapsibleProps,
-} from "./collapsible";
+export { Collapsible, type CollapsibleProps } from "./collapsible";
 export { Combobox, type ComboboxProps } from "./combobox";
 export { Dialog, type DialogProps } from "./dialog";
 export { Drawer, type DrawerProps } from "./drawer";
@@ -40,21 +33,18 @@ export { Menu, type MenuItem, type MenuProps } from "./menu";
 export * as MenuPrimitive from "./menu-primitive";
 export { Popover, type PopoverProps } from "./popover";
 export { Progress, type ProgressProps } from "./progress";
+export { SegmentGroup, type SegmentGroupProps } from "./segment-group";
 export {
 	Skeleton,
 	SkeletonCircle,
+	SkeletonText,
 	type SkeletonCircleProps,
 	type SkeletonProps,
-	SkeletonText,
 	type SkeletonTextProps,
 } from "./skeleton";
 export { Slider, type SliderProps } from "./slider";
 export { Spinner, type SpinnerProps } from "./spinner";
-export {
-	type PanelConfig,
-	Splitter,
-	type SplitterProps,
-} from "./splitter";
+export { Splitter, type PanelConfig, type SplitterProps } from "./splitter";
 export { Switch, type SwitchProps } from "./switch";
 export {
 	Table,
@@ -66,4 +56,5 @@ export { Tabs, type TabsItem, type TabsProps } from "./tabs";
 export { Text, type TextProps } from "./text";
 export { Textarea, type TextareaProps } from "./textarea";
 export * as Toast from "./toast";
+export { ToggleGroup, type ToggleGroupProps } from "./toggle-group";
 export { Tooltip, type TooltipProps } from "./tooltip";
