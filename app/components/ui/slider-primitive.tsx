@@ -115,13 +115,13 @@ export function Label(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSliderContext();
 	return (
-		<label
+		<span
 			data-part="label"
 			class={cx(context?.styles.label, classProp)}
 			{...rest}
 		>
 			{children}
-		</label>
+		</span>
 	);
 }
 

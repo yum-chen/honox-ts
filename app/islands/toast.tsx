@@ -11,7 +11,7 @@ import {
 	Title,
 } from "../components/ui/toast-primitive";
 
-export interface ToastOptions {
+interface ToastOptions {
 	id: string;
 	title?: string;
 	description?: string;
@@ -34,7 +34,7 @@ const dispatchToast = (options: Omit<ToastOptions, "id">) => {
 	return id;
 };
 
-export const toaster = {
+const toaster = {
 	create: (options: Omit<ToastOptions, "id">) => dispatchToast(options),
 	success: (
 		title: string,
@@ -133,7 +133,7 @@ const Icons = {
 	),
 };
 
-export function Toaster() {
+function Toaster() {
 	const [toasts, setToasts] = useState<ToastOptions[]>([]);
 
 	useEffect(() => {
@@ -168,7 +168,7 @@ export function Toaster() {
 	}, []);
 
 	return (
-		<div
+		<section
 			role="region"
 			aria-live="polite"
 			style={{
@@ -229,6 +229,9 @@ export function Toaster() {
 					</Root>
 				);
 			})}
-		</div>
+		</section>
 	);
 }
+
+export type { ToastOptions };
+export { Toaster, toaster };
