@@ -1250,23 +1250,79 @@ export default createRoute((c) => {
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
 					Breadcrumb Component Examples
 				</Heading>
-				<Breadcrumb.Root>
-					<Breadcrumb.List>
-						<Breadcrumb.Item>
-							<Breadcrumb.Link href="/">Home</Breadcrumb.Link>
-						</Breadcrumb.Item>
-						<Breadcrumb.Separator />
-						<Breadcrumb.Item>
-							<Breadcrumb.Link href="/components">Components</Breadcrumb.Link>
-						</Breadcrumb.Item>
-						<Breadcrumb.Separator />
-						<Breadcrumb.Item>
-							<Breadcrumb.Link href="/components/breadcrumb" current>
-								Breadcrumb
-							</Breadcrumb.Link>
-						</Breadcrumb.Item>
-					</Breadcrumb.List>
-				</Breadcrumb.Root>
+
+				<div
+					class={css({
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+						width: "full",
+						alignItems: "center",
+					})}
+				>
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic Breadcrumb
+						</Text>
+						<Breadcrumb
+							items={[
+								{ label: "Home", href: "/" },
+								{ label: "Components", href: "/components" },
+								{ label: "Breadcrumb", current: true },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Underline Variant & Small Size
+						</Text>
+						<Breadcrumb
+							variant="underline"
+							size="sm"
+							items={[
+								{ label: "Docs", href: "/docs" },
+								{ label: "Guides", href: "/docs/guides" },
+								{ label: "Getting Started", current: true },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Custom Separator
+						</Text>
+						<Breadcrumb
+							separator="/"
+							items={[
+								{ label: "Projects", href: "/projects" },
+								{ label: "Project Alpha", href: "/projects/alpha" },
+								{ label: "Settings", current: true },
+							]}
+						/>
+					</div>
+				</div>
 			</div>
 
 			{/* Card Examples */}

@@ -11,6 +11,7 @@ export const conditions = {
 		highlighted: "&:is([data-highlighted])",
 		open: "&:is([data-state=open])",
 		closed: "&:is([data-state=closed])",
+		_currentPage: '&[aria-current="page"]',
 		_icon: "& :where(svg, [data-part=icon])",
 	},
 } as const;

@@ -8,7 +8,7 @@ export {
 	type AlertProps,
 } from "./alert";
 export { Badge, type BadgeProps } from "./badge";
-export * as Breadcrumb from "./breadcrumb";
+export { Breadcrumb, type BreadcrumbProps } from "./breadcrumb";
 export {
 	Button,
 	ButtonGroup,
