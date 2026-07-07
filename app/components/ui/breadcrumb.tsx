@@ -54,16 +54,35 @@ interface LinkProps
 	extends PropsWithChildren<{
 		class?: string;
 		href?: string;
+		current?: boolean;
 		[key: string]: unknown;
 	}> {}
 
 function Link(props: LinkProps) {
-	const { class: classProp, children, ...restProps } = props;
+	const { class: classProp, children, href, current, ...restProps } = props;
 	const styles = useBreadcrumbContext();
+
+	if (href) {
+		return (
+			<a
+				class={cx(styles.link, classProp)}
+				href={href}
+				aria-current={current ? "page" : undefined}
+				{...restProps}
+			>
+				{children}
+			</a>
+		);
+	}
+
 	return (
-		<a class={cx(styles.link, classProp)} {...restProps}>
+		<span
+			class={cx(styles.link, classProp)}
+			aria-current={current ? "page" : undefined}
+			{...restProps}
+		>
 			{children}
-		</a>
+		</span>
 	);
 }
 
@@ -108,5 +127,56 @@ function ChevronRightIcon() {
 	);
 }
 
-export type { LinkProps, RootProps };
-export { Ellipsis, Item, Link, List, Root, Separator };
+interface BreadcrumbItem {
+	/** Display text or JSX node */
+	label: Child;
+	/** If present, renders as <a>; otherwise renders as plain text (current page) */
+	href?: string;
+	/** Marks the current page. Defaults to `true` for the last item. */
+	current?: boolean;
+}
+
+interface BreadcrumbProps extends BreadcrumbVariantProps {
+	items: BreadcrumbItem[];
+	/** Custom separator between items. Default: ChevronRight SVG icon. */
+	separator?: Child;
+	class?: string;
+}
+
+function BreadcrumbComponent(props: BreadcrumbProps) {
+	const { items, separator, ...rootProps } = props;
+
+	return (
+		<Root {...rootProps}>
+			<List>
+				{items.map((item, index) => {
+					const isLast = index === items.length - 1;
+					const current = item.current ?? isLast;
+
+					return [
+						<Item key={`${index}-item`}>
+							<Link href={item.href} current={current}>
+								{item.label}
+							</Link>
+						</Item>,
+						!isLast && (
+							<Separator key={`${index}-separator`}>{separator}</Separator>
+						),
+					];
+				})}
+			</List>
+		</Root>
+	);
+}
+
+const Breadcrumb = Object.assign(BreadcrumbComponent, {
+	Root,
+	List,
+	Item,
+	Link,
+	Separator,
+	Ellipsis,
+});
+
+export type { BreadcrumbItem, BreadcrumbProps, LinkProps, RootProps };
+export { Breadcrumb, Ellipsis, Item, Link, List, Root, Separator };

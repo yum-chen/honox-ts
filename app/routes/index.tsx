@@ -1250,23 +1250,42 @@ export default createRoute((c) => {
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
 					Breadcrumb Component Examples
 				</Heading>
-				<Breadcrumb.Root>
-					<Breadcrumb.List>
-						<Breadcrumb.Item>
-							<Breadcrumb.Link href="/">Home</Breadcrumb.Link>
-						</Breadcrumb.Item>
-						<Breadcrumb.Separator />
-						<Breadcrumb.Item>
-							<Breadcrumb.Link href="/components">Components</Breadcrumb.Link>
-						</Breadcrumb.Item>
-						<Breadcrumb.Separator />
-						<Breadcrumb.Item>
-							<Breadcrumb.Link href="/components/breadcrumb" current>
-								Breadcrumb
-							</Breadcrumb.Link>
-						</Breadcrumb.Item>
-					</Breadcrumb.List>
-				</Breadcrumb.Root>
+
+				<Text size="sm" class={css({ color: "fg.muted", mb: "2" })}>
+					Basic Breadcrumb (Flattened API)
+				</Text>
+				<Breadcrumb
+					items={[
+						{ label: "Home", href: "/" },
+						{ label: "Components", href: "/components" },
+						{ label: "Breadcrumb" },
+					]}
+				/>
+
+				<Text size="sm" class={css({ color: "fg.muted", mt: "4", mb: "2" })}>
+					Underline Variant & Large Size
+				</Text>
+				<Breadcrumb
+					variant="underline"
+					size="lg"
+					items={[
+						{ label: "Docs", href: "/docs" },
+						{ label: "Guides", href: "/docs/guides" },
+						{ label: "Getting Started" },
+					]}
+				/>
+
+				<Text size="sm" class={css({ color: "fg.muted", mt: "4", mb: "2" })}>
+					Custom Separator
+				</Text>
+				<Breadcrumb
+					separator="/"
+					items={[
+						{ label: "Project", href: "/project" },
+						{ label: "Settings", href: "/project/settings" },
+						{ label: "General" },
+					]}
+				/>
 			</div>
 
 			{/* Card Examples */}
