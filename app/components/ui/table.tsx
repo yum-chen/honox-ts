@@ -1,13 +1,5 @@
 import TableIsland from "../../islands/table";
 import {
-	Body,
-	Caption,
-	Cell,
-	Foot,
-	Head,
-	Header,
-	Root,
-	Row,
 	TableBase,
 	type TableColumn,
 	type TableProps,
@@ -21,17 +13,4 @@ export function Table<T = Record<string, unknown>>(props: TableProps<T>) {
 	return <TableBase {...props} />;
 }
 
-// Attach sub-components to the Table component
-Object.assign(Table, {
-	Root,
-	Body,
-	Caption,
-	Cell,
-	Foot,
-	Head,
-	Header,
-	Row,
-});
-
-export { Body, Caption, Cell, Foot, Head, Header, Root, Row };
 export type { TableColumn, TableProps, TableRow };

@@ -60,6 +60,8 @@ export const table = defineSlotRecipe({
 			"& td": {
 				boxShadow: "inset 0 1px 0 0 var(--shadow-color)!",
 				shadowColor: "border",
+				px: "3",
+				py: "3",
 			},
 		},
 	},
