@@ -1,6 +1,6 @@
-import type { JSX, PropsWithChildren } from "hono/jsx";
+import type { PropsWithChildren } from "hono/jsx";
 import { createContext, useContext } from "hono/jsx";
-import { cx } from "styled-system/css";
+import { css, cx } from "styled-system/css";
 import type { TableVariantProps } from "styled-system/recipes";
 import { table } from "styled-system/recipes";
 
@@ -174,6 +174,38 @@ export function TableBase<T = Record<string, unknown>>(props: TableProps<T>) {
 	// If no columns/rows provided, act as Root for backward compatibility or custom usage
 	if (!columns || !rows) {
 		return (
+			<div
+				class={css({
+					overflowX: "auto",
+					maxWidth: "100%",
+					WebkitOverflowScrolling: "touch",
+				})}
+			>
+				{" "}
+				<Root
+					variant={variant}
+					striped={striped}
+					interactive={interactive}
+					stickyHeader={stickyHeader}
+					columnBorder={columnBorder}
+					class={classProp}
+					{...rest}
+				>
+					{(props as any).children}
+				</Root>
+			</div>
+		);
+	}
+
+	return (
+		<div
+			class={css({
+				overflowX: "auto",
+				maxWidth: "100%",
+				WebkitOverflowScrolling: "touch",
+			})}
+		>
+			{" "}
 			<Root
 				variant={variant}
 				striped={striped}
@@ -183,59 +215,45 @@ export function TableBase<T = Record<string, unknown>>(props: TableProps<T>) {
 				class={classProp}
 				{...rest}
 			>
-				{(props as any).children}
-			</Root>
-		);
-	}
-
-	return (
-		<Root
-			variant={variant}
-			striped={striped}
-			interactive={interactive}
-			stickyHeader={stickyHeader}
-			columnBorder={columnBorder}
-			class={classProp}
-			{...rest}
-		>
-			{caption && <Caption class={captionClass}>{caption}</Caption>}
-			<Head class={headClass}>
-				<Row>
-					{columns.map((column) => (
-						<Header
-							key={column.key}
-							class={column.headerClass || headerClass}
-							style={column.align ? { textAlign: column.align } : undefined}
-						>
-							{column.header}
-						</Header>
-					))}
-				</Row>
-			</Head>
-			<Body class={bodyClass}>
-				{rows.map((row: any, rowIndex) => (
-					<Row
-						key={rowIndex}
-						class={row.class || rowClass}
-						{...(interactive && row.onClick ? { onclick: row.onClick } : {})}
-						{...(row.disabled ? { "data-disabled": true } : {})}
-					>
+				{caption && <Caption class={captionClass}>{caption}</Caption>}
+				<Head class={headClass}>
+					<Row>
 						{columns.map((column) => (
-							<Cell
+							<Header
 								key={column.key}
-								class={column.class || cellClass}
+								class={column.headerClass || headerClass}
 								style={column.align ? { textAlign: column.align } : undefined}
 							>
-								{column.render
-									? column.render(row, rowIndex)
-									: (row[column.key] as any)}
-							</Cell>
+								{column.header}
+							</Header>
 						))}
 					</Row>
-				))}
-			</Body>
-			{footer && <Foot class={footClass}>{footer}</Foot>}
-		</Root>
+				</Head>
+				<Body class={bodyClass}>
+					{rows.map((row: any, rowIndex) => (
+						<Row
+							key={rowIndex}
+							class={row.class || rowClass}
+							{...(interactive && row.onClick ? { onclick: row.onClick } : {})}
+							{...(row.disabled ? { "data-disabled": true } : {})}
+						>
+							{columns.map((column) => (
+								<Cell
+									key={column.key}
+									class={column.class || cellClass}
+									style={column.align ? { textAlign: column.align } : undefined}
+								>
+									{column.render
+										? column.render(row, rowIndex)
+										: (row[column.key] as any)}
+								</Cell>
+							))}
+						</Row>
+					))}
+				</Body>
+				{footer && <Foot class={footClass}>{footer}</Foot>}
+			</Root>
+		</div>
 	);
 }
 

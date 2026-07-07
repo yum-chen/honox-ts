@@ -1,4 +1,3 @@
-import type { JSX } from "hono/jsx";
 import {
 	cloneElement,
 	createContext,

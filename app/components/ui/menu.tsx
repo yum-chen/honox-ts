@@ -1,4 +1,3 @@
-import type { JSX } from "hono/jsx";
 import { cx } from "styled-system/css";
 import { type MenuVariantProps, menu } from "styled-system/recipes";
 import InteractiveMenuRoot from "../../islands/menu";

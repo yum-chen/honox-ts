@@ -261,59 +261,66 @@ export function InteractivePopoverRoot(props: PopoverRootProps) {
 
 	const fallbackId = useId();
 	const rootId = idProp || `popover-${fallbackId}`;
-	const handleOpenChangeRef = useRef<(nextOpen: boolean) => void>(() => {});
+	const previouslyFocused = useRef<HTMLElement | null>(null);
 
-	const handleOpenChange = (nextOpen: boolean) => {
-		setIsOpen(nextOpen);
-	};
+	const setOpen = (nextOpen: boolean) => setIsOpen(nextOpen);
+	const setOpenRef = useRef<(nextOpen: boolean) => void>(setOpen);
+	setOpenRef.current = setOpen;
+
+	const openRef = useRef(isOpen);
+	openRef.current = isOpen;
 
 	useEffect(() => {
-		handleOpenChangeRef.current = handleOpenChange;
-	}, []);
-
-	useEffect(() => {
-		if (typeof document === "undefined") {
-			return;
-		}
-
+		if (typeof document === "undefined") return;
 		const root = document.getElementById(rootId);
-		if (!root) {
-			return;
-		}
+		if (!root) return;
 
-		const positioners = Array.from(
-			root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
-		);
 		const handleClick = (e: Event) => {
 			const target = e.target as HTMLElement;
 			const dataPart = target.getAttribute("data-part");
 
 			if (dataPart === "trigger") {
-				const nextOpen = !isOpen;
-				if (nextOpen) {
-					positioners.forEach((p) => {
-						p.style.cssText = "display: block !important;";
-					});
-				} else {
-					positioners.forEach((p) => {
-						p.style.cssText = "display: none !important;";
-					});
-				}
-				handleOpenChangeRef.current?.(nextOpen);
+				setOpenRef.current?.(!openRef.current);
 			} else if (dataPart === "close-trigger") {
-				positioners.forEach((p) => {
-					p.style.cssText = "display: none !important;";
-				});
-				handleOpenChangeRef.current?.(false);
+				setOpenRef.current?.(false);
 			}
 		};
 
 		root.addEventListener("click", handleClick);
+		return () => root.removeEventListener("click", handleClick);
+	}, [rootId]);
 
-		return () => {
-			root.removeEventListener("click", handleClick);
+	// Dismiss on Escape and outside-click; manage focus
+	useEffect(() => {
+		if (typeof document === "undefined" || !isOpen) return;
+		const root = document.getElementById(rootId);
+		if (!root) return;
+
+		previouslyFocused.current = document.activeElement as HTMLElement;
+		const content = root.querySelector<HTMLElement>('[data-part="content"]');
+		content?.focus();
+
+		const onKeyDown = (e: KeyboardEvent) => {
+			if (e.key === "Escape") {
+				e.preventDefault();
+				setOpenRef.current?.(false);
+			}
 		};
-	}, [rootId, isOpen]);
+
+		const onPointerDown = (e: MouseEvent) => {
+			if (!root.contains(e.target as Node)) {
+				setOpenRef.current?.(false);
+			}
+		};
+
+		document.addEventListener("keydown", onKeyDown);
+		document.addEventListener("mousedown", onPointerDown);
+		return () => {
+			document.removeEventListener("keydown", onKeyDown);
+			document.removeEventListener("mousedown", onPointerDown);
+			previouslyFocused.current?.focus?.();
+		};
+	}, [isOpen, rootId]);
 
 	return (
 		<div id={rootId}>

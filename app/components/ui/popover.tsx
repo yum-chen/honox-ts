@@ -1,4 +1,3 @@
-import type { JSX } from "hono/jsx";
 import { css } from "styled-system/css";
 import PopoverIsland from "../../islands/popover";
 import { IconButton } from "./button";

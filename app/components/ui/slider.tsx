@@ -1,4 +1,3 @@
-import type { JSX } from "hono/jsx";
 import { css, cx } from "styled-system/css";
 import SliderIsland from "../../islands/slider";
 import {

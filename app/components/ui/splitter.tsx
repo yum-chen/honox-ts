@@ -1,4 +1,3 @@
-import type { JSX } from "hono/jsx";
 import { useId } from "hono/jsx";
 import SplitterIsland from "../../islands/splitter";
 import { Panel, ResizeTrigger, Root } from "./splitter-primitive";

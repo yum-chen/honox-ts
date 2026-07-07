@@ -1,4 +1,3 @@
-import type { JSX } from "hono/jsx";
 import { useRef } from "hono/jsx";
 import DialogIsland from "../../islands/dialog";
 import { IconButton } from "./button";

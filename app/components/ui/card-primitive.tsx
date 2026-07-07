@@ -1,4 +1,4 @@
-import type { JSX, PropsWithChildren } from "hono/jsx";
+import type { PropsWithChildren } from "hono/jsx";
 import { createContext, useContext } from "hono/jsx";
 import { cx } from "styled-system/css";
 import type { CardVariantProps } from "styled-system/recipes";
