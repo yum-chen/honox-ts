@@ -154,6 +154,7 @@ export function Content(props: ContentProps) {
 	return (
 		<div
 			role="dialog"
+			tabIndex={-1}
 			data-part="content"
 			aria-modal="true"
 			aria-labelledby={id ? `${id}-title` : undefined}
@@ -357,119 +358,110 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 	const rootId = idProp || `dialog-${fallbackId}`;
 	const rootRef = useRef<HTMLElement>(null);
 
-	const handleOpenChangeRef = useRef<(nextOpen: boolean) => void>(() => {});
+	const previouslyFocused = useRef<HTMLElement | null>(null);
 
-	const handleOpenChange = (nextOpen: boolean) => {
+	const setOpen = (nextOpen: boolean) => {
 		if (!isControlled) {
 			setIsOpen(nextOpen);
 		}
 		onOpenChangeProp?.(nextOpen);
 	};
 
-	// Store the handler in a ref
-	useEffect(() => {
-		handleOpenChangeRef.current = handleOpenChange;
-	}, [isControlled, onOpenChangeProp]);
+	// Keep the latest setOpen reachable from the (mount-once) delegated handler
+	const setOpenRef = useRef<(nextOpen: boolean) => void>(setOpen);
+	setOpenRef.current = setOpen;
 
-	// Attach event listeners using event delegation
+	// Track latest open value for the delegated click handler
+	const openRef = useRef(open);
+	openRef.current = open;
+
+	// Click delegation for trigger / backdrop / close / action
 	useEffect(() => {
 		const root = rootRef.current;
 		if (!root) return;
 
-		// Handle all clicks via event delegation
 		const handleClick = (e: Event) => {
 			const target = (e.target as HTMLElement).closest(
 				"[data-part]",
-			) as HTMLElement;
+			) as HTMLElement | null;
 			if (!target) return;
 			const dataPart = target.getAttribute("data-part");
 
-			const getElements = () => {
-				return {
-					positioners: Array.from(
-						root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
-					),
-					backdrops: Array.from(
-						root.querySelectorAll<HTMLElement>('[data-part="backdrop"]'),
-					),
-					contents: Array.from(
-						root.querySelectorAll<HTMLElement>('[data-part="content"]'),
-					),
-				};
-			};
-
-			const hide = () => {
-				const { positioners, backdrops, contents } = getElements();
-				root.setAttribute("data-state", "closed");
-				positioners.forEach((p) => {
-					p.style.cssText =
-						"display: none !important; visibility: hidden !important;";
-					p.setAttribute("data-state", "closed");
-				});
-				backdrops.forEach((b) => {
-					b.style.cssText =
-						"display: none !important; visibility: hidden !important;";
-					b.setAttribute("data-state", "closed");
-				});
-				contents.forEach((c) => {
-					c.setAttribute("data-state", "closed");
-					c.style.cssText =
-						"display: none !important; visibility: hidden !important;";
-				});
-			};
-
-			const show = () => {
-				const { positioners, backdrops, contents } = getElements();
-				root.setAttribute("data-state", "open");
-				positioners.forEach((p) => {
-					p.style.cssText =
-						"display: flex !important; visibility: visible !important;";
-					p.setAttribute("data-state", "open");
-				});
-				backdrops.forEach((b) => {
-					b.style.cssText =
-						"display: block !important; visibility: visible !important;";
-					b.setAttribute("data-state", "open");
-				});
-				contents.forEach((c) => {
-					c.setAttribute("data-state", "open");
-					c.style.cssText =
-						"display: flex !important; visibility: visible !important;";
-				});
-			};
-
-			if (dataPart === "backdrop") {
-				hide();
-				handleOpenChangeRef.current?.(false);
-			} else if (dataPart === "trigger") {
-				const currentOpen = root.getAttribute("data-state") === "open";
-				const nextOpen = !currentOpen;
-				if (nextOpen) show();
-				else hide();
-				handleOpenChangeRef.current?.(nextOpen);
-			} else if (
+			if (
+				dataPart === "backdrop" ||
 				dataPart === "close-trigger" ||
 				dataPart === "action-trigger"
 			) {
-				hide();
-				handleOpenChangeRef.current?.(false);
+				setOpenRef.current?.(false);
+			} else if (dataPart === "trigger") {
+				setOpenRef.current?.(!openRef.current);
 			}
 		};
 
-		// Use event delegation on root
 		root.addEventListener("click", handleClick);
-
-		return () => {
-			root.removeEventListener("click", handleClick);
-		};
+		return () => root.removeEventListener("click", handleClick);
 	}, []);
+
+	// Accessibility: focus management, focus trap, Escape-to-close, scroll lock
+	useEffect(() => {
+		if (typeof document === "undefined" || !open) return;
+		const root = rootRef.current;
+		if (!root) return;
+
+		previouslyFocused.current = document.activeElement as HTMLElement;
+		const prevOverflow = document.body.style.overflow;
+		document.body.style.overflow = "hidden";
+
+		const content = root.querySelector<HTMLElement>('[data-part="content"]');
+		const getFocusable = () =>
+			content
+				? Array.from(
+						content.querySelectorAll<HTMLElement>(
+							'a[href], button:not([disabled]), textarea, input:not([disabled]), select, [tabindex]:not([tabindex="-1"])',
+						),
+					)
+				: [];
+
+		(getFocusable()[0] ?? content)?.focus();
+
+		const onKeyDown = (e: KeyboardEvent) => {
+			if (e.key === "Escape") {
+				e.preventDefault();
+				setOpenRef.current?.(false);
+				return;
+			}
+			if (e.key !== "Tab") return;
+			const items = getFocusable();
+			if (items.length === 0) {
+				e.preventDefault();
+				content?.focus();
+				return;
+			}
+			const first = items[0];
+			const last = items[items.length - 1];
+			if (e.shiftKey && document.activeElement === first) {
+				e.preventDefault();
+				last?.focus();
+			} else if (!e.shiftKey && document.activeElement === last) {
+				e.preventDefault();
+				first?.focus();
+			}
+		};
+
+		document.addEventListener("keydown", onKeyDown);
+		return () => {
+			document.removeEventListener("keydown", onKeyDown);
+			document.body.style.overflow = prevOverflow;
+			previouslyFocused.current?.focus?.();
+		};
+	}, [open]);
 
 	return (
 		<Root
 			{...rest}
 			id={rootId}
 			open={open}
-			onOpenChange={handleOpenChange}
+			onOpenChange={setOpen}
 			rootRef={rootRef}
 		/>
 	);
