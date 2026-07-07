@@ -1,7 +1,7 @@
 import SwitchIsland from "../../islands/switch";
 import {
-	type SwitchProps as SwitchPrimitiveProps,
 	Switch as SwitchPrimitive,
+	type SwitchProps as SwitchPrimitiveProps,
 } from "./switch-primitive";
 
 export interface SwitchProps extends SwitchPrimitiveProps {

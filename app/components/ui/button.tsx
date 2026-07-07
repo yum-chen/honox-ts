@@ -1,8 +1,8 @@
 import ButtonIsland from "../../islands/button";
 import {
-	Button as ButtonPrimitive,
 	ButtonGroup as ButtonGroupPrimitive,
 	type ButtonGroupProps,
+	Button as ButtonPrimitive,
 	type ButtonProps,
 } from "./button-primitive";
 
