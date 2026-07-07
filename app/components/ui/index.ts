@@ -34,7 +34,7 @@ export { Field, type FieldProps } from "./field";
 export { Fieldset, type FieldsetProps } from "./fieldset";
 export { Group, type GroupProps } from "./group";
 export { Heading, type HeadingProps } from "./heading";
-export * as HoverCard from "./hover-card";
+export { HoverCard, type HoverCardProps } from "./hover-card";
 export { Loader, type LoaderProps } from "./loader";
 export { Menu, type MenuItem, type MenuProps } from "./menu";
 export * as MenuPrimitive from "./menu-primitive";

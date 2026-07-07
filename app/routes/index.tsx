@@ -890,8 +890,8 @@ export default createRoute((c) => {
 				</Heading>
 				<div class={css({ display: "flex", gap: "8" })}>
 					<div class={css({ position: "relative" })}>
-						<HoverCard.Root>
-							<HoverCard.Trigger asChild>
+						<HoverCard
+							trigger={
 								<Text
 									class={css({
 										cursor: "default",
@@ -901,46 +901,33 @@ export default createRoute((c) => {
 								>
 									Basic HoverCard
 								</Text>
-							</HoverCard.Trigger>
-							<HoverCard.Positioner>
-								<HoverCard.Content>
-									<Text fontWeight="bold">HoverCard Title</Text>
-									<Text size="sm" class={css({ color: "fg.muted", mt: "1" })}>
-										This is a basic hover card that appears on hover.
-									</Text>
-								</HoverCard.Content>
-							</HoverCard.Positioner>
-						</HoverCard.Root>
+							}
+							title="HoverCard Title"
+							description="This is a basic hover card that appears on hover."
+						/>
 					</div>
 
 					<div class={css({ position: "relative" })}>
-						<HoverCard.Root>
-							<HoverCard.Trigger asChild>
-								<Button variant="outline">Hover with Arrow</Button>
-							</HoverCard.Trigger>
-							<HoverCard.Positioner>
-								<HoverCard.Content>
-									<HoverCard.Arrow>
-										<HoverCard.ArrowTip />
-									</HoverCard.Arrow>
-									<Text fontWeight="bold">HoverCard with Arrow</Text>
-									<Text size="sm" class={css({ color: "fg.muted", mt: "1" })}>
-										This hover card includes an arrow pointing to the trigger.
-									</Text>
-								</HoverCard.Content>
-							</HoverCard.Positioner>
-						</HoverCard.Root>
+						<HoverCard
+							showArrow
+							trigger={<Button variant="outline">Hover with Arrow</Button>}
+							title="HoverCard with Arrow"
+							description="This hover card includes an arrow pointing to the trigger."
+						/>
 					</div>
 
 					<div class={css({ position: "relative" })}>
-						<HoverCard.Root interactive openDelay={100} closeDelay={100}>
-							<HoverCard.Trigger asChild>
+						<HoverCard
+							interactive
+							openDelay={100}
+							closeDelay={100}
+							trigger={
 								<Badge variant="outline" colorPalette="blue" cursor="default">
 									Interactive
 								</Badge>
-							</HoverCard.Trigger>
-							<HoverCard.Positioner>
-								<HoverCard.Content>
+							}
+							content={
+								<>
 									<Text fontWeight="bold">Interactive HoverCard</Text>
 									<Text size="sm" class={css({ color: "fg.muted", mt: "1" })}>
 										This hover card is interactive and has custom delays.
@@ -948,9 +935,9 @@ export default createRoute((c) => {
 									<Button size="xs" variant="solid" class={css({ mt: "3" })}>
 										Action
 									</Button>
-								</HoverCard.Content>
-							</HoverCard.Positioner>
-						</HoverCard.Root>
+								</>
+							}
+						/>
 					</div>
 				</div>
 			</div>
