@@ -18,7 +18,7 @@ import {
 
 // ============= Flattened API Types =============
 
-export type MenuItemType =
+type MenuItemType =
 	| "item"
 	| "separator"
 	| "checkbox"
@@ -27,13 +27,13 @@ export type MenuItemType =
 	| "submenu"
 	| "group";
 
-export interface BaseMenuItem {
+interface BaseMenuItem {
 	type?: MenuItemType;
 	disabled?: boolean;
 	class?: string;
 }
 
-export interface MenuItemItem extends BaseMenuItem {
+interface MenuItemItem extends BaseMenuItem {
 	type?: "item";
 	label: string;
 	value: string;
@@ -41,11 +41,11 @@ export interface MenuItemItem extends BaseMenuItem {
 	indicator?: JSX.Element;
 }
 
-export interface MenuSeparatorItem extends BaseMenuItem {
+interface MenuSeparatorItem extends BaseMenuItem {
 	type: "separator";
 }
 
-export interface MenuCheckboxItem extends BaseMenuItem {
+interface MenuCheckboxItem extends BaseMenuItem {
 	type: "checkbox";
 	label: string;
 	value: string;
@@ -53,7 +53,7 @@ export interface MenuCheckboxItem extends BaseMenuItem {
 	icon?: JSX.Element;
 }
 
-export interface MenuRadioItem extends BaseMenuItem {
+interface MenuRadioItem extends BaseMenuItem {
 	type: "radio";
 	label: string;
 	value: string;
@@ -61,21 +61,21 @@ export interface MenuRadioItem extends BaseMenuItem {
 	icon?: JSX.Element;
 }
 
-export interface MenuRadioGroupItem extends BaseMenuItem {
+interface MenuRadioGroupItem extends BaseMenuItem {
 	type: "radio-group";
 	value: string;
 	label?: string;
 	items: MenuRadioItem[];
 }
 
-export interface MenuSubmenuItem extends BaseMenuItem {
+interface MenuSubmenuItem extends BaseMenuItem {
 	type: "submenu";
 	label: string;
 	icon?: JSX.Element;
 	items: (MenuItemItem | MenuSeparatorItem | MenuCheckboxItem)[];
 }
 
-export type MenuItem =
+type MenuItem =
 	| MenuItemItem
 	| MenuSeparatorItem
 	| MenuCheckboxItem
@@ -83,7 +83,7 @@ export type MenuItem =
 	| MenuRadioGroupItem
 	| MenuSubmenuItem;
 
-export interface MenuProps extends MenuVariantProps {
+interface MenuProps extends MenuVariantProps {
 	trigger?: JSX.Element;
 	items: MenuItem[];
 	defaultOpen?: boolean;
@@ -165,7 +165,7 @@ function renderMenuItem(item: MenuItem, index: number): JSX.Element {
 
 // ============= Flattened Menu Component =============
 
-export function Menu(props: MenuProps) {
+function Menu(props: MenuProps) {
 	const {
 		trigger,
 		items,
@@ -211,4 +211,17 @@ export function Menu(props: MenuProps) {
 // ============= Exports =============
 
 // Export the flattened Menu component
-export { Menu as default };
+export {
+	type BaseMenuItem,
+	Menu,
+	Menu as default,
+	type MenuCheckboxItem,
+	type MenuItem,
+	type MenuItemItem,
+	type MenuItemType,
+	type MenuProps,
+	type MenuRadioGroupItem,
+	type MenuRadioItem,
+	type MenuSeparatorItem,
+	type MenuSubmenuItem,
+};

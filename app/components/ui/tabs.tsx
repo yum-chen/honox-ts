@@ -6,9 +6,9 @@ import {
 	type TabsStructureProps,
 } from "./tabs-primitive";
 
-export type { TabsItem } from "./tabs-primitive";
+type TabsItemFromPrimitive = import("./tabs-primitive").TabsItem;
 
-export interface TabsProps extends InteractiveRootProps, TabsStructureProps {
+interface TabsProps extends InteractiveRootProps, TabsStructureProps {
 	interactive?: boolean;
 }
 
@@ -29,5 +29,6 @@ const TabsRoot = (props: TabsProps) => {
 };
 
 export const Tabs = TabsRoot;
+export type { TabsItemFromPrimitive as TabsItem, TabsProps };
 
 export default Tabs;

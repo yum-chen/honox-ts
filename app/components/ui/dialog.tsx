@@ -17,17 +17,17 @@ import {
 	Trigger,
 } from "./dialog-primitive";
 
-export interface RootProps extends DialogPrimitiveRootProps {
+interface RootProps extends DialogPrimitiveRootProps {
 	interactive?: boolean;
 }
 
-function Root(props: RootProps) {
+const Root = (props: RootProps) => {
 	const { interactive, ...rest } = props;
 	if (interactive) {
 		return <DialogIsland {...rest} />;
 	}
 	return <DialogPrimitiveRoot {...rest} />;
-}
+};
 
 const CloseIcon = () => (
 	<svg
@@ -46,6 +46,8 @@ const CloseIcon = () => (
 		<path d="m6 6 12 12" />
 	</svg>
 );
+
+export type { RootProps };
 
 export interface DialogProps extends RootProps {
 	trigger?: JSX.Element;

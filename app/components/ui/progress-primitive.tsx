@@ -87,7 +87,7 @@ export function Label(props: PropsWithChildren<{ class?: string }>) {
 		value === null ? "indeterminate" : value >= max ? "complete" : "loading";
 
 	return (
-		<label
+		<span
 			data-scope="progress"
 			data-part="label"
 			data-state={state}
@@ -95,7 +95,7 @@ export function Label(props: PropsWithChildren<{ class?: string }>) {
 			{...rest}
 		>
 			{children}
-		</label>
+		</span>
 	);
 }
 
@@ -217,6 +217,7 @@ export function Circle(props: PropsWithChildren<{ class?: string }>) {
 			class={cx(styles.circle, classProp)}
 			{...rest}
 		>
+			<title>Progress</title>
 			{children}
 		</svg>
 	);

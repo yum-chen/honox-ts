@@ -42,7 +42,9 @@ export default createRoute(
 				}
 
 				const postTags = Array.isArray(data.tags) ? data.tags : [];
-				postTags.forEach((tag: string) => allTags.add(tag));
+				postTags.forEach((tag: string) => {
+					allTags.add(tag);
+				});
 			} catch (_error) {
 				// Ignore errors
 			}
@@ -111,7 +113,9 @@ export default createRoute(
 				}
 
 				const postTags = Array.isArray(data.tags) ? data.tags : [];
-				postTags.forEach((tag: string) => allTags.add(tag));
+				postTags.forEach((tag: string) => {
+					allTags.add(tag);
+				});
 			} catch (_error) {
 				// Ignore errors
 			}

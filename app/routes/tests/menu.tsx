@@ -35,12 +35,13 @@ const _Box = ({
 	border,
 	onContextMenu,
 }: any) => (
-	<div
-		class={css({ p, bg, borderRadius, border })}
+	<button
+		type="button"
+		class={css({ p, bg, borderRadius, border, textAlign: "left" })}
 		onContextMenu={onContextMenu}
 	>
 		{children}
-	</div>
+	</button>
 );
 
 export default function MenuTestPage() {
