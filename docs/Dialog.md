@@ -43,9 +43,3 @@ export default function MyPage() {
   );
 }
 ```
-
-# Sub-components
-
-The underlying primitives are also available:
-
-`Dialog.Root`, `Dialog.Trigger`, `Dialog.Backdrop`, `Dialog.Positioner`, `Dialog.Content`, `Dialog.Header`, `Dialog.Title`, `Dialog.Description`, `Dialog.Body`, `Dialog.Footer`, `Dialog.CloseTrigger`, `Dialog.ActionTrigger`

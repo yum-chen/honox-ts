@@ -2,59 +2,32 @@
 
 # Introduction
 
-A transient notification used to provide feedback about an action. Supports an imperative API and a composable primitive API.
+A transient notification used to provide feedback about an action. Toasts are created imperatively through the `toaster` API. Mount a single `<Toast.Toaster />` to render them.
 
-# Props
-
-Toast is exported as a namespace. The primitives accept the props below; `type` controls the visual intent.
-
-## Toast.Root
-
-| Prop | Type | Description |
-| :--- | :--- | :--- |
-| `type` | `"info" \| "success" \| "warning" \| "error" \| "loading"` | The intent/style of the toast. |
-| `class` | `string` | Custom CSS classes for the root element. |
-
-## Toast.Title / Toast.Description / Toast.Indicator
-
-| Prop | Type | Description |
-| :--- | :--- | :--- |
-| `class` | `string` | Custom CSS classes for the element. |
-
-## Toast.ActionTrigger / Toast.CloseTrigger
-
-| Prop | Type | Description |
-| :--- | :--- | :--- |
-| `asChild` | `boolean` | Render as the child element (slot). |
-| `class` | `string` | Custom CSS classes for the element. |
-
-# Imperative API
-
-`Toast.toaster` provides shortcut helpers:
-
-| Method | Signature |
-| :--- | :--- |
-| `create` | `(options: Omit<ToastOptions, "id">) => string` |
-| `success` | `(title: string, options?: Partial<...>) => string` |
-| `error` | `(title: string, options?: Partial<...>) => string` |
-| `warning` | `(title: string, options?: Partial<...>) => string` |
-| `info` | `(title: string, options?: Partial<...>) => string` |
-| `dismiss` | `(id?: string) => void` |
-
-### ToastOptions
-
-| Property | Type | Description |
-| :--- | :--- | :--- |
-| `title` | `string` | The toast title. |
-| `description` | `string` | The toast description. |
-| `type` | `"info" \| "success" \| "warning" \| "error" \| "loading"` | Intent. |
-| `duration` | `number` | Auto-dismiss duration in ms. |
-| `closable` | `boolean` | Whether the toast can be dismissed. |
-| `action` | `{ label: string; onClick: () => void }` | Optional action button. |
+> A live, runnable version of every example below is in `app/routes/index.tsx` — the **Toast Component Examples** section. The docs examples are kept in sync with that file.
 
 # Usage
 
-## Imperative Toast
+## Mount the Toaster
+
+Place `<Toast.Toaster />` once near your app root (this matches `app/routes/index.tsx`):
+
+```tsx
+import { Toast } from "../components/ui";
+
+export default function App() {
+  return (
+    <>
+      {/* ...your application... */}
+      <Toast.Toaster />
+    </>
+  );
+}
+```
+
+## Show a toast (client components / islands)
+
+From a hydrated client component or island, call `Toast.toaster.*`:
 
 ```tsx
 import { Toast, Button } from "../components/ui";
@@ -72,22 +45,56 @@ export default function MyPage() {
 }
 ```
 
-## Composable Toast
+## Show a toast (SSG-safe)
+
+The home-page demo triggers toasts by dispatching the underlying `park-ui:toast:create` CustomEvent directly. This works **without client hydration**, which is why the static `onclick` attribute is used instead of a JSX `onClick` handler. The following block is reproduced from `app/routes/index.tsx`:
 
 ```tsx
-import { Toast } from "../components/ui";
-
-export default function MyToast() {
-  return (
-    <Toast.Root type="success">
-      <Toast.Title>Success</Toast.Title>
-      <Toast.Description>Operation completed.</Toast.Description>
-      <Toast.CloseTrigger>Dismiss</Toast.CloseTrigger>
-    </Toast.Root>
-  );
-}
+<Toast.Toaster />
+<div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+  <Button
+    variant="outline"
+    onclick="window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Success', description: 'Action completed successfully', closable: true, type: 'success' } }))"
+  >
+    Show Success Toast
+  </Button>
+  <Button
+    variant="outline"
+    onclick="window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Error', description: 'An error occurred', closable: true, type: 'error' } }))"
+  >
+    Show Error Toast
+  </Button>
+  <Button
+    variant="outline"
+    onclick="window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Loading', description: 'Please wait...', type: 'loading' } }))"
+  >
+    Show Loading Toast
+  </Button>
+</div>
 ```
 
-# Sub-components
+> Note: Toast content is created **imperatively** — `title` and `description` accept strings only, so a toast's body cannot be authored as JSX. The `Toaster` renders it internally from the private primitives.
 
-`Toast.Root`, `Toast.Title`, `Toast.Description`, `Toast.ActionTrigger`, `Toast.CloseTrigger`, `Toast.Indicator`, `Toast.Toaster`
+# API
+
+`Toast.toaster` provides the following helpers:
+
+| Method | Signature |
+| :--- | :--- |
+| `create` | `(options: Omit<ToastOptions, "id">) => string` |
+| `success` | `(title: string, options?: Partial<ToastOptions>) => string` |
+| `error` | `(title: string, options?: Partial<ToastOptions>) => string` |
+| `warning` | `(title: string, options?: Partial<ToastOptions>) => string` |
+| `info` | `(title: string, options?: Partial<ToastOptions>) => string` |
+| `dismiss` | `(id?: string) => void` |
+
+## ToastOptions
+
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `title` | `string` | The toast title. |
+| `description` | `string` | The toast description. |
+| `type` | `"info" \| "success" \| "warning" \| "error" \| "loading"` | Intent/style of the toast. |
+| `duration` | `number` | Auto-dismiss duration in milliseconds. |
+| `closable` | `boolean` | Whether the toast can be dismissed. |
+| `action` | `{ label: string; onClick: () => void }` | Optional action button. |

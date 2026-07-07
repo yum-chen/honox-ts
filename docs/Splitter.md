@@ -49,7 +49,3 @@ export default function MyPage() {
   );
 }
 ```
-
-# Sub-components
-
-`Splitter.Root`, `Splitter.Panel`, `Splitter.ResizeTrigger`

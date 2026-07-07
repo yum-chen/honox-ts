@@ -61,9 +61,3 @@ export default function MyPage() {
   );
 }
 ```
-
-# Sub-components
-
-The underlying primitives are also available for advanced layouts:
-
-`Breadcrumb.Root`, `Breadcrumb.List`, `Breadcrumb.Item`, `Breadcrumb.Link`, `Breadcrumb.Separator`, `Breadcrumb.Ellipsis`

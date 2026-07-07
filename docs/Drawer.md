@@ -43,9 +43,3 @@ export default function MyPage() {
   );
 }
 ```
-
-# Sub-components
-
-The underlying primitives are also available:
-
-`Drawer.Root`, `Drawer.Trigger`, `Drawer.Backdrop`, `Drawer.Positioner`, `Drawer.Content`, `Drawer.Header`, `Drawer.Title`, `Drawer.Description`, `Drawer.Body`, `Drawer.Footer`, `Drawer.CloseTrigger`, `Drawer.ActionTrigger`

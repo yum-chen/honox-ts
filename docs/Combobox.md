@@ -52,36 +52,3 @@ export default function MyPage() {
   );
 }
 ```
-
-## Primitives
-
-For more control, you can use the primitive components:
-
-```tsx
-import * as Combobox from "../components/ui/combobox";
-
-export default function CustomCombobox() {
-  return (
-    <Combobox.Root>
-      <Combobox.Label>Framework</Combobox.Label>
-      <Combobox.Control>
-        <Combobox.Input />
-        <Combobox.IndicatorGroup>
-          <Combobox.ClearTrigger />
-          <Combobox.Trigger />
-        </Combobox.IndicatorGroup>
-      </Combobox.Control>
-      <Combobox.Positioner>
-        <Combobox.Content>
-          <Combobox.List>
-            <Combobox.Item value="react">
-              <Combobox.ItemText>React</Combobox.ItemText>
-              <Combobox.ItemIndicator />
-            </Combobox.Item>
-          </Combobox.List>
-        </Combobox.Content>
-      </Combobox.Positioner>
-    </Combobox.Root>
-  );
-}
-```

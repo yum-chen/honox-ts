@@ -64,7 +64,3 @@ export default function MyPage() {
   );
 }
 ```
-
-# Sub-components
-
-`Menu.Root`, `Menu.Trigger`, `Menu.ContextTrigger`, `Menu.Positioner`, `Menu.Content`, `Menu.Item`, `Menu.ItemGroup`, `Menu.ItemGroupLabel`, `Menu.Separator`, `Menu.Arrow`, `Menu.ArrowTip`, `Menu.CheckboxItem`, `Menu.RadioItem`, `Menu.RadioItemGroup`, `Menu.Indicator`, `Menu.ItemIndicator`, `Menu.ItemText`, `Menu.TriggerItem`

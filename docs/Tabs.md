@@ -44,7 +44,3 @@ export default function MyPage() {
   );
 }
 ```
-
-# Sub-components
-
-`Tabs.Root`, `Tabs.List`, `Tabs.Trigger`, `Tabs.Content`, `Tabs.Indicator`
