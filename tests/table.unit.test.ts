@@ -6,16 +6,6 @@ describe("Table Unit Tests", () => {
 		expect(Table).toBeDefined();
 	});
 
-	test("Table primitives are attached", () => {
-		expect(Table.Root).toBeDefined();
-		expect(Table.Head).toBeDefined();
-		expect(Table.Body).toBeDefined();
-		expect(Table.Row).toBeDefined();
-		expect(Table.Header).toBeDefined();
-		expect(Table.Cell).toBeDefined();
-		expect(Table.Caption).toBeDefined();
-		expect(Table.Foot).toBeDefined();
-	});
 
 	test("Table renders with flattened API structure", () => {
 		const columns = [

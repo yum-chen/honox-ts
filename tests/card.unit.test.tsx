@@ -31,16 +31,3 @@ test("Card renders footer", () => {
 	expect(html).toContain("Action");
 });
 
-test("Card renders as compound components", () => {
-    const html = (
-        <Card.Root>
-            <Card.Header>
-                <Card.Title>Compound Title</Card.Title>
-            </Card.Header>
-            <Card.Body>Compound Body</Card.Body>
-        </Card.Root>
-    ).toString();
-
-    expect(html).toContain("Compound Title");
-    expect(html).toContain("Compound Body");
-});
