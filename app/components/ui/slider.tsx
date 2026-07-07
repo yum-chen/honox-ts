@@ -15,7 +15,7 @@ import {
 	ValueText,
 } from "./slider-primitive";
 
-export interface SliderProps {
+interface SliderProps {
 	// Value
 	value?: number | number[];
 	defaultValue?: number | number[];
@@ -64,7 +64,7 @@ const serializeValue = (v: any) => {
 	return undefined;
 };
 
-export function Slider(props: SliderProps) {
+function Slider(props: SliderProps) {
 	const {
 		label,
 		showValueText,
@@ -189,4 +189,5 @@ export function Slider(props: SliderProps) {
 	);
 }
 
+export { Slider, type SliderProps };
 export default Slider;

@@ -16,7 +16,7 @@ const FieldsetContext = createContext<FieldsetContextValue | null>(null);
 
 const useFieldsetContext = () => useContext(FieldsetContext);
 
-export interface FieldsetProps extends FieldsetVariantProps, PropsWithChildren {
+interface FieldsetProps extends FieldsetVariantProps, PropsWithChildren {
 	class?: string;
 	id?: string;
 	disabled?: boolean;
@@ -28,7 +28,7 @@ export interface FieldsetProps extends FieldsetVariantProps, PropsWithChildren {
 	[key: string]: unknown;
 }
 
-export function Fieldset(props: FieldsetProps) {
+function Fieldset(props: FieldsetProps) {
 	const [variantProps, localProps] = fieldset.splitVariantProps(props);
 	const {
 		children,
@@ -164,4 +164,5 @@ function FieldsetControl(
 	);
 }
 
+export { Fieldset, type FieldsetProps };
 export default Fieldset;

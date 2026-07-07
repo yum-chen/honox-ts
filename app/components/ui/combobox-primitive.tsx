@@ -381,6 +381,14 @@ export function Item(
 					context?.onItemSelect?.(value);
 				}
 			}}
+			onKeyDown={(e) => {
+				if (e.key === "Enter" || e.key === " ") {
+					if (!disabled) {
+						context?.onItemSelect?.(value);
+					}
+					e.preventDefault();
+				}
+			}}
 			{...rest}
 		>
 			{children}
