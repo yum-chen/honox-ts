@@ -2,66 +2,75 @@
 
 # Introduction
 
-A control that allows the user to select a value from a range.
+A control that allows the user to select a value (or range of values) from a continuous scale.
 
 # Props
 
-## Root Props
-
-| Prop            | Type                                     | Description                                      |
-| :-------------- | :--------------------------------------- | :----------------------------------------------- |
-| `orientation`   | `"horizontal" \| "vertical"`             | The orientation of the slider.                   |
-| `value`         | `number[]`                               | The values of the slider (controlled).           |
-| `defaultValue`  | `number[]`                               | The initial values of the slider (uncontrolled). |
-| `min`           | `number`                                 | The minimum value.                               |
-| `max`           | `number`                                 | The maximum value.                               |
-| `step`          | `number`                                 | The step increment.                              |
-| `onValueChange` | `(details: { value: number[] }) => void` | Callback triggered when values change.           |
-| `interactive`   | `boolean`                                | Forces hydration as an island.                   |
+| Prop              | Type                                              | Description                                                  |
+| :---------------- | :------------------------------------------------ | :----------------------------------------------------------- |
+| `value`           | `number \| number[]`                              | The current value(s) (controlled).                           |
+| `defaultValue`    | `number \| number[]`                              | The initial value(s) (uncontrolled).                         |
+| `min`             | `number`                                          | The minimum value.                                           |
+| `max`             | `number`                                          | The maximum value.                                           |
+| `step`            | `number`                                          | The step increment.                                          |
+| `onChange`        | `(details: { value: number[] }) => void`          | Callback triggered when the value changes.                   |
+| `onDraggingChange`| `(details: { dragging: boolean }) => void`        | Callback triggered when the dragging state changes.          |
+| `label`           | `string \| JSX.Element`                           | Label displayed above the slider.                            |
+| `showValueText`   | `boolean`                                         | Whether to show the current value text.                      |
+| `formatValue`     | `(value: number) => string`                       | Custom formatter for the value text.                         |
+| `marks`           | `{ value: number; label: string \| JSX.Element }[]` | Tick marks to display along the track.                     |
+| `orientation`     | `"horizontal" \| "vertical"`                      | The orientation of the slider.                               |
+| `height`          | `string`                                          | Height (required for vertical orientation).                  |
+| `disabled`        | `boolean`                                          | Whether the slider is disabled.                              |
+| `readOnly`        | `boolean`                                          | Whether the slider is read-only.                             |
+| `interactive`     | `boolean`                                          | Enable client-side interactivity.                            |
+| `size`            | `"sm" \| "md" \| "lg"`                             | The size of the slider.                                      |
+| `colorPalette`    | `string`                                           | The color theme of the slider.                               |
+| `class`           | `string`                                           | Custom CSS classes for the root element.                     |
+| `trackClass`      | `string`                                           | Custom CSS classes for the track.                            |
+| `rangeClass`      | `string`                                           | Custom CSS classes for the range.                            |
+| `thumbClass`      | `string`                                           | Custom CSS classes for the thumb.                            |
+| `labelClass`      | `string`                                           | Custom CSS classes for the label.                            |
+| `valueTextClass`  | `string`                                           | Custom CSS classes for the value text.                       |
+| `markClass`       | `string`                                           | Custom CSS classes for the marks.                            |
 
 # Usage
 
+## Basic Slider
+
 ```tsx
-import * as Slider from "../components/ui/slider";
+import { Slider } from "../components/ui";
 
 export default function MyPage() {
   return (
-    <Slider.Root defaultValue={[30]} min={0} max={100} interactive>
-      <Slider.Label>Volume</Slider.Label>
-      <Slider.Control>
-        <Slider.Track>
-          <Slider.Range />
-        </Slider.Track>
-        <Slider.Thumb index={0} />
-      </Slider.Control>
-    </Slider.Root>
+    <Slider
+      label="Volume"
+      defaultValue={30}
+      min={0}
+      max={100}
+      showValueText
+      interactive
+    />
   );
 }
 ```
 
-## With Markers
+## With Marks
 
 ```tsx
-<Slider.Root defaultValue={[50]} interactive>
-  <Slider.Control>
-    <Slider.Track>
-      <Slider.Range />
-    </Slider.Track>
-    <Slider.Thumb index={0} />
-    <Slider.MarkerGroup>
-      <Slider.Marker value={0}>
-        <Slider.MarkerIndicator />
-        <span>0</span>
-      </Slider.Marker>
-      <Slider.Marker value={50}>
-        <Slider.MarkerIndicator />
-        <span>50</span>
-      </Slider.Marker>
-      <Slider.Marker value={100}>
-        <Slider.MarkerIndicator />
-        <span>100</span>
-      </Slider.Marker>
-    </Slider.MarkerGroup>
-  </Slider.Control>
-</Slider.Root>
+import { Slider } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Slider
+      defaultValue={50}
+      marks={[
+        { value: 0, label: "0" },
+        { value: 50, label: "50" },
+        { value: 100, label: "100" },
+      ]}
+      interactive
+    />
+  );
+}
 ```

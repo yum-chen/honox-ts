@@ -15,8 +15,7 @@ A component for displaying contextual information on hover or focus.
 | `showArrow`    | `boolean` | Whether to show an arrow pointing to the trigger.                                     |
 | `open`         | `boolean` | Whether the tooltip is open (controlled).                                             |
 | `disabled`     | `boolean` | Whether the tooltip is disabled.                                                      |
-| `interactive`  | `boolean` | Whether the tooltip's content is interactive (remains open when hovered).             |
-| `interactable` | `boolean` | Forces hydration as an island. Defaults to `true`.                                    |
+| `interactive`  | `boolean` | Whether the tooltip's content is interactive (remains open when hovered) and enables client-side hydration. |
 | `asChild`      | `boolean` | Whether to merge props onto the immediate child element instead of wrapping in a div. |
 
 ## Root (Composition)
@@ -24,8 +23,10 @@ A component for displaying contextual information on hover or focus.
 | Prop           | Type      | Description                                        |
 | :------------- | :-------- | :------------------------------------------------- |
 | `children`     | `any`     | Tooltip sub-components.                            |
+| `id`           | `string`  | Unique identifier for the tooltip.                 |
 | `open`         | `boolean` | Whether the tooltip is open.                       |
-| `interactable` | `boolean` | Forces hydration as an island. Defaults to `true`. |
+| `disabled`     | `boolean` | Whether the tooltip is disabled.                   |
+| `interactive`  | `boolean` | Forces hydration as an island. Defaults to `true`. |
 
 # Usage
 
