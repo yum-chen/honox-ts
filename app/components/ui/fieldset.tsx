@@ -116,9 +116,7 @@ function FieldsetHelperText(
 	);
 }
 
-function FieldsetErrorText(
-	props: PropsWithChildren<{ class?: string }>,
-) {
+function FieldsetErrorText(props: PropsWithChildren<{ class?: string }>) {
 	const context = useFieldsetContext();
 	const styles = fieldset();
 	if (context?.invalid) {
