@@ -27,6 +27,7 @@ import { tabs } from "./tabs";
 import { text } from "./text";
 import { textarea } from "./textarea";
 import { toast } from "./toast";
+import { toggleGroup } from "./toggle-group";
 import { tooltip } from "./tooltip";
 
 export const recipes = {
@@ -43,6 +44,7 @@ export const recipes = {
 
 export const slotRecipes = {
 	alert,
+	toggleGroup,
 	splitter,
 	breadcrumb,
 	card,

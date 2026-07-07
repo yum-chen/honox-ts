@@ -50,11 +50,7 @@ export {
 } from "./skeleton";
 export { Slider, type SliderProps } from "./slider";
 export { Spinner, type SpinnerProps } from "./spinner";
-export {
-	type PanelConfig,
-	Splitter,
-	type SplitterProps,
-} from "./splitter";
+export { type PanelConfig, Splitter, type SplitterProps } from "./splitter";
 export { Switch, type SwitchProps } from "./switch";
 export {
 	Table,
@@ -66,4 +62,5 @@ export { Tabs, type TabsItem, type TabsProps } from "./tabs";
 export { Text, type TextProps } from "./text";
 export { Textarea, type TextareaProps } from "./textarea";
 export * as Toast from "./toast";
+export { ToggleGroup, type ToggleGroupProps } from "./toggle-group";
 export { Tooltip, type TooltipProps } from "./tooltip";

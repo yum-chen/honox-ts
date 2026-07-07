@@ -37,6 +37,7 @@ import {
 	Text,
 	Textarea,
 	Toast,
+	ToggleGroup,
 	Tooltip,
 } from "../components/ui";
 
@@ -1988,6 +1989,68 @@ export default createRoute((c) => {
 								{ id: "p3", size: 20 },
 							]}
 						/>
+					</div>
+				</div>
+			</div>
+
+			{/* ToggleGroup Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					ToggleGroup Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+					})}
+				>
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic ToggleGroup (Interactive)
+						</Text>
+						<ToggleGroup interactive defaultValue={["react"]}>
+							<ToggleGroup.Item value="react">React</ToggleGroup.Item>
+							<ToggleGroup.Item value="solid">Solid</ToggleGroup.Item>
+							<ToggleGroup.Item value="svelte">Svelte</ToggleGroup.Item>
+						</ToggleGroup>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Outline Variant & Multiple
+						</Text>
+						<ToggleGroup
+							interactive
+							variant="outline"
+							multiple
+							defaultValue={["bold", "italic"]}
+						>
+							<ToggleGroup.Item value="bold">
+								<Text fontWeight="bold">B</Text>
+							</ToggleGroup.Item>
+							<ToggleGroup.Item value="italic">
+								<Text fontStyle="italic">I</Text>
+							</ToggleGroup.Item>
+							<ToggleGroup.Item value="underline">
+								<Text textDecoration="underline">U</Text>
+							</ToggleGroup.Item>
+						</ToggleGroup>
 					</div>
 				</div>
 			</div>

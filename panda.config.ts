@@ -53,6 +53,7 @@ export default defineConfig({
 			text: ["*"],
 			textarea: ["*"],
 			toast: ["*"],
+			toggleGroup: ["*"],
 			tooltip: ["*"],
 		},
 	},
