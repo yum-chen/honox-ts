@@ -14,7 +14,7 @@ interface FieldsetContextValue {
 
 const FieldsetContext = createContext<FieldsetContextValue | null>(null);
 
-export const useFieldsetContext = () => useContext(FieldsetContext);
+const useFieldsetContext = () => useContext(FieldsetContext);
 
 export interface FieldsetProps extends FieldsetVariantProps, PropsWithChildren {
 	class?: string;
@@ -83,7 +83,7 @@ export function Fieldset(props: FieldsetProps) {
 	);
 }
 
-export function FieldsetLegend(props: PropsWithChildren<{ class?: string }>) {
+function FieldsetLegend(props: PropsWithChildren<{ class?: string }>) {
 	const context = useFieldsetContext();
 	const styles = fieldset();
 	return (
@@ -97,7 +97,7 @@ export function FieldsetLegend(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function FieldsetHelperText(
+function FieldsetHelperText(
 	props: PropsWithChildren<{
 		class?: string;
 	}>,
@@ -116,7 +116,7 @@ export function FieldsetHelperText(
 	);
 }
 
-export function FieldsetErrorText(
+function FieldsetErrorText(
 	props: PropsWithChildren<{ class?: string }>,
 ) {
 	const context = useFieldsetContext();
@@ -136,7 +136,7 @@ export function FieldsetErrorText(
 	return null;
 }
 
-export function FieldsetContent(
+function FieldsetContent(
 	props: PropsWithChildren<{
 		class?: string;
 		[key: string]: unknown;
@@ -151,7 +151,7 @@ export function FieldsetContent(
 	);
 }
 
-export function FieldsetControl(
+function FieldsetControl(
 	props: PropsWithChildren<{
 		class?: string;
 		[key: string]: unknown;
@@ -165,3 +165,5 @@ export function FieldsetControl(
 		</div>
 	);
 }
+
+export default Fieldset;

@@ -189,18 +189,4 @@ export function Slider(props: SliderProps) {
 	);
 }
 
-// Re-export primitives for advanced usage if needed
-export {
-	Control,
-	Label,
-	Marker,
-	MarkerGroup,
-	MarkerIndicator,
-	Range,
-	SliderPrimitiveRoot as Root,
-	Thumb,
-	Track,
-	ValueText,
-};
-
 export default Slider;

@@ -1372,19 +1372,16 @@ export default createRoute((c) => {
 						})}
 					>
 						<Text size="sm" class={css({ color: "fg.muted" })}>
-							Mixed Compound API (Backward Compatible)
+							Custom Separator (Slash)
 						</Text>
-						<Breadcrumb.Root>
-							<Breadcrumb.List>
-								<Breadcrumb.Item>
-									<Breadcrumb.Link href="/">Home</Breadcrumb.Link>
-								</Breadcrumb.Item>
-								<Breadcrumb.Separator />
-								<Breadcrumb.Item>
-									<Breadcrumb.Link href="/compound">Compound</Breadcrumb.Link>
-								</Breadcrumb.Item>
-							</Breadcrumb.List>
-						</Breadcrumb.Root>
+						<Breadcrumb
+							separator="/"
+							items={[
+								{ label: "Account", href: "/account" },
+								{ label: "Settings", href: "/account/settings" },
+								{ label: "Security" },
+							]}
+						/>
 					</div>
 				</div>
 			</div>

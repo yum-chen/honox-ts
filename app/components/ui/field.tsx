@@ -35,10 +35,4 @@ export function Field(props: FieldProps) {
 	return <FieldRoot {...props} />;
 }
 
-export {
-	FieldErrorText,
-	FieldHelperText,
-	FieldLabel,
-	FieldRequiredIndicator,
-	FieldRoot,
-} from "./field-primitive";
+export default Field;

@@ -105,17 +105,3 @@ export const Splitter = (props: SplitterProps) => {
 		</Root>
 	);
 };
-
-// Also export primitives for advanced use cases
-export {
-	Panel as SplitterPanel,
-	ResizeTrigger as SplitterResizeTrigger,
-	Root as SplitterRoot,
-};
-
-// Attach primitives to Splitter for dot-notation support
-Object.assign(Splitter, {
-	Root,
-	Panel,
-	ResizeTrigger,
-});

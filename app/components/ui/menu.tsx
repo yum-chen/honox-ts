@@ -4,24 +4,17 @@ import { type MenuVariantProps, menu } from "styled-system/recipes";
 import InteractiveMenuRoot from "../../islands/menu";
 // Import primitive components from menu-primitive
 import {
-	MenuArrow as Arrow,
-	MenuArrowTip as ArrowTip,
 	MenuCheckboxItem as CheckboxItem,
 	MenuContent as Content,
-	MenuContextTrigger as ContextTrigger,
-	MenuIndicator as Indicator,
 	MenuItem as Item,
-	MenuItemGroup as ItemGroup,
 	MenuItemGroupLabel as ItemGroupLabel,
 	MenuItemIndicator as ItemIndicator,
 	MenuItemText as ItemText,
 	MenuPositioner as Positioner,
-	MenuRadioItem as RadioItem,
 	MenuRadioItemGroup as RadioItemGroup,
 	MenuRoot as RootPrimitive,
 	MenuSeparator as Separator,
 	MenuTrigger as Trigger,
-	MenuTriggerItem as TriggerItem,
 } from "./menu-primitive";
 
 // ============= Flattened API Types =============
@@ -220,44 +213,3 @@ export function Menu(props: MenuProps) {
 
 // Export the flattened Menu component
 export { Menu as default };
-
-// Attach sub-components to the Menu component
-Object.assign(Menu, {
-	Root: RootPrimitive,
-	Trigger,
-	ContextTrigger,
-	Positioner,
-	Content,
-	Item,
-	ItemGroup,
-	ItemGroupLabel,
-	Separator,
-	Arrow,
-	ArrowTip,
-	CheckboxItem,
-	RadioItem,
-	RadioItemGroup,
-	Indicator,
-	ItemIndicator,
-	ItemText,
-	TriggerItem,
-});
-
-export const MenuRoot = RootPrimitive;
-export const MenuTrigger = Trigger;
-export const MenuContextTrigger = ContextTrigger;
-export const MenuPositioner = Positioner;
-export const MenuContent = Content;
-export const MenuItem = Item;
-export const MenuItemGroup = ItemGroup;
-export const MenuItemGroupLabel = ItemGroupLabel;
-export const MenuSeparator = Separator;
-export const MenuArrow = Arrow;
-export const MenuArrowTip = ArrowTip;
-export const MenuCheckboxItem = CheckboxItem;
-export const MenuRadioItem = RadioItem;
-export const MenuRadioItemGroup = RadioItemGroup;
-export const MenuIndicator = Indicator;
-export const MenuItemIndicator = ItemIndicator;
-export const MenuItemText = ItemText;
-export const MenuTriggerItem = TriggerItem;

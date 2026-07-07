@@ -30,23 +30,8 @@ export {
 export { Combobox, type ComboboxProps } from "./combobox";
 export { Dialog, type DialogProps } from "./dialog";
 export { Drawer, type DrawerProps } from "./drawer";
-export {
-	Field,
-	FieldErrorText,
-	FieldHelperText,
-	FieldLabel,
-	type FieldProps,
-	FieldRequiredIndicator,
-} from "./field";
-export {
-	Fieldset,
-	FieldsetContent,
-	FieldsetControl,
-	FieldsetErrorText,
-	FieldsetHelperText,
-	FieldsetLegend,
-	type FieldsetProps,
-} from "./fieldset";
+export { Field, type FieldProps } from "./field";
+export { Fieldset, type FieldsetProps } from "./fieldset";
 export { Group, type GroupProps } from "./group";
 export { Heading, type HeadingProps } from "./heading";
 export * as HoverCard from "./hover-card";

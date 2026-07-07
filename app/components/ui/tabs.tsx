@@ -1,13 +1,9 @@
 import InteractiveTabsIsland from "../../islands/tabs";
 import {
-	Content,
-	Indicator,
 	type RootProps as InteractiveRootProps,
-	List,
 	Root,
 	TabsStructure,
 	type TabsStructureProps,
-	Trigger,
 } from "./tabs-primitive";
 
 export type { TabsItem } from "./tabs-primitive";
@@ -32,12 +28,6 @@ const TabsRoot = (props: TabsProps) => {
 	);
 };
 
-export const Tabs = Object.assign(TabsRoot, {
-	Root: TabsRoot,
-	List,
-	Trigger,
-	Content,
-	Indicator,
-});
+export const Tabs = TabsRoot;
 
 export default Tabs;

@@ -1,14 +1,7 @@
 import type { Child } from "hono/jsx";
 import { Fragment } from "hono/jsx";
 import type { BreadcrumbVariantProps } from "styled-system/recipes";
-import {
-	Ellipsis,
-	Item,
-	Link,
-	List,
-	Root,
-	Separator,
-} from "./breadcrumb-primitive";
+import { Item, Link, List, Root, Separator } from "./breadcrumb-primitive";
 
 export interface BreadcrumbItem {
 	/** Display text or JSX node */
@@ -55,14 +48,3 @@ export function Breadcrumb(props: BreadcrumbProps) {
 		</Root>
 	);
 }
-
-Object.assign(Breadcrumb, {
-	Root,
-	List,
-	Item,
-	Link,
-	Separator,
-	Ellipsis,
-});
-
-export { Ellipsis, Item, Link, List, Root, Separator };
