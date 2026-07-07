@@ -195,4 +195,4 @@ export function CardBase(props: CardBaseProps) {
 }
 
 export type { RootProps };
-export { Body, Description, Footer, Header, Root, Title, Image };
+export { Body, Description, Footer, Header, Image, Root, Title };

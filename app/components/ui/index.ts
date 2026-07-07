@@ -38,7 +38,7 @@ export * as HoverCard from "./hover-card";
 export { Loader, type LoaderProps } from "./loader";
 export { Menu, type MenuItem, type MenuProps } from "./menu";
 export * as MenuPrimitive from "./menu-primitive";
-export * as Popover from "./popover";
+export { Popover, type PopoverProps } from "./popover";
 export { Progress, type ProgressProps } from "./progress";
 export {
 	Skeleton,
@@ -58,8 +58,8 @@ export {
 export { Switch, type SwitchProps } from "./switch";
 export {
 	Table,
-	type TableProps,
 	type TableColumn,
+	type TableProps,
 	type TableRow,
 } from "./table";
 export { Tabs, type TabsItem, type TabsProps } from "./tabs";
