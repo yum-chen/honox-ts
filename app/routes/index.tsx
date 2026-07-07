@@ -1250,23 +1250,143 @@ export default createRoute((c) => {
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
 					Breadcrumb Component Examples
 				</Heading>
-				<Breadcrumb.Root>
-					<Breadcrumb.List>
-						<Breadcrumb.Item>
-							<Breadcrumb.Link href="/">Home</Breadcrumb.Link>
-						</Breadcrumb.Item>
-						<Breadcrumb.Separator />
-						<Breadcrumb.Item>
-							<Breadcrumb.Link href="/components">Components</Breadcrumb.Link>
-						</Breadcrumb.Item>
-						<Breadcrumb.Separator />
-						<Breadcrumb.Item>
-							<Breadcrumb.Link href="/components/breadcrumb" current>
-								Breadcrumb
-							</Breadcrumb.Link>
-						</Breadcrumb.Item>
-					</Breadcrumb.List>
-				</Breadcrumb.Root>
+
+				<div
+					class={css({
+						display: "flex",
+						flexDirection: "column",
+						gap: "6",
+						width: "full",
+						alignItems: "center",
+					})}
+				>
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							width: "full",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic Breadcrumb (Flattened API)
+						</Text>
+						<Breadcrumb
+							items={[
+								{ label: "Home", href: "/" },
+								{ label: "Components", href: "/components" },
+								{ label: "Breadcrumb" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							width: "full",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Underline Variant
+						</Text>
+						<Breadcrumb
+							variant="underline"
+							items={[
+								{ label: "Docs", href: "/docs" },
+								{ label: "Guides", href: "/docs/guides" },
+								{ label: "Getting Started" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							width: "full",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Custom Separator
+						</Text>
+						<Breadcrumb
+							separator="/"
+							items={[
+								{ label: "Products", href: "/products" },
+								{ label: "Electronics", href: "/products/electronics" },
+								{ label: "Smartphones" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							width: "full",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Custom Separator as JSX
+						</Text>
+						<Breadcrumb
+							separator={
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<title>Slash</title>
+									<path d="M22 2 2 22" />
+								</svg>
+							}
+							items={[
+								{ label: "Archive", href: "/archive" },
+								{ label: "2024", href: "/archive/2024" },
+								{ label: "Reports" },
+							]}
+						/>
+					</div>
+
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							width: "full",
+							alignItems: "center",
+						})}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Mixed Compound API (Backward Compatible)
+						</Text>
+						<Breadcrumb.Root>
+							<Breadcrumb.List>
+								<Breadcrumb.Item>
+									<Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+								</Breadcrumb.Item>
+								<Breadcrumb.Separator />
+								<Breadcrumb.Item>
+									<Breadcrumb.Link href="/compound">Compound</Breadcrumb.Link>
+								</Breadcrumb.Item>
+							</Breadcrumb.List>
+						</Breadcrumb.Root>
+					</div>
+				</div>
 			</div>
 
 			{/* Card Examples */}
