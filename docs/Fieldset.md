@@ -14,8 +14,34 @@ Groups related form controls and provides a legend.
 | `disabled`    | `boolean` | Whether the fieldset is disabled.            |
 | `invalid`     | `boolean` | Whether the fieldset is in an invalid state. |
 | `interactive` | `boolean` | Whether to enable client-side hydration.     |
+| `legend`      | `Child`   | The legend text for the fieldset.            |
+| `helperText`  | `Child`   | Helper text shown below the legend.          |
+| `errorText`   | `Child`   | Error text shown when the fieldset is invalid. |
 
 # Usage
+
+## Flattened API
+
+```tsx
+import { Fieldset, Field } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Fieldset
+      legend="User Profile"
+      helperText="Manage your info."
+      invalid
+      errorText="Something went wrong."
+    >
+      <Field>...</Field>
+    </Fieldset>
+  );
+}
+```
+
+## Composition
+
+For more control, use the sub-components:
 
 ```tsx
 import {

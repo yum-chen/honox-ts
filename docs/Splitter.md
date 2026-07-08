@@ -2,50 +2,50 @@
 
 # Introduction
 
-A component that allows users to resize panels by dragging a separator.
+A layout component that divides content into resizable panels separated by drag handles.
 
 # Props
 
-## Root Props
+## Splitter
 
-| Prop           | Type                                                       | Description                                     |
-| :------------- | :--------------------------------------------------------- | :---------------------------------------------- |
-| `orientation`  | `"horizontal" \| "vertical"`                               | The orientation of the splitter.                |
-| `size`         | `{ id: string \| number; size: number }[]`                 | The sizes of the panels (controlled).           |
-| `defaultSize`  | `{ id: string \| number; size: number }[]`                 | The initial sizes of the panels (uncontrolled). |
-| `onSizeChange` | `(size: { id: string \| number; size: number }[]) => void` | Callback triggered when panel sizes change.     |
-| `interactive`  | `boolean`                                                  | Forces hydration as an island.                  |
+| Prop | Type | Description |
+| :--- | :--- | :--- |
+| `panels` | `PanelConfig[]` | The panels to render (required). |
+| `orientation` | `"horizontal" \| "vertical"` | Layout direction of the panels. |
+| `interactive` | `boolean` | Enable client-side drag-to-resize. |
+| `defaultSize` | `{ id: string \| number; size: number }[]` | Initial sizes (interactive mode). |
+| `size` | `{ id: string \| number; size: number }[]` | Controlled sizes (interactive mode). |
+| `onSizeChange` | `(sizes: { id: string \| number; size: number }[]) => void` | Callback when sizes change. |
+| `resizeTriggerClass` | `string` | Custom CSS classes for the resize handles. |
+| `class` | `string` | Custom CSS classes for the root element. |
+| `style` | `Record<string, string \| number>` | Inline styles for the root element. |
+| `id` | `string` | Custom id for the root element. |
 
-## Panel Props
+### PanelConfig
 
-| Prop | Type               | Description                      |
-| :--- | :----------------- | :------------------------------- |
+| Property | Type | Description |
+| :--- | :--- | :--- |
 | `id` | `string \| number` | Unique identifier for the panel. |
-
-## ResizeTrigger Props
-
-| Prop | Type     | Description                        |
-| :--- | :------- | :--------------------------------- |
-| `id` | `string` | Unique identifier for the trigger. |
+| `content` | `JSX.Element \| string` | Content rendered inside the panel. |
+| `class` | `string` | Custom CSS classes for the panel. |
+| `style` | `Record<string, string \| number>` | Inline styles for the panel. |
 
 # Usage
 
+## Basic Splitter
+
 ```tsx
-import * as Splitter from "../components/ui/splitter";
+import { Splitter } from "../components/ui";
 
 export default function MyPage() {
   return (
-    <Splitter.Root
-      defaultSize={[
-        { id: "1", size: 50 },
-        { id: "2", size: 50 },
+    <Splitter
+      orientation="horizontal"
+      panels={[
+        { id: "left", content: <aside>Sidebar</aside> },
+        { id: "right", content: <main>Content</main> },
       ]}
-      interactive
-    >
-      <Splitter.Panel id="1">Panel 1</Splitter.Panel>
-      <Splitter.ResizeTrigger id="1:2" />
-      <Splitter.Panel id="2">Panel 2</Splitter.Panel>
-    </Splitter.Root>
+    />
   );
 }
 ```
