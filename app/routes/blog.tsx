@@ -294,6 +294,7 @@ export default createRoute(async (c) => {
 						trigger={
 							<Button
 								variant="outline"
+								colorPalette="blue"
 								class={css({
 									display: "flex",
 									alignItems: "center",
@@ -302,10 +303,6 @@ export default createRoute(async (c) => {
 									py: "2",
 									borderRadius: "lg",
 									transition: "all 0.2s",
-									_hover: {
-										borderColor: "blue.300",
-										bg: "blue.50",
-									},
 								})}
 							>
 								<svg
@@ -424,7 +421,7 @@ export default createRoute(async (c) => {
 										>
 											{searchQuery && (
 												<a href="/blog" style={{ textDecoration: "none" }}>
-													<Button variant="ghost" size="sm">
+													<Button variant="plain" size="sm">
 														Clear
 													</Button>
 												</a>
@@ -773,14 +770,11 @@ export default createRoute(async (c) => {
 									})}
 								>
 									<Button
-										variant="ghost"
+										variant="plain"
 										size="sm"
 										colorPalette="blue"
 										class={css({
 											px: "2",
-											_hover: {
-												bg: "blue.50",
-											},
 										})}
 									>
 										Read more
@@ -1035,10 +1029,6 @@ export default createRoute(async (c) => {
 								borderRadius: "xl",
 								fontWeight: "semibold",
 								shadow: "md",
-								_hover: {
-									shadow: "lg",
-									transform: "translateY(-1px)",
-								},
 							})}
 						>
 							Subscribe
