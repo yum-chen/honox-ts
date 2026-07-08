@@ -37,6 +37,7 @@ It hydrates as an island when **any** of the following signals is present (or `i
 - `inputValue` (controlled input value)
 - `onToggle`
 - `onInputChange`
+- `onItemSelect` (item selection callback — select-only comboboxes hydrate on this)
 
 | `interactive` prop | Result |
 | :--- | :--- |
