@@ -19,6 +19,7 @@ interface DrawerContextValue {
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 	id: string;
+	role?: "dialog" | "alertdialog";
 }
 
 const DrawerContext = createContext<DrawerContextValue | null>(null);
@@ -33,11 +34,12 @@ export interface RootProps extends DrawerVariantProps, PropsWithChildren {
 	onOpenChange?: (open: boolean) => void;
 	id?: string;
 	rootRef?: any;
+	role?: "dialog" | "alertdialog";
 }
 
 export function Root(props: RootProps) {
 	const [variantProps, localProps] = drawer.splitVariantProps(props);
-	const { children, open, onOpenChange, id: idProp, rootRef } = localProps;
+	const { children, open, onOpenChange, id: idProp, rootRef, role } = localProps;
 	const styles = drawer(variantProps);
 	const generatedId = useId();
 	const id = idProp || generatedId;
@@ -47,6 +49,7 @@ export function Root(props: RootProps) {
 		open,
 		onOpenChange,
 		id,
+		role: props.role,
 	};
 
 	return (
@@ -143,17 +146,19 @@ export function Positioner(props: PositionerProps) {
 
 export interface ContentProps extends PropsWithChildren {
 	class?: string;
+	role?: "dialog" | "alertdialog";
 }
 
 export function Content(props: ContentProps) {
-	const { children, class: classProp, ...restProps } = props;
+	const { children, class: classProp, role: roleProp, ...restProps } = props;
 	const context = useDrawerContext();
 	const styles = context?.styles || drawer();
 	const open = context?.open;
 	const id = context?.id;
+	const role = roleProp || context?.role || "dialog";
 	return (
 		<div
-			role="dialog"
+			role={role}
 			data-part="content"
 			aria-modal="true"
 			aria-labelledby={id ? `${id}-title` : undefined}
@@ -338,6 +343,7 @@ export function ActionTrigger(props: ActionTriggerProps) {
 // Interactive version with state management and event listeners
 export interface InteractiveDrawerProps extends RootProps {
 	defaultOpen?: boolean;
+	role?: "dialog" | "alertdialog";
 }
 
 export function InteractiveDrawer(props: InteractiveDrawerProps) {
@@ -346,6 +352,7 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 		onOpenChange: onOpenChangeProp,
 		defaultOpen,
 		id: idProp,
+		role,
 		...rest
 	} = props;
 	const [isOpen, setIsOpen] = useState(openProp ?? defaultOpen ?? false);
@@ -356,8 +363,7 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 	const fallbackId = useId();
 	const rootId = idProp || `drawer-${fallbackId}`;
 	const rootRef = useRef<HTMLElement>(null);
-
-	const handleOpenChangeRef = useRef<(nextOpen: boolean) => void>(() => {});
+	const lastFocusedElement = useRef<HTMLElement | null>(null);
 
 	const handleOpenChange = (nextOpen: boolean) => {
 		if (!isControlled) {
@@ -366,17 +372,109 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 		onOpenChangeProp?.(nextOpen);
 	};
 
-	// Store the handler in a ref
+	const getElements = () => {
+		const root = rootRef.current;
+		if (!root) return { positioners: [], backdrops: [], contents: [] };
+		return {
+			positioners: Array.from(
+				root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
+			),
+			backdrops: Array.from(
+				root.querySelectorAll<HTMLElement>('[data-part="backdrop"]'),
+			),
+			contents: Array.from(
+				root.querySelectorAll<HTMLElement>('[data-part="content"]'),
+			),
+		};
+	};
+
+	const getFocusableElements = (container: HTMLElement) => {
+		return Array.from(
+			container.querySelectorAll<HTMLElement>(
+				'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+			),
+		).filter((el) => {
+			const style = window.getComputedStyle(el);
+			return style.display !== "none" && style.visibility !== "hidden";
+		});
+	};
+
+	const hide = () => {
+		const root = rootRef.current;
+		if (!root) return;
+		const { positioners, backdrops, contents } = getElements();
+		root.setAttribute("data-state", "closed");
+		for (const p of positioners) {
+			p.style.cssText = "display: none !important;";
+			p.setAttribute("data-state", "closed");
+		}
+		for (const b of backdrops) {
+			b.style.cssText = "display: none !important;";
+			b.setAttribute("data-state", "closed");
+		}
+		for (const c of contents) {
+			c.setAttribute("data-state", "closed");
+			c.style.cssText = "display: none !important;";
+		}
+
+		if (lastFocusedElement.current) {
+			lastFocusedElement.current.focus();
+			lastFocusedElement.current = null;
+		}
+
+		const openModals = document.querySelectorAll(
+			'[data-state="open"]:is([data-scope="dialog"], [data-scope="drawer"])',
+		);
+		if (openModals.length === 0) {
+			document.body.style.overflow = "";
+		}
+	};
+
+	const show = () => {
+		const root = rootRef.current;
+		if (!root) return;
+		lastFocusedElement.current = document.activeElement as HTMLElement;
+
+		const { positioners, backdrops, contents } = getElements();
+		root.setAttribute("data-state", "open");
+		for (const p of positioners) {
+			p.style.cssText = "display: flex !important; visibility: visible !important;";
+			p.setAttribute("data-state", "open");
+		}
+		for (const b of backdrops) {
+			b.style.cssText = "display: block !important; visibility: visible !important;";
+			b.setAttribute("data-state", "open");
+		}
+		for (const c of contents) {
+			c.setAttribute("data-state", "open");
+			c.style.cssText = "display: flex !important; visibility: visible !important;";
+		}
+
+		if (contents.length > 0) {
+			const content = contents[0];
+			const focusable = getFocusableElements(content);
+			if (focusable.length > 0) {
+				focusable[0].focus();
+			} else {
+				content.setAttribute("tabindex", "-1");
+				content.focus();
+			}
+		}
+
+		document.body.style.overflow = "hidden";
+	};
+
+	// Synchronize manual DOM state with React state
 	useEffect(() => {
-		handleOpenChangeRef.current = handleOpenChange;
-	}, [isControlled, onOpenChangeProp]);
+		if (open) show();
+		else hide();
+	}, [open]);
 
 	// Attach event listeners using event delegation
 	useEffect(() => {
 		const root = rootRef.current;
 		if (!root) return;
 
-		// Handle all clicks via event delegation
 		const handleClick = (e: Event) => {
 			const target = (e.target as HTMLElement).closest(
 				"[data-part]",
@@ -384,85 +482,70 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 			if (!target) return;
 			const dataPart = target.getAttribute("data-part");
 
-			const getElements = () => {
-				return {
-					positioners: Array.from(
-						root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
-					),
-					backdrops: Array.from(
-						root.querySelectorAll<HTMLElement>('[data-part="backdrop"]'),
-					),
-					contents: Array.from(
-						root.querySelectorAll<HTMLElement>('[data-part="content"]'),
-					),
-				};
-			};
-
-			const hide = () => {
-				const { positioners, backdrops, contents } = getElements();
-				root.setAttribute("data-state", "closed");
-				positioners.forEach((p) => {
-					p.style.cssText =
-						"display: none !important; visibility: hidden !important;";
-					p.setAttribute("data-state", "closed");
-				});
-				backdrops.forEach((b) => {
-					b.style.cssText =
-						"display: none !important; visibility: hidden !important;";
-					b.setAttribute("data-state", "closed");
-				});
-				contents.forEach((c) => {
-					c.setAttribute("data-state", "closed");
-					c.style.cssText =
-						"display: none !important; visibility: hidden !important;";
-				});
-			};
-
-			const show = () => {
-				const { positioners, backdrops, contents } = getElements();
-				root.setAttribute("data-state", "open");
-				positioners.forEach((p) => {
-					p.style.cssText =
-						"display: flex !important; visibility: visible !important;";
-					p.setAttribute("data-state", "open");
-				});
-				backdrops.forEach((b) => {
-					b.style.cssText =
-						"display: block !important; visibility: visible !important;";
-					b.setAttribute("data-state", "open");
-				});
-				contents.forEach((c) => {
-					c.setAttribute("data-state", "open");
-					c.style.cssText =
-						"display: flex !important; visibility: visible !important;";
-				});
-			};
-
 			if (dataPart === "backdrop") {
-				hide();
-				handleOpenChangeRef.current?.(false);
+				handleOpenChange(false);
 			} else if (dataPart === "trigger") {
 				const currentOpen = root.getAttribute("data-state") === "open";
-				const nextOpen = !currentOpen;
-				if (nextOpen) show();
-				else hide();
-				handleOpenChangeRef.current?.(nextOpen);
+				handleOpenChange(!currentOpen);
 			} else if (
 				dataPart === "close-trigger" ||
 				dataPart === "action-trigger"
 			) {
-				hide();
-				handleOpenChangeRef.current?.(false);
+				handleOpenChange(false);
 			}
 		};
 
-		// Use event delegation on root
 		root.addEventListener("click", handleClick);
 
 		return () => {
 			root.removeEventListener("click", handleClick);
 		};
 	}, []);
+
+	// Manage keyboard listeners only when open
+	useEffect(() => {
+		if (!open) return;
+
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.key === "Escape") {
+				handleOpenChange(false);
+				return;
+			}
+
+			if (e.key === "Tab") {
+				const root = rootRef.current;
+				if (!root) return;
+				const content = root.querySelector<HTMLElement>('[data-part="content"]');
+				if (!content) return;
+
+				const focusableElements = getFocusableElements(content);
+				if (focusableElements.length === 0) {
+					e.preventDefault();
+					return;
+				}
+
+				const firstElement = focusableElements[0];
+				const lastElement = focusableElements[focusableElements.length - 1];
+
+				if (e.shiftKey) {
+					if (document.activeElement === firstElement) {
+						lastElement.focus();
+						e.preventDefault();
+					}
+				} else {
+					if (document.activeElement === lastElement) {
+						firstElement.focus();
+						e.preventDefault();
+					}
+				}
+			}
+		};
+
+		window.addEventListener("keydown", handleKeyDown);
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [open]);
 
 	return (
 		<Root
@@ -471,6 +554,7 @@ export function InteractiveDrawer(props: InteractiveDrawerProps) {
 			open={open}
 			onOpenChange={handleOpenChange}
 			rootRef={rootRef}
+			role={role}
 		/>
 	);
 }

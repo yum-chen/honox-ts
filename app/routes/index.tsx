@@ -662,15 +662,48 @@ export default createRoute((c) => {
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
 					Dialog Component Examples
 				</Heading>
-				<Dialog
-					interactive
-					trigger={<Button variant="outline">Open Dialog</Button>}
-					title="Dialog Title"
-					description="This dialog uses the simplified flattened API."
-					body="This is the dialog body content."
-					cancel={<Button variant="outline">Cancel</Button>}
-					confirm={<Button>Confirm</Button>}
-				/>
+				<div class={css({ display: "flex", gap: "4" })}>
+					<Dialog
+						interactive
+						trigger={<Button variant="outline">Open Dialog</Button>}
+						title="Dialog Title"
+						description="This dialog uses the simplified flattened API."
+						body="This is the dialog body content."
+						cancel={<Button variant="outline">Cancel</Button>}
+						confirm={<Button>Confirm</Button>}
+					/>
+					<Dialog
+						interactive
+						role="alertdialog"
+						trigger={
+							<Button variant="outline" colorPalette="red">
+								Delete Account
+							</Button>
+						}
+						title="Are you absolutely sure?"
+						description="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+						cancel={<Button variant="outline">Cancel</Button>}
+						confirm={<Button colorPalette="red">Delete Account</Button>}
+					/>
+					<Dialog
+						interactive
+						trigger={<Button variant="outline">Nested Dialogs</Button>}
+						title="Level 1"
+						body={
+							<div class={css({ display: "flex", flexDirection: "column", gap: "4" })}>
+								<Text>This is the first level.</Text>
+								<Dialog
+									interactive
+									trigger={<Button variant="outline">Open Level 2</Button>}
+									title="Level 2"
+									body="This is the second level. Scroll locking and focus trapping should still work correctly."
+									cancel={<Button variant="outline">Close Level 2</Button>}
+								/>
+							</div>
+						}
+						cancel={<Button variant="outline">Close Level 1</Button>}
+					/>
+				</div>
 			</div>
 
 			{/* Drawer Examples */}
@@ -689,15 +722,30 @@ export default createRoute((c) => {
 					Drawer Component Examples
 				</Heading>
 
-				<Drawer
-					interactive
-					trigger={<Button variant="outline">Open Drawer</Button>}
-					title="Drawer Title"
-					description="This drawer uses the simplified flattened API."
-					body="This is the main content of the drawer, passed via the body prop."
-					cancel={<Button variant="outline">Close</Button>}
-					confirm={<Button>Action</Button>}
-				/>
+				<div class={css({ display: "flex", gap: "4" })}>
+					<Drawer
+						interactive
+						trigger={<Button variant="outline">Open Drawer</Button>}
+						title="Drawer Title"
+						description="This drawer uses the simplified flattened API."
+						body="This is the main content of the drawer, passed via the body prop."
+						cancel={<Button variant="outline">Close</Button>}
+						confirm={<Button>Action</Button>}
+					/>
+					<Drawer
+						interactive
+						role="alertdialog"
+						trigger={
+							<Button variant="outline" colorPalette="red">
+								Delete Account (Drawer)
+							</Button>
+						}
+						title="Are you absolutely sure?"
+						description="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+						cancel={<Button variant="outline">Cancel</Button>}
+						confirm={<Button colorPalette="red">Delete Account</Button>}
+					/>
+				</div>
 			</div>
 
 			{/* Menu Examples (Flattened API) */}

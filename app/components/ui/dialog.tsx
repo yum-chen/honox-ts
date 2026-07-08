@@ -59,6 +59,7 @@ export interface DialogProps extends RootProps {
 	cancel?: JSX.Element;
 	confirm?: JSX.Element;
 	closable?: boolean;
+	role?: "dialog" | "alertdialog";
 }
 
 export function Dialog(props: DialogProps) {
@@ -73,6 +74,7 @@ export function Dialog(props: DialogProps) {
 		closable = true,
 		children,
 		rootRef: rootRefProp,
+		role,
 		...rest
 	} = props;
 
@@ -80,7 +82,7 @@ export function Dialog(props: DialogProps) {
 	const rootRef = rootRefProp || localRef;
 
 	return (
-		<Root {...rest} rootRef={rootRef}>
+		<Root {...rest} rootRef={rootRef} role={role}>
 			{trigger && <Trigger asChild>{trigger}</Trigger>}
 			<Backdrop />
 			<Positioner>
