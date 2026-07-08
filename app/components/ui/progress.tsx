@@ -52,4 +52,3 @@ export const Progress = (props: ProgressProps) => {
 		</Root>
 	);
 };
-

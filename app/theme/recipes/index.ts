@@ -1,7 +1,6 @@
-import { toggleGroup } from "./toggle-group";
-import { segmentGroup } from "./segment-group";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
+import { avatar } from "./avatar";
 import { badge } from "./badge";
 import { breadcrumb } from "./breadcrumb";
 import { button } from "./button";
@@ -19,6 +18,7 @@ import { hoverCard } from "./hover-card";
 import { menu } from "./menu";
 import { popover } from "./popover";
 import { progress } from "./progress";
+import { segmentGroup } from "./segment-group";
 import { skeleton } from "./skeleton";
 import { slider } from "./slider";
 import { spinner } from "./spinner";
@@ -29,21 +29,23 @@ import { tabs } from "./tabs";
 import { text } from "./text";
 import { textarea } from "./textarea";
 import { toast } from "./toast";
+import { toggleGroup } from "./toggle-group";
 import { tooltip } from "./tooltip";
 
 export const recipes = {
-    absoluteCenter,
-    badge,
-    button,
-    group,
-    heading,
-    spinner,
-    text,
-    textarea,
-    skeleton,
+	absoluteCenter,
+	badge,
+	button,
+	group,
+	heading,
+	spinner,
+	text,
+	textarea,
+	skeleton,
 };
 
 export const slotRecipes = {
+	avatar,
 	toggleGroup,
 	segmentGroup,
 	alert,
