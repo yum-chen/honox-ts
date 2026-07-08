@@ -3,6 +3,7 @@ import {
 	type FieldProps as BaseFieldProps,
 	FieldRoot,
 } from "./field-primitive";
+import { shouldHydrate } from "./island-utils";
 
 export interface FieldProps extends BaseFieldProps {
 	interactive?: boolean;
@@ -19,14 +20,13 @@ export function Field(props: FieldProps) {
 		minLength,
 	} = props;
 
-	const isInteractive =
-		interactive !== false &&
-		(interactive ||
-			onValueChange !== undefined ||
-			value !== undefined ||
-			defaultValue !== undefined ||
-			validator !== undefined ||
-			minLength !== undefined);
+	const hasSignal =
+		onValueChange !== undefined ||
+		value !== undefined ||
+		defaultValue !== undefined ||
+		validator !== undefined ||
+		minLength !== undefined;
+	const isInteractive = shouldHydrate(interactive, hasSignal);
 
 	if (isInteractive) {
 		return <FieldIsland {...props} />;

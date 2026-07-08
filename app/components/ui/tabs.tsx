@@ -5,6 +5,7 @@ import {
 	TabsStructure,
 	type TabsStructureProps,
 } from "./tabs-primitive";
+import { shouldHydrate } from "./island-utils";
 
 type TabsItemFromPrimitive = import("./tabs-primitive").TabsItem;
 
@@ -13,9 +14,14 @@ interface TabsProps extends InteractiveRootProps, TabsStructureProps {
 }
 
 const TabsRoot = (props: TabsProps) => {
-	const { interactive = true, ...rest } = props;
+	const { interactive, ...rest } = props;
 
-	if (interactive) {
+	const hasSignal =
+		rest.value !== undefined ||
+		rest.defaultValue !== undefined ||
+		rest.onValueChange !== undefined;
+
+	if (shouldHydrate(interactive, hasSignal)) {
 		return <InteractiveTabsIsland {...rest} />;
 	}
 

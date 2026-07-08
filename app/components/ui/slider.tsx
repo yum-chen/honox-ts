@@ -14,6 +14,7 @@ import {
 	toValueArray,
 	ValueText,
 } from "./slider-primitive";
+import { shouldHydrate } from "./island-utils";
 
 interface SliderProps {
 	// Value
@@ -94,13 +95,12 @@ function Slider(props: SliderProps) {
 		...rest
 	} = props;
 
-	const isInteractive =
-		interactive !== false &&
-		(interactive ||
-			onChange !== undefined ||
-			onDraggingChange !== undefined ||
-			value !== undefined ||
-			defaultValue !== undefined);
+	const hasSignal =
+		onChange !== undefined ||
+		onDraggingChange !== undefined ||
+		value !== undefined ||
+		defaultValue !== undefined;
+	const isInteractive = shouldHydrate(interactive, hasSignal);
 
 	const values = toValueArray(value, toValueArray(defaultValue, [min ?? 0]));
 

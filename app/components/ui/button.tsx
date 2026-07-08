@@ -5,6 +5,13 @@ import {
 	Button as ButtonPrimitive,
 	type ButtonProps,
 } from "./button-primitive";
+import { shouldHydrate } from "./island-utils";
+
+/** True when the button carries a client-side handler that needs hydration. */
+const hasButtonSignal = (p: ButtonProps): boolean =>
+	p.onClick !== undefined ||
+	p.onPointerDown !== undefined ||
+	p.onSubmit !== undefined;
 
 const CloseIcon = () => (
 	<svg
@@ -25,7 +32,7 @@ const CloseIcon = () => (
 );
 
 export function IconButton(props: ButtonProps) {
-	if (props.interactive) {
+	if (shouldHydrate(props.interactive, hasButtonSignal(props))) {
 		return <ButtonIsland {...props} px="0" />;
 	}
 	return (
@@ -36,7 +43,7 @@ export function IconButton(props: ButtonProps) {
 }
 
 export function CloseButton(props: ButtonProps) {
-	if (props.interactive) {
+	if (shouldHydrate(props.interactive, hasButtonSignal(props))) {
 		return (
 			<ButtonIsland variant="plain" aria-label="Close" {...props} px="0">
 				<CloseIcon />
@@ -51,7 +58,7 @@ export function CloseButton(props: ButtonProps) {
 }
 
 export function Button(props: ButtonProps) {
-	if (props.interactive) {
+	if (shouldHydrate(props.interactive, hasButtonSignal(props))) {
 		return <ButtonIsland {...props} />;
 	}
 	return <ButtonPrimitive {...props} />;
