@@ -1,6 +1,6 @@
 # HonoX + PandaCSS + Sveltia CMS Starter
 
-A full-stack HonoX starter with type-safe CSS-in-JS (PandaCSS), a CMS-backed blog, and a component-only UI architecture.
+Full-stack [HonoX](https://github.com/honojs/honox) starter with type-safe CSS-in-JS ([PandaCSS](https://panda-css.com/)), and a Git-backed CMS ([Sveltia CMS](https://sveltiacms.app/)).
 
 Live demo: [https://honox.chen.so](https://honox.chen.so)
 
