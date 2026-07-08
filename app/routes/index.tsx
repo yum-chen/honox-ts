@@ -4,6 +4,7 @@ import {
 	AbsoluteCenter,
 	Alert,
 	AlertIcon,
+	Avatar,
 	Badge,
 	Breadcrumb,
 	Button,
@@ -179,6 +180,61 @@ export default createRoute((c) => {
 					<Heading size="md">Heading md</Heading>
 					<Heading size="sm">Heading sm</Heading>
 					<Heading size="xs">Heading xs</Heading>
+				</div>
+			</div>
+
+			{/* Avatar Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Avatar Component Examples
+				</Heading>
+
+				<div
+					class={css({
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+						alignItems: "center",
+					})}
+				>
+					<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+						<Avatar
+							name="John Doe"
+							src="https://avatars.githubusercontent.com/u/1029?v=4"
+						/>
+						<Avatar name="Jane Doe" />
+						<Avatar />
+					</div>
+
+					<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+						<Avatar size="xs" name="XS" />
+						<Avatar size="sm" name="SM" />
+						<Avatar size="md" name="MD" />
+						<Avatar size="lg" name="LG" />
+						<Avatar size="xl" name="XL" />
+						<Avatar size="2xl" name="2XL" />
+					</div>
+
+					<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+						<Avatar shape="square" name="Square" />
+						<Avatar shape="rounded" name="Rounded" />
+						<Avatar shape="full" name="Full" />
+					</div>
+
+					<div class={css({ display: "flex", gap: "4", alignItems: "center" })}>
+						<Avatar variant="solid" name="Solid" colorPalette="blue" />
+						<Avatar variant="subtle" name="Subtle" colorPalette="blue" />
+						<Avatar variant="outline" name="Outline" colorPalette="blue" />
+						<Avatar variant="surface" name="Surface" colorPalette="blue" />
+					</div>
 				</div>
 			</div>
 

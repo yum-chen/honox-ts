@@ -33,7 +33,9 @@ export const useToggleGroupContext = () => {
 				orientation: "horizontal",
 			} as ToggleGroupContextValue;
 		}
-		throw new Error("useToggleGroupContext must be used within a ToggleGroup.Root");
+		throw new Error(
+			"useToggleGroupContext must be used within a ToggleGroup.Root",
+		);
 	}
 	return context;
 };
@@ -79,7 +81,10 @@ export function Root(props: RootProps) {
 	};
 
 	return (
-		<ToggleGroupContext.Provider context={ToggleGroupContext} value={contextValue}>
+		<ToggleGroupContext.Provider
+			context={ToggleGroupContext}
+			value={contextValue}
+		>
 			<div
 				id={id}
 				ref={rootRef}

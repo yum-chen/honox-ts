@@ -26,6 +26,7 @@ export default defineConfig({
 		// utilities: ["colorPalette"],
 		recipes: {
 			absoluteCenter: ["*"],
+			avatar: ["*"],
 			alert: ["*"],
 			badge: ["*"],
 			breadcrumb: ["*"],

@@ -76,9 +76,12 @@ export default function SegmentGroupIsland(props: SegmentGroupIslandProps) {
 				),
 			);
 
-			const currentItem = (e.target as HTMLElement).closest<HTMLElement>(
-				'[data-part="item"]',
-			) || root.querySelector<HTMLElement>('[data-part="item"][data-state="checked"]:not([data-disabled])') || items[0];
+			const currentItem =
+				(e.target as HTMLElement).closest<HTMLElement>('[data-part="item"]') ||
+				root.querySelector<HTMLElement>(
+					'[data-part="item"][data-state="checked"]:not([data-disabled])',
+				) ||
+				items[0];
 
 			if (!currentItem) return;
 
