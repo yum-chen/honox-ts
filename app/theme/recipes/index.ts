@@ -17,6 +17,7 @@ import { hoverCard } from "./hover-card";
 import { menu } from "./menu";
 import { popover } from "./popover";
 import { progress } from "./progress";
+import { segmentGroup } from "./segment-group";
 import { skeleton } from "./skeleton";
 import { slider } from "./slider";
 import { spinner } from "./spinner";
@@ -45,6 +46,7 @@ export const recipes = {
 export const slotRecipes = {
 	alert,
 	toggleGroup,
+	segmentGroup,
 	splitter,
 	breadcrumb,
 	card,

@@ -25,6 +25,7 @@ import {
 	Menu,
 	Popover,
 	Progress,
+	SegmentGroup,
 	Skeleton,
 	SkeletonCircle,
 	SkeletonText,
@@ -1989,6 +1990,71 @@ export default createRoute((c) => {
 								{ id: "p3", size: 20 },
 							]}
 						/>
+					</div>
+				</div>
+			</div>
+
+			{/* SegmentGroup Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					SegmentGroup Component Examples
+				</Heading>
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+					})}
+				>
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic SegmentGroup (Interactive)
+						</Text>
+						<SegmentGroup interactive defaultValue="react">
+							<SegmentGroup.Indicator />
+							<SegmentGroup.Items
+								items={[
+									{ label: "React", value: "react" },
+									{ label: "Solid", value: "solid" },
+									{ label: "Svelte", value: "svelte" },
+								]}
+							/>
+						</SegmentGroup>
+					</div>
+
+					<div
+						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Vertical SegmentGroup
+						</Text>
+						<SegmentGroup
+							interactive
+							orientation="vertical"
+							defaultValue="option-2"
+						>
+							<SegmentGroup.Indicator />
+							<SegmentGroup.Items
+								items={[
+									{ label: "Option 1", value: "option-1" },
+									{ label: "Option 2", value: "option-2" },
+									{ label: "Option 3", value: "option-3", disabled: true },
+								]}
+							/>
+						</SegmentGroup>
 					</div>
 				</div>
 			</div>

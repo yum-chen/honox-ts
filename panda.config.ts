@@ -45,6 +45,7 @@ export default defineConfig({
 			menu: ["*"],
 			popover: ["*"],
 			progress: ["*"],
+			segmentGroup: ["*"],
 			skeleton: ["*"],
 			slider: ["*"],
 			spinner: ["*"],
