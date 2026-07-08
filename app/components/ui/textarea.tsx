@@ -3,6 +3,7 @@ import {
 	type TextareaProps as BaseTextareaProps,
 	Textarea as TextareaPrimitive,
 } from "./textarea-primitive";
+import { shouldHydrate } from "./island-utils";
 
 export interface TextareaProps extends BaseTextareaProps {
 	interactive?: boolean;
@@ -19,14 +20,13 @@ export function Textarea(props: TextareaProps) {
 		minLength,
 	} = props;
 
-	const isInteractive =
-		interactive !== false &&
-		(interactive ||
-			onValueChange !== undefined ||
-			value !== undefined ||
-			defaultValue !== undefined ||
-			validator !== undefined ||
-			minLength !== undefined);
+	const hasSignal =
+		onValueChange !== undefined ||
+		value !== undefined ||
+		defaultValue !== undefined ||
+		validator !== undefined ||
+		minLength !== undefined;
+	const isInteractive = shouldHydrate(interactive, hasSignal);
 
 	if (isInteractive) {
 		return <TextareaIsland {...props} />;

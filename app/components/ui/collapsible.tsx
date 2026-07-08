@@ -7,6 +7,7 @@ import {
 	Root as RootPrimitive,
 	Trigger,
 } from "./collapsible-primitive";
+import { shouldHydrate } from "./island-utils";
 
 interface CollapsibleProps {
 	/**
@@ -76,7 +77,7 @@ function Collapsible(props: CollapsibleProps) {
 		content,
 		indicator,
 		indicatorPlacement = "end",
-		interactive = true,
+		interactive,
 		onOpenChange,
 		open,
 		defaultOpen,
@@ -89,12 +90,7 @@ function Collapsible(props: CollapsibleProps) {
 		...rest
 	} = props;
 
-	const isInteractive =
-		interactive !== false &&
-		(interactive ||
-			onOpenChange !== undefined ||
-			open !== undefined ||
-			defaultOpen !== undefined);
+	const isInteractive = shouldHydrate(interactive, true);
 
 	const rootProps = {
 		...rest,

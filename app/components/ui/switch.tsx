@@ -3,6 +3,7 @@ import {
 	Switch as SwitchPrimitive,
 	type SwitchProps as SwitchPrimitiveProps,
 } from "./switch-primitive";
+import { shouldHydrate } from "./island-utils";
 
 export interface SwitchProps extends SwitchPrimitiveProps {
 	interactive?: boolean;
@@ -12,12 +13,11 @@ export interface SwitchProps extends SwitchPrimitiveProps {
 export function Switch(props: SwitchProps) {
 	const { interactive, onCheckedChange, checked, defaultChecked } = props;
 
-	const isInteractive =
-		interactive !== false &&
-		(interactive ||
-			onCheckedChange !== undefined ||
-			checked !== undefined ||
-			defaultChecked !== undefined);
+	const hasSignal =
+		onCheckedChange !== undefined ||
+		checked !== undefined ||
+		defaultChecked !== undefined;
+	const isInteractive = shouldHydrate(interactive, hasSignal);
 
 	if (isInteractive) {
 		return <SwitchIsland {...props} />;

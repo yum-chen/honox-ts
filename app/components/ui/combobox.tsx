@@ -4,6 +4,7 @@ import {
 	Root as ComboboxPrimitiveRoot,
 	ComboboxStructure,
 } from "./combobox-primitive";
+import { shouldHydrate } from "./island-utils";
 
 export interface ComboboxProps extends ComboboxFlattenedProps {
 	interactive?: boolean;
@@ -12,13 +13,12 @@ export interface ComboboxProps extends ComboboxFlattenedProps {
 export function Combobox(props: ComboboxProps) {
 	const { interactive, ...rest } = props;
 
-	const isInteractive =
-		interactive !== false &&
-		(interactive ||
-			rest.open !== undefined ||
-			rest.inputValue !== undefined ||
-			rest.onToggle !== undefined ||
-			rest.onInputChange !== undefined);
+	const hasSignal =
+		rest.open !== undefined ||
+		rest.inputValue !== undefined ||
+		rest.onToggle !== undefined ||
+		rest.onInputChange !== undefined;
+	const isInteractive = shouldHydrate(interactive, hasSignal);
 
 	if (isInteractive) {
 		return <ComboboxIsland {...rest} />;

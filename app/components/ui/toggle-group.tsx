@@ -6,6 +6,7 @@ import {
 	ToggleGroupStructure,
 	type ToggleGroupStructureProps,
 } from "./toggle-group-primitive";
+import { shouldHydrate } from "./island-utils";
 
 export interface ToggleGroupProps
 	extends RootProps,
@@ -14,9 +15,14 @@ export interface ToggleGroupProps
 }
 
 const ToggleGroupRoot = (props: ToggleGroupProps) => {
-	const { interactive = true, ...rest } = props;
+	const { interactive, ...rest } = props;
 
-	if (interactive) {
+	const hasSignal =
+		rest.value !== undefined ||
+		rest.defaultValue !== undefined ||
+		rest.onValueChange !== undefined;
+
+	if (shouldHydrate(interactive, hasSignal)) {
 		return <ToggleGroupIsland {...(rest as any)} />;
 	}
 

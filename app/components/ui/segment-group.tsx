@@ -11,6 +11,7 @@ import {
 	SegmentGroupStructure,
 	type SegmentGroupStructureProps,
 } from "./segment-group-primitive";
+import { shouldHydrate } from "./island-utils";
 
 export interface SegmentGroupProps
 	extends RootProps,
@@ -19,9 +20,14 @@ export interface SegmentGroupProps
 }
 
 const SegmentGroupRoot = (props: SegmentGroupProps) => {
-	const { interactive = true, ...rest } = props;
+	const { interactive, ...rest } = props;
 
-	if (interactive) {
+	const hasSignal =
+		rest.value !== undefined ||
+		rest.defaultValue !== undefined ||
+		rest.onValueChange !== undefined;
+
+	if (shouldHydrate(interactive, hasSignal)) {
 		return <SegmentGroupIsland {...(rest as any)} />;
 	}
 

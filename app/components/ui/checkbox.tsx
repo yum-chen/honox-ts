@@ -3,6 +3,7 @@ import {
 	type CheckboxProps as BaseCheckboxProps,
 	Checkbox as CheckboxPrimitive,
 } from "./checkbox-primitive";
+import { shouldHydrate } from "./island-utils";
 
 export interface CheckboxProps extends BaseCheckboxProps {
 	interactive?: boolean;
@@ -12,12 +13,11 @@ export interface CheckboxProps extends BaseCheckboxProps {
 export function Checkbox(props: CheckboxProps) {
 	const { interactive, onCheckedChange, checked, defaultChecked } = props;
 
-	const isInteractive =
-		interactive !== false &&
-		(interactive ||
-			onCheckedChange !== undefined ||
-			checked !== undefined ||
-			defaultChecked !== undefined);
+	const hasSignal =
+		onCheckedChange !== undefined ||
+		checked !== undefined ||
+		defaultChecked !== undefined;
+	const isInteractive = shouldHydrate(interactive, hasSignal);
 
 	if (isInteractive) {
 		return <CheckboxIsland {...props} />;
