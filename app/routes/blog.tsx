@@ -121,7 +121,7 @@ export default createRoute(async (c) => {
 					right: "0",
 					height: "500px",
 					bgGradient: "to-b",
-					gradientFrom: "blue.50",
+					gradientFrom: "blue.3",
 					gradientTo: "transparent",
 					opacity: "0.5",
 					pointerEvents: "none",
@@ -144,7 +144,7 @@ export default createRoute(async (c) => {
 						height: "200px",
 						opacity: "0.1",
 						backgroundImage:
-							"radial-gradient(circle, blue.500 1px, transparent 1px)",
+							"radial-gradient(circle, blue.9 1px, transparent 1px)",
 						backgroundSize: "20px 20px",
 						pointerEvents: "none",
 					})}
@@ -303,8 +303,8 @@ export default createRoute(async (c) => {
 									borderRadius: "lg",
 									transition: "all 0.2s",
 									_hover: {
-										borderColor: "blue.300",
-										bg: "blue.50",
+										borderColor: "blue.7",
+										bg: "blue.3",
 									},
 								})}
 							>
@@ -408,8 +408,8 @@ export default createRoute(async (c) => {
 													transition: "all 0.2s",
 													_focus: {
 														outline: "none",
-														borderColor: "blue.500",
-														shadow: "0 0 0 3px var(--colors-blue-100)",
+														borderColor: "blue.9",
+														shadow: "0 0 0 3px var(--colors-blue-6)",
 													},
 													_placeholder: { color: "fg.muted" },
 												})}
@@ -424,7 +424,7 @@ export default createRoute(async (c) => {
 										>
 											{searchQuery && (
 												<a href="/blog" style={{ textDecoration: "none" }}>
-													<Button variant="ghost" size="sm">
+													<Button variant="plain" size="sm">
 														Clear
 													</Button>
 												</a>
@@ -541,7 +541,7 @@ export default createRoute(async (c) => {
 												Search: "{searchQuery}"
 											</Badge>
 											<a href="/blog" style={{ textDecoration: "none" }}>
-												<Button variant="link" size="sm" colorPalette="red">
+												<Button variant="plain" size="sm" colorPalette="red">
 													Clear all
 												</Button>
 											</a>
@@ -716,7 +716,7 @@ export default createRoute(async (c) => {
 											w: "9",
 											h: "9",
 											borderRadius: "full",
-											bg: "blue.500",
+											bg: "blue.9",
 											display: "flex",
 											alignItems: "center",
 											justifyContent: "center",
@@ -773,13 +773,13 @@ export default createRoute(async (c) => {
 									})}
 								>
 									<Button
-										variant="ghost"
+										variant="plain"
 										size="sm"
 										colorPalette="blue"
 										class={css({
 											px: "2",
 											_hover: {
-												bg: "blue.50",
+												bg: "blue.3",
 											},
 										})}
 									>
@@ -871,8 +871,8 @@ export default createRoute(async (c) => {
 					py: "12",
 					px: "8",
 					bgGradient: "to-br",
-					gradientFrom: "blue.50",
-					gradientTo: "purple.50",
+					gradientFrom: "blue.3",
+					gradientTo: "purple.3",
 					borderRadius: "3xl",
 					textAlign: "center",
 					position: "relative",
@@ -888,7 +888,7 @@ export default createRoute(async (c) => {
 						w: "300px",
 						h: "300px",
 						borderRadius: "full",
-						bg: "blue.100",
+						bg: "blue.5",
 						opacity: "0.3",
 						pointerEvents: "none",
 					})}
@@ -901,7 +901,7 @@ export default createRoute(async (c) => {
 						w: "200px",
 						h: "200px",
 						borderRadius: "full",
-						bg: "purple.100",
+						bg: "purple.5",
 						opacity: "0.3",
 						pointerEvents: "none",
 					})}
@@ -919,7 +919,7 @@ export default createRoute(async (c) => {
 							h: "16",
 							mx: "auto",
 							mb: "4",
-							bg: "blue.500",
+							bg: "blue.9",
 							borderRadius: "2xl",
 							display: "flex",
 							alignItems: "center",
@@ -1017,8 +1017,8 @@ export default createRoute(async (c) => {
 									transition: "all 0.2s",
 									_focus: {
 										outline: "none",
-										borderColor: "blue.500",
-										shadow: "0 0 0 3px var(--colors-blue-100)",
+										borderColor: "blue.9",
+										shadow: "0 0 0 3px var(--colors-blue-6)",
 									},
 									_placeholder: { color: "fg.muted" },
 								})}
