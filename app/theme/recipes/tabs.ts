@@ -1,9 +1,9 @@
-import { tabsAnatomy } from "@ark-ui/react/anatomy";
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const tabs = defineSlotRecipe({
-	slots: tabsAnatomy.keys(),
+	slots: ['root', 'list', 'trigger', 'content', 'indicator'],
 	className: "tabs",
+	jsx: ['Tabs'],
 	base: {
 		root: {
 			position: "relative",

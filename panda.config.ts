@@ -55,6 +55,9 @@ export default defineConfig({
 			textarea: ["*"],
 			toast: ["*"],
 			tooltip: ["*"],
+			segmentGroup: ["*"],
+			toggleGroup: ["*"],
+			tabs: ["*"],
 		},
 	},
 

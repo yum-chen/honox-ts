@@ -1,9 +1,9 @@
-import { segmentGroupAnatomy } from '@ark-ui/react/anatomy'
 import { defineSlotRecipe } from '@pandacss/dev'
 
 export const segmentGroup = defineSlotRecipe({
   className: 'segment-group',
-  slots: segmentGroupAnatomy.keys(),
+  slots: ['root', 'label', 'indicator', 'item', 'itemText', 'itemControl', 'itemHiddenInput'],
+  jsx: ['SegmentGroup'],
   base: {
     root: {
       bg: {
