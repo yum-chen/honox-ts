@@ -1,4 +1,3 @@
-import { pagination } from "./pagination";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { avatar } from "./avatar";
@@ -17,6 +16,7 @@ import { group } from "./group";
 import { heading } from "./heading";
 import { hoverCard } from "./hover-card";
 import { menu } from "./menu";
+import { pagination } from "./pagination";
 import { popover } from "./popover";
 import { progress } from "./progress";
 import { radioGroup } from "./radio-group";
@@ -28,6 +28,7 @@ import { splitter } from "./splitter";
 import { switchRecipe } from "./switch";
 import { table } from "./table";
 import { tabs } from "./tabs";
+import { tagsInput } from "./tags-input";
 import { text } from "./text";
 import { textarea } from "./textarea";
 import { toast } from "./toast";
@@ -35,15 +36,15 @@ import { toggleGroup } from "./toggle-group";
 import { tooltip } from "./tooltip";
 
 export const recipes = {
-    absoluteCenter,
-    badge,
-    button,
-    group,
-    heading,
-    spinner,
-    text,
-    textarea,
-    skeleton,
+	absoluteCenter,
+	badge,
+	button,
+	group,
+	heading,
+	spinner,
+	text,
+	textarea,
+	skeleton,
 };
 
 export const slotRecipes = {
@@ -73,4 +74,5 @@ export const slotRecipes = {
 	tabs,
 	toast,
 	tooltip,
+	tagsInput,
 };

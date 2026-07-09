@@ -87,10 +87,7 @@ function Pagination(props: PaginationProps) {
 
 	if (isInteractive) {
 		return (
-			<PaginationIsland
-				{...rootProps}
-				onPageChange={onPageChange}
-			>
+			<PaginationIsland {...rootProps} onPageChange={onPageChange}>
 				{content}
 			</PaginationIsland>
 		);

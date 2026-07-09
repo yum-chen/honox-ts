@@ -1,20 +1,22 @@
 export {
-    AbsoluteCenter,
-    type AbsoluteCenterProps
+	AbsoluteCenter,
+	type AbsoluteCenterProps,
 } from "./absolute-center";
 export { Alert, AlertIcon, type AlertProps } from "./alert";
 export { Avatar, type AvatarProps } from "./avatar";
 export { Badge, type BadgeProps } from "./badge";
 export {
-    Breadcrumb,
-    type BreadcrumbItem,
-    type BreadcrumbProps
+	Breadcrumb,
+	type BreadcrumbItem,
+	type BreadcrumbProps,
 } from "./breadcrumb";
 export {
-    Button,
-    ButtonGroup, CloseButton,
-    IconButton, type ButtonGroupProps,
-    type ButtonProps
+	Button,
+	ButtonGroup,
+	type ButtonGroupProps,
+	type ButtonProps,
+	CloseButton,
+	IconButton,
 } from "./button";
 export { Card, type CardProps } from "./card";
 export { Checkbox, type CheckboxProps } from "./checkbox";
@@ -36,21 +38,25 @@ export { Progress, type ProgressProps } from "./progress";
 export { RadioGroup, type RadioGroupProps } from "./radio-group";
 export { SegmentGroup, type SegmentGroupProps } from "./segment-group";
 export {
-    Skeleton,
-    SkeletonCircle, SkeletonText, type SkeletonCircleProps,
-    type SkeletonProps, type SkeletonTextProps
+	Skeleton,
+	SkeletonCircle,
+	type SkeletonCircleProps,
+	type SkeletonProps,
+	SkeletonText,
+	type SkeletonTextProps,
 } from "./skeleton";
 export { Slider, type SliderProps } from "./slider";
 export { Spinner, type SpinnerProps } from "./spinner";
-export { Splitter, type PanelConfig, type SplitterProps } from "./splitter";
+export { type PanelConfig, Splitter, type SplitterProps } from "./splitter";
 export { Switch, type SwitchProps } from "./switch";
 export {
-    Table,
-    type TableColumn,
-    type TableProps,
-    type TableRow
+	Table,
+	type TableColumn,
+	type TableProps,
+	type TableRow,
 } from "./table";
 export { Tabs, type TabsItem, type TabsProps } from "./tabs";
+export { TagsInput, type TagsInputProps } from "./tags-input";
 export { Text, type TextProps } from "./text";
 export { Textarea, type TextareaProps } from "./textarea";
 export * as Toast from "./toast";
