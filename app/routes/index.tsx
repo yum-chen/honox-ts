@@ -45,6 +45,7 @@ import {
 	ToggleGroup,
 	Tooltip,
 } from "../components/ui";
+import PaginatedTable from "../islands/paginated-table";
 
 const items = [
 	{ label: "React", value: "react" },
@@ -1857,7 +1858,7 @@ export default createRoute((c) => {
 					flexDirection: "column",
 					gap: "4",
 					alignItems: "center",
-					maxWidth: "xl",
+					maxWidth: "3xl",
 					mx: "auto",
 					pb: "20",
 				})}
@@ -2487,18 +2488,10 @@ export default createRoute((c) => {
 					<div
 						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
 					>
-						<Text size="sm" class={css({ color: "fg.muted" })}>
-							Interactive Pagination
+						<Text size="sm" class={css({ color: "fg.muted", mb: "2" })}>
+							Interactive Pagination with Paginated Table
 						</Text>
-						<Pagination
-							interactive
-							count={100}
-							pageSize={10}
-							defaultPage={3}
-							onPageChange={(details) =>
-								console.log("Page changed to:", details.page)
-							}
-						/>
+						<PaginatedTable />
 					</div>
 				</div>
 			</div>

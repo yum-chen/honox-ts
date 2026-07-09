@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "hono/jsx";
 import TagsInputIsland from "../../islands/tags-input";
-import * as Primitives from "./tags-input-primitive";
 import { shouldHydrate } from "./island-utils";
+import * as Primitives from "./tags-input-primitive";
 
 export interface TagsInputProps extends Primitives.RootProps {
 	/**
