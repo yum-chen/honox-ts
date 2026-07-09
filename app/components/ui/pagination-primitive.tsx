@@ -25,7 +25,10 @@ export function getPagesList(options: {
 	const maxButtons = boundaryCount * 2 + siblingCount * 2 + 3;
 
 	if (totalPages <= maxButtons) {
-		return range(1, totalPages).map((v) => ({ type: "page" as const, value: v }));
+		return range(1, totalPages).map((v) => ({
+			type: "page" as const,
+			value: v,
+		}));
 	}
 
 	const leftSiblingIndex = Math.max(page - siblingCount, boundaryCount + 1);
@@ -429,11 +432,7 @@ export function LastTrigger(props: TriggerProps) {
 }
 
 export interface PaginationItemsProps {
-	render?: (page: {
-		type: "page";
-		value: number;
-		selected: boolean;
-	}) => Child;
+	render?: (page: { type: "page"; value: number; selected: boolean }) => Child;
 	ellipsis?: Child;
 }
 

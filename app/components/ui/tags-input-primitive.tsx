@@ -278,7 +278,9 @@ const XIcon = () => (
 	</svg>
 );
 
-export function ItemDeleteTrigger(props: PropsWithChildren<{ class?: string }>) {
+export function ItemDeleteTrigger(
+	props: PropsWithChildren<{ class?: string }>,
+) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useTagsInputContext();
 	const styles = context?.styles;

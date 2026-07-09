@@ -82,7 +82,11 @@ export default function TagsInputIsland(props: TagsInputIslandProps) {
 					onValueChange?.({ value: nextValue });
 					onInputValueChange?.({ inputValue: "" });
 				}
-			} else if (e.key === "Backspace" && !inputValueRef.current && valueRef.current.length > 0) {
+			} else if (
+				e.key === "Backspace" &&
+				!inputValueRef.current &&
+				valueRef.current.length > 0
+			) {
 				const nextValue = valueRef.current.slice(0, -1);
 				setValue(nextValue);
 				valueRef.current = nextValue;
@@ -94,7 +98,9 @@ export default function TagsInputIsland(props: TagsInputIslandProps) {
 			const target = e.target as HTMLElement;
 
 			// Handle delete trigger
-			const deleteTrigger = target.closest<HTMLElement>('[data-part="item-delete-trigger"]');
+			const deleteTrigger = target.closest<HTMLElement>(
+				'[data-part="item-delete-trigger"]',
+			);
 			if (deleteTrigger) {
 				const index = Number(deleteTrigger.getAttribute("data-index"));
 				if (!isNaN(index)) {
@@ -108,7 +114,9 @@ export default function TagsInputIsland(props: TagsInputIslandProps) {
 			}
 
 			// Handle clear trigger
-			const clearTrigger = target.closest<HTMLElement>('[data-part="clear-trigger"]');
+			const clearTrigger = target.closest<HTMLElement>(
+				'[data-part="clear-trigger"]',
+			);
 			if (clearTrigger) {
 				setValue([]);
 				valueRef.current = [];
