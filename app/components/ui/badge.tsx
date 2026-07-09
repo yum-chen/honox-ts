@@ -7,7 +7,6 @@ export interface BadgeProps
 	extends BadgeVariantProps,
 		PropsWithChildren<{
 			class?: string;
-			interactive?: boolean;
 			colorPalette?:
 				| "blue"
 				| "green"

@@ -7,7 +7,6 @@ export interface HeadingProps extends HeadingVariantProps {
 	as?: ElementType;
 	children?: Child;
 	class?: string;
-	interactive?: boolean;
 	[key: string]: unknown;
 }
 

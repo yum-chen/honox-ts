@@ -1,6 +1,7 @@
 import type { JSX } from "hono/jsx";
 import { useId } from "hono/jsx";
 import SplitterIsland from "../../islands/splitter";
+import { shouldHydrate } from "./island-utils";
 import { Panel, ResizeTrigger, Root } from "./splitter-primitive";
 
 export interface PanelConfig {
@@ -39,7 +40,7 @@ export const Splitter = (props: SplitterProps) => {
 		id: idProp,
 		orientation = "horizontal",
 		panels,
-		interactive = true,
+		interactive,
 		defaultSize,
 		size,
 		onSizeChange,
@@ -52,7 +53,7 @@ export const Splitter = (props: SplitterProps) => {
 	const fallbackId = useId();
 	const id = idProp || fallbackId;
 
-	if (interactive) {
+	if (shouldHydrate(interactive, true)) {
 		return (
 			<SplitterIsland
 				id={id}

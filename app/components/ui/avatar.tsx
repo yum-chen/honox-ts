@@ -1,4 +1,5 @@
 import { InteractiveAvatar } from "../../islands/avatar";
+import { shouldHydrate } from "./island-utils";
 import { AvatarBase, type AvatarBaseProps } from "./avatar-primitive";
 
 export interface AvatarProps extends AvatarBaseProps {
@@ -8,8 +9,9 @@ export interface AvatarProps extends AvatarBaseProps {
 export function Avatar(props: AvatarProps) {
 	const { interactive, ...rest } = props;
 
-	// Use InteractiveAvatar if src is present (to handle loading states) or if explicitly requested
-	if (rest.src || interactive) {
+	// Hydrate the interactive avatar when an async image (src) needs client-side
+	// loading/error handling, or when interactive is explicitly requested.
+	if (shouldHydrate(interactive, Boolean(rest.src))) {
 		return <InteractiveAvatar {...rest} />;
 	}
 

@@ -21,7 +21,6 @@ interface FieldsetProps extends FieldsetVariantProps, PropsWithChildren {
 	id?: string;
 	disabled?: boolean;
 	invalid?: boolean;
-	interactive?: boolean;
 	legend?: Child;
 	helperText?: Child;
 	errorText?: Child;

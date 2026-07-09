@@ -1,6 +1,7 @@
 import type { JSX } from "hono/jsx";
 import { useRef } from "hono/jsx";
 import DrawerIsland from "../../islands/drawer";
+import { shouldHydrate } from "./island-utils";
 import { IconButton } from "./button";
 import {
 	ActionTrigger,
@@ -23,8 +24,8 @@ interface RootProps extends DrawerPrimitiveRootProps {
 }
 
 function Root(props: RootProps) {
-	const { interactive = true, ...rest } = props;
-	if (interactive) {
+	const { interactive, ...rest } = props;
+	if (shouldHydrate(interactive, true)) {
 		return <DrawerIsland {...rest} />;
 	}
 	return <DrawerPrimitiveRoot {...rest} />;

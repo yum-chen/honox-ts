@@ -1,6 +1,7 @@
 import type { JSX } from "hono/jsx";
 import { useRef } from "hono/jsx";
 import DialogIsland from "../../islands/dialog";
+import { shouldHydrate } from "./island-utils";
 import { IconButton } from "./button";
 import {
 	ActionTrigger,
@@ -23,8 +24,8 @@ interface RootProps extends DialogPrimitiveRootProps {
 }
 
 const Root = (props: RootProps) => {
-	const { interactive = true, ...rest } = props;
-	if (interactive) {
+	const { interactive, ...rest } = props;
+	if (shouldHydrate(interactive, true)) {
 		return <DialogIsland {...rest} />;
 	}
 	return <DialogPrimitiveRoot {...rest} />;

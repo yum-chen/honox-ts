@@ -1,5 +1,6 @@
 import type { JSX } from "hono/jsx";
 import RadioGroupIsland from "../../islands/radio-group";
+import { shouldHydrate } from "./island-utils";
 import {
 	Indicator,
 	Item,
@@ -27,7 +28,11 @@ interface RadioGroupProps extends RootProps {
 const RadioGroupRoot = (props: RadioGroupProps) => {
 	const { items, label, interactive, ...rest } = props;
 
-	const Component = interactive ? RadioGroupIsland : Root;
+	const hasSignal =
+		rest.value !== undefined ||
+		rest.defaultValue !== undefined ||
+		rest.onValueChange !== undefined;
+	const Component = shouldHydrate(interactive, hasSignal) ? RadioGroupIsland : Root;
 
 	return (
 		<Component {...rest}>
