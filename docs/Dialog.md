@@ -48,7 +48,7 @@ Complies with the [Dialog (Modal) WAI-ARIA design pattern](https://www.w3.org/WA
 - **Focus moves into the dialog on open** — to `initialFocusEl()`, else the first focusable element, else the content itself.
 - **Focus is trapped while open** — `Tab` / `Shift+Tab` cycle only within the dialog content. Nested dialogs are handled: only the topmost dialog traps and owns `Escape`.
 - **`Escape` closes** the dialog (unless `closeOnEscape={false}`).
-- **Background is inert** — everything outside the dialog (including a parent dialog behind a nested one) gets `inert` + is removed from the tab order, while the dialog subtree stays interactive.
+- **Background is inert** — everything outside the dialog (including a parent dialog behind a nested one) gets `inert` + is removed from the tab order, while the dialog subtree stays interactive. A module-level stack tracks nested open dialogs, ensuring only the topmost open dialog and its path remain active.
 - **Body scroll is locked** while at least one dialog is open, and restored when the last one closes.
 - **Focus returns to the trigger on close** (or to `finalFocusEl()` if provided).
 - **Accessible name** — derived from `title` (`aria-labelledby`) or an explicit `aria-label`. A client-side `console.warn` is emitted if neither is present.

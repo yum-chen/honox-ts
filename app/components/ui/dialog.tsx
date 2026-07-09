@@ -11,7 +11,7 @@ import {
 	Content,
 	Description,
 	Root as DialogPrimitiveRoot,
-	type RootProps as DialogPrimitiveRootProps,
+	type InteractiveDialogProps,
 	Footer,
 	Header,
 	Positioner,
@@ -19,7 +19,7 @@ import {
 	Trigger,
 } from "./dialog-primitive";
 
-interface RootProps extends DialogPrimitiveRootProps {
+interface RootProps extends InteractiveDialogProps {
 	interactive?: boolean;
 }
 

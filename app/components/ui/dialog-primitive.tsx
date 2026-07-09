@@ -53,7 +53,7 @@ export function Root(props: RootProps) {
 	};
 
 	return (
-		<div id={id} ref={rootRef}>
+		<div id={id} ref={rootRef} data-dialog-root="">
 			<DialogContext.Provider value={value}>{children}</DialogContext.Provider>
 		</div>
 	);
@@ -157,10 +157,12 @@ export function Content(props: ContentProps) {
 	const id = context?.id;
 	const hasAriaLabel = "aria-label" in restProps;
 	return (
+		// biome-ignore lint/a11y/useAriaPropsSupportedByRole: dialogRole is set dynamically to a valid dialog/alertdialog role
 		<div
 			role={context?.dialogRole ?? "dialog"}
 			data-part="content"
 			aria-modal="true"
+			tabIndex={-1}
 			{...(hasAriaLabel
 				? {}
 				: { "aria-labelledby": id ? `${id}-title` : undefined })}
@@ -356,6 +358,7 @@ const FOCUSABLE_SELECTOR =
 // Drives focus trapping (only the topmost handles keys) and inert math
 // so a nested dialog correctly disables the page AND its parent.
 const openDialogRoots: HTMLElement[] = [];
+let originalBodyOverflow: string | null = null;
 
 function getFocusable(container: HTMLElement): HTMLElement[] {
 	return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
@@ -366,22 +369,34 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
 // Inert every sibling along the ancestor chain of each open dialog,
 // except the path to a dialog and except ancestors of any open dialog.
 function applyInert() {
-	document.querySelectorAll<HTMLElement>("[inert]").forEach((el) => (el.inert = false));
+	document.querySelectorAll<HTMLElement>("[inert]").forEach((el) => {
+		el.inert = false;
+	});
+
+	const paths = new Set<HTMLElement>();
 	for (const root of openDialogRoots) {
-		const path = new Set<HTMLElement>();
 		let p: HTMLElement | null = root;
 		while (p && p !== document.body) {
-			path.add(p);
+			paths.add(p);
 			p = p.parentElement;
 		}
-		let node: HTMLElement | null = root.parentElement;
-		while (node && node !== document.body) {
-			for (const sib of Array.from(node.children)) {
-				if (path.has(sib as HTMLElement)) continue;
-				const protects = openDialogRoots.some((r) => sib === r || sib.contains(r));
-				if (!protects) (sib as HTMLElement).inert = true;
+	}
+
+	for (const root of openDialogRoots) {
+		let p: HTMLElement | null = root;
+		while (p && p !== document.body) {
+			const parent = p.parentElement;
+			if (parent) {
+				for (const child of Array.from(parent.children) as HTMLElement[]) {
+					if (!paths.has(child)) {
+						const containsOpenDialog = openDialogRoots.some((r) => child === r || child.contains(r));
+						if (!containsOpenDialog) {
+							child.inert = true;
+						}
+					}
+				}
 			}
-			node = node.parentElement;
+			p = p?.parentElement ?? null;
 		}
 	}
 }
@@ -412,7 +427,6 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 		...rest
 	} = props;
 	const [isOpen, setIsOpen] = useState(openProp ?? defaultOpen ?? false);
-
 	const isControlled = openProp !== undefined;
 	const open = isControlled ? openProp : isOpen;
 
@@ -434,6 +448,21 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 		handleOpenChangeRef.current = handleOpenChange;
 	}, [isControlled, onOpenChangeProp]);
 
+	const configRef = useRef({
+		closeOnEscape,
+		closeOnInteractOutside,
+		initialFocusEl,
+		finalFocusEl,
+	});
+
+	// Synchronize configuration props on every render to prevent effect tearing
+	configRef.current = {
+		closeOnEscape,
+		closeOnInteractOutside,
+		initialFocusEl,
+		finalFocusEl,
+	};
+
 	// Click delegation (open / close). Backdrop dismiss is gated by closeOnInteractOutside.
 	useEffect(() => {
 		const root = rootRef.current;
@@ -444,78 +473,22 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 				"[data-part]",
 			) as HTMLElement;
 			if (!target) return;
+			if (target.closest("[data-dialog-root]") !== root) return;
+
 			const dataPart = target.getAttribute("data-part");
 
-			const getElements = () => {
-				return {
-					positioners: Array.from(
-						root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
-					),
-					backdrops: Array.from(
-						root.querySelectorAll<HTMLElement>('[data-part="backdrop"]'),
-					),
-					contents: Array.from(
-						root.querySelectorAll<HTMLElement>('[data-part="content"]'),
-					),
-				};
-			};
-
-			const hide = () => {
-				const { positioners, backdrops, contents } = getElements();
-				root.setAttribute("data-state", "closed");
-				positioners.forEach((p) => {
-					p.style.cssText =
-						"display: none !important; visibility: hidden !important;";
-					p.setAttribute("data-state", "closed");
-				});
-				backdrops.forEach((b) => {
-					b.style.cssText =
-						"display: none !important; visibility: hidden !important;";
-					b.setAttribute("data-state", "closed");
-				});
-				contents.forEach((c) => {
-					c.setAttribute("data-state", "closed");
-					c.style.cssText =
-						"display: none !important; visibility: hidden !important;";
-				});
-			};
-
-			const show = () => {
-				const { positioners, backdrops, contents } = getElements();
-				root.setAttribute("data-state", "open");
-				positioners.forEach((p) => {
-					p.style.cssText =
-						"display: flex !important; visibility: visible !important;";
-					p.setAttribute("data-state", "open");
-				});
-				backdrops.forEach((b) => {
-					b.style.cssText =
-						"display: block !important; visibility: visible !important;";
-					b.setAttribute("data-state", "open");
-				});
-				contents.forEach((c) => {
-					c.setAttribute("data-state", "open");
-					c.style.cssText =
-						"display: flex !important; visibility: visible !important;";
-				});
-			};
-
 			if (dataPart === "backdrop") {
-				if (closeOnInteractOutside) {
-					hide();
+				if (configRef.current.closeOnInteractOutside) {
 					handleOpenChangeRef.current?.(false);
 				}
 			} else if (dataPart === "trigger") {
 				const currentOpen = root.getAttribute("data-state") === "open";
 				const nextOpen = !currentOpen;
-				if (nextOpen) show();
-				else hide();
 				handleOpenChangeRef.current?.(nextOpen);
 			} else if (
 				dataPart === "close-trigger" ||
 				dataPart === "action-trigger"
 			) {
-				hide();
 				handleOpenChangeRef.current?.(false);
 			}
 		};
@@ -525,7 +498,53 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 		return () => {
 			root.removeEventListener("click", handleClick);
 		};
-	}, [closeOnInteractOutside]);
+	}, []);
+
+	// Synchronize DOM classes, display styles, data-state attributes
+	useEffect(() => {
+		const root = rootRef.current;
+		if (!root) return;
+
+		const getElements = () => {
+			return {
+				positioners: Array.from(root.querySelectorAll<HTMLElement>('[data-part="positioner"]')).filter((el) => el.closest('[data-dialog-root]') === root),
+				backdrops: Array.from(root.querySelectorAll<HTMLElement>('[data-part="backdrop"]')).filter((el) => el.closest('[data-dialog-root]') === root),
+				contents: Array.from(root.querySelectorAll<HTMLElement>('[data-part="content"]')).filter((el) => el.closest('[data-dialog-root]') === root),
+			};
+		};
+
+		const { positioners, backdrops, contents } = getElements();
+
+		if (open) {
+			root.setAttribute("data-state", "open");
+			positioners.forEach((p) => {
+				p.style.cssText = "display: flex !important; visibility: visible !important;";
+				p.setAttribute("data-state", "open");
+			});
+			backdrops.forEach((b) => {
+				b.style.cssText = "display: block !important; visibility: visible !important;";
+				b.setAttribute("data-state", "open");
+			});
+			contents.forEach((c) => {
+				c.setAttribute("data-state", "open");
+				c.style.cssText = "display: flex !important; visibility: visible !important;";
+			});
+		} else {
+			root.setAttribute("data-state", "closed");
+			positioners.forEach((p) => {
+				p.style.cssText = "display: none !important; visibility: hidden !important;";
+				p.setAttribute("data-state", "closed");
+			});
+			backdrops.forEach((b) => {
+				b.style.cssText = "display: none !important; visibility: hidden !important;";
+				b.setAttribute("data-state", "closed");
+			});
+			contents.forEach((c) => {
+				c.setAttribute("data-state", "closed");
+				c.style.cssText = "display: none !important; visibility: hidden !important;";
+			});
+		}
+	}, [open]);
 
 	// Accessibility behavior layer: focus trap, Escape, inert background, scroll lock,
 	// focus return to trigger on close. Runs whenever `open` changes.
@@ -539,19 +558,34 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 		const prevFocus = document.activeElement as HTMLElement | null;
 		openDialogRoots.push(root);
 		applyInert();
-		const prevOverflow = document.body.style.overflow;
-		document.body.style.overflow = "hidden";
 
-		// Move focus into the dialog (initialFocusEl > first focusable > content)
+		// Safe Scroll Lock
+		if (openDialogRoots.length === 1 && originalBodyOverflow === null) {
+			originalBodyOverflow = document.body.style.overflow;
+			document.body.style.overflow = "hidden";
+		}
+
+		// Focus in on open
 		const focusables = getFocusable(content);
-		(initialFocusEl?.() ?? focusables[0] ?? content).focus();
+		const targetToFocus = configRef.current.initialFocusEl?.() ?? focusables[0] ?? content;
+		if (targetToFocus) {
+			targetToFocus.focus();
+		}
+
+		// Accessible-name fallback when title is omitted
+		const titleEl = content.querySelector(`#${rootId}-title`);
+		if (!titleEl) {
+			if (!content.hasAttribute("aria-label") && !content.hasAttribute("aria-labelledby")) {
+				content.setAttribute("aria-label", dialogRole === "alertdialog" ? "Alert Dialog" : "Dialog");
+			}
+		}
 
 		const onKeyDown = (e: KeyboardEvent) => {
 			// Only the topmost (most recently opened) dialog handles keys
 			if (openDialogRoots[openDialogRoots.length - 1] !== root) return;
 
 			if (e.key === "Escape") {
-				if (closeOnEscape) {
+				if (configRef.current.closeOnEscape) {
 					e.preventDefault();
 					handleOpenChangeRef.current?.(false);
 				}
@@ -566,7 +600,10 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 				}
 				const first = f[0];
 				const last = f[f.length - 1];
-				if (e.shiftKey && document.activeElement === first) {
+				if (!content.contains(document.activeElement)) {
+					e.preventDefault();
+					first.focus();
+				} else if (e.shiftKey && document.activeElement === first) {
 					e.preventDefault();
 					last.focus();
 				} else if (!e.shiftKey && document.activeElement === last) {
@@ -582,11 +619,19 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 			const i = openDialogRoots.indexOf(root);
 			if (i !== -1) openDialogRoots.splice(i, 1);
 			applyInert();
-			if (openDialogRoots.length === 0) document.body.style.overflow = prevOverflow;
+
+			if (openDialogRoots.length === 0) {
+				document.body.style.overflow = originalBodyOverflow || "";
+				originalBodyOverflow = null;
+			}
+
 			// Return focus to the trigger (or finalFocusEl) on close
-			(finalFocusEl?.() ?? prevFocus)?.focus?.();
+			const targetToReturnFocus = configRef.current.finalFocusEl?.() ?? prevFocus;
+			if (targetToReturnFocus && typeof targetToReturnFocus.focus === "function") {
+				targetToReturnFocus.focus();
+			}
 		};
-	}, [open, closeOnEscape, initialFocusEl, finalFocusEl]);
+	}, [open, rootId, dialogRole]);
 
 	return (
 		<Root
