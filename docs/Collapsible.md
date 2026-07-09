@@ -16,7 +16,7 @@ An interactive component that can be expanded or collapsed to show or hide conte
 | `defaultOpen`        | `boolean`                     | Whether the collapsible is open by default (uncontrolled).               |
 | `onOpenChange`       | `(open: boolean) => void`     | Callback for when the open state changes.                                |
 | `disabled`           | `boolean`                     | Whether the collapsible is disabled.                                     |
-| `interactive`        | `boolean`                     | Enable client-side interactivity. Defaults to `true` when interactive props are present. |
+| `interactive`        | `boolean`                     | Enable client-side interactivity. Collapsible is **Tier-1 (auto-interactive)**: it always hydrates as an island unless you pass `interactive={false}`. |
 | `class`              | `string`                      | Root element class name.                                                 |
 | `triggerClass`       | `string`                      | Trigger element class name.                                              |
 | `contentClass`       | `string`                      | Content element class name.                                              |
@@ -57,3 +57,11 @@ export default function MyPage() {
   );
 }
 ```
+
+# Hydration
+
+Collapsible is classified as **Tier-1 (auto-interactive)**.
+
+- It always renders as a hydrated client island (it needs JS to expand/collapse and to run `onOpenChange`).
+- The only way to opt out of hydration is to pass `interactive={false}`, in which case it renders the static `*-primitive` markup without the toggle behavior.
+- This is implemented via the shared `shouldHydrate(interactive, true)` predicate in `app/components/ui/island-utils.ts`, the single source of truth for all hydration decisions.
