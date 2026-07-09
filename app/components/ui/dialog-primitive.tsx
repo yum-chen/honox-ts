@@ -29,7 +29,7 @@ const useDialogContext = () => {
 	return context;
 };
 
-export interface RootProps extends DialogVariantProps, PropsWithChildren {
+interface RootProps extends DialogVariantProps, PropsWithChildren {
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 	id?: string;
@@ -37,9 +37,16 @@ export interface RootProps extends DialogVariantProps, PropsWithChildren {
 	dialogRole?: "dialog" | "alertdialog";
 }
 
-export function Root(props: RootProps) {
+function Root(props: RootProps) {
 	const [variantProps, localProps] = dialog.splitVariantProps(props);
-	const { children, open, onOpenChange, id: idProp, rootRef, dialogRole } = localProps;
+	const {
+		children,
+		open,
+		onOpenChange,
+		id: idProp,
+		rootRef,
+		dialogRole,
+	} = localProps;
 	const styles = dialog(variantProps);
 	const generatedId = useId();
 	const id = idProp || generatedId;
@@ -53,18 +60,18 @@ export function Root(props: RootProps) {
 	};
 
 	return (
-		<div id={id} ref={rootRef}>
+		<div id={id} ref={rootRef} data-dialog-root="">
 			<DialogContext.Provider value={value}>{children}</DialogContext.Provider>
 		</div>
 	);
 }
 
-export interface TriggerProps extends PropsWithChildren {
+interface TriggerProps extends PropsWithChildren {
 	class?: string;
 	asChild?: boolean;
 }
 
-export function Trigger(props: TriggerProps) {
+function Trigger(props: TriggerProps) {
 	const { children, class: classProp, asChild, ...restProps } = props;
 	const context = useDialogContext();
 	const open = context?.open;
@@ -91,11 +98,11 @@ export function Trigger(props: TriggerProps) {
 	);
 }
 
-export interface BackdropProps extends PropsWithChildren {
+interface BackdropProps extends PropsWithChildren {
 	class?: string;
 }
 
-export function Backdrop(props: BackdropProps) {
+function Backdrop(props: BackdropProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDialogContext();
 	const styles = context?.styles || dialog();
@@ -117,11 +124,11 @@ export function Backdrop(props: BackdropProps) {
 	);
 }
 
-export interface PositionerProps extends PropsWithChildren {
+interface PositionerProps extends PropsWithChildren {
 	class?: string;
 }
 
-export function Positioner(props: PositionerProps) {
+function Positioner(props: PositionerProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDialogContext();
 	const styles = context?.styles || dialog();
@@ -144,23 +151,25 @@ export function Positioner(props: PositionerProps) {
 	);
 }
 
-export interface ContentProps extends PropsWithChildren {
+interface ContentProps extends PropsWithChildren {
 	class?: string;
 	"aria-label"?: string;
 }
 
-export function Content(props: ContentProps) {
+function Content(props: ContentProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDialogContext();
 	const styles = context?.styles || dialog();
 	const open = context?.open;
 	const id = context?.id;
-	const hasAriaLabel = "aria-label" in restProps;
+	const hasAriaLabel = restProps["aria-label"] !== undefined;
 	return (
+		// biome-ignore lint/a11y/useAriaPropsSupportedByRole: dynamic role is dialog or alertdialog
 		<div
 			role={context?.dialogRole ?? "dialog"}
 			data-part="content"
 			aria-modal="true"
+			tabIndex={-1}
 			{...(hasAriaLabel
 				? {}
 				: { "aria-labelledby": id ? `${id}-title` : undefined })}
@@ -179,11 +188,11 @@ export function Content(props: ContentProps) {
 	);
 }
 
-export interface HeaderProps extends PropsWithChildren {
+interface HeaderProps extends PropsWithChildren {
 	class?: string;
 }
 
-export function Header(props: HeaderProps) {
+function Header(props: HeaderProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDialogContext();
 	const styles = context?.styles || dialog();
@@ -195,11 +204,11 @@ export function Header(props: HeaderProps) {
 	);
 }
 
-export interface BodyProps extends PropsWithChildren {
+interface BodyProps extends PropsWithChildren {
 	class?: string;
 }
 
-export function Body(props: BodyProps) {
+function Body(props: BodyProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDialogContext();
 	const styles = context?.styles || dialog();
@@ -211,11 +220,11 @@ export function Body(props: BodyProps) {
 	);
 }
 
-export interface FooterProps extends PropsWithChildren {
+interface FooterProps extends PropsWithChildren {
 	class?: string;
 }
 
-export function Footer(props: FooterProps) {
+function Footer(props: FooterProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDialogContext();
 	const styles = context?.styles || dialog();
@@ -227,11 +236,11 @@ export function Footer(props: FooterProps) {
 	);
 }
 
-export interface TitleProps extends PropsWithChildren {
+interface TitleProps extends PropsWithChildren {
 	class?: string;
 }
 
-export function Title(props: TitleProps) {
+function Title(props: TitleProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDialogContext();
 	const styles = context?.styles || dialog();
@@ -248,11 +257,11 @@ export function Title(props: TitleProps) {
 	);
 }
 
-export interface DescriptionProps extends PropsWithChildren {
+interface DescriptionProps extends PropsWithChildren {
 	class?: string;
 }
 
-export function Description(props: DescriptionProps) {
+function Description(props: DescriptionProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDialogContext();
 	const styles = context?.styles || dialog();
@@ -269,13 +278,13 @@ export function Description(props: DescriptionProps) {
 	);
 }
 
-export interface CloseTriggerProps extends PropsWithChildren {
+interface CloseTriggerProps extends PropsWithChildren {
 	class?: string;
 	asChild?: boolean;
 	unstyled?: boolean;
 }
 
-export function CloseTrigger(props: CloseTriggerProps) {
+function CloseTrigger(props: CloseTriggerProps) {
 	const { children, class: classProp, asChild, unstyled, ...restProps } = props;
 	const context = useDialogContext();
 	const styles = context?.styles || dialog();
@@ -314,12 +323,12 @@ export function CloseTrigger(props: CloseTriggerProps) {
 	);
 }
 
-export interface ActionTriggerProps extends PropsWithChildren {
+interface ActionTriggerProps extends PropsWithChildren {
 	class?: string;
 	asChild?: boolean;
 }
 
-export function ActionTrigger(props: ActionTriggerProps) {
+function ActionTrigger(props: ActionTriggerProps) {
 	const { children, class: classProp, asChild, ...restProps } = props;
 
 	const triggerProps = {
@@ -345,28 +354,33 @@ export function ActionTrigger(props: ActionTriggerProps) {
 // Interactive version with state management and full a11y behavior
 // (focus trap, Escape, inert background, scroll lock, focus return).
 
-// Selector for focusable elements inside the dialog content.
 const FOCUSABLE_SELECTOR =
-	'a[href],area[href],button:not([disabled]),input:not([disabled]),' +
-	'select:not([disabled]),textarea:not([disabled]),iframe:not([disabled]),' +
+	"a[href],area[href],button:not([disabled]),input:not([disabled])," +
+	"select:not([disabled]),textarea:not([disabled]),iframe:not([disabled])," +
 	'object:not([disabled]),embed,[tabindex]:not([tabindex="-1"]),' +
 	'[contenteditable]:not([contenteditable="false"])';
 
-// Stack of currently-open dialog root elements (topmost = last).
-// Drives focus trapping (only the topmost handles keys) and inert math
-// so a nested dialog correctly disables the page AND its parent.
 const openDialogRoots: HTMLElement[] = [];
+let originalOverflow: string | undefined;
 
 function getFocusable(container: HTMLElement): HTMLElement[] {
-	return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
-		(el) => !el.hasAttribute("disabled") && (el.offsetParent !== null || el === document.activeElement),
+	return Array.from(
+		container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+	).filter(
+		(el) =>
+			!el.hasAttribute("disabled") &&
+			(el.offsetParent !== null ||
+				window.getComputedStyle(el).display !== "none" ||
+				el === document.activeElement),
 	);
 }
 
-// Inert every sibling along the ancestor chain of each open dialog,
-// except the path to a dialog and except ancestors of any open dialog.
 function applyInert() {
-	document.querySelectorAll<HTMLElement>("[inert]").forEach((el) => (el.inert = false));
+	for (const el of Array.from(
+		document.querySelectorAll<HTMLElement>("[inert]"),
+	)) {
+		el.inert = false;
+	}
 	for (const root of openDialogRoots) {
 		const path = new Set<HTMLElement>();
 		let p: HTMLElement | null = root;
@@ -378,7 +392,9 @@ function applyInert() {
 		while (node && node !== document.body) {
 			for (const sib of Array.from(node.children)) {
 				if (path.has(sib as HTMLElement)) continue;
-				const protects = openDialogRoots.some((r) => sib === r || sib.contains(r));
+				const protects = openDialogRoots.some(
+					(r) => sib === r || sib.contains(r),
+				);
 				if (!protects) (sib as HTMLElement).inert = true;
 			}
 			node = node.parentElement;
@@ -386,7 +402,49 @@ function applyInert() {
 	}
 }
 
-export interface InteractiveDialogProps extends RootProps {
+function syncDom(root: HTMLElement, open: boolean) {
+	root.setAttribute("data-state", open ? "open" : "closed");
+
+	const positioners = Array.from(
+		root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
+	).filter((el) => el.closest("[data-dialog-root]") === root);
+	const backdrops = Array.from(
+		root.querySelectorAll<HTMLElement>('[data-part="backdrop"]'),
+	).filter((el) => el.closest("[data-dialog-root]") === root);
+	const contents = Array.from(
+		root.querySelectorAll<HTMLElement>('[data-part="content"]'),
+	).filter((el) => el.closest("[data-dialog-root]") === root);
+	const triggers = Array.from(
+		root.querySelectorAll<HTMLElement>('[data-part="trigger"]'),
+	).filter((el) => el.closest("[data-dialog-root]") === root);
+
+	for (const p of positioners) {
+		p.setAttribute("data-state", open ? "open" : "closed");
+		p.style.cssText = open
+			? "display: flex !important; visibility: visible !important;"
+			: "display: none !important; visibility: hidden !important;";
+	}
+
+	for (const b of backdrops) {
+		b.setAttribute("data-state", open ? "open" : "closed");
+		b.style.cssText = open
+			? "display: block !important; visibility: visible !important;"
+			: "display: none !important; visibility: hidden !important;";
+	}
+
+	for (const c of contents) {
+		c.setAttribute("data-state", open ? "open" : "closed");
+		c.style.cssText = open
+			? "display: flex !important; visibility: visible !important;"
+			: "display: none !important; visibility: hidden !important;";
+	}
+
+	for (const t of triggers) {
+		t.setAttribute("aria-expanded", open ? "true" : "false");
+	}
+}
+
+interface InteractiveDialogProps extends RootProps {
 	defaultOpen?: boolean;
 	/** Close when Escape is pressed. Default: true. */
 	closeOnEscape?: boolean;
@@ -398,7 +456,7 @@ export interface InteractiveDialogProps extends RootProps {
 	finalFocusEl?: () => HTMLElement | null;
 }
 
-export function InteractiveDialog(props: InteractiveDialogProps) {
+function InteractiveDialog(props: InteractiveDialogProps) {
 	const {
 		open: openProp,
 		onOpenChange: onOpenChangeProp,
@@ -434,6 +492,22 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 		handleOpenChangeRef.current = handleOpenChange;
 	}, [isControlled, onOpenChangeProp]);
 
+	// Stable reference for all interactive configuration values
+	const configRef = useRef({
+		closeOnEscape,
+		closeOnInteractOutside,
+		initialFocusEl,
+		finalFocusEl,
+	});
+	useEffect(() => {
+		configRef.current = {
+			closeOnEscape,
+			closeOnInteractOutside,
+			initialFocusEl,
+			finalFocusEl,
+		};
+	});
+
 	// Click delegation (open / close). Backdrop dismiss is gated by closeOnInteractOutside.
 	useEffect(() => {
 		const root = rootRef.current;
@@ -446,76 +520,21 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 			if (!target) return;
 			const dataPart = target.getAttribute("data-part");
 
-			const getElements = () => {
-				return {
-					positioners: Array.from(
-						root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
-					),
-					backdrops: Array.from(
-						root.querySelectorAll<HTMLElement>('[data-part="backdrop"]'),
-					),
-					contents: Array.from(
-						root.querySelectorAll<HTMLElement>('[data-part="content"]'),
-					),
-				};
-			};
-
-			const hide = () => {
-				const { positioners, backdrops, contents } = getElements();
-				root.setAttribute("data-state", "closed");
-				positioners.forEach((p) => {
-					p.style.cssText =
-						"display: none !important; visibility: hidden !important;";
-					p.setAttribute("data-state", "closed");
-				});
-				backdrops.forEach((b) => {
-					b.style.cssText =
-						"display: none !important; visibility: hidden !important;";
-					b.setAttribute("data-state", "closed");
-				});
-				contents.forEach((c) => {
-					c.setAttribute("data-state", "closed");
-					c.style.cssText =
-						"display: none !important; visibility: hidden !important;";
-				});
-			};
-
-			const show = () => {
-				const { positioners, backdrops, contents } = getElements();
-				root.setAttribute("data-state", "open");
-				positioners.forEach((p) => {
-					p.style.cssText =
-						"display: flex !important; visibility: visible !important;";
-					p.setAttribute("data-state", "open");
-				});
-				backdrops.forEach((b) => {
-					b.style.cssText =
-						"display: block !important; visibility: visible !important;";
-					b.setAttribute("data-state", "open");
-				});
-				contents.forEach((c) => {
-					c.setAttribute("data-state", "open");
-					c.style.cssText =
-						"display: flex !important; visibility: visible !important;";
-				});
-			};
-
 			if (dataPart === "backdrop") {
-				if (closeOnInteractOutside) {
-					hide();
+				if (configRef.current.closeOnInteractOutside) {
+					syncDom(root, false);
 					handleOpenChangeRef.current?.(false);
 				}
 			} else if (dataPart === "trigger") {
 				const currentOpen = root.getAttribute("data-state") === "open";
 				const nextOpen = !currentOpen;
-				if (nextOpen) show();
-				else hide();
+				syncDom(root, nextOpen);
 				handleOpenChangeRef.current?.(nextOpen);
 			} else if (
 				dataPart === "close-trigger" ||
 				dataPart === "action-trigger"
 			) {
-				hide();
+				syncDom(root, false);
 				handleOpenChangeRef.current?.(false);
 			}
 		};
@@ -525,33 +544,41 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 		return () => {
 			root.removeEventListener("click", handleClick);
 		};
-	}, [closeOnInteractOutside]);
+	}, []);
 
 	// Accessibility behavior layer: focus trap, Escape, inert background, scroll lock,
 	// focus return to trigger on close. Runs whenever `open` changes.
 	useEffect(() => {
-		if (!open) return;
 		const root = rootRef.current;
 		if (!root) return;
+
+		// Always synchronize DOM state when open state changes
+		syncDom(root, open);
+
+		if (!open) return;
 		const content = root.querySelector<HTMLElement>('[data-part="content"]');
 		if (!content) return;
 
 		const prevFocus = document.activeElement as HTMLElement | null;
 		openDialogRoots.push(root);
 		applyInert();
-		const prevOverflow = document.body.style.overflow;
+
+		// Handle body scroll locking
+		if (openDialogRoots.length === 1) {
+			originalOverflow = document.body.style.overflow;
+		}
 		document.body.style.overflow = "hidden";
 
 		// Move focus into the dialog (initialFocusEl > first focusable > content)
 		const focusables = getFocusable(content);
-		(initialFocusEl?.() ?? focusables[0] ?? content).focus();
+		(configRef.current.initialFocusEl?.() ?? focusables[0] ?? content).focus();
 
 		const onKeyDown = (e: KeyboardEvent) => {
 			// Only the topmost (most recently opened) dialog handles keys
 			if (openDialogRoots[openDialogRoots.length - 1] !== root) return;
 
 			if (e.key === "Escape") {
-				if (closeOnEscape) {
+				if (configRef.current.closeOnEscape) {
 					e.preventDefault();
 					handleOpenChangeRef.current?.(false);
 				}
@@ -582,11 +609,16 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 			const i = openDialogRoots.indexOf(root);
 			if (i !== -1) openDialogRoots.splice(i, 1);
 			applyInert();
-			if (openDialogRoots.length === 0) document.body.style.overflow = prevOverflow;
+
+			if (openDialogRoots.length === 0 && originalOverflow !== undefined) {
+				document.body.style.overflow = originalOverflow;
+				originalOverflow = undefined;
+			}
+
 			// Return focus to the trigger (or finalFocusEl) on close
-			(finalFocusEl?.() ?? prevFocus)?.focus?.();
+			(configRef.current.finalFocusEl?.() ?? prevFocus)?.focus?.();
 		};
-	}, [open, closeOnEscape, initialFocusEl, finalFocusEl]);
+	}, [open]);
 
 	return (
 		<Root
@@ -599,3 +631,35 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 		/>
 	);
 }
+
+export type {
+	ActionTriggerProps,
+	BackdropProps,
+	BodyProps,
+	CloseTriggerProps,
+	ContentProps,
+	DescriptionProps,
+	FooterProps,
+	HeaderProps,
+	InteractiveDialogProps,
+	PositionerProps,
+	RootProps,
+	TitleProps,
+	TriggerProps,
+};
+
+export {
+	ActionTrigger,
+	Backdrop,
+	Body,
+	CloseTrigger,
+	Content,
+	Description,
+	Footer,
+	Header,
+	InteractiveDialog,
+	Positioner,
+	Root,
+	Title,
+	Trigger,
+};

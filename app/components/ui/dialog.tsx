@@ -10,15 +10,15 @@ import {
 	Content,
 	Description,
 	Root as DialogPrimitiveRoot,
-	type RootProps as DialogPrimitiveRootProps,
 	Footer,
 	Header,
+	type InteractiveDialogProps,
 	Positioner,
 	Title,
 	Trigger,
 } from "./dialog-primitive";
 
-interface RootProps extends DialogPrimitiveRootProps {
+interface RootProps extends InteractiveDialogProps {
 	interactive?: boolean;
 }
 
@@ -48,9 +48,7 @@ const CloseIcon = () => (
 	</svg>
 );
 
-export type { RootProps };
-
-export interface DialogProps extends RootProps {
+interface DialogProps extends RootProps {
 	trigger?: JSX.Element;
 	title?: string | JSX.Element;
 	description?: string | JSX.Element;
@@ -65,7 +63,7 @@ export interface DialogProps extends RootProps {
 	"aria-label"?: string;
 }
 
-export function Dialog(props: DialogProps) {
+function Dialog(props: DialogProps) {
 	const {
 		trigger,
 		title,
@@ -92,12 +90,15 @@ export function Dialog(props: DialogProps) {
 	const localRef = useRef<HTMLElement>(null);
 	const rootRef = rootRefProp || localRef;
 
+	const effectiveAriaLabel =
+		ariaLabel || (!title ? role || "dialog" : undefined);
+
 	return (
 		<Root {...rest} rootRef={rootRef} dialogRole={role}>
 			{trigger && <Trigger asChild>{trigger}</Trigger>}
 			<Backdrop />
 			<Positioner>
-				<Content aria-label={ariaLabel}>
+				<Content aria-label={effectiveAriaLabel}>
 					{closable && (
 						<CloseTrigger asChild>
 							<IconButton variant="plain" size="sm" aria-label="Close">
@@ -128,4 +129,6 @@ export function Dialog(props: DialogProps) {
 	);
 }
 
+export type { DialogProps, RootProps };
+export { Dialog };
 export default Dialog;

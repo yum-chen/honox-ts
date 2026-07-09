@@ -74,3 +74,34 @@ export default function MyPage() {
   );
 }
 ```
+
+## Nested Dialogs
+
+The behavioral accessibility layer natively supports nested dialogs. Opening a second dialog from inside the first one will correctly trap focus in the topmost dialog, keep `Escape` keyboard handling on the topmost dialog, and make the parent dialog `inert` until the child dialog is closed.
+
+```tsx
+import { Dialog, Button } from "../components/ui";
+
+export default function NestedDialogsPage() {
+  return (
+    <Dialog
+      trigger={<Button>Open First Dialog</Button>}
+      title="First Dialog"
+      description="This is the first level dialog."
+      body={
+        <div>
+          <p>Click below to open a nested dialog:</p>
+          <Dialog
+            trigger={<Button colorPalette="blue">Open Second Dialog</Button>}
+            title="Second Dialog"
+            description="This is a nested dialog."
+            body="Focus and keyboard interactions are trapped here now."
+            cancel={<Button variant="outline">Close Second</Button>}
+          />
+        </div>
+      }
+      cancel={<Button variant="outline">Close First</Button>}
+    />
+  );
+}
+```
