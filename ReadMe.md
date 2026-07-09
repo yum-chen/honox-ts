@@ -31,6 +31,8 @@ Live demo: [https://honox.chen.so](https://honox.chen.so)
 | `/blog/:slug` | `app/routes/blog/[slug].tsx` | Individual post |
 | `/admin/` | `public/admin/index.html` | Sveltia CMS UI |
 
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for UI components architecture details.
+
 ---
 
 ## Blog & CMS
