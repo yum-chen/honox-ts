@@ -64,6 +64,14 @@ export interface DialogProps extends RootProps {
 	role?: "dialog" | "alertdialog";
 	/** Accessible name for the dialog when no `title` is provided. */
 	"aria-label"?: string;
+	/** Close when Escape is pressed. Default: true. */
+	closeOnEscape?: boolean;
+	/** Close when the backdrop is clicked / interaction occurs outside. Default: true. */
+	closeOnInteractOutside?: boolean;
+	/** Element to focus when the dialog opens. Defaults to the first focusable. */
+	initialFocusEl?: () => HTMLElement | null;
+	/** Element to focus when the dialog closes. Defaults to the trigger. */
+	finalFocusEl?: () => HTMLElement | null;
 }
 
 export function Dialog(props: DialogProps) {
@@ -83,12 +91,9 @@ export function Dialog(props: DialogProps) {
 		...rest
 	} = props;
 
-	// Dev aid: a dialog must have an accessible name (WAI-ARIA). Warn client-side only.
-	if (typeof window !== "undefined" && !title && !ariaLabel) {
-		console.warn(
-			"[Dialog] Missing accessible name: provide a `title` or `aria-label` so screen readers can identify the dialog.",
-		);
-	}
+	// Dev aid: a dialog must have an accessible name (WAI-ARIA). The Content
+	// component already warns client-side when neither `title` nor `aria-label`
+	// resolves to one, so we don't duplicate that warning here.
 
 	const localRef = useRef<HTMLElement>(null);
 	const rootRef = rootRefProp || localRef;

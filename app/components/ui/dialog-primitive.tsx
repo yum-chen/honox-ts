@@ -144,27 +144,64 @@ export function Positioner(props: PositionerProps) {
 	);
 }
 
+// Recursively check whether a `data-part="<part>"` element exists in the
+// rendered children tree. Used to decide whether the dialog actually has a
+// Title / Description so we can wire `aria-labelledby` / `aria-describedby`
+// correctly (and avoid pointing those attributes at non-existent elements).
+function hasPart(node: unknown, part: string): boolean {
+	if (node == null || typeof node !== "object") return false;
+	if (Array.isArray(node)) return node.some((c) => hasPart(c, part));
+	const el = node as { props?: { "data-part"?: string; children?: unknown } };
+	if (el.props?.["data-part"] === part) return true;
+	if (el.props?.children != null) return hasPart(el.props.children, part);
+	return false;
+}
+
 export interface ContentProps extends PropsWithChildren {
 	class?: string;
 	"aria-label"?: string;
 }
 
 export function Content(props: ContentProps) {
-	const { children, class: classProp, ...restProps } = props;
+	const { children, class: classProp, "aria-label": ariaLabel, ...restProps } = props;
 	const context = useDialogContext();
 	const styles = context?.styles || dialog();
 	const open = context?.open;
 	const id = context?.id;
-	const hasAriaLabel = "aria-label" in restProps;
+	const role = context?.dialogRole ?? "dialog";
+
+	const titleId = id ? `${id}-title` : undefined;
+	const descriptionId = id ? `${id}-description` : undefined;
+
+	// Accessible name resolution (WAI-ARIA):
+	//  - explicit `aria-label` wins
+	//  - else reference the visible Title via `aria-labelledby` (Title renders id `${id}-title`)
+	//  - else fall back to a role-based default so screen readers always get *something*
+	//    (this avoids pointing `aria-labelledby` at a non-existent element when `title` is omitted)
+	const titleRendered = hasPart(children, "title");
+	const describedBy =
+		descriptionId && hasPart(children, "description") ? descriptionId : undefined;
+
+	const nameProps = ariaLabel
+		? { "aria-label": ariaLabel }
+		: titleRendered
+			? { "aria-labelledby": titleId }
+			: { "aria-label": role === "alertdialog" ? "Alert" : "Dialog" };
+
+	// Dev aid: a dialog must have an accessible name (WAI-ARIA). Warn client-side only.
+	if (typeof window !== "undefined" && !ariaLabel && !titleRendered) {
+		console.warn(
+			"[Dialog] Missing accessible name: provide a `title` or `aria-label` so screen readers can identify the dialog.",
+		);
+	}
+
 	return (
 		<div
-			role={context?.dialogRole ?? "dialog"}
+			role={role}
 			data-part="content"
 			aria-modal="true"
-			{...(hasAriaLabel
-				? {}
-				: { "aria-labelledby": id ? `${id}-title` : undefined })}
-			aria-describedby={id ? `${id}-description` : undefined}
+			{...nameProps}
+			{...(describedBy ? { "aria-describedby": describedBy } : {})}
 			class={cx(
 				styles.content,
 				"dialog__content",
@@ -240,6 +277,7 @@ export function Title(props: TitleProps) {
 	return (
 		<h2
 			id={id ? `${id}-title` : undefined}
+			data-part="title"
 			class={cx(styles.title, "dialog__title", classProp)}
 			{...restProps}
 		>
@@ -261,6 +299,7 @@ export function Description(props: DescriptionProps) {
 	return (
 		<div
 			id={id ? `${id}-description` : undefined}
+			data-part="description"
 			class={cx(styles.description, "dialog__description", classProp)}
 			{...restProps}
 		>
