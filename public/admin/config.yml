@@ -236,6 +236,164 @@ collections:
                   - { label: Checked, name: checked, widget: boolean, default: false }
                   - { label: Disabled, name: disabled, widget: boolean, default: false }
 
+          - &paginated_table_type
+            label: PaginatedTable
+            name: paginatedTable
+            widget: object
+            fields: []
+
+          - &pagination_type
+            label: Pagination
+            name: pagination
+            widget: object
+            fields: &pagination_fields
+              - { label: Count, name: count, widget: number, default: 100 }
+              - { label: Page Size, name: pageSize, widget: number, default: 10 }
+              - { label: Default Page, name: defaultPage, widget: number, default: 1 }
+              - { label: Interactive, name: interactive, widget: boolean, default: true }
+
+          - &popover_type
+            label: Popover
+            name: popover
+            widget: object
+            fields: &popover_fields
+              - { label: Trigger Text, name: triggerText, widget: string }
+              - { label: Title, name: title, widget: string, required: false }
+              - { label: Description, name: description, widget: string, required: false }
+              - { label: Body, name: body, widget: string, required: false }
+              - { label: Cancel Text (Close), name: cancelText, widget: string, required: false }
+              - { label: Closable, name: closable, widget: boolean, default: true }
+              - { label: Show Arrow, name: showArrow, widget: boolean, default: true }
+              - { label: Interactive, name: interactive, widget: boolean, default: true }
+
+          - &progress_type
+            label: Progress
+            name: progress
+            widget: object
+            fields: &progress_fields
+              - { label: Value, name: value, widget: number, default: 50, required: false }
+              - { label: Min, name: min, widget: number, default: 0 }
+              - { label: Max, name: max, widget: number, default: 100 }
+              - { label: Label, name: label, widget: string, required: false }
+              - { label: Show Value Text, name: showValueText, widget: boolean, default: false }
+              - label: Type
+                name: type
+                widget: select
+                options: [linear, circular]
+                default: linear
+              - label: Variant
+                name: variant
+                widget: select
+                options: [solid, subtle]
+                default: solid
+              - label: Shape
+                name: shape
+                widget: select
+                options: [square, rounded, full]
+                default: rounded
+              - label: Size
+                name: size
+                widget: select
+                options: [xs, sm, md, lg, xl]
+                default: md
+
+          - &radio_group_type
+            label: RadioGroup
+            name: radioGroup
+            widget: object
+            fields: &radio_group_fields
+              - { label: Label, name: label, widget: string, required: false }
+              - { label: Default Value, name: defaultValue, widget: string, required: false }
+              - label: Size
+                name: size
+                widget: select
+                options: [sm, md, lg]
+                default: md
+              - { label: Interactive, name: interactive, widget: boolean, default: true }
+              - label: Items
+                name: items
+                widget: list
+                fields:
+                  - { label: Label, name: label, widget: string }
+                  - { label: Value, name: value, widget: string }
+                  - { label: Disabled, name: disabled, widget: boolean, default: false }
+
+          - &segment_group_type
+            label: SegmentGroup
+            name: segmentGroup
+            widget: object
+            fields: &segment_group_fields
+              - { label: Label, name: label, widget: string, required: false }
+              - { label: Default Value, name: defaultValue, widget: string, required: false }
+              - { label: Fitted, name: fitted, widget: boolean, default: false }
+              - label: Orientation
+                name: orientation
+                widget: select
+                options: [horizontal, vertical]
+                default: horizontal
+              - { label: Interactive, name: interactive, widget: boolean, default: true }
+              - label: Items
+                name: items
+                widget: list
+                fields:
+                  - { label: Label, name: label, widget: string }
+                  - { label: Value, name: value, widget: string }
+                  - { label: Disabled, name: disabled, widget: boolean, default: false }
+
+          - &slider_type
+            label: Slider
+            name: slider
+            widget: object
+            fields: &slider_fields
+              - { label: Label, name: label, widget: string, required: false }
+              - { label: Default Value, name: defaultValue, widget: number, default: 50 }
+              - { label: Min, name: min, widget: number, default: 0 }
+              - { label: Max, name: max, widget: number, default: 100 }
+              - { label: Step, name: step, widget: number, default: 1 }
+              - { label: Show Value Text, name: showValueText, widget: boolean, default: false }
+              - { label: Interactive, name: interactive, widget: boolean, default: true }
+              - label: Size
+                name: size
+                widget: select
+                options: [sm, md, lg]
+                default: md
+
+          - &switch_type
+            label: Switch
+            name: switch
+            widget: object
+            fields: &switch_fields
+              - { label: Label, name: label, widget: string }
+              - { label: Checked, name: checked, widget: boolean, default: false }
+              - { label: Default Checked, name: defaultChecked, widget: boolean, default: false }
+              - { label: Disabled, name: disabled, widget: boolean, default: false }
+              - label: Size
+                name: size
+                widget: select
+                options: [sm, md, lg]
+                default: md
+              - { label: Interactive, name: interactive, widget: boolean, default: false }
+
+          - &skeleton_type
+            label: Skeleton
+            name: skeleton
+            widget: object
+            fields: &skeleton_fields
+              - { label: Loading, name: loading, widget: boolean, default: true }
+              - { label: Circle, name: circle, widget: boolean, default: false }
+              - label: Variant
+                name: variant
+                widget: select
+                options: [pulse, shine, none]
+                default: pulse
+              - { label: Lines count (text mode), name: noOfLines, widget: number, default: 3, required: false }
+              - { label: Gap (text mode), name: gap, widget: string, default: "2", required: false }
+              - label: Skeleton Type
+                name: skeletonType
+                widget: select
+                options: [basic, circle, text]
+                default: basic
+
           - label: Stack (Leaf)
             name: stack
             widget: object
@@ -258,6 +416,15 @@ collections:
                   - *field_type
                   - *hover_card_type
                   - *menu_type
+                  - *paginated_table_type
+                  - *pagination_type
+                  - *popover_type
+                  - *progress_type
+                  - *radio_group_type
+                  - *segment_group_type
+                  - *slider_type
+                  - *switch_type
+                  - *skeleton_type
 
           - label: Card (Leaf)
             name: card
@@ -392,6 +559,15 @@ collections:
                   - *field_type
                   - *hover_card_type
                   - *menu_type
+                  - *paginated_table_type
+                  - *pagination_type
+                  - *popover_type
+                  - *progress_type
+                  - *radio_group_type
+                  - *segment_group_type
+                  - *slider_type
+                  - *switch_type
+                  - *skeleton_type
                   - label: Stack
                     name: stack
                     widget: object

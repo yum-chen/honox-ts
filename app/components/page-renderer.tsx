@@ -17,7 +17,18 @@ import {
 	HoverCard,
 	Menu,
 	type MenuItem,
+	PaginatedTable,
+	Pagination,
+	Popover,
+	Progress,
+	RadioGroup,
+	SegmentGroup,
+	Skeleton,
+	SkeletonCircle,
+	SkeletonText,
+	Slider,
 	Stack,
+	Switch,
 	Text,
 } from "./ui";
 
@@ -73,7 +84,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 		}
 		case "checkbox": {
 			const { label, checked, ...checkboxProps } = props;
-			let resolvedChecked: boolean | "indeterminate" | undefined = undefined;
+			let resolvedChecked: boolean | "indeterminate" | undefined;
 			if (checked === "true") {
 				resolvedChecked = true;
 			} else if (checked === "false") {
@@ -93,14 +104,18 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			const { items, label, ...comboboxProps } = props;
 			return (
 				<Combobox
-					items={(items as { label: string; value: string; disabled?: boolean }[]) || []}
+					items={
+						(items as { label: string; value: string; disabled?: boolean }[]) ||
+						[]
+					}
 					label={label as string}
 					{...comboboxProps}
 				/>
 			);
 		}
 		case "card": {
-			const { title, description, body, footer, children, ...cardProps } = props;
+			const { title, description, body, footer, children, ...cardProps } =
+				props;
 			const renderedChildren = children ? (
 				<PageRenderer content={children as ComponentBlock[]} />
 			) : undefined;
@@ -139,7 +154,16 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			);
 		}
 		case "dialog": {
-			const { triggerText, title, description, body, cancelText, confirmText, children, ...dialogProps } = props;
+			const {
+				triggerText,
+				title,
+				description,
+				body,
+				cancelText,
+				confirmText,
+				children,
+				...dialogProps
+			} = props;
 			const renderedChildren = children ? (
 				<PageRenderer content={children as ComponentBlock[]} />
 			) : undefined;
@@ -176,7 +200,16 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			);
 		}
 		case "drawer": {
-			const { triggerText, title, description, body, cancelText, confirmText, children, ...drawerProps } = props;
+			const {
+				triggerText,
+				title,
+				description,
+				body,
+				cancelText,
+				confirmText,
+				children,
+				...drawerProps
+			} = props;
 			const renderedChildren = children ? (
 				<PageRenderer content={children as ComponentBlock[]} />
 			) : undefined;
@@ -213,7 +246,8 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			);
 		}
 		case "field": {
-			const { label, helperText, errorText, placeholder, ...fieldProps } = props;
+			const { label, helperText, errorText, placeholder, ...fieldProps } =
+				props;
 			return (
 				<Field
 					label={label as string}
@@ -225,7 +259,8 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			);
 		}
 		case "fieldset": {
-			const { legend, helperText, errorText, children, ...fieldsetProps } = props;
+			const { legend, helperText, errorText, children, ...fieldsetProps } =
+				props;
 			const renderedChildren = children ? (
 				<PageRenderer content={children as ComponentBlock[]} />
 			) : undefined;
@@ -245,16 +280,20 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			const renderedChildren = children ? (
 				<PageRenderer content={children as ComponentBlock[]} />
 			) : undefined;
-			return (
-				<Group {...groupProps}>
-					{renderedChildren}
-				</Group>
-			);
+			return <Group {...groupProps}>{renderedChildren}</Group>;
 		}
 		case "hoverCard": {
 			const { triggerText, title, description, ...hoverCardProps } = props;
 			const hoverTrigger = triggerText ? (
-				<Text class={css({ cursor: "pointer", textDecoration: "underline", textDecorationStyle: "dotted" })}>{triggerText as string}</Text>
+				<Text
+					class={css({
+						cursor: "pointer",
+						textDecoration: "underline",
+						textDecorationStyle: "dotted",
+					})}
+				>
+					{triggerText as string}
+				</Text>
 			) : undefined;
 			return (
 				<HoverCard
@@ -278,6 +317,109 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				/>
 			);
 		}
+		case "paginatedTable": {
+			return <PaginatedTable {...props} />;
+		}
+		case "pagination": {
+			const { count, ...paginationProps } = props;
+			return <Pagination count={count as number} {...paginationProps} />;
+		}
+		case "popover": {
+			const {
+				triggerText,
+				title,
+				description,
+				body,
+				cancelText,
+				...popoverProps
+			} = props;
+			const popoverTrigger = triggerText ? (
+				<Button variant="outline">{triggerText as string}</Button>
+			) : undefined;
+			const popoverCancel = cancelText ? (
+				<Button variant="outline">{cancelText as string}</Button>
+			) : undefined;
+			return (
+				<Popover
+					trigger={popoverTrigger}
+					title={title as string}
+					description={description as string}
+					body={body as string}
+					footer={popoverCancel}
+					{...popoverProps}
+				/>
+			);
+		}
+		case "progress": {
+			const { label, value, ...progressProps } = props;
+			return (
+				<Progress
+					label={label as string}
+					value={value === null ? null : (value as number)}
+					{...progressProps}
+				/>
+			);
+		}
+		case "radioGroup": {
+			const { label, items, ...radioGroupProps } = props;
+			return (
+				<RadioGroup
+					label={label as string}
+					items={
+						items as (
+							| string
+							| { value: string; label: string; disabled?: boolean }
+						)[]
+					}
+					{...radioGroupProps}
+				/>
+			);
+		}
+		case "segmentGroup": {
+			const { label, items, ...segmentGroupProps } = props;
+			return (
+				<SegmentGroup
+					label={label as string}
+					items={
+						items as (
+							| string
+							| { value: string; label: string; disabled?: boolean }
+						)[]
+					}
+					{...segmentGroupProps}
+				/>
+			);
+		}
+		case "slider": {
+			const { label, defaultValue, ...sliderProps } = props;
+			return (
+				<Slider
+					label={label as string}
+					defaultValue={defaultValue as number}
+					{...sliderProps}
+				/>
+			);
+		}
+		case "switch": {
+			const { label, ...switchProps } = props;
+			return <Switch {...switchProps}>{label as string}</Switch>;
+		}
+		case "skeleton": {
+			const { skeletonType, noOfLines, gap, ...skeletonProps } = props;
+			if (skeletonType === "circle") {
+				return <SkeletonCircle {...skeletonProps} />;
+			}
+			if (skeletonType === "text") {
+				return (
+					<SkeletonText
+						noOfLines={noOfLines as number}
+						gap={gap as string}
+						{...skeletonProps}
+					/>
+				);
+			}
+			return <Skeleton {...skeletonProps} />;
+		}
 		default:
 			return (
 				<div>
@@ -300,6 +442,5 @@ function PageRenderer({ content }: PageRendererProps) {
 	);
 }
 
+export type { ComponentBlock, PageRendererProps };
 export { PageRenderer };
-export type { PageRendererProps };
-export type { ComponentBlock };

@@ -19,6 +19,98 @@
       "children": [
         {
           "type": "heading",
+          "text": "Progress & Indicators",
+          "size": "2xl",
+          "as": "h2"
+        },
+        {
+          "type": "progress",
+          "label": "System Optimization Progress",
+          "value": 65,
+          "showValueText": true,
+          "variant": "subtle",
+          "size": "md"
+        },
+        {
+          "type": "skeleton",
+          "loading": true,
+          "skeletonType": "text",
+          "noOfLines": 2,
+          "gap": "2"
+        },
+        {
+          "type": "heading",
+          "text": "Selection & Inputs",
+          "size": "2xl",
+          "as": "h2"
+        },
+        {
+          "type": "stack",
+          "direction": "horizontal",
+          "gap": "8",
+          "children": [
+            {
+              "type": "radioGroup",
+              "label": "Deploy Region",
+              "defaultValue": "us-east",
+              "interactive": true,
+              "items": [
+                { "label": "US East", "value": "us-east" },
+                { "label": "EU West", "value": "eu-west", "disabled": false }
+              ]
+            },
+            {
+              "type": "segmentGroup",
+              "label": "Editor Mode",
+              "defaultValue": "code",
+              "fitted": true,
+              "interactive": true,
+              "items": [
+                { "label": "Visual", "value": "visual" },
+                { "label": "Code", "value": "code" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Sliders & Toggles",
+          "size": "2xl",
+          "as": "h2"
+        },
+        {
+          "type": "slider",
+          "label": "Sensitivity adjustment",
+          "defaultValue": 40,
+          "min": 0,
+          "max": 100,
+          "showValueText": true,
+          "interactive": true
+        },
+        {
+          "type": "switch",
+          "label": "High availability cluster mode",
+          "defaultChecked": true,
+          "interactive": true
+        },
+        {
+          "type": "heading",
+          "text": "Table & Navigation",
+          "size": "2xl",
+          "as": "h2"
+        },
+        {
+          "type": "paginatedTable"
+        },
+        {
+          "type": "pagination",
+          "count": 50,
+          "pageSize": 10,
+          "defaultPage": 2,
+          "interactive": true
+        },
+        {
+          "type": "heading",
           "text": "Fieldset & Field Controls",
           "size": "2xl",
           "as": "h2"
@@ -110,6 +202,16 @@
               "title": "Quick Help",
               "description": "Menus allow complex action triggers.",
               "showArrow": true
+            },
+            {
+              "type": "popover",
+              "triggerText": "Open Info Popover",
+              "title": "Database status",
+              "description": "Connection healthy.",
+              "body": "No active issues or query degradation observed in this replica cluster.",
+              "cancelText": "Acknowledge",
+              "showArrow": true,
+              "interactive": true
             }
           ]
         },
