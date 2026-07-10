@@ -39,25 +39,40 @@ interface PageRendererProps {
 	content: ComponentBlock[];
 }
 
-function RenderBlock({ block }: { block: ComponentBlock }) {
+function RenderBlock({
+	block,
+	...extraProps
+}: {
+	block: ComponentBlock;
+	// biome-ignore lint/suspicious/noExplicitAny: block properties are parsed from dynamic JSON and forwarded down
+	[key: string]: any;
+}) {
 	const { type, ...props } = block;
 
 	switch (type) {
 		case "stack": {
 			const { children, ...stackProps } = props;
 			return (
-				<Stack {...stackProps}>
+				<Stack {...stackProps} {...extraProps}>
 					<PageRenderer content={children} />
 				</Stack>
 			);
 		}
 		case "button": {
 			const { text, ...buttonProps } = props;
-			return <Button {...buttonProps}>{text}</Button>;
+			return (
+				<Button {...buttonProps} {...extraProps}>
+					{text}
+				</Button>
+			);
 		}
 		case "badge": {
 			const { text, ...badgeProps } = props;
-			return <Badge {...badgeProps}>{text}</Badge>;
+			return (
+				<Badge {...badgeProps} {...extraProps}>
+					{text}
+				</Badge>
+			);
 		}
 		case "alert": {
 			const { title, description, status, variant, ...alertProps } = props;
@@ -69,16 +84,25 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 					variant={variant}
 					indicator={<AlertIcon />}
 					{...alertProps}
+					{...extraProps}
 				/>
 			);
 		}
 		case "heading": {
 			const { text, ...headingProps } = props;
-			return <Heading {...headingProps}>{text}</Heading>;
+			return (
+				<Heading {...headingProps} {...extraProps}>
+					{text}
+				</Heading>
+			);
 		}
 		case "text": {
 			const { content, ...textProps } = props;
-			return <Text {...textProps}>{content}</Text>;
+			return (
+				<Text {...textProps} {...extraProps}>
+					{content}
+				</Text>
+			);
 		}
 		case "card": {
 			const {
@@ -98,6 +122,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 					image={image}
 					imagePosition={imagePosition}
 					{...cardProps}
+					{...extraProps}
 				>
 					{children && <PageRenderer content={children} />}
 				</Card>
@@ -122,6 +147,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 					size={size}
 					colorPalette={colorPalette}
 					{...checkboxProps}
+					{...extraProps}
 				>
 					{label}
 				</Checkbox>
@@ -129,6 +155,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 		}
 		case "collapsible": {
 			const {
+				trigger,
 				triggerText,
 				showIndicator,
 				indicatorPlacement,
@@ -137,7 +164,12 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				children,
 				...collapsibleProps
 			} = props;
-			const trigger = triggerText || "Toggle";
+			const triggerElement =
+				trigger && trigger.length > 0 ? (
+					<RenderBlock block={trigger[0]} />
+				) : (
+					triggerText || "Toggle"
+				);
 			const indicator = showIndicator ? (
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -162,13 +194,14 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			return (
 				<Collapsible
 					interactive
-					trigger={trigger}
+					trigger={triggerElement}
 					indicator={indicator}
 					indicatorPlacement={indicatorPlacement}
 					defaultOpen={open}
 					disabled={disabled}
 					content={<div>{children && <PageRenderer content={children} />}</div>}
 					{...collapsibleProps}
+					{...extraProps}
 				/>
 			);
 		}
@@ -181,6 +214,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 					placeholder={placeholder}
 					items={items || []}
 					{...comboboxProps}
+					{...extraProps}
 				/>
 			);
 		}
@@ -188,6 +222,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			const {
 				title,
 				description,
+				trigger: triggerProp,
 				triggerText,
 				confirmText,
 				cancelText,
@@ -195,9 +230,12 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				children,
 				...dialogProps
 			} = props;
-			const trigger = triggerText ? (
-				<Button variant="outline">{triggerText}</Button>
-			) : undefined;
+			const trigger =
+				triggerProp && triggerProp.length > 0 ? (
+					<RenderBlock block={triggerProp[0]} />
+				) : triggerText ? (
+					<Button variant="outline">{triggerText}</Button>
+				) : undefined;
 			const confirm = confirmText ? <Button>{confirmText}</Button> : undefined;
 			const cancel = cancelText ? (
 				<Button variant="outline">{cancelText}</Button>
@@ -213,6 +251,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 					cancel={cancel}
 					role={role}
 					{...dialogProps}
+					{...extraProps}
 				>
 					{children && <PageRenderer content={children} />}
 				</Dialog>
@@ -222,15 +261,19 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			const {
 				title,
 				description,
+				trigger: triggerProp,
 				triggerText,
 				confirmText,
 				cancelText,
 				children,
 				...drawerProps
 			} = props;
-			const trigger = triggerText ? (
-				<Button variant="outline">{triggerText}</Button>
-			) : undefined;
+			const trigger =
+				triggerProp && triggerProp.length > 0 ? (
+					<RenderBlock block={triggerProp[0]} />
+				) : triggerText ? (
+					<Button variant="outline">{triggerText}</Button>
+				) : undefined;
 			const confirm = confirmText ? <Button>{confirmText}</Button> : undefined;
 			const cancel = cancelText ? (
 				<Button variant="outline">{cancelText}</Button>
@@ -245,6 +288,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 					confirm={confirm}
 					cancel={cancel}
 					{...drawerProps}
+					{...extraProps}
 				>
 					{children && <PageRenderer content={children} />}
 				</Drawer>
@@ -275,6 +319,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 					required={required}
 					readOnly={readOnly}
 					{...fieldProps}
+					{...extraProps}
 				>
 					{children && <PageRenderer content={children} />}
 				</Field>
@@ -298,6 +343,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 					disabled={disabled}
 					invalid={invalid}
 					{...fieldsetProps}
+					{...extraProps}
 				>
 					{children && <PageRenderer content={children} />}
 				</Fieldset>
@@ -311,6 +357,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 					grow={grow}
 					orientation={orientation}
 					{...groupProps}
+					{...extraProps}
 				>
 					{children && <PageRenderer content={children} />}
 				</Group>
@@ -348,6 +395,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 					showArrow={showArrow}
 					content={content}
 					{...hoverCardProps}
+					{...extraProps}
 				/>
 			);
 		}
@@ -362,6 +410,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 					trigger={trigger}
 					items={items || []}
 					{...menuProps}
+					{...extraProps}
 				/>
 			);
 		}
@@ -394,6 +443,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 					showArrow={showArrow}
 					closable={closable}
 					{...popoverProps}
+					{...extraProps}
 				>
 					{content}
 				</Popover>
@@ -407,6 +457,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 						loaded={loaded}
 						class={css({ width: "full" })}
 						{...skeletonProps}
+						{...extraProps}
 					>
 						{children ? (
 							<PageRenderer content={children} />
@@ -439,6 +490,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 					circle={variant === "circle"}
 					loaded={loaded}
 					{...skeletonProps}
+					{...extraProps}
 				>
 					{children && <PageRenderer content={children} />}
 				</Skeleton>
@@ -446,27 +498,27 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 		}
 		case "paginatedTable":
 		case "paginated-table": {
-			return <PaginatedTable {...props} />;
+			return <PaginatedTable {...props} {...extraProps} />;
 		}
 		case "pagination": {
-			return <Pagination interactive {...props} />;
+			return <Pagination interactive {...props} {...extraProps} />;
 		}
 		case "progress": {
-			return <Progress {...props} />;
+			return <Progress {...props} {...extraProps} />;
 		}
 		case "radioGroup":
 		case "radio-group": {
-			return <RadioGroup interactive {...props} />;
+			return <RadioGroup interactive {...props} {...extraProps} />;
 		}
 		case "segmentGroup":
 		case "segment-group": {
-			return <SegmentGroup interactive {...props} />;
+			return <SegmentGroup interactive {...props} {...extraProps} />;
 		}
 		case "slider": {
-			return <Slider interactive {...props} />;
+			return <Slider interactive {...props} {...extraProps} />;
 		}
 		case "switch": {
-			return <Switch interactive {...props} />;
+			return <Switch interactive {...props} {...extraProps} />;
 		}
 		default:
 			return (
