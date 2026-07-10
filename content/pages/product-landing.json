@@ -3,10 +3,10 @@
   "content": [
     {
       "type": "alert",
-      "status": "info",
-      "variant": "subtle",
       "title": "Limited-time launch offer",
-      "description": "Get 3 months free on annual plans — through July 31."
+      "description": "Get 3 months free on annual plans — through July 31.",
+      "variant": "surface",
+      "status": "info"
     },
     {
       "type": "stack",
@@ -16,8 +16,8 @@
       "children": [
         {
           "type": "badge",
-          "text": "New · Pulse 2.0",
           "variant": "subtle",
+          "text": "New · Pulse 2.0",
           "colorPalette": "purple"
         },
         {
@@ -71,14 +71,39 @@
     {
       "type": "stack",
       "direction": "horizontal",
-      "gap": "4",
       "justify": "center",
+      "gap": "4",
       "children": [
-        { "type": "badge", "text": "Acme Corp", "variant": "outline", "colorPalette": "slate" },
-        { "type": "badge", "text": "Globex", "variant": "outline", "colorPalette": "slate" },
-        { "type": "badge", "text": "Umbrella", "variant": "outline", "colorPalette": "slate" },
-        { "type": "badge", "text": "Initech", "variant": "outline", "colorPalette": "slate" },
-        { "type": "badge", "text": "Soylent", "variant": "outline", "colorPalette": "slate" }
+        {
+          "type": "badge",
+          "variant": "outline",
+          "text": "Acme Corp",
+          "colorPalette": "slate"
+        },
+        {
+          "type": "badge",
+          "variant": "outline",
+          "text": "Globex",
+          "colorPalette": "slate"
+        },
+        {
+          "type": "badge",
+          "variant": "outline",
+          "text": "Umbrella",
+          "colorPalette": "slate"
+        },
+        {
+          "type": "badge",
+          "variant": "outline",
+          "text": "Initech",
+          "colorPalette": "slate"
+        },
+        {
+          "type": "badge",
+          "variant": "outline",
+          "text": "Soylent",
+          "colorPalette": "slate"
+        }
       ]
     },
     {
@@ -99,58 +124,73 @@
       "children": [
         {
           "type": "card",
+          "children": [
+            {
+              "type": "badge",
+              "text": "Live",
+              "variant": "subtle",
+              "colorPalette": "green"
+            }
+          ],
           "title": "Real-Time Dashboards",
           "description": "Live metrics, zero refresh",
           "body": "Track every KPI as it happens with sub-second latency streaming straight from your data warehouse.",
-          "imagePosition": "top",
-          "children": [
-            { "type": "badge", "text": "Live", "variant": "subtle", "colorPalette": "green" }
-          ]
+          "imagePosition": "top"
         },
         {
           "type": "card",
+          "children": [
+            {
+              "type": "badge",
+              "text": "AI-Powered",
+              "variant": "subtle",
+              "colorPalette": "purple"
+            }
+          ],
           "title": "Smart Alerts",
           "description": "Know before it breaks",
           "body": "Anomaly detection flags issues automatically and routes them to the right team in Slack or PagerDuty.",
-          "imagePosition": "top",
-          "children": [
-            { "type": "badge", "text": "AI-Powered", "variant": "subtle", "colorPalette": "purple" }
-          ]
+          "imagePosition": "top"
         },
         {
           "type": "card",
+          "children": [
+            {
+              "type": "badge",
+              "text": "Collaborative",
+              "variant": "subtle",
+              "colorPalette": "blue"
+            }
+          ],
           "title": "Team Collaboration",
           "description": "Insights, not silos",
           "body": "Annotate charts, leave comments, and share saved views so everyone works from the same source of truth.",
-          "imagePosition": "top",
-          "children": [
-            { "type": "badge", "text": "Collaborative", "variant": "subtle", "colorPalette": "blue" }
-          ]
+          "imagePosition": "top"
         }
       ]
     },
     {
       "type": "card",
-      "title": "See your metrics come alive",
-      "description": "A single pane of glass for your whole stack.",
-      "body": "Connect Postgres, Snowflake, Stripe, and 40+ other sources in minutes. No pipelines, no code required.",
-      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80",
-      "imagePosition": "left",
       "children": [
         {
           "type": "button",
-          "text": "Explore Features",
           "variant": "solid",
+          "text": "Explore Features",
           "colorPalette": "blue",
           "size": "md"
         },
         {
           "type": "badge",
-          "text": "2-minute setup",
           "variant": "outline",
+          "text": "2-minute setup",
           "colorPalette": "slate"
         }
-      ]
+      ],
+      "title": "See your metrics come alive",
+      "description": "A single pane of glass for your whole stack.",
+      "body": "Connect Postgres, Snowflake, Stripe, and 40+ other sources in minutes. No pipelines, no code required.",
+      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80",
+      "imagePosition": "left"
     },
     {
       "type": "card",
@@ -177,10 +217,6 @@
       "children": [
         {
           "type": "card",
-          "title": "Starter",
-          "description": "$0 / month",
-          "body": "Up to 3 team members. 1 project. Community support.",
-          "imagePosition": "top",
           "children": [
             {
               "type": "button",
@@ -189,16 +225,21 @@
               "colorPalette": "blue",
               "size": "md"
             }
-          ]
+          ],
+          "title": "Starter",
+          "description": "$0 / month",
+          "body": "Up to 3 team members. 1 project. Community support.",
+          "imagePosition": "top"
         },
         {
           "type": "card",
-          "title": "Pro",
-          "description": "$49 / month",
-          "body": "Unlimited team members and projects. Priority support. Smart alerts included.",
-          "imagePosition": "top",
           "children": [
-            { "type": "badge", "text": "Most Popular", "variant": "solid", "colorPalette": "blue" },
+            {
+              "type": "badge",
+              "text": "Most Popular",
+              "variant": "solid",
+              "colorPalette": "blue"
+            },
             {
               "type": "button",
               "text": "Choose Pro",
@@ -206,14 +247,14 @@
               "colorPalette": "blue",
               "size": "md"
             }
-          ]
+          ],
+          "title": "Pro",
+          "description": "$49 / month",
+          "body": "Unlimited team members and projects. Priority support. Smart alerts included.",
+          "imagePosition": "top"
         },
         {
           "type": "card",
-          "title": "Enterprise",
-          "description": "Let's talk",
-          "body": "SSO & SAML. Dedicated support engineer. Custom data retention. SLA guarantees.",
-          "imagePosition": "top",
           "children": [
             {
               "type": "button",
@@ -222,7 +263,11 @@
               "colorPalette": "blue",
               "size": "md"
             }
-          ]
+          ],
+          "title": "Enterprise",
+          "description": "Let's talk",
+          "body": "SSO & SAML. Dedicated support engineer. Custom data retention. SLA guarantees.",
+          "imagePosition": "top"
         }
       ]
     },
@@ -239,59 +284,59 @@
       "children": [
         {
           "type": "collapsible",
-          "triggerText": "Can I cancel anytime?",
-          "showIndicator": true,
-          "indicatorPlacement": "end",
-          "open": false,
           "children": [
             {
               "type": "text",
               "size": "md",
               "content": "Yes. There are no long-term contracts — cancel or downgrade your plan anytime from account settings."
             }
-          ]
+          ],
+          "triggerText": "Can I cancel anytime?",
+          "showIndicator": true,
+          "indicatorPlacement": "end",
+          "open": false
         },
         {
           "type": "collapsible",
-          "triggerText": "Does Pulse support self-hosting?",
-          "showIndicator": true,
-          "indicatorPlacement": "end",
-          "open": false,
           "children": [
             {
               "type": "text",
               "size": "md",
               "content": "Enterprise plans include a self-hosted deployment option with full data residency control."
             }
-          ]
+          ],
+          "triggerText": "Does Pulse support self-hosting?",
+          "showIndicator": true,
+          "indicatorPlacement": "end",
+          "open": false
         },
         {
           "type": "collapsible",
-          "triggerText": "What data sources are supported?",
-          "showIndicator": true,
-          "indicatorPlacement": "end",
-          "open": false,
           "children": [
             {
               "type": "text",
               "size": "md",
               "content": "Pulse connects to Postgres, MySQL, Snowflake, BigQuery, Stripe, and 40+ other sources out of the box."
             }
-          ]
+          ],
+          "triggerText": "What data sources are supported?",
+          "showIndicator": true,
+          "indicatorPlacement": "end",
+          "open": false
         },
         {
           "type": "collapsible",
-          "triggerText": "Is there a free trial?",
-          "showIndicator": true,
-          "indicatorPlacement": "end",
-          "open": false,
           "children": [
             {
               "type": "text",
               "size": "md",
               "content": "Every plan starts with a 14-day free trial — no credit card required."
             }
-          ]
+          ],
+          "triggerText": "Is there a free trial?",
+          "showIndicator": true,
+          "indicatorPlacement": "end",
+          "open": false
         }
       ]
     },
