@@ -126,3 +126,107 @@ test("PageRenderer renders drawer correctly", () => {
 	expect(html).toContain("Save");
 	expect(html).toContain("Close");
 });
+
+test("PageRenderer renders field correctly", () => {
+	const content = [
+		{
+			type: "field",
+			label: "Username",
+			helperText: "Enter a unique username",
+			errorText: "Username is taken",
+			defaultValue: "john_doe"
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+
+	expect(html).toContain("Username");
+	expect(html).toContain("Enter a unique username");
+	expect(html).toContain("john_doe");
+});
+
+test("PageRenderer renders fieldset correctly", () => {
+	const content = [
+		{
+			type: "fieldset",
+			legend: "User details",
+			helperText: "Provide accurate info",
+			children: [
+				{
+					type: "field",
+					label: "Email",
+					defaultValue: "john@example.com"
+				}
+			]
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+
+	expect(html).toContain("User details");
+	expect(html).toContain("Provide accurate info");
+	expect(html).toContain("Email");
+	expect(html).toContain("john@example.com");
+});
+
+test("PageRenderer renders group correctly", () => {
+	const content = [
+		{
+			type: "group",
+			orientation: "vertical",
+			attached: true,
+			children: [
+				{
+					type: "button",
+					text: "First Button"
+				},
+				{
+					type: "button",
+					text: "Second Button"
+				}
+			]
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+
+	expect(html).toContain("First Button");
+	expect(html).toContain("Second Button");
+});
+
+test("PageRenderer renders hover-card correctly", () => {
+	const content = [
+		{
+			type: "hover-card",
+			triggerText: "Hover Me",
+			title: "HoverCard Title",
+			description: "HoverCard description detail"
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+
+	expect(html).toContain("Hover Me");
+	expect(html).toContain("HoverCard Title");
+	expect(html).toContain("HoverCard description detail");
+});
+
+test("PageRenderer renders menu correctly", () => {
+	const content = [
+		{
+			type: "menu",
+			triggerText: "Options Menu",
+			items: [
+				{ type: "item", label: "Edit Profile", value: "edit" },
+				{ type: "separator" },
+				{ type: "checkbox", label: "Subscribe", value: "subscribe", checked: true }
+			]
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+
+	expect(html).toContain("Options Menu");
+	expect(html).toContain("Edit Profile");
+	expect(html).toContain("Subscribe");
+});

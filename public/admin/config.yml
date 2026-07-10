@@ -196,6 +196,34 @@ collections:
                                 fields:
                                   - { label: Label, name: label, widget: string }
                                   - { label: Value, name: value, widget: string }
+                          - label: Menu
+                            name: menu
+                            widget: object
+                            fields: &menu_fields
+                              - { label: Trigger Text, name: triggerText, widget: string, required: false }
+                              - label: Items
+                                name: items
+                                widget: list
+                                types:
+                                  - label: Menu Item
+                                    name: item
+                                    widget: object
+                                    fields:
+                                      - { label: Label, name: label, widget: string }
+                                      - { label: Value, name: value, widget: string }
+                                      - { label: Disabled, name: disabled, widget: boolean, required: false }
+                                  - label: Separator
+                                    name: separator
+                                    widget: object
+                                    fields: []
+                                  - label: Checkbox Item
+                                    name: checkbox
+                                    widget: object
+                                    fields:
+                                      - { label: Label, name: label, widget: string }
+                                      - { label: Value, name: value, widget: string }
+                                      - { label: Checked, name: checked, widget: boolean, required: false }
+                                      - { label: Disabled, name: disabled, widget: boolean, required: false }
 
                   - label: Card
                     name: card
@@ -257,6 +285,65 @@ collections:
                         types: *leaf_components
                         required: false
 
+                  - label: Field
+                    name: field
+                    widget: object
+                    fields: &field_fields
+                      - { label: Label, name: label, widget: string, required: false }
+                      - { label: Helper Text, name: helperText, widget: string, required: false }
+                      - { label: Error Text, name: errorText, widget: string, required: false }
+                      - { label: Disabled, name: disabled, widget: boolean, default: false }
+                      - { label: Invalid, name: invalid, widget: boolean, default: false }
+                      - { label: Read Only, name: readOnly, widget: boolean, default: false }
+                      - { label: Required, name: required, widget: boolean, default: false }
+                      - { label: Default Value, name: defaultValue, widget: string, required: false }
+                      - label: Children
+                        name: children
+                        widget: list
+                        types: *leaf_components
+                        required: false
+
+                  - label: Fieldset
+                    name: fieldset
+                    widget: object
+                    fields: &fieldset_fields
+                      - { label: Legend, name: legend, widget: string, required: false }
+                      - { label: Helper Text, name: helperText, widget: string, required: false }
+                      - { label: Error Text, name: errorText, widget: string, required: false }
+                      - { label: Disabled, name: disabled, widget: boolean, default: false }
+                      - { label: Invalid, name: invalid, widget: boolean, default: false }
+                      - label: Children
+                        name: children
+                        widget: list
+                        types: *leaf_components
+
+                  - label: Group
+                    name: group
+                    widget: object
+                    fields: &group_fields
+                      - { label: Orientation, name: orientation, widget: select, options: [horizontal, vertical], default: horizontal }
+                      - { label: Attached, name: attached, widget: boolean, default: false }
+                      - { label: Grow, name: grow, widget: boolean, default: false }
+                      - label: Children
+                        name: children
+                        widget: list
+                        types: *leaf_components
+
+                  - label: HoverCard
+                    name: hovercard
+                    widget: object
+                    fields: &hover_card_fields
+                      - { label: Trigger Text, name: triggerText, widget: string, required: false }
+                      - { label: Title, name: title, widget: string, required: false }
+                      - { label: Description, name: description, widget: string, required: false }
+                      - { label: Show Arrow, name: showArrow, widget: boolean, default: false }
+                      - { label: Interactive, name: interactive, widget: boolean, default: true }
+                      - label: Children
+                        name: children
+                        widget: list
+                        types: *leaf_components
+                        required: false
+
                   - label: Button
                     name: button
                     widget: object
@@ -285,10 +372,11 @@ collections:
                     name: combobox
                     widget: object
                     fields: *combobox_fields
+                  - label: Menu
+                    name: menu
+                    widget: object
+                    fields: *menu_fields
 
-          # ==========================================
-          # 2. CARD
-          # ==========================================
           - label: Card
             name: card
             widget: object
@@ -304,9 +392,6 @@ collections:
                 types: *nestable_components
                 required: false
 
-          # ==========================================
-          # 3. COLLAPSIBLE
-          # ==========================================
           - label: Collapsible
             name: collapsible
             widget: object
@@ -321,9 +406,6 @@ collections:
                 widget: list
                 types: *nestable_components
 
-          # ==========================================
-          # 4. DIALOG
-          # ==========================================
           - label: Dialog
             name: dialog
             widget: object
@@ -340,9 +422,6 @@ collections:
                 types: *nestable_components
                 required: false
 
-          # ==========================================
-          # 5. DRAWER
-          # ==========================================
           - label: Drawer
             name: drawer
             widget: object
@@ -352,6 +431,65 @@ collections:
               - { label: Trigger Text, name: triggerText, widget: string }
               - { label: Confirm Text, name: confirmText, widget: string, required: false }
               - { label: Cancel Text, name: cancelText, widget: string, required: false }
+              - label: Children
+                name: children
+                widget: list
+                types: *nestable_components
+                required: false
+
+          - label: Field
+            name: field
+            widget: object
+            fields:
+              - { label: Label, name: label, widget: string, required: false }
+              - { label: Helper Text, name: helperText, widget: string, required: false }
+              - { label: Error Text, name: errorText, widget: string, required: false }
+              - { label: Disabled, name: disabled, widget: boolean, default: false }
+              - { label: Invalid, name: invalid, widget: boolean, default: false }
+              - { label: Read Only, name: readOnly, widget: boolean, default: false }
+              - { label: Required, name: required, widget: boolean, default: false }
+              - { label: Default Value, name: defaultValue, widget: string, required: false }
+              - label: Children
+                name: children
+                widget: list
+                types: *nestable_components
+                required: false
+
+          - label: Fieldset
+            name: fieldset
+            widget: object
+            fields:
+              - { label: Legend, name: legend, widget: string, required: false }
+              - { label: Helper Text, name: helperText, widget: string, required: false }
+              - { label: Error Text, name: errorText, widget: string, required: false }
+              - { label: Disabled, name: disabled, widget: boolean, default: false }
+              - { label: Invalid, name: invalid, widget: boolean, default: false }
+              - label: Children
+                name: children
+                widget: list
+                types: *nestable_components
+
+          - label: Group
+            name: group
+            widget: object
+            fields:
+              - { label: Orientation, name: orientation, widget: select, options: [horizontal, vertical], default: horizontal }
+              - { label: Attached, name: attached, widget: boolean, default: false }
+              - { label: Grow, name: grow, widget: boolean, default: false }
+              - label: Children
+                name: children
+                widget: list
+                types: *nestable_components
+
+          - label: HoverCard
+            name: hovercard
+            widget: object
+            fields:
+              - { label: Trigger Text, name: triggerText, widget: string, required: false }
+              - { label: Title, name: title, widget: string, required: false }
+              - { label: Description, name: description, widget: string, required: false }
+              - { label: Show Arrow, name: showArrow, widget: boolean, default: false }
+              - { label: Interactive, name: interactive, widget: boolean, default: true }
               - label: Children
                 name: children
                 widget: list
@@ -389,3 +527,7 @@ collections:
             name: combobox
             widget: object
             fields: *combobox_fields
+          - label: Menu
+            name: menu
+            widget: object
+            fields: *menu_fields
