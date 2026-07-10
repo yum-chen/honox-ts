@@ -250,3 +250,63 @@ test("PageRenderer renders slider and switch correctly", () => {
 	expect(html).toContain("Dark Mode");
 	expect(html).toContain("role=\"switch\"");
 });
+
+test("PageRenderer renders custom triggers for collapsible, dialog, and drawer", () => {
+	const content = [
+		{
+			type: "collapsible",
+			trigger: [
+				{
+					type: "button",
+					text: "Custom Collapsible Button Trigger",
+					variant: "solid",
+					colorPalette: "purple"
+				}
+			],
+			children: [
+				{
+					type: "text",
+					content: "Secret custom trigger content"
+				}
+			]
+		},
+		{
+			type: "dialog",
+			title: "Custom Dialog Title",
+			trigger: [
+				{
+					type: "badge",
+					text: "Custom Dialog Badge Trigger",
+					variant: "outline",
+					colorPalette: "blue"
+				}
+			],
+			confirmText: "Proceed",
+			cancelText: "Dismiss"
+		},
+		{
+			type: "drawer",
+			title: "Custom Drawer Title",
+			trigger: [
+				{
+					type: "button",
+					text: "Custom Drawer Button Trigger"
+				}
+			]
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+
+	// Check collapsible custom trigger
+	expect(html).toContain("Custom Collapsible Button Trigger");
+	expect(html).toContain("Secret custom trigger content");
+
+	// Check dialog custom trigger
+	expect(html).toContain("Custom Dialog Badge Trigger");
+	expect(html).toContain("Custom Dialog Title");
+
+	// Check drawer custom trigger
+	expect(html).toContain("Custom Drawer Button Trigger");
+	expect(html).toContain("Custom Drawer Title");
+});
