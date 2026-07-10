@@ -15,48 +15,119 @@
     {
       "type": "stack",
       "direction": "vertical",
-      "gap": "4",
+      "gap": "6",
       "children": [
         {
           "type": "heading",
-          "text": "Interactive Components",
+          "text": "Card Component Showcase",
+          "size": "2xl",
+          "as": "h2"
+        },
+        {
+          "type": "card",
+          "title": "Main Project Card",
+          "description": "Demonstrates Card with children",
+          "variant": "outline",
+          "children": [
+            {
+              "type": "stack",
+              "direction": "vertical",
+              "gap": "2",
+              "children": [
+                {
+                  "type": "text",
+                  "size": "md",
+                  "content": "This text sits inside the card's body, alongside other nested elements."
+                },
+                {
+                  "type": "checkbox",
+                  "label": "Enable developer features",
+                  "checked": true,
+                  "interactive": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Collapsible & Combobox Components",
+          "size": "2xl",
+          "as": "h2"
+        },
+        {
+          "type": "collapsible",
+          "trigger": "Click to expand configuration",
+          "defaultOpen": false,
+          "interactive": true,
+          "children": [
+            {
+              "type": "stack",
+              "direction": "vertical",
+              "gap": "4",
+              "children": [
+                {
+                  "type": "combobox",
+                  "label": "Preferred Framework",
+                  "placeholder": "Select a technology...",
+                  "interactive": true,
+                  "items": [
+                    { "label": "React", "value": "react" },
+                    { "label": "Svelte", "value": "svelte" },
+                    { "label": "Hono", "value": "hono" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Modals & Overlays",
           "size": "2xl",
           "as": "h2"
         },
         {
           "type": "stack",
           "direction": "horizontal",
-          "gap": "2",
+          "gap": "4",
           "children": [
             {
-              "type": "button",
-              "text": "Click Me",
-              "variant": "solid",
-              "colorPalette": "blue"
+              "type": "dialog",
+              "triggerText": "Open Settings Dialog",
+              "title": "User Profile Settings",
+              "description": "Update your profile information below.",
+              "cancelText": "Close",
+              "confirmText": "Save Changes",
+              "interactive": true,
+              "children": [
+                {
+                  "type": "checkbox",
+                  "label": "Receive marketing newsletter",
+                  "checked": "false",
+                  "interactive": true
+                }
+              ]
             },
             {
-              "type": "badge",
-              "text": "New",
-              "variant": "subtle",
-              "colorPalette": "green"
+              "type": "drawer",
+              "triggerText": "Open Operations Drawer",
+              "title": "System Logs",
+              "description": "View real-time event telemetry.",
+              "cancelText": "Dismiss",
+              "interactive": true,
+              "children": [
+                {
+                  "type": "badge",
+                  "text": "System Ready",
+                  "variant": "subtle",
+                  "colorPalette": "green"
+                }
+              ]
             }
           ]
-        },
-        {
-          "type": "alert",
-          "variant": "surface",
-          "title": "Success",
-          "description": "The page renderer is working correctly!",
-          "status": "success"
         }
       ]
-    },
-    {
-      "type": "badge",
-      "text": "SSS",
-      "variant": "solid",
-      "colorPalette": "",
-      "size": "md"
     }
   ]
 }

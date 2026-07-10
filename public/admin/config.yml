@@ -53,14 +53,138 @@ collections:
     slug: "{{slug}}"
     fields:
       - { label: Title, name: title, widget: string }
-      - label: Content
-        name: content
+      - label: Children
+        name: children
         widget: list
         types:
-          - label: Stack
+          - &button_type
+            label: Button
+            name: button
+            widget: object
+            fields: &button_fields
+              - { label: Text, name: text, widget: string }
+              - label: Variant
+                name: variant
+                widget: select
+                options: [solid, outline, subtle, surface, plain]
+                default: solid
+              - label: Color Palette
+                name: colorPalette
+                widget: select
+                options: [blue, green, red, purple, orange, amber, cyan, slate]
+                required: false
+              - label: Size
+                name: size
+                widget: select
+                options: [xs, sm, md, lg]
+                default: md
+              - { label: Interactive, name: interactive, widget: boolean, default: false }
+
+          - &badge_type
+            label: Badge
+            name: badge
+            widget: object
+            fields: &badge_fields
+              - { label: Text, name: text, widget: string }
+              - label: Variant
+                name: variant
+                widget: select
+                options: [solid, subtle, outline, surface]
+                default: solid
+              - label: Color Palette
+                name: colorPalette
+                widget: select
+                options: [blue, green, red, purple, orange, amber, cyan, slate]
+                required: false
+              - label: Size
+                name: size
+                widget: select
+                options: [sm, md, lg]
+                default: md
+
+          - &alert_type
+            label: Alert
+            name: alert
+            widget: object
+            fields: &alert_fields
+              - { label: Title, name: title, widget: string }
+              - { label: Description, name: description, widget: string, required: false }
+              - label: Status
+                name: status
+                widget: select
+                options: [info, success, warning, error]
+                default: info
+              - label: Variant
+                name: variant
+                widget: select
+                options: [subtle, solid, outline, surface]
+                default: subtle
+
+          - &heading_type
+            label: Heading
+            name: heading
+            widget: object
+            fields: &heading_fields
+              - { label: Text, name: text, widget: string }
+              - label: Level
+                name: as
+                widget: select
+                options: [h1, h2, h3, h4, h5, h6]
+                default: h2
+              - label: Size
+                name: size
+                widget: select
+                options: [xs, sm, md, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, 7xl]
+                default: xl
+
+          - &text_type
+            label: Text
+            name: text
+            widget: object
+            fields: &text_fields
+              - { label: Content, name: content, widget: string }
+              - label: Size
+                name: size
+                widget: select
+                options: [xs, sm, md, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, 7xl]
+                default: md
+
+          - &checkbox_type
+            label: Checkbox
+            name: checkbox
+            widget: object
+            fields: &checkbox_fields
+              - { label: Label, name: label, widget: string }
+              - { label: Checked, name: checked, widget: select, options: ["true", "false", "indeterminate"], default: "false" }
+              - { label: Default Checked, name: defaultChecked, widget: boolean, default: false }
+              - { label: Disabled, name: disabled, widget: boolean, default: false }
+              - label: Size
+                name: size
+                widget: select
+                options: [sm, md, lg]
+                default: md
+              - { label: Interactive, name: interactive, widget: boolean, default: false }
+
+          - &combobox_type
+            label: Combobox
+            name: combobox
+            widget: object
+            fields: &combobox_fields
+              - { label: Label, name: label, widget: string }
+              - { label: Placeholder, name: placeholder, widget: string, required: false }
+              - { label: Allow Clear, name: allowClear, widget: boolean, default: false }
+              - label: Items
+                name: items
+                widget: list
+                fields:
+                  - { label: Label, name: label, widget: string }
+                  - { label: Value, name: value, widget: string }
+              - { label: Interactive, name: interactive, widget: boolean, default: true }
+
+          - label: Stack (Leaf)
             name: stack
             widget: object
-            fields:
+            fields: &stack_leaf_fields
               - &stack_direction { label: Direction, name: direction, widget: select, options: [horizontal, vertical], default: horizontal }
               - &stack_align { label: Align, name: align, widget: select, options: [start, center, end, stretch, baseline], required: false }
               - &stack_justify { label: Justify, name: justify, widget: select, options: [start, center, end, between, around, evenly], required: false }
@@ -68,124 +192,218 @@ collections:
               - label: Children
                 name: children
                 widget: list
-                types:
-                  - label: Button
-                    name: button
-                    widget: object
-                    fields: &button_fields
-                      - { label: Text, name: text, widget: string }
-                      - label: Variant
-                        name: variant
-                        widget: select
-                        options: [solid, outline, subtle, surface, plain]
-                        default: solid
-                      - label: Color Palette
-                        name: colorPalette
-                        widget: select
-                        options: [blue, green, red, purple, orange, amber, cyan, slate]
-                        required: false
-                      - label: Size
-                        name: size
-                        widget: select
-                        options: [xs, sm, md, lg]
-                        default: md
-                  - label: Badge
-                    name: badge
-                    widget: object
-                    fields: &badge_fields
-                      - { label: Text, name: text, widget: string }
-                      - label: Variant
-                        name: variant
-                        widget: select
-                        options: [solid, subtle, outline, surface]
-                        default: solid
-                      - label: Color Palette
-                        name: colorPalette
-                        widget: select
-                        options: [blue, green, red, purple, orange, amber, cyan, slate]
-                        required: false
-                      - label: Size
-                        name: size
-                        widget: select
-                        options: [sm, md, lg]
-                        default: md
-                  - label: Alert
-                    name: alert
-                    widget: object
-                    fields: &alert_fields
-                      - { label: Title, name: title, widget: string }
-                      - { label: Description, name: description, widget: string, required: false }
-                      - label: Status
-                        name: status
-                        widget: select
-                        options: [info, success, warning, error]
-                        default: info
-                      - label: Variant
-                        name: variant
-                        widget: select
-                        options: [subtle, solid, outline, surface]
-                        default: subtle
-                  - label: Heading
-                    name: heading
-                    widget: object
-                    fields: &heading_fields
-                      - { label: Text, name: text, widget: string }
-                      - label: Level
-                        name: as
-                        widget: select
-                        options: [h1, h2, h3, h4, h5, h6]
-                        default: h2
-                      - label: Size
-                        name: size
-                        widget: select
-                        options: [xs, sm, md, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, 7xl]
-                        default: xl
-                  - label: Text
-                    name: text
-                    widget: object
-                    fields: &text_fields
-                      - { label: Content, name: content, widget: string }
-                      - label: Size
-                        name: size
-                        widget: select
-                        options: [xs, sm, md, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, 7xl]
-                        default: md
+                types: &leaf_components_list
+                  - *button_type
+                  - *badge_type
+                  - *alert_type
+                  - *heading_type
+                  - *text_type
+                  - *checkbox_type
+                  - *combobox_type
+
+          - label: Card (Leaf)
+            name: card
+            widget: object
+            fields: &card_leaf_fields
+              - { label: Title, name: title, widget: string, required: false }
+              - { label: Description, name: description, widget: string, required: false }
+              - { label: Body, name: body, widget: string, required: false }
+              - { label: Footer, name: footer, widget: string, required: false }
+              - { label: Image, name: image, widget: image, required: false }
+              - label: Image Position
+                name: imagePosition
+                widget: select
+                options: [top, bottom, left, right]
+                default: top
+              - label: Variant
+                name: variant
+                widget: select
+                options: [elevated, outline, subtle]
+                default: outline
+              - { label: Interactive, name: interactive, widget: boolean, default: false }
+              - label: Children
+                name: children
+                widget: list
+                types: *leaf_components_list
+                required: false
+
+          - label: Collapsible (Leaf)
+            name: collapsible
+            widget: object
+            fields: &collapsible_leaf_fields
+              - { label: Trigger, name: trigger, widget: string }
+              - { label: Content, name: content, widget: string, required: false }
+              - label: Indicator Placement
+                name: indicatorPlacement
+                widget: select
+                options: [start, end]
+                default: end
+              - { label: Default Open, name: defaultOpen, widget: boolean, default: false }
+              - { label: Disabled, name: disabled, widget: boolean, default: false }
+              - { label: Interactive, name: interactive, widget: boolean, default: true }
+              - label: Children
+                name: children
+                widget: list
+                types: *leaf_components_list
+                required: false
+
+          - label: Dialog (Leaf)
+            name: dialog
+            widget: object
+            fields: &dialog_leaf_fields
+              - { label: Trigger Text, name: triggerText, widget: string, required: false }
+              - { label: Title, name: title, widget: string, required: false }
+              - { label: Description, name: description, widget: string, required: false }
+              - { label: Body, name: body, widget: string, required: false }
+              - { label: Cancel Text, name: cancelText, widget: string, required: false }
+              - { label: Confirm Text, name: confirmText, widget: string, required: false }
+              - { label: Closable, name: closable, widget: boolean, default: true }
+              - { label: Interactive, name: interactive, widget: boolean, default: true }
+              - label: Children
+                name: children
+                widget: list
+                types: *leaf_components_list
+                required: false
+
+          - label: Drawer (Leaf)
+            name: drawer
+            widget: object
+            fields: &drawer_leaf_fields
+              - { label: Trigger Text, name: triggerText, widget: string, required: false }
+              - { label: Title, name: title, widget: string, required: false }
+              - { label: Description, name: description, widget: string, required: false }
+              - { label: Body, name: body, widget: string, required: false }
+              - { label: Cancel Text, name: cancelText, widget: string, required: false }
+              - { label: Confirm Text, name: confirmText, widget: string, required: false }
+              - { label: Closable, name: closable, widget: boolean, default: true }
+              - { label: Interactive, name: interactive, widget: boolean, default: true }
+              - label: Children
+                name: children
+                widget: list
+                types: *leaf_components_list
+                required: false
+
+          - label: Stack
+            name: stack
+            widget: object
+            fields:
+              - *stack_direction
+              - *stack_align
+              - *stack_justify
+              - *stack_gap
+              - label: Children
+                name: children
+                widget: list
+                types: &level_2_components_list
+                  - *button_type
+                  - *badge_type
+                  - *alert_type
+                  - *heading_type
+                  - *text_type
+                  - *checkbox_type
+                  - *combobox_type
                   - label: Stack
                     name: stack
                     widget: object
-                    fields:
-                      - *stack_direction
-                      - *stack_align
-                      - *stack_justify
-                      - *stack_gap
-                      - { label: Children, name: children, widget: list, types: [
-                          { label: Button, name: button, widget: object, fields: *button_fields },
-                          { label: Badge, name: badge, widget: object, fields: *badge_fields },
-                          { label: Alert, name: alert, widget: object, fields: *alert_fields },
-                          { label: Heading, name: heading, widget: object, fields: *heading_fields },
-                          { label: Text, name: text, widget: object, fields: *text_fields }
-                        ] }
+                    fields: *stack_leaf_fields
+                  - label: Card
+                    name: card
+                    widget: object
+                    fields: *card_leaf_fields
+                  - label: Collapsible
+                    name: collapsible
+                    widget: object
+                    fields: *collapsible_leaf_fields
+                  - label: Dialog
+                    name: dialog
+                    widget: object
+                    fields: *dialog_leaf_fields
+                  - label: Drawer
+                    name: drawer
+                    widget: object
+                    fields: *drawer_leaf_fields
 
-          - label: Button
-            name: button
+          - label: Card
+            name: card
             widget: object
-            fields: *button_fields
-          - label: Badge
-            name: badge
+            fields:
+              - { label: Title, name: title, widget: string, required: false }
+              - { label: Description, name: description, widget: string, required: false }
+              - { label: Body, name: body, widget: string, required: false }
+              - { label: Footer, name: footer, widget: string, required: false }
+              - { label: Image, name: image, widget: image, required: false }
+              - label: Image Position
+                name: imagePosition
+                widget: select
+                options: [top, bottom, left, right]
+                default: top
+              - label: Variant
+                name: variant
+                widget: select
+                options: [elevated, outline, subtle]
+                default: outline
+              - { label: Interactive, name: interactive, widget: boolean, default: false }
+              - label: Children
+                name: children
+                widget: list
+                types: *level_2_components_list
+                required: false
+
+          - label: Collapsible
+            name: collapsible
             widget: object
-            fields: *badge_fields
-          - label: Alert
-            name: alert
+            fields:
+              - { label: Trigger, name: trigger, widget: string }
+              - { label: Content, name: content, widget: string, required: false }
+              - label: Indicator Placement
+                name: indicatorPlacement
+                widget: select
+                options: [start, end]
+                default: end
+              - { label: Default Open, name: defaultOpen, widget: boolean, default: false }
+              - { label: Disabled, name: disabled, widget: boolean, default: false }
+              - { label: Interactive, name: interactive, widget: boolean, default: true }
+              - label: Children
+                name: children
+                widget: list
+                types: *level_2_components_list
+                required: false
+
+          - label: Dialog
+            name: dialog
             widget: object
-            fields: *alert_fields
-          - label: Heading
-            name: heading
+            fields:
+              - { label: Trigger Text, name: triggerText, widget: string, required: false }
+              - { label: Title, name: title, widget: string, required: false }
+              - { label: Description, name: description, widget: string, required: false }
+              - { label: Body, name: body, widget: string, required: false }
+              - { label: Cancel Text, name: cancelText, widget: string, required: false }
+              - { label: Confirm Text, name: confirmText, widget: string, required: false }
+              - { label: Closable, name: closable, widget: boolean, default: true }
+              - { label: Interactive, name: interactive, widget: boolean, default: true }
+              - label: Children
+                name: children
+                widget: list
+                types: *level_2_components_list
+                required: false
+
+          - label: Drawer
+            name: drawer
             widget: object
-            fields: *heading_fields
-          - label: Text
-            name: text
-            widget: object
-            fields: *text_fields
+            fields:
+              - { label: Trigger Text, name: triggerText, widget: string, required: false }
+              - { label: Title, name: title, widget: string, required: false }
+              - { label: Description, name: description, widget: string, required: false }
+              - { label: Body, name: body, widget: string, required: false }
+              - { label: Cancel Text, name: cancelText, widget: string, required: false }
+              - { label: Confirm Text, name: confirmText, widget: string, required: false }
+              - { label: Closable, name: closable, widget: boolean, default: true }
+              - { label: Interactive, name: interactive, widget: boolean, default: true }
+              - label: Children
+                name: children
+                widget: list
+                types: *level_2_components_list
+                required: false
 
 # Uncomment and configure for multilingual sites
 # i18n:
