@@ -43,6 +43,150 @@ collections:
         widget: boolean
         default: false
 
+  - name: pages
+    label: Pages
+    label_singular: Page
+    folder: content/pages
+    extension: json
+    format: json
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - label: Content
+        name: content
+        widget: list
+        types:
+          - label: Stack
+            name: stack
+            widget: object
+            fields:
+              - &stack_direction { label: Direction, name: direction, widget: select, options: [horizontal, vertical], default: horizontal }
+              - &stack_align { label: Align, name: align, widget: select, options: [start, center, end, stretch, baseline], required: false }
+              - &stack_justify { label: Justify, name: justify, widget: select, options: [start, center, end, between, around, evenly], required: false }
+              - &stack_gap { label: Gap, name: gap, widget: select, options: ["0", "0.5", "1", "1.5", "2", "2.5", "3", "4", "5", "6", "7", "8", "9", "10", "12", "14", "16", "20"], default: "2" }
+              - label: Children
+                name: children
+                widget: list
+                types:
+                  - label: Button
+                    name: button
+                    widget: object
+                    fields: &button_fields
+                      - { label: Text, name: text, widget: string }
+                      - label: Variant
+                        name: variant
+                        widget: select
+                        options: [solid, outline, subtle, surface, plain]
+                        default: solid
+                      - label: Color Palette
+                        name: colorPalette
+                        widget: select
+                        options: [blue, green, red, purple, orange, amber, cyan, slate]
+                        required: false
+                      - label: Size
+                        name: size
+                        widget: select
+                        options: [xs, sm, md, lg]
+                        default: md
+                  - label: Badge
+                    name: badge
+                    widget: object
+                    fields: &badge_fields
+                      - { label: Text, name: text, widget: string }
+                      - label: Variant
+                        name: variant
+                        widget: select
+                        options: [solid, subtle, outline, surface]
+                        default: solid
+                      - label: Color Palette
+                        name: colorPalette
+                        widget: select
+                        options: [blue, green, red, purple, orange, amber, cyan, slate]
+                        required: false
+                      - label: Size
+                        name: size
+                        widget: select
+                        options: [sm, md, lg]
+                        default: md
+                  - label: Alert
+                    name: alert
+                    widget: object
+                    fields: &alert_fields
+                      - { label: Title, name: title, widget: string }
+                      - { label: Description, name: description, widget: string, required: false }
+                      - label: Status
+                        name: status
+                        widget: select
+                        options: [info, success, warning, error]
+                        default: info
+                      - label: Variant
+                        name: variant
+                        widget: select
+                        options: [subtle, solid, outline, surface]
+                        default: subtle
+                  - label: Heading
+                    name: heading
+                    widget: object
+                    fields: &heading_fields
+                      - { label: Text, name: text, widget: string }
+                      - label: Level
+                        name: as
+                        widget: select
+                        options: [h1, h2, h3, h4, h5, h6]
+                        default: h2
+                      - label: Size
+                        name: size
+                        widget: select
+                        options: [xs, sm, md, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, 7xl]
+                        default: xl
+                  - label: Text
+                    name: text
+                    widget: object
+                    fields: &text_fields
+                      - { label: Content, name: content, widget: string }
+                      - label: Size
+                        name: size
+                        widget: select
+                        options: [xs, sm, md, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, 7xl]
+                        default: md
+                  - label: Stack
+                    name: stack
+                    widget: object
+                    fields:
+                      - *stack_direction
+                      - *stack_align
+                      - *stack_justify
+                      - *stack_gap
+                      - { label: Children, name: children, widget: list, types: [
+                          { label: Button, name: button, widget: object, fields: *button_fields },
+                          { label: Badge, name: badge, widget: object, fields: *badge_fields },
+                          { label: Alert, name: alert, widget: object, fields: *alert_fields },
+                          { label: Heading, name: heading, widget: object, fields: *heading_fields },
+                          { label: Text, name: text, widget: object, fields: *text_fields }
+                        ] }
+
+          - label: Button
+            name: button
+            widget: object
+            fields: *button_fields
+          - label: Badge
+            name: badge
+            widget: object
+            fields: *badge_fields
+          - label: Alert
+            name: alert
+            widget: object
+            fields: *alert_fields
+          - label: Heading
+            name: heading
+            widget: object
+            fields: *heading_fields
+          - label: Text
+            name: text
+            widget: object
+            fields: *text_fields
+
 # Uncomment and configure for multilingual sites
 # i18n:
 #   - locale: en
