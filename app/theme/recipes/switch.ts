@@ -69,7 +69,7 @@ export const switchRecipe = defineSlotRecipe({
 			borderRadius: "inherit",
 			transform: "translateX(0)",
 			_checked: {
-				transform: "translateX(var(--switch-x))",
+				transform: "translateX(calc(var(--switch-x) + 5px))",
 			},
 		},
 	},
