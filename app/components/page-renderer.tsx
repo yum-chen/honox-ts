@@ -137,6 +137,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 		case "collapsible": {
 			const {
 				triggerText,
+				trigger: triggerProp,
 				showIndicator,
 				indicatorPlacement,
 				open,
@@ -144,7 +145,12 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				children,
 				...collapsibleProps
 			} = props;
-			const trigger = (triggerText as string) || "Toggle";
+			let trigger: any = triggerText as string;
+			if (triggerProp && Array.isArray(triggerProp) && triggerProp.length > 0) {
+				trigger = <PageRenderer content={triggerProp as ComponentBlock[]} />;
+			} else if (!trigger) {
+				trigger = "Toggle";
+			}
 			const indicator = showIndicator ? (
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -198,15 +204,19 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				title,
 				description,
 				triggerText,
+				trigger: triggerProp,
 				confirmText,
 				cancelText,
 				role,
 				children,
 				...dialogProps
 			} = props;
-			const trigger = triggerText ? (
-				<Button variant="outline">{triggerText as string}</Button>
-			) : undefined;
+			let trigger: any = undefined;
+			if (triggerProp && Array.isArray(triggerProp) && triggerProp.length > 0) {
+				trigger = <PageRenderer content={triggerProp as ComponentBlock[]} />;
+			} else if (triggerText) {
+				trigger = <Button variant="outline">{triggerText as string}</Button>;
+			}
 			const confirm = confirmText ? <Button>{confirmText as string}</Button> : undefined;
 			const cancel = cancelText ? (
 				<Button variant="outline">{cancelText as string}</Button>
@@ -234,14 +244,18 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				title,
 				description,
 				triggerText,
+				trigger: triggerProp,
 				confirmText,
 				cancelText,
 				children,
 				...drawerProps
 			} = props;
-			const trigger = triggerText ? (
-				<Button variant="outline">{triggerText as string}</Button>
-			) : undefined;
+			let trigger: any = undefined;
+			if (triggerProp && Array.isArray(triggerProp) && triggerProp.length > 0) {
+				trigger = <PageRenderer content={triggerProp as ComponentBlock[]} />;
+			} else if (triggerText) {
+				trigger = <Button variant="outline">{triggerText as string}</Button>;
+			}
 			const confirm = confirmText ? <Button>{confirmText as string}</Button> : undefined;
 			const cancel = cancelText ? (
 				<Button variant="outline">{cancelText as string}</Button>
@@ -342,6 +356,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 		case "hover-card": {
 			const {
 				triggerText,
+				trigger: triggerProp,
 				title,
 				description,
 				showArrow,
@@ -349,7 +364,12 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				children,
 				...hoverCardProps
 			} = props;
-			const trigger = triggerText ? <Button variant="plain">{triggerText as string}</Button> : undefined;
+			let trigger: any = undefined;
+			if (triggerProp && Array.isArray(triggerProp) && triggerProp.length > 0) {
+				trigger = <PageRenderer content={triggerProp as ComponentBlock[]} />;
+			} else if (triggerText) {
+				trigger = <Button variant="plain">{triggerText as string}</Button>;
+			}
 			const typedChildren = children as ComponentBlock[];
 			return (
 				<HoverCard
@@ -366,11 +386,17 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 		case "menu": {
 			const {
 				triggerText,
+				trigger: triggerProp,
 				items,
 				children,
 				...menuProps
 			} = props;
-			const trigger = triggerText ? <Button variant="outline">{triggerText as string}</Button> : undefined;
+			let trigger: any = undefined;
+			if (triggerProp && Array.isArray(triggerProp) && triggerProp.length > 0) {
+				trigger = <PageRenderer content={triggerProp as ComponentBlock[]} />;
+			} else if (triggerText) {
+				trigger = <Button variant="outline">{triggerText as string}</Button>;
+			}
 			const typedChildren = children as ComponentBlock[];
 			return (
 				<Menu
@@ -412,6 +438,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 		case "popover": {
 			const {
 				triggerText,
+				trigger: triggerProp,
 				title,
 				description,
 				body,
@@ -422,7 +449,12 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				children,
 				...popoverProps
 			} = props;
-			const trigger = triggerText ? <Button variant="outline">{triggerText as string}</Button> : undefined;
+			let trigger: any = undefined;
+			if (triggerProp && Array.isArray(triggerProp) && triggerProp.length > 0) {
+				trigger = <PageRenderer content={triggerProp as ComponentBlock[]} />;
+			} else if (triggerText) {
+				trigger = <Button variant="outline">{triggerText as string}</Button>;
+			}
 			const typedChildren = children as ComponentBlock[];
 			return (
 				<Popover

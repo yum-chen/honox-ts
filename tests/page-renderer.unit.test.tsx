@@ -64,6 +64,31 @@ test("PageRenderer renders collapsible correctly", () => {
 	expect(html).toContain("Secret content");
 });
 
+test("PageRenderer renders collapsible with custom trigger component correctly", () => {
+	const content = [
+		{
+			type: "collapsible",
+			trigger: [
+				{
+					type: "badge",
+					text: "Custom Collapsible Trigger Badge"
+				}
+			],
+			children: [
+				{
+					type: "text",
+					content: "Secret content 2"
+				}
+			]
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+
+	expect(html).toContain("Custom Collapsible Trigger Badge");
+	expect(html).toContain("Secret content 2");
+});
+
 test("PageRenderer renders combobox correctly", () => {
 	const content = [
 		{
@@ -106,6 +131,27 @@ test("PageRenderer renders dialog correctly", () => {
 	expect(html).toContain("No");
 });
 
+test("PageRenderer renders dialog with custom trigger component correctly", () => {
+	const content = [
+		{
+			type: "dialog",
+			title: "Confirm Custom Action",
+			description: "Custom sure?",
+			trigger: [
+				{
+					type: "heading",
+					text: "Custom Dialog Trigger Heading"
+				}
+			]
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+
+	expect(html).toContain("Confirm Custom Action");
+	expect(html).toContain("Custom Dialog Trigger Heading");
+});
+
 test("PageRenderer renders drawer correctly", () => {
 	const content = [
 		{
@@ -125,6 +171,26 @@ test("PageRenderer renders drawer correctly", () => {
 	expect(html).toContain("Open Drawer");
 	expect(html).toContain("Save");
 	expect(html).toContain("Close");
+});
+
+test("PageRenderer renders drawer with custom trigger component correctly", () => {
+	const content = [
+		{
+			type: "drawer",
+			title: "Custom Sidebar",
+			trigger: [
+				{
+					type: "button",
+					text: "Custom Drawer Trigger Button"
+				}
+			]
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+
+	expect(html).toContain("Custom Sidebar");
+	expect(html).toContain("Custom Drawer Trigger Button");
 });
 
 test("PageRenderer renders field correctly", () => {
