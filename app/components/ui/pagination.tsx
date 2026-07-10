@@ -79,6 +79,7 @@ function Pagination(props: PaginationProps) {
 		boundaryCount,
 		type,
 		getPageUrl,
+		onPageChange,
 		class: classProp,
 		...rest,
 	};
@@ -93,7 +94,7 @@ function Pagination(props: PaginationProps) {
 
 	if (isInteractive) {
 		return (
-			<PaginationIsland {...rootProps} onPageChange={onPageChange}>
+			<PaginationIsland {...rootProps}>
 				{content}
 			</PaginationIsland>
 		);

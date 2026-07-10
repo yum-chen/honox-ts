@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState, useId } from "hono/jsx";
+import { useEffect, useId, useRef, useState } from "hono/jsx";
 import {
-	Root,
-	Label,
 	Control,
+	HiddenInput,
 	Input,
 	Items,
-	HiddenInput,
+	Label,
+	Root,
 	type RootProps,
 } from "../components/ui/tags-input-primitive";
 
