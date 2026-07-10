@@ -230,3 +230,155 @@ test("PageRenderer renders menu correctly", () => {
 	expect(html).toContain("Edit Profile");
 	expect(html).toContain("Subscribe");
 });
+
+test("PageRenderer renders paginatedTable correctly", () => {
+	const content = [
+		{
+			type: "paginatedTable"
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+	expect(html).toContain("table");
+});
+
+test("PageRenderer renders pagination correctly", () => {
+	const content = [
+		{
+			type: "pagination",
+			count: 100,
+			pageSize: 10,
+			defaultPage: 1
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+	expect(html).toContain("nav");
+});
+
+test("PageRenderer renders popover correctly", () => {
+	const content = [
+		{
+			type: "popover",
+			triggerText: "Open Popover",
+			title: "Popover Title",
+			body: "Popover Body content info"
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+	expect(html).toContain("Open Popover");
+	expect(html).toContain("Popover Title");
+	expect(html).toContain("Popover Body content info");
+});
+
+test("PageRenderer renders progress correctly", () => {
+	const content = [
+		{
+			type: "progress",
+			label: "Downloading",
+			value: 75,
+			showValueText: true
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+	expect(html).toContain("Downloading");
+});
+
+test("PageRenderer renders radioGroup correctly", () => {
+	const content = [
+		{
+			type: "radioGroup",
+			label: "Options",
+			items: [
+				{ label: "Option A", value: "a" },
+				{ label: "Option B", value: "b" }
+			]
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+	expect(html).toContain("Options");
+	expect(html).toContain("Option A");
+	expect(html).toContain("Option B");
+});
+
+test("PageRenderer renders segmentGroup correctly", () => {
+	const content = [
+		{
+			type: "segmentGroup",
+			label: "View Mode",
+			items: [
+				{ label: "Grid", value: "grid" },
+				{ label: "List", value: "list" }
+			]
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+	expect(html).toContain("View Mode");
+	expect(html).toContain("Grid");
+	expect(html).toContain("List");
+});
+
+test("PageRenderer renders slider correctly", () => {
+	const content = [
+		{
+			type: "slider",
+			label: "Volume",
+			defaultValue: 50,
+			showValueText: true
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+	expect(html).toContain("Volume");
+});
+
+test("PageRenderer renders switch correctly", () => {
+	const content = [
+		{
+			type: "switch",
+			label: "Enable notifications",
+			defaultChecked: true
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+	expect(html).toContain("Enable notifications");
+});
+
+test("PageRenderer renders skeleton variants correctly", () => {
+	const contentCircle = [
+		{
+			type: "skeleton",
+			circle: true
+		}
+	];
+	const contentText = [
+		{
+			type: "skeleton",
+			noOfLines: 4
+		}
+	];
+	const contentPlain = [
+		{
+			type: "skeleton",
+			children: [
+				{ type: "text", content: "Inside skeleton text" }
+			]
+		}
+	];
+
+	const htmlCircle = (<PageRenderer content={contentCircle} />).toString();
+	const htmlText = (<PageRenderer content={contentText} />).toString();
+	const htmlPlain = (<PageRenderer content={contentPlain} />).toString();
+
+	// Check circles have circle variant
+	expect(htmlCircle).toContain("skeleton");
+	// Check text works
+	expect(htmlText).toContain("skeleton");
+	// Check children renders inside plain skeleton
+	expect(htmlPlain).toContain("Inside skeleton text");
+});

@@ -16,7 +16,18 @@ import {
 	Heading,
 	HoverCard,
 	Menu,
+	PaginatedTable,
+	Pagination,
+	Popover,
+	Progress,
+	RadioGroup,
+	SegmentGroup,
+	Skeleton,
+	SkeletonCircle,
+	SkeletonText,
+	Slider,
 	Stack,
+	Switch,
 	Text,
 } from "./ui";
 
@@ -35,28 +46,31 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 	switch (type) {
 		case "stack": {
 			const { children, ...stackProps } = props;
+			const typedChildren = children as ComponentBlock[];
 			return (
 				<Stack {...stackProps}>
-					<PageRenderer content={children} />
+					<PageRenderer content={typedChildren} />
 				</Stack>
 			);
 		}
 		case "button": {
 			const { text, ...buttonProps } = props;
-			return <Button {...buttonProps}>{text}</Button>;
+			const typedText = text as string;
+			return <Button {...buttonProps}>{typedText}</Button>;
 		}
 		case "badge": {
 			const { text, ...badgeProps } = props;
-			return <Badge {...badgeProps}>{text}</Badge>;
+			const typedText = text as string;
+			return <Badge {...badgeProps}>{typedText}</Badge>;
 		}
 		case "alert": {
 			const { title, description, status, variant, ...alertProps } = props;
 			return (
 				<Alert
-					title={title}
-					description={description}
-					status={status}
-					variant={variant}
+					title={title as string}
+					description={description as string}
+					status={status as any}
+					variant={variant as any}
 					indicator={<AlertIcon />}
 					{...alertProps}
 				/>
@@ -64,11 +78,13 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 		}
 		case "heading": {
 			const { text, ...headingProps } = props;
-			return <Heading {...headingProps}>{text}</Heading>;
+			const typedText = text as string;
+			return <Heading {...headingProps}>{typedText}</Heading>;
 		}
 		case "text": {
 			const { content, ...textProps } = props;
-			return <Text {...textProps}>{content}</Text>;
+			const typedContent = content as string;
+			return <Text {...textProps}>{typedContent}</Text>;
 		}
 		case "card": {
 			const {
@@ -80,16 +96,17 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				children,
 				...cardProps
 			} = props;
+			const typedChildren = children as ComponentBlock[];
 			return (
 				<Card
-					title={title}
-					description={description}
-					body={body}
-					image={image}
-					imagePosition={imagePosition}
+					title={title as string}
+					description={description as string}
+					body={body as string}
+					image={image as string}
+					imagePosition={imagePosition as any}
 					{...cardProps}
 				>
-					{children && <PageRenderer content={children} />}
+					{typedChildren && <PageRenderer content={typedChildren} />}
 				</Card>
 			);
 		}
@@ -106,14 +123,14 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			return (
 				<Checkbox
 					interactive
-					checked={checked}
-					disabled={disabled}
-					invalid={invalid}
-					size={size}
-					colorPalette={colorPalette}
+					checked={checked as boolean}
+					disabled={disabled as boolean}
+					invalid={invalid as boolean}
+					size={size as any}
+					colorPalette={colorPalette as string}
 					{...checkboxProps}
 				>
-					{label}
+					{label as string}
 				</Checkbox>
 			);
 		}
@@ -127,7 +144,7 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				children,
 				...collapsibleProps
 			} = props;
-			const trigger = triggerText || "Toggle";
+			const trigger = (triggerText as string) || "Toggle";
 			const indicator = showIndicator ? (
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -149,15 +166,17 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				</svg>
 			) : undefined;
 
+			const typedChildren = children as ComponentBlock[];
+
 			return (
 				<Collapsible
 					interactive
 					trigger={trigger}
 					indicator={indicator}
-					indicatorPlacement={indicatorPlacement}
-					defaultOpen={open}
-					disabled={disabled}
-					content={<div>{children && <PageRenderer content={children} />}</div>}
+					indicatorPlacement={indicatorPlacement as any}
+					defaultOpen={open as boolean}
+					disabled={disabled as boolean}
+					content={<div>{typedChildren && <PageRenderer content={typedChildren} />}</div>}
 					{...collapsibleProps}
 				/>
 			);
@@ -167,9 +186,9 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			return (
 				<Combobox
 					interactive
-					label={label}
-					placeholder={placeholder}
-					items={items || []}
+					label={label as string}
+					placeholder={placeholder as string}
+					items={(items as any[]) || []}
 					{...comboboxProps}
 				/>
 			);
@@ -186,25 +205,27 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				...dialogProps
 			} = props;
 			const trigger = triggerText ? (
-				<Button variant="outline">{triggerText}</Button>
+				<Button variant="outline">{triggerText as string}</Button>
 			) : undefined;
-			const confirm = confirmText ? <Button>{confirmText}</Button> : undefined;
+			const confirm = confirmText ? <Button>{confirmText as string}</Button> : undefined;
 			const cancel = cancelText ? (
-				<Button variant="outline">{cancelText}</Button>
+				<Button variant="outline">{cancelText as string}</Button>
 			) : undefined;
+
+			const typedChildren = children as ComponentBlock[];
 
 			return (
 				<Dialog
 					interactive
-					title={title}
-					description={description}
+					title={title as string}
+					description={description as string}
 					trigger={trigger}
 					confirm={confirm}
 					cancel={cancel}
-					role={role}
+					role={role as any}
 					{...dialogProps}
 				>
-					{children && <PageRenderer content={children} />}
+					{typedChildren && <PageRenderer content={typedChildren} />}
 				</Dialog>
 			);
 		}
@@ -219,24 +240,26 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				...drawerProps
 			} = props;
 			const trigger = triggerText ? (
-				<Button variant="outline">{triggerText}</Button>
+				<Button variant="outline">{triggerText as string}</Button>
 			) : undefined;
-			const confirm = confirmText ? <Button>{confirmText}</Button> : undefined;
+			const confirm = confirmText ? <Button>{confirmText as string}</Button> : undefined;
 			const cancel = cancelText ? (
-				<Button variant="outline">{cancelText}</Button>
+				<Button variant="outline">{cancelText as string}</Button>
 			) : undefined;
+
+			const typedChildren = children as ComponentBlock[];
 
 			return (
 				<Drawer
 					interactive
-					title={title}
-					description={description}
+					title={title as string}
+					description={description as string}
 					trigger={trigger}
 					confirm={confirm}
 					cancel={cancel}
 					{...drawerProps}
 				>
-					{children && <PageRenderer content={children} />}
+					{typedChildren && <PageRenderer content={typedChildren} />}
 				</Drawer>
 			);
 		}
@@ -253,20 +276,21 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				children,
 				...fieldProps
 			} = props;
+			const typedChildren = children as ComponentBlock[];
 			return (
 				<Field
 					interactive
-					label={label}
-					helperText={helperText}
-					errorText={errorText}
-					disabled={disabled}
-					invalid={invalid}
-					readOnly={readOnly}
-					required={required}
-					defaultValue={defaultValue}
+					label={label as any}
+					helperText={helperText as any}
+					errorText={errorText as any}
+					disabled={disabled as boolean}
+					invalid={invalid as boolean}
+					readOnly={readOnly as boolean}
+					required={required as boolean}
+					defaultValue={defaultValue as string}
 					{...fieldProps}
 				>
-					{children && <PageRenderer content={children} />}
+					{typedChildren && <PageRenderer content={typedChildren} />}
 				</Field>
 			);
 		}
@@ -280,29 +304,37 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				children,
 				...fieldsetProps
 			} = props;
+			const typedChildren = children as ComponentBlock[];
 			return (
 				<Fieldset
-					legend={legend}
-					helperText={helperText}
-					errorText={errorText}
-					disabled={disabled}
-					invalid={invalid}
+					legend={legend as any}
+					helperText={helperText as any}
+					errorText={errorText as any}
+					disabled={disabled as boolean}
+					invalid={invalid as boolean}
 					{...fieldsetProps}
 				>
-					{children && <PageRenderer content={children} />}
+					{typedChildren && <PageRenderer content={typedChildren} />}
 				</Fieldset>
 			);
 		}
 		case "group": {
-			const { orientation, attached, grow, children, ...groupProps } = props;
+			const {
+				orientation,
+				attached,
+				grow,
+				children,
+				...groupProps
+			} = props;
+			const typedChildren = children as ComponentBlock[];
 			return (
 				<Group
-					orientation={orientation}
-					attached={attached}
-					grow={grow}
+					orientation={orientation as any}
+					attached={attached as boolean}
+					grow={grow as boolean}
 					{...groupProps}
 				>
-					{children && <PageRenderer content={children} />}
+					{typedChildren && <PageRenderer content={typedChildren} />}
 				</Group>
 			);
 		}
@@ -317,30 +349,233 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 				children,
 				...hoverCardProps
 			} = props;
-			const trigger = triggerText ? (
-				<Button variant="plain">{triggerText}</Button>
-			) : undefined;
+			const trigger = triggerText ? <Button variant="plain">{triggerText as string}</Button> : undefined;
+			const typedChildren = children as ComponentBlock[];
 			return (
 				<HoverCard
-					interactive={interactive}
+					interactive={interactive as boolean}
 					trigger={trigger}
-					title={title}
-					description={description}
-					showArrow={showArrow}
-					content={children ? <PageRenderer content={children} /> : undefined}
+					title={title as any}
+					description={description as any}
+					showArrow={showArrow as boolean}
+					content={typedChildren ? <PageRenderer content={typedChildren} /> : undefined}
 					{...hoverCardProps}
 				/>
 			);
 		}
 		case "menu": {
-			const { triggerText, items, children, ...menuProps } = props;
-			const trigger = triggerText ? (
-				<Button variant="outline">{triggerText}</Button>
-			) : undefined;
+			const {
+				triggerText,
+				items,
+				children,
+				...menuProps
+			} = props;
+			const trigger = triggerText ? <Button variant="outline">{triggerText as string}</Button> : undefined;
+			const typedChildren = children as ComponentBlock[];
 			return (
-				<Menu interactive trigger={trigger} items={items} {...menuProps}>
-					{children && <PageRenderer content={children} />}
+				<Menu
+					interactive
+					trigger={trigger}
+					items={items as any[]}
+					{...menuProps}
+				>
+					{typedChildren && <PageRenderer content={typedChildren} />}
 				</Menu>
+			);
+		}
+		case "paginatedtable":
+		case "paginatedTable": {
+			return <PaginatedTable {...props} />;
+		}
+		case "pagination": {
+			const {
+				count,
+				pageSize,
+				defaultPage,
+				siblingCount,
+				boundaryCount,
+				interactive,
+				...paginationProps
+			} = props;
+			return (
+				<Pagination
+					count={count as number}
+					pageSize={pageSize as number}
+					defaultPage={defaultPage as number}
+					siblingCount={siblingCount as number}
+					boundaryCount={boundaryCount as number}
+					interactive={interactive as boolean}
+					{...paginationProps}
+				/>
+			);
+		}
+		case "popover": {
+			const {
+				triggerText,
+				title,
+				description,
+				body,
+				footer,
+				showArrow,
+				closable,
+				interactive,
+				children,
+				...popoverProps
+			} = props;
+			const trigger = triggerText ? <Button variant="outline">{triggerText as string}</Button> : undefined;
+			const typedChildren = children as ComponentBlock[];
+			return (
+				<Popover
+					trigger={trigger}
+					title={title as any}
+					description={description as any}
+					body={body as any}
+					footer={footer as any}
+					showArrow={showArrow as boolean}
+					closable={closable as boolean}
+					interactive={interactive as boolean}
+					{...popoverProps}
+				>
+					{typedChildren && <PageRenderer content={typedChildren} />}
+				</Popover>
+			);
+		}
+		case "progress": {
+			const {
+				label,
+				value,
+				min,
+				max,
+				type: progressType,
+				showValueText,
+				...progressProps
+			} = props;
+			return (
+				<Progress
+					label={label as any}
+					value={value as number}
+					min={min as number}
+					max={max as number}
+					type={progressType as any}
+					showValueText={showValueText as boolean}
+					{...progressProps}
+				/>
+			);
+		}
+		case "radiogroup":
+		case "radioGroup": {
+			const {
+				label,
+				items,
+				defaultValue,
+				value,
+				interactive,
+				children,
+				...radioGroupProps
+			} = props;
+			const typedChildren = children as ComponentBlock[];
+			return (
+				<RadioGroup
+					label={label as any}
+					items={items as any[]}
+					defaultValue={defaultValue as string}
+					value={value as string}
+					interactive={interactive as boolean}
+					{...radioGroupProps}
+				>
+					{typedChildren && <PageRenderer content={typedChildren} />}
+				</RadioGroup>
+			);
+		}
+		case "segmentgroup":
+		case "segmentGroup": {
+			const {
+				label,
+				items,
+				defaultValue,
+				value,
+				interactive,
+				children,
+				...segmentGroupProps
+			} = props;
+			const typedChildren = children as ComponentBlock[];
+			return (
+				<SegmentGroup
+					label={label as any}
+					items={items as any[]}
+					defaultValue={defaultValue as any}
+					value={value as any}
+					interactive={interactive as boolean}
+					{...segmentGroupProps}
+				>
+					{typedChildren && <PageRenderer content={typedChildren} />}
+				</SegmentGroup>
+			);
+		}
+		case "slider": {
+			const {
+				label,
+				min,
+				max,
+				step,
+				defaultValue,
+				showValueText,
+				orientation,
+				interactive,
+				...sliderProps
+			} = props;
+			return (
+				<Slider
+					label={label as any}
+					min={min as number}
+					max={max as number}
+					step={step as number}
+					defaultValue={defaultValue as any}
+					showValueText={showValueText as boolean}
+					orientation={orientation as any}
+					interactive={interactive as boolean}
+					{...sliderProps}
+				/>
+			);
+		}
+		case "switch": {
+			const {
+				label,
+				defaultChecked,
+				checked,
+				disabled,
+				interactive,
+				...switchProps
+			} = props;
+			return (
+				<Switch
+					label={label as any}
+					defaultChecked={defaultChecked as boolean}
+					checked={checked as boolean}
+					disabled={disabled as boolean}
+					interactive={interactive as boolean}
+					{...switchProps}
+				/>
+			);
+		}
+		case "skeleton": {
+			const {
+				circle,
+				noOfLines,
+				children,
+				...skeletonProps
+			} = props;
+			const typedChildren = children as ComponentBlock[];
+			if (circle) {
+				return <SkeletonCircle {...skeletonProps} />;
+			}
+			if (noOfLines !== undefined && noOfLines !== null) {
+				return <SkeletonText noOfLines={noOfLines as number} {...skeletonProps} />;
+			}
+			return (
+				<Skeleton {...skeletonProps}>
+					{typedChildren && <PageRenderer content={typedChildren} />}
+				</Skeleton>
 			);
 		}
 		default:
