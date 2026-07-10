@@ -96,6 +96,21 @@ If you add new static files to `public/admin/`, they'll be automatically served 
 
 ---
 
+## Expanded CMS Layouts & PageRenderer
+
+The CMS `pages` collection at `public/admin/config.yml` and the matching `PageRenderer` at `app/components/page-renderer.tsx` support an extensive list of nestable, customizable UI components.
+
+### Supported Components
+- **Layouts/Containers**: `Stack`, `Card`, `Collapsible`, `Dialog`, `Drawer`, `Field`, `Fieldset`, `Group`, `HoverCard`, `Popover`, `Skeleton`
+- **Interactive Forms & Controls**: `Button`, `Checkbox`, `Combobox`, `RadioGroup`, `SegmentGroup`, `Slider`, `Switch`
+- **Data & Navigation**: `PaginatedTable`, `Pagination`, `Menu`
+- **Presentational**: `Alert`, `Badge`, `Heading`, `Text`, `Progress`
+
+### Polymorphic Nesting
+Container components (such as `Stack`, `Card`, `Popover`, `Skeleton`, etc.) support a `children` field allowing you to nest other components up to 3 levels deep inside the CMS without incurring infinite circular references in the YAML config parser.
+
+---
+
 ## Documentation
 
 Component docs are in `docs/`. Each component has its own file with props, examples, and notes.
