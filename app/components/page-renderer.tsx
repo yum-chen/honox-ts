@@ -1,3 +1,4 @@
+import { css } from "styled-system/css";
 import {
 	Alert,
 	AlertIcon,
@@ -9,7 +10,13 @@ import {
 	Combobox,
 	Dialog,
 	Drawer,
+	Field,
+	Fieldset,
+	Group,
 	Heading,
+	HoverCard,
+	Menu,
+	type MenuItem,
 	Stack,
 	Text,
 } from "./ui";
@@ -37,20 +44,20 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 		}
 		case "button": {
 			const { text, ...buttonProps } = props;
-			return <Button {...buttonProps}>{text as any}</Button>;
+			return <Button {...buttonProps}>{text as string}</Button>;
 		}
 		case "badge": {
 			const { text, ...badgeProps } = props;
-			return <Badge {...badgeProps}>{text as any}</Badge>;
+			return <Badge {...badgeProps}>{text as string}</Badge>;
 		}
 		case "alert": {
 			const { title, description, status, variant, ...alertProps } = props;
 			return (
 				<Alert
-					title={title as any}
-					description={description as any}
-					status={status as any}
-					variant={variant as any}
+					title={title as string}
+					description={description as string}
+					status={status as "info" | "success" | "warning" | "error"}
+					variant={variant as "subtle" | "solid" | "outline" | "surface"}
 					indicator={<AlertIcon />}
 					{...alertProps}
 				/>
@@ -58,11 +65,11 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 		}
 		case "heading": {
 			const { text, ...headingProps } = props;
-			return <Heading {...headingProps}>{text as any}</Heading>;
+			return <Heading {...headingProps}>{text as string}</Heading>;
 		}
 		case "text": {
 			const { content, ...textProps } = props;
-			return <Text {...textProps}>{content as any}</Text>;
+			return <Text {...textProps}>{content as string}</Text>;
 		}
 		case "checkbox": {
 			const { label, checked, ...checkboxProps } = props;
@@ -78,14 +85,18 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			}
 			return (
 				<Checkbox checked={resolvedChecked} {...checkboxProps}>
-					{label as any}
+					{label as string}
 				</Checkbox>
 			);
 		}
 		case "combobox": {
 			const { items, label, ...comboboxProps } = props;
 			return (
-				<Combobox items={(items as any) || []} label={label as any} {...comboboxProps} />
+				<Combobox
+					items={(items as { label: string; value: string; disabled?: boolean }[]) || []}
+					label={label as string}
+					{...comboboxProps}
+				/>
 			);
 		}
 		case "card": {
@@ -95,10 +106,10 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			) : undefined;
 			return (
 				<Card
-					title={title as any}
-					description={description as any}
-					body={body as any}
-					footer={footer as any}
+					title={title as string}
+					description={description as string}
+					body={body as string}
+					footer={footer as string}
 					{...cardProps}
 				>
 					{renderedChildren}
@@ -114,14 +125,14 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			// Content of collapsible can be either the direct content string or nested children
 			const collapsibleContent = (
 				<div>
-					{content && <p>{content as any}</p>}
+					{content && <p>{content as string}</p>}
 					{renderedChildren}
 				</div>
 			);
 
 			return (
 				<Collapsible
-					trigger={(trigger as any) || ""}
+					trigger={(trigger as string) || ""}
 					content={collapsibleContent}
 					{...collapsibleProps}
 				/>
@@ -134,29 +145,29 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			) : undefined;
 
 			const dialogTrigger = triggerText ? (
-				<Button variant="outline">{triggerText as any}</Button>
+				<Button variant="outline">{triggerText as string}</Button>
 			) : undefined;
 
 			const dialogBody = (
 				<div>
-					{body && <p>{body as any}</p>}
+					{body && <p>{body as string}</p>}
 					{renderedChildren}
 				</div>
 			);
 
 			const dialogCancel = cancelText ? (
-				<Button variant="outline">{cancelText as any}</Button>
+				<Button variant="outline">{cancelText as string}</Button>
 			) : undefined;
 
 			const dialogConfirm = confirmText ? (
-				<Button>{confirmText as any}</Button>
+				<Button>{confirmText as string}</Button>
 			) : undefined;
 
 			return (
 				<Dialog
 					trigger={dialogTrigger}
-					title={title as any}
-					description={description as any}
+					title={title as string}
+					description={description as string}
 					body={dialogBody}
 					cancel={dialogCancel}
 					confirm={dialogConfirm}
@@ -171,33 +182,99 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 			) : undefined;
 
 			const drawerTrigger = triggerText ? (
-				<Button variant="outline">{triggerText as any}</Button>
+				<Button variant="outline">{triggerText as string}</Button>
 			) : undefined;
 
 			const drawerBody = (
 				<div>
-					{body && <p>{body as any}</p>}
+					{body && <p>{body as string}</p>}
 					{renderedChildren}
 				</div>
 			);
 
 			const drawerCancel = cancelText ? (
-				<Button variant="outline">{cancelText as any}</Button>
+				<Button variant="outline">{cancelText as string}</Button>
 			) : undefined;
 
 			const drawerConfirm = confirmText ? (
-				<Button>{confirmText as any}</Button>
+				<Button>{confirmText as string}</Button>
 			) : undefined;
 
 			return (
 				<Drawer
 					trigger={drawerTrigger}
-					title={title as any}
-					description={description as any}
+					title={title as string}
+					description={description as string}
 					body={drawerBody}
 					cancel={drawerCancel}
 					confirm={drawerConfirm}
 					{...drawerProps}
+				/>
+			);
+		}
+		case "field": {
+			const { label, helperText, errorText, placeholder, ...fieldProps } = props;
+			return (
+				<Field
+					label={label as string}
+					helperText={helperText as string}
+					errorText={errorText as string}
+					placeholder={placeholder as string}
+					{...fieldProps}
+				/>
+			);
+		}
+		case "fieldset": {
+			const { legend, helperText, errorText, children, ...fieldsetProps } = props;
+			const renderedChildren = children ? (
+				<PageRenderer content={children as ComponentBlock[]} />
+			) : undefined;
+			return (
+				<Fieldset
+					legend={legend as string}
+					helperText={helperText as string}
+					errorText={errorText as string}
+					{...fieldsetProps}
+				>
+					{renderedChildren}
+				</Fieldset>
+			);
+		}
+		case "group": {
+			const { children, ...groupProps } = props;
+			const renderedChildren = children ? (
+				<PageRenderer content={children as ComponentBlock[]} />
+			) : undefined;
+			return (
+				<Group {...groupProps}>
+					{renderedChildren}
+				</Group>
+			);
+		}
+		case "hoverCard": {
+			const { triggerText, title, description, ...hoverCardProps } = props;
+			const hoverTrigger = triggerText ? (
+				<Text class={css({ cursor: "pointer", textDecoration: "underline", textDecorationStyle: "dotted" })}>{triggerText as string}</Text>
+			) : undefined;
+			return (
+				<HoverCard
+					trigger={hoverTrigger}
+					title={title as string}
+					description={description as string}
+					{...hoverCardProps}
+				/>
+			);
+		}
+		case "menu": {
+			const { triggerText, items, ...menuProps } = props;
+			const menuTrigger = triggerText ? (
+				<Button variant="outline">{triggerText as string}</Button>
+			) : undefined;
+			return (
+				<Menu
+					trigger={menuTrigger}
+					items={items as MenuItem[]}
+					{...menuProps}
 				/>
 			);
 		}

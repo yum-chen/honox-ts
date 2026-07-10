@@ -181,6 +181,61 @@ collections:
                   - { label: Value, name: value, widget: string }
               - { label: Interactive, name: interactive, widget: boolean, default: true }
 
+          - &field_type
+            label: Field
+            name: field
+            widget: object
+            fields: &field_fields
+              - { label: Label, name: label, widget: string, required: false }
+              - { label: Helper Text, name: helperText, widget: string, required: false }
+              - { label: Error Text, name: errorText, widget: string, required: false }
+              - { label: Placeholder, name: placeholder, widget: string, required: false }
+              - { label: Disabled, name: disabled, widget: boolean, default: false }
+              - { label: Invalid, name: invalid, widget: boolean, default: false }
+              - { label: Required, name: required, widget: boolean, default: false }
+              - { label: Read Only, name: readOnly, widget: boolean, default: false }
+              - { label: Default Value, name: defaultValue, widget: string, required: false }
+              - { label: Interactive, name: interactive, widget: boolean, default: false }
+
+          - &hover_card_type
+            label: HoverCard
+            name: hoverCard
+            widget: object
+            fields: &hover_card_fields
+              - { label: Trigger Text, name: triggerText, widget: string }
+              - { label: Title, name: title, widget: string, required: false }
+              - { label: Description, name: description, widget: string, required: false }
+              - { label: Open Delay (ms), name: openDelay, widget: number, default: 700, required: false }
+              - { label: Close Delay (ms), name: closeDelay, widget: number, default: 300, required: false }
+              - { label: Show Arrow, name: showArrow, widget: boolean, default: false }
+              - { label: Interactive, name: interactive, widget: boolean, default: true }
+
+          - &menu_type
+            label: Menu
+            name: menu
+            widget: object
+            fields: &menu_fields
+              - { label: Trigger Text, name: triggerText, widget: string }
+              - label: Size
+                name: size
+                widget: select
+                options: [xs, sm, md, lg, xl]
+                default: md
+              - { label: Interactive, name: interactive, widget: boolean, default: true }
+              - label: Items
+                name: items
+                widget: list
+                fields:
+                  - label: Type
+                    name: type
+                    widget: select
+                    options: [item, separator, checkbox, radio]
+                    default: item
+                  - { label: Label, name: label, widget: string, required: false }
+                  - { label: Value, name: value, widget: string, required: false }
+                  - { label: Checked, name: checked, widget: boolean, default: false }
+                  - { label: Disabled, name: disabled, widget: boolean, default: false }
+
           - label: Stack (Leaf)
             name: stack
             widget: object
@@ -200,6 +255,9 @@ collections:
                   - *text_type
                   - *checkbox_type
                   - *combobox_type
+                  - *field_type
+                  - *hover_card_type
+                  - *menu_type
 
           - label: Card (Leaf)
             name: card
@@ -283,6 +341,35 @@ collections:
                 types: *leaf_components_list
                 required: false
 
+          - label: Fieldset (Leaf)
+            name: fieldset
+            widget: object
+            fields: &fieldset_leaf_fields
+              - { label: Legend, name: legend, widget: string, required: false }
+              - { label: Helper Text, name: helperText, widget: string, required: false }
+              - { label: Error Text, name: errorText, widget: string, required: false }
+              - { label: Disabled, name: disabled, widget: boolean, default: false }
+              - { label: Invalid, name: invalid, widget: boolean, default: false }
+              - { label: Interactive, name: interactive, widget: boolean, default: false }
+              - label: Children
+                name: children
+                widget: list
+                types: *leaf_components_list
+                required: false
+
+          - label: Group (Leaf)
+            name: group
+            widget: object
+            fields: &group_leaf_fields
+              - { label: Orientation, name: orientation, widget: select, options: [horizontal, vertical], default: horizontal }
+              - { label: Attached, name: attached, widget: boolean, default: false }
+              - { label: Grow, name: grow, widget: boolean, default: false }
+              - label: Children
+                name: children
+                widget: list
+                types: *leaf_components_list
+                required: false
+
           - label: Stack
             name: stack
             widget: object
@@ -302,6 +389,9 @@ collections:
                   - *text_type
                   - *checkbox_type
                   - *combobox_type
+                  - *field_type
+                  - *hover_card_type
+                  - *menu_type
                   - label: Stack
                     name: stack
                     widget: object
@@ -322,6 +412,14 @@ collections:
                     name: drawer
                     widget: object
                     fields: *drawer_leaf_fields
+                  - label: Fieldset
+                    name: fieldset
+                    widget: object
+                    fields: *fieldset_leaf_fields
+                  - label: Group
+                    name: group
+                    widget: object
+                    fields: *group_leaf_fields
 
           - label: Card
             name: card
@@ -399,6 +497,35 @@ collections:
               - { label: Confirm Text, name: confirmText, widget: string, required: false }
               - { label: Closable, name: closable, widget: boolean, default: true }
               - { label: Interactive, name: interactive, widget: boolean, default: true }
+              - label: Children
+                name: children
+                widget: list
+                types: *level_2_components_list
+                required: false
+
+          - label: Fieldset
+            name: fieldset
+            widget: object
+            fields:
+              - { label: Legend, name: legend, widget: string, required: false }
+              - { label: Helper Text, name: helperText, widget: string, required: false }
+              - { label: Error Text, name: errorText, widget: string, required: false }
+              - { label: Disabled, name: disabled, widget: boolean, default: false }
+              - { label: Invalid, name: invalid, widget: boolean, default: false }
+              - { label: Interactive, name: interactive, widget: boolean, default: false }
+              - label: Children
+                name: children
+                widget: list
+                types: *level_2_components_list
+                required: false
+
+          - label: Group
+            name: group
+            widget: object
+            fields:
+              - { label: Orientation, name: orientation, widget: select, options: [horizontal, vertical], default: horizontal }
+              - { label: Attached, name: attached, widget: boolean, default: false }
+              - { label: Grow, name: grow, widget: boolean, default: false }
               - label: Children
                 name: children
                 widget: list

@@ -19,6 +19,39 @@
       "children": [
         {
           "type": "heading",
+          "text": "Fieldset & Field Controls",
+          "size": "2xl",
+          "as": "h2"
+        },
+        {
+          "type": "fieldset",
+          "legend": "User Identification",
+          "helperText": "We need this to authenticate you.",
+          "children": [
+            {
+              "type": "group",
+              "attached": true,
+              "grow": true,
+              "children": [
+                {
+                  "type": "field",
+                  "label": "Username",
+                  "helperText": "At least 5 characters.",
+                  "placeholder": "Enter username...",
+                  "defaultValue": "developer"
+                },
+                {
+                  "type": "button",
+                  "text": "Check Availability",
+                  "variant": "solid",
+                  "colorPalette": "blue"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
           "text": "Card Component Showcase",
           "size": "2xl",
           "as": "h2"
@@ -46,6 +79,37 @@
                   "interactive": true
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Interactive Card & Overlays",
+          "size": "2xl",
+          "as": "h2"
+        },
+        {
+          "type": "stack",
+          "direction": "horizontal",
+          "gap": "4",
+          "children": [
+            {
+              "type": "menu",
+              "triggerText": "Action Menu",
+              "size": "md",
+              "items": [
+                { "type": "item", "label": "Edit Profile", "value": "edit" },
+                { "type": "item", "label": "Preferences", "value": "prefs" },
+                { "type": "separator" },
+                { "type": "checkbox", "label": "Enable Telemetry", "value": "telemetry", "checked": true }
+              ]
+            },
+            {
+              "type": "hoverCard",
+              "triggerText": "Hover for Info",
+              "title": "Quick Help",
+              "description": "Menus allow complex action triggers.",
+              "showArrow": true
             }
           ]
         },
