@@ -16,7 +16,18 @@ import {
 	Heading,
 	HoverCard,
 	Menu,
+	PaginatedTable,
+	Pagination,
+	Popover,
+	Progress,
+	RadioGroup,
+	SegmentGroup,
+	Skeleton,
+	SkeletonCircle,
+	SkeletonText,
+	Slider,
 	Stack,
+	Switch,
 	Text,
 } from "./ui";
 
@@ -353,6 +364,162 @@ function RenderBlock({ block }: { block: ComponentBlock }) {
 					items={items || []}
 					{...menuProps}
 				/>
+			);
+		}
+		case "paginated-table":
+		case "paginatedTable": {
+			return <PaginatedTable {...props} />;
+		}
+		case "pagination": {
+			const { count = 100, pageSize = 10, ...paginationProps } = props;
+			return (
+				<Pagination
+					interactive
+					count={Number(count)}
+					pageSize={Number(pageSize)}
+					{...paginationProps}
+				/>
+			);
+		}
+		case "popover": {
+			const {
+				triggerText,
+				title,
+				description,
+				body,
+				footer,
+				showArrow,
+				closable,
+				children,
+				...popoverProps
+			} = props;
+			const trigger = triggerText ? (
+				<Button variant="outline">{triggerText}</Button>
+			) : undefined;
+			return (
+				<Popover
+					interactive
+					trigger={trigger}
+					title={title}
+					description={description}
+					body={body}
+					footer={footer}
+					showArrow={showArrow}
+					closable={closable}
+					{...popoverProps}
+				>
+					{children && <PageRenderer content={children} />}
+				</Popover>
+			);
+		}
+		case "progress": {
+			const { label, showValueText, value, min, max, type, ...progressProps } =
+				props;
+			return (
+				<Progress
+					label={label}
+					showValueText={showValueText}
+					value={value !== undefined ? Number(value) : undefined}
+					min={min !== undefined ? Number(min) : undefined}
+					max={max !== undefined ? Number(max) : undefined}
+					type={type}
+					{...progressProps}
+				/>
+			);
+		}
+		case "radio-group":
+		case "radioGroup": {
+			const { label, items, ...radioProps } = props;
+			return (
+				<RadioGroup
+					interactive
+					label={label}
+					items={items || []}
+					{...radioProps}
+				/>
+			);
+		}
+		case "segment-group":
+		case "segmentGroup": {
+			const { label, items, ...segmentProps } = props;
+			return (
+				<SegmentGroup
+					interactive
+					label={label}
+					items={items || []}
+					{...segmentProps}
+				/>
+			);
+		}
+		case "slider": {
+			const {
+				label,
+				showValueText,
+				min,
+				max,
+				step,
+				defaultValue,
+				value,
+				...sliderProps
+			} = props;
+			return (
+				<Slider
+					interactive
+					label={label}
+					showValueText={showValueText}
+					min={min !== undefined ? Number(min) : undefined}
+					max={max !== undefined ? Number(max) : undefined}
+					step={step !== undefined ? Number(step) : undefined}
+					defaultValue={
+						defaultValue !== undefined
+							? Array.isArray(defaultValue)
+								? defaultValue.map(Number)
+								: Number(defaultValue)
+							: undefined
+					}
+					value={
+						value !== undefined
+							? Array.isArray(value)
+								? value.map(Number)
+								: Number(value)
+							: undefined
+					}
+					{...sliderProps}
+				/>
+			);
+		}
+		case "switch": {
+			const { label, checked, disabled, ...switchProps } = props;
+			return (
+				<Switch
+					interactive
+					checked={checked}
+					disabled={disabled}
+					{...switchProps}
+				>
+					{label}
+				</Switch>
+			);
+		}
+		case "skeleton": {
+			const { skeletonType = "default", children, ...skeletonProps } = props;
+			if (skeletonType === "circle") {
+				return <SkeletonCircle {...skeletonProps} />;
+			}
+			if (skeletonType === "text") {
+				const { noOfLines, gap } = skeletonProps;
+				return (
+					<SkeletonText
+						noOfLines={noOfLines !== undefined ? Number(noOfLines) : undefined}
+						gap={gap}
+						{...skeletonProps}
+					/>
+				);
+			}
+			return (
+				<Skeleton {...skeletonProps}>
+					{children && <PageRenderer content={children} />}
+				</Skeleton>
 			);
 		}
 		default:
