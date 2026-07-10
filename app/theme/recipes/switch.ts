@@ -63,12 +63,13 @@ export const switchRecipe = defineSlotRecipe({
 			alignItems: "center",
 			justifyContent: "center",
 			flexShrink: 0,
-			transitionProperty: "translate",
+			transitionProperty: "transform",
 			transitionDuration: "fast",
 			transitionTimingFunction: "default",
 			borderRadius: "inherit",
-			_peerChecked: {
-				translate: "var(--switch-x) 0",
+			transform: "translateX(0)",
+			_checked: {
+				transform: "translateX(var(--switch-x))",
 			},
 		},
 	},
