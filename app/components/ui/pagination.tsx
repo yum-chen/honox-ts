@@ -93,11 +93,7 @@ function Pagination(props: PaginationProps) {
 	);
 
 	if (isInteractive) {
-		return (
-			<PaginationIsland {...rootProps}>
-				{content}
-			</PaginationIsland>
-		);
+		return <PaginationIsland {...rootProps}>{content}</PaginationIsland>;
 	}
 
 	return <Root {...rootProps}>{content}</Root>;

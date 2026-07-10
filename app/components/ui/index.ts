@@ -32,6 +32,7 @@ export { HoverCard, type HoverCardProps } from "./hover-card";
 export { Loader, type LoaderProps } from "./loader";
 export { Menu, type MenuItem, type MenuProps } from "./menu";
 export * as MenuPrimitive from "./menu-primitive";
+export { PaginatedTable, type PaginatedTableProps } from "./paginated-table";
 export { Pagination, type PaginationProps } from "./pagination";
 export { Popover, type PopoverProps } from "./popover";
 export { Progress, type ProgressProps } from "./progress";

@@ -27,10 +27,11 @@ export const pagination = defineSlotRecipe({
 				bg: "bg.subtle",
 			},
 			_selected: {
-				bg: "accent.default",
-				color: "accent.fg",
+				bg: "gray.3",
+				color: "fg.default",
+				cursor: "default",
 				_hover: {
-					bg: "accent.default",
+					bg: "gray.3",
 				},
 			},
 			_disabled: {

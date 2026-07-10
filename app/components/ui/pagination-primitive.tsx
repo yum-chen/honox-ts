@@ -222,7 +222,9 @@ export function Item(props: ItemProps) {
 			class={cx(context.styles.item, classProp)}
 			{...itemProps}
 			onClick={() => {
-				context.onPageChange?.({ page: value, pageSize: context.pageSize });
+				if (!isSelected) {
+					context.onPageChange?.({ page: value, pageSize: context.pageSize });
+				}
 			}}
 		>
 			{children || String(value)}
