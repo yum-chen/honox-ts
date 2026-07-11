@@ -16,7 +16,6 @@
 		"start": "bun run src/main.ts"
 	},
 	"dependencies": {
-		"@ark-ui/react": "^5.37.2",
 		"hono": "^4.12.29",
 		"honox": "0.1.56"
 	},
