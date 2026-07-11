@@ -117,6 +117,7 @@ Applies to:
 | `hover-card` | `shouldHydrate(interactive, true)` | Always hydrates | ✅ `hover-card.tsx` |
 | `popover` | `shouldHydrate(interactive, true)` | Always hydrates | ✅ `popover.tsx` |
 | `menu` | `shouldHydrate(interactive, true)` | Always hydrates | ✅ `menu.tsx` |
+| `select` | `shouldHydrate(interactive, true)` | Always hydrates — opening the dropdown and selecting an item require JS; there is no static fallback (the native `<select>` is visually hidden and exists only for form submission) | ✅ `select.tsx` (Tier-1) |
 | `collapsible` | `shouldHydrate(interactive, true)` | Always hydrates (expand/collapse needs JS) | ✅ `collapsible.tsx` (Tier-1) |
 | `toast` | Always island (client singleton) | No prop, always an island | ✅ `toast.tsx` |
 
