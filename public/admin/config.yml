@@ -402,7 +402,6 @@ collections:
                     name: collapsible
                     widget: object
                     fields: &collapsible_fields
-                      - { label: Trigger Text, name: triggerText, widget: string, required: false }
                       - label: Trigger
                         name: trigger
                         widget: list
@@ -643,7 +642,6 @@ collections:
             name: collapsible
             widget: object
             fields:
-              - { label: Trigger Text, name: triggerText, widget: string, required: false }
               - label: Trigger
                 name: trigger
                 widget: list

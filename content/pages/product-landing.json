@@ -295,7 +295,6 @@
               "content": "Yes. There are no long-term contracts — cancel or downgrade your plan anytime from account settings."
             }
           ],
-          "triggerText": "",
           "trigger": [
             {
               "type": "text",
@@ -316,7 +315,6 @@
               "content": "Enterprise plans include a self-hosted deployment option with full data residency control."
             }
           ],
-          "triggerText": "",
           "trigger": [
             {
               "type": "text",
@@ -337,7 +335,6 @@
               "content": "Pulse connects to Postgres, MySQL, Snowflake, BigQuery, Stripe, and 40+ other sources out of the box."
             }
           ],
-          "triggerText": "",
           "trigger": [
             {
               "type": "text",
@@ -358,7 +355,6 @@
               "content": "Every plan starts with a 14-day free trial — no credit card required."
             }
           ],
-          "triggerText": "",
           "trigger": [
             {
               "type": "text",

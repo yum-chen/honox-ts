@@ -166,8 +166,10 @@ const registry: Record<string, BlockRenderer> = {
 				trigger = cmsTrigger;
 			}
 		}
-		if (!trigger) {
-			trigger = triggerText || "Toggle";
+
+		// Fallback to triggerText for deprecated behavior
+		if (!trigger && triggerText) {
+			trigger = triggerText;
 		}
 
 		const indicator = showIndicator ? (

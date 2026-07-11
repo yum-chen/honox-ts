@@ -64,12 +64,11 @@
               "status": "warning"
             }
           ],
-          "triggerText": "Click to expand details",
+          "trigger": "Click to expand details",
           "showIndicator": true,
           "indicatorPlacement": "end",
           "open": false,
-          "content": "Content",
-          "trigger": "Trigger of Collapsile"
+          "content": "Content"
         },
         {
           "type": "heading",

@@ -47,7 +47,7 @@ test("PageRenderer renders collapsible correctly", () => {
 	const content = [
 		{
 			type: "collapsible",
-			triggerText: "Click to reveal",
+			trigger: "Click to reveal",
 			showIndicator: true,
 			children: [
 				{
@@ -61,6 +61,27 @@ test("PageRenderer renders collapsible correctly", () => {
 	const html = (<PageRenderer content={content} />).toString();
 
 	expect(html).toContain("Click to reveal");
+	expect(html).toContain("Secret content");
+});
+
+test("PageRenderer renders collapsible using deprecated triggerText correctly", () => {
+	const content = [
+		{
+			type: "collapsible",
+			triggerText: "Click to reveal (deprecated)",
+			showIndicator: true,
+			children: [
+				{
+					type: "text",
+					content: "Secret content"
+				}
+			]
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+
+	expect(html).toContain("Click to reveal (deprecated)");
 	expect(html).toContain("Secret content");
 });
 

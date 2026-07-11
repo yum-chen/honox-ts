@@ -5,7 +5,10 @@ import { type SkeletonVariantProps, skeleton } from "styled-system/recipes";
 
 interface SkeletonProps
 	extends PropsWithChildren<Omit<SkeletonVariantProps, "variant">>,
-		Omit<import("hono/jsx").JSX.IntrinsicElements["div"], "children" | "width" | "height" | "size"> {
+		Omit<
+			import("hono/jsx").JSX.IntrinsicElements["div"],
+			"children" | "width" | "height" | "size"
+		> {
 	class?: string;
 	width?: string | number;
 	height?: string | number;
@@ -34,7 +37,14 @@ function Skeleton(props: SkeletonProps) {
 	const isText = props.variant === "text";
 
 	if (isText) {
-		return <SkeletonText noOfLines={noOfLines} gap={gap} class={classProp} {...restProps} />;
+		return (
+			<SkeletonText
+				noOfLines={noOfLines}
+				gap={gap}
+				class={classProp}
+				{...restProps}
+			/>
+		);
 	}
 
 	// Resolve direct dimensions using inline styles and Panda tokens
@@ -57,9 +67,10 @@ function Skeleton(props: SkeletonProps) {
 	].filter(Boolean).join(";");
 
 	// Resolve animation variant. If it is circle/text shape variant, default animation is pulse
-	const resolvedVariant = (props.variant === "circle" || props.variant === "text")
-		? undefined
-		: props.variant;
+	const resolvedVariant =
+		props.variant === "circle" || props.variant === "text"
+			? undefined
+			: props.variant;
 
 	return (
 		<div
