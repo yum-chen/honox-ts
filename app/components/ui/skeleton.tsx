@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "hono/jsx";
-import { css, cx } from "styled-system/css";
+import { cx } from "styled-system/css";
 import { stack } from "styled-system/patterns";
 import { type SkeletonVariantProps, skeleton } from "styled-system/recipes";
 
@@ -15,9 +15,19 @@ interface SkeletonProps
 	gap?: string | number;
 }
 
+function getPandaSize(val: string | number) {
+	if (typeof val === "number") {
+		return `var(--sizes-${val})`;
+	}
+	if (/^\d+(\.\d+)?$/.test(val)) {
+		return `var(--sizes-${val})`;
+	}
+	return val;
+}
+
 function Skeleton(props: SkeletonProps) {
 	const [variantProps, localProps] = skeleton.splitVariantProps(props);
-	const { children, class: classProp, width, height, size, noOfLines, gap, ...restProps } = localProps;
+	const { children, class: classProp, style: styleProp, width, height, size, noOfLines, gap, ...restProps } = localProps;
 
 	// Check if the user specified the visual variant ("circle" or "text") via the variant prop or explicitly
 	const isCircle = variantProps.circle || props.variant === "circle";
@@ -27,18 +37,24 @@ function Skeleton(props: SkeletonProps) {
 		return <SkeletonText noOfLines={noOfLines} gap={gap} class={classProp} {...restProps} />;
 	}
 
-	const styles: Record<string, any> = {};
+	// Resolve direct dimensions using inline styles and Panda tokens
+	const styles: Record<string, string> = {};
 	if (size !== undefined) {
-		styles.boxSize = size;
+		const sizeValue = getPandaSize(size);
+		styles.width = sizeValue;
+		styles.height = sizeValue;
 	}
 	if (width !== undefined) {
-		styles.width = width;
+		styles.width = getPandaSize(width);
 	}
 	if (height !== undefined) {
-		styles.height = height;
+		styles.height = getPandaSize(height);
 	}
 
-	const hasStyles = Object.keys(styles).length > 0;
+	const inlineStyles = [
+		...Object.entries(styles).map(([k, v]) => `${k}:${v}`),
+		styleProp,
+	].filter(Boolean).join(";");
 
 	// Resolve animation variant. If it is circle/text shape variant, default animation is pulse
 	const resolvedVariant = (props.variant === "circle" || props.variant === "text")
@@ -53,9 +69,9 @@ function Skeleton(props: SkeletonProps) {
 					circle: isCircle,
 					variant: resolvedVariant,
 				}),
-				hasStyles ? css(styles) : undefined,
 				classProp,
 			)}
+			style={inlineStyles || undefined}
 			{...restProps}
 		>
 			{children}
@@ -87,14 +103,14 @@ function SkeletonText(props: SkeletonTextProps) {
 	} = props;
 
 	return (
-		<div class={cx(stack({ gap }), css({ width: "full" }), classProp)}>
+		<div class={cx(stack({ gap }), classProp)} style="width: 100%;">
 			{Array.from({ length: noOfLines }).map((_, index) => (
 				<Skeleton
 					key={index}
-					class={css({
-						height: "4",
-						_last: { maxW: noOfLines === 1 ? "100%" : "80%" },
-					})}
+					height="4"
+					style={{
+						maxWidth: index === noOfLines - 1 ? (noOfLines === 1 ? "100%" : "80%") : undefined,
+					}}
 					{...skeletonProps}
 				/>
 			))}
@@ -104,9 +120,5 @@ function SkeletonText(props: SkeletonTextProps) {
 
 export {
 	Skeleton,
-	SkeletonCircle,
-	SkeletonText,
 	type SkeletonProps,
-	type SkeletonCircleProps,
-	type SkeletonTextProps,
 };

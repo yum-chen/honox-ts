@@ -42,11 +42,7 @@ export { SegmentGroup, type SegmentGroupProps } from "./segment-group";
 export { Select, type SelectProps } from "./select";
 export {
 	Skeleton,
-	SkeletonCircle,
-	type SkeletonCircleProps,
 	type SkeletonProps,
-	SkeletonText,
-	type SkeletonTextProps,
 } from "./skeleton";
 export { Slider, type SliderProps } from "./slider";
 export { Spinner, type SpinnerProps } from "./spinner";
