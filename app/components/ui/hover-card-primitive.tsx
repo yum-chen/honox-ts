@@ -38,6 +38,7 @@ export interface HoverCardRootProps extends PropsWithChildren {
 	closeDelay?: number;
 	lazyMount?: boolean;
 	unmountOnExit?: boolean;
+	rootRef?: any;
 }
 
 export function Root(props: HoverCardRootProps) {
@@ -47,6 +48,7 @@ export function Root(props: HoverCardRootProps) {
 		children,
 		lazyMount,
 		unmountOnExit,
+		rootRef,
 	} = props;
 	const autoId = useId();
 	const id = idProp || autoId;
@@ -57,11 +59,18 @@ export function Root(props: HoverCardRootProps) {
 	}
 
 	return (
-		<HoverCardContext.Provider
-			value={{ id, open, styles, lazyMount, unmountOnExit, hasOpenedRef }}
+		<div
+			id={id}
+			ref={rootRef}
+			data-state={open ? "open" : "closed"}
+			style={{ position: "relative", display: "inline-block" }}
 		>
-			{children}
-		</HoverCardContext.Provider>
+			<HoverCardContext.Provider
+				value={{ id, open, styles, lazyMount, unmountOnExit, hasOpenedRef }}
+			>
+				{children}
+			</HoverCardContext.Provider>
+		</div>
 	);
 }
 
@@ -389,16 +398,15 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 	}, [openDelay, closeDelay]);
 
 	return (
-		<div id={rootId} ref={rootRef} data-state={open ? "open" : "closed"}>
-			<Root
-				{...rest}
-				id={idProp}
-				open={open}
-				lazyMount={lazyMount}
-				unmountOnExit={unmountOnExit}
-			>
-				{children}
-			</Root>
-		</div>
+		<Root
+			{...rest}
+			id={rootId}
+			open={open}
+			lazyMount={lazyMount}
+			unmountOnExit={unmountOnExit}
+			rootRef={rootRef}
+		>
+			{children}
+		</Root>
 	);
 }
