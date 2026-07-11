@@ -15,6 +15,7 @@ import {
 	Code,
 	Collapsible,
 	Combobox,
+	DatePicker,
 	Dialog,
 	Drawer,
 	Field,
@@ -1119,6 +1120,41 @@ export default createRoute((c) => {
 					items={items}
 					label="Framework"
 					placeholder="Select a Framework"
+				/>
+			</div>
+
+			{/* DatePicker Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					DatePicker Component Examples
+				</Heading>
+
+				<Text size="sm" class={css({ color: "fg.muted", mb: "2" })}>
+					Interactive DatePicker (Hydrated Island)
+				</Text>
+				<DatePicker
+					interactive
+					placeholder="Select Date"
+					defaultValue={["2026-07-28"]}
+				/>
+
+				<Text size="sm" class={css({ color: "fg.muted", mt: "4", mb: "2" })}>
+					Static DatePicker (Server Renders Initial State)
+				</Text>
+				<DatePicker
+					interactive={false}
+					placeholder="Static Date"
+					defaultValue={["2024-12-25"]}
 				/>
 			</div>
 

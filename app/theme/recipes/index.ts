@@ -1,4 +1,3 @@
-import { input } from "./input";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { avatar } from "./avatar";
@@ -10,6 +9,7 @@ import { checkbox } from "./checkbox";
 import { code } from "./code";
 import { collapsible } from "./collapsible";
 import { combobox } from "./combobox";
+import { datePicker } from "./date-picker";
 import { dialog } from "./dialog";
 import { drawer } from "./drawer";
 import { field } from "./field";
@@ -17,6 +17,7 @@ import { fieldset } from "./fieldset";
 import { group } from "./group";
 import { heading } from "./heading";
 import { hoverCard } from "./hover-card";
+import { input } from "./input";
 import { menu } from "./menu";
 import { pagination } from "./pagination";
 import { popover } from "./popover";
@@ -39,17 +40,17 @@ import { toggleGroup } from "./toggle-group";
 import { tooltip } from "./tooltip";
 
 export const recipes = {
-    absoluteCenter,
-    badge,
-    button,
-    group,
-    heading,
-    spinner,
-    text,
-    textarea,
-    skeleton,
-    code,
-    input
+	absoluteCenter,
+	badge,
+	button,
+	group,
+	heading,
+	spinner,
+	text,
+	textarea,
+	skeleton,
+	code,
+	input,
 };
 
 export const slotRecipes = {
@@ -81,4 +82,5 @@ export const slotRecipes = {
 	toast,
 	tooltip,
 	select,
+	datePicker,
 };
