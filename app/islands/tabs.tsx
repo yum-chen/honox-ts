@@ -59,9 +59,11 @@ export default function TabsIsland(props: TabsIslandProps) {
 				'[data-part="trigger"]',
 			);
 			if (trigger && !trigger.hasAttribute("data-disabled")) {
-				const newValue = trigger.getAttribute("data-value")!;
-				setValue(newValue);
-				onValueChange?.(newValue);
+				const newValue = trigger.getAttribute("data-value");
+				if (newValue) {
+					setValue(newValue);
+					onValueChange?.(newValue);
+				}
 			}
 		};
 
@@ -93,9 +95,11 @@ export default function TabsIsland(props: TabsIslandProps) {
 				const nextTrigger = triggers[nextIndex];
 				nextTrigger.focus();
 				if (props.activationMode !== "manual") {
-					const newValue = nextTrigger.getAttribute("data-value")!;
-					setValue(newValue);
-					onValueChange?.(newValue);
+					const newValue = nextTrigger.getAttribute("data-value");
+					if (newValue) {
+						setValue(newValue);
+						onValueChange?.(newValue);
+					}
 				}
 				e.preventDefault();
 			}

@@ -60,9 +60,11 @@ export default function SegmentGroupIsland(props: SegmentGroupIslandProps) {
 				'[data-part="item"]',
 			);
 			if (item && !item.hasAttribute("data-disabled")) {
-				const newValue = item.getAttribute("data-value")!;
-				setValue(newValue);
-				onValueChange?.(newValue);
+				const newValue = item.getAttribute("data-value");
+				if (newValue) {
+					setValue(newValue);
+					onValueChange?.(newValue);
+				}
 			}
 		};
 
@@ -101,9 +103,11 @@ export default function SegmentGroupIsland(props: SegmentGroupIslandProps) {
 			if (nextIndex !== -1) {
 				const nextItem = items[nextIndex];
 				nextItem.focus();
-				const newValue = nextItem.getAttribute("data-value")!;
-				setValue(newValue);
-				onValueChange?.(newValue);
+				const newValue = nextItem.getAttribute("data-value");
+				if (newValue) {
+					setValue(newValue);
+					onValueChange?.(newValue);
+				}
 				e.preventDefault();
 			}
 		};

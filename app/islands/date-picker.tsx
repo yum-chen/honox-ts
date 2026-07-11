@@ -50,9 +50,7 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 	const [focusedValue, setFocusedValue] =
 		useState<CalendarDate>(initialFocused);
 	const currentFocusedValue =
-		focusedValueProp !== undefined
-			? parseSingleDate(focusedValueProp)!
-			: focusedValue;
+		parseSingleDate(focusedValueProp) ?? focusedValue;
 
 	// Keep refs for event handlers to avoid closure stale state
 	const stateRef = useRef({

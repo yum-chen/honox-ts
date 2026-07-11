@@ -38,7 +38,8 @@ export default function ToggleGroupIsland(props: ToggleGroupIslandProps) {
 				'[data-part="item"]',
 			);
 			if (item && !item.hasAttribute("disabled")) {
-				const itemValue = item.getAttribute("data-value")!;
+				const itemValue = item.getAttribute("data-value");
+				if (!itemValue) return;
 				let newValue: string[];
 
 				if (multiple) {

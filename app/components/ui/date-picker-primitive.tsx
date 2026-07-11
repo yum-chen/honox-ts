@@ -226,9 +226,7 @@ export function DatePickerRoot(props: DatePickerRootProps) {
 		(value[0] || fromJSDate(new Date()));
 	const [focusedState, setFocusedState] =
 		useState<CalendarDate>(initialFocused);
-	const focusedValue = focusedValueProp
-		? parseSingleDate(focusedValueProp)!
-		: focusedState;
+	const focusedValue = parseSingleDate(focusedValueProp) ?? focusedState;
 
 	const min = parseSingleDate(minProp);
 	const max = parseSingleDate(maxProp);
