@@ -1,9 +1,10 @@
 import { expect, test } from "bun:test";
-import { Skeleton, SkeletonCircle } from "../app/components/ui/skeleton";
+import { Skeleton } from "../app/components/ui/skeleton";
 import { css } from "styled-system/css";
 
-test("SkeletonCircle component renders with class and boxSize", async () => {
-	const html = (await SkeletonCircle({
+test("Skeleton component renders with variant='circle' and class and boxSize", async () => {
+	const html = (await Skeleton({
+		variant: "circle",
 		class: css({ boxSize: "12" }),
 	})) as unknown as { toString: () => string };
 	const htmlString = html.toString();
@@ -12,14 +13,15 @@ test("SkeletonCircle component renders with class and boxSize", async () => {
 	expect(htmlString).toContain("size_12");
 });
 
-test("SkeletonCircle component renders with direct size prop", async () => {
-	const html = (await SkeletonCircle({
+test("Skeleton component renders with variant='circle' and direct size prop", async () => {
+	const html = (await Skeleton({
+		variant: "circle",
 		size: "12",
 	})) as unknown as { toString: () => string };
 	const htmlString = html.toString();
 	expect(htmlString).toContain("skeleton");
 	expect(htmlString).toContain("skeleton--circle_true");
-	expect(htmlString).toContain("size_12");
+	expect(htmlString).toContain('style="width:var(--sizes-12);height:var(--sizes-12)"');
 });
 
 test("Skeleton component renders with width and height props", async () => {
@@ -29,8 +31,7 @@ test("Skeleton component renders with width and height props", async () => {
 	})) as unknown as { toString: () => string };
 	const htmlString = html.toString();
 	expect(htmlString).toContain("skeleton");
-	expect(htmlString).toContain("w_40");
-	expect(htmlString).toContain("h_6");
+	expect(htmlString).toContain('style="width:var(--sizes-40);height:var(--sizes-6)"');
 });
 
 test("Skeleton component renders with variant='circle' prop", async () => {
@@ -41,7 +42,7 @@ test("Skeleton component renders with variant='circle' prop", async () => {
 	const htmlString = html.toString();
 	expect(htmlString).toContain("skeleton");
 	expect(htmlString).toContain("skeleton--circle_true");
-	expect(htmlString).toContain("size_10");
+	expect(htmlString).toContain('style="width:var(--sizes-10);height:var(--sizes-10)"');
 });
 
 test("Skeleton component renders with variant='text' prop", async () => {

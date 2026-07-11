@@ -33,8 +33,6 @@ import {
 	SegmentGroup,
 	Select,
 	Skeleton,
-	SkeletonCircle,
-	SkeletonText,
 	Slider,
 	Spinner,
 	Splitter,
@@ -1396,7 +1394,7 @@ export default createRoute((c) => {
 						<Text size="sm" class={css({ color: "fg.muted" })}>
 							Skeleton Circle
 						</Text>
-						<SkeletonCircle class={css({ boxSize: "12" })} />
+						<Skeleton variant="circle" size="12" />
 					</div>
 
 					<div
@@ -1410,7 +1408,7 @@ export default createRoute((c) => {
 						<Text size="sm" class={css({ color: "fg.muted" })}>
 							Skeleton Text
 						</Text>
-						<SkeletonText noOfLines={3} gap="3" />
+						<Skeleton variant="text" noOfLines={3} gap="3" />
 					</div>
 
 					<div
