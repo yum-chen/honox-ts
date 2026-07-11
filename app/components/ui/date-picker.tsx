@@ -30,6 +30,8 @@ import {
 	CalendarDate,
 	parseDate,
 	fromJSDate,
+	parseValue,
+	parseSingleDate,
 	type DatePickerRootProps,
 } from "./date-picker-primitive";
 
@@ -38,14 +40,33 @@ export interface DatePickerProps extends DatePickerRootProps {
 }
 
 export function DatePickerRoot(props: DatePickerProps) {
-	const { interactive, ...rest } = props;
+	const { interactive, value, defaultValue, min, max, focusedValue, defaultFocusedValue, isDateUnavailable, ...rest } = props;
 	const isInteractive = shouldHydrate(interactive, true);
 
 	if (isInteractive) {
-		return <DatePickerIsland {...rest} />;
+		const serializedValue = value ? parseValue(value).map(v => v.toString()) : undefined;
+		const serializedDefaultValue = defaultValue ? parseValue(defaultValue).map(v => v.toString()) : undefined;
+		const serializedMin = min ? parseSingleDate(min)?.toString() : undefined;
+		const serializedMax = max ? parseSingleDate(max)?.toString() : undefined;
+		const serializedFocusedValue = focusedValue ? parseSingleDate(focusedValue)?.toString() : undefined;
+		const serializedDefaultFocusedValue = defaultFocusedValue ? parseSingleDate(defaultFocusedValue)?.toString() : undefined;
+
+		const { children, ...islandRest } = rest as any;
+
+		return (
+			<DatePickerIsland
+				{...islandRest}
+				value={serializedValue as any}
+				defaultValue={serializedDefaultValue as any}
+				min={serializedMin as any}
+				max={serializedMax as any}
+				focusedValue={serializedFocusedValue as any}
+				defaultFocusedValue={serializedDefaultFocusedValue as any}
+			/>
+		);
 	}
 
-	return <RootPrimitive {...rest} />;
+	return <RootPrimitive {...props} />;
 }
 
 export const DatePicker = Object.assign(DatePickerRoot, {

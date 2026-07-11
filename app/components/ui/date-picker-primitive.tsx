@@ -37,6 +37,30 @@ export function fromJSDate(date: Date): CalendarDate {
 	return new CalendarDate(date.getFullYear(), date.getMonth() + 1, date.getDate());
 }
 
+export function parseValue(val: any): CalendarDate[] {
+	if (!val) return [];
+	if (Array.isArray(val)) {
+		return val.map((v) => {
+			if (v instanceof CalendarDate) return v;
+			if (v instanceof Date) return fromJSDate(v);
+			if (typeof v === "string") return parseDate(v);
+			return parseDate(String(v));
+		});
+	}
+	if (val instanceof CalendarDate) return [val];
+	if (val instanceof Date) return [fromJSDate(val)];
+	if (typeof val === "string") return [parseDate(val)];
+	return [];
+}
+
+export function parseSingleDate(val: any): CalendarDate | undefined {
+	if (!val) return undefined;
+	if (val instanceof CalendarDate) return val;
+	if (val instanceof Date) return fromJSDate(val);
+	if (typeof val === "string") return parseDate(val);
+	return undefined;
+}
+
 export type DatePickerStyles = ReturnType<typeof datePicker>;
 
 export interface DatePickerContextValue {
@@ -97,13 +121,13 @@ export interface DatePickerRootProps extends DatePickerVariantProps, PropsWithCh
 	selectionMode?: "single" | "multiple" | "range";
 	maxSelectedDates?: number;
 	view?: "day" | "month" | "year";
-	value?: CalendarDate[];
-	defaultValue?: CalendarDate[];
-	focusedValue?: CalendarDate;
-	defaultFocusedValue?: CalendarDate;
+	value?: CalendarDate[] | string[] | string | Date[];
+	defaultValue?: CalendarDate[] | string[] | string | Date[];
+	focusedValue?: CalendarDate | string | Date;
+	defaultFocusedValue?: CalendarDate | string | Date;
 	locale?: string;
-	min?: CalendarDate;
-	max?: CalendarDate;
+	min?: CalendarDate | string | Date;
+	max?: CalendarDate | string | Date;
 	isDateUnavailable?: (date: CalendarDate, locale: string) => boolean;
 	onValueChange?: (details: { value: CalendarDate[] }) => void;
 	onOpenChange?: (details: { open: boolean }) => void;
@@ -162,8 +186,8 @@ export function DatePickerRoot(props: DatePickerRootProps) {
 		focusedValue: focusedValueProp,
 		defaultFocusedValue,
 		locale = "en-US",
-		min,
-		max,
+		min: minProp,
+		max: maxProp,
 		isDateUnavailable,
 		onValueChange,
 		onOpenChange,
@@ -175,13 +199,16 @@ export function DatePickerRoot(props: DatePickerRootProps) {
 	const styles = datePicker(variantProps);
 	const rootId = id || `date-picker-${useId()}`;
 
-	const initialValue = valueProp ?? defaultValue ?? [];
+	const initialValue = parseValue(valueProp ?? defaultValue);
 	const [valState, setValState] = useState<CalendarDate[]>(initialValue);
-	const value = valueProp ?? valState;
+	const value = valueProp ? parseValue(valueProp) : valState;
 
-	const initialFocused = focusedValueProp ?? defaultFocusedValue ?? (value[0] || fromJSDate(new Date()));
+	const initialFocused = parseSingleDate(focusedValueProp ?? defaultFocusedValue) ?? (value[0] || fromJSDate(new Date()));
 	const [focusedState, setFocusedState] = useState<CalendarDate>(initialFocused);
-	const focusedValue = focusedValueProp ?? focusedState;
+	const focusedValue = focusedValueProp ? parseSingleDate(focusedValueProp)! : focusedState;
+
+	const min = parseSingleDate(minProp);
+	const max = parseSingleDate(maxProp);
 
 	const [viewState, setViewState] = useState<"day" | "month" | "year">(view);
 	const currentView = props.view ?? viewState;
@@ -931,4 +958,73 @@ export function DatePickerContext(props: { children: (api: DatePickerContextValu
 	const context = useDatePickerContext();
 	if (!context) return null;
 	return props.children(context);
+}
+
+export interface DatePickerFlattenedProps extends DatePickerRootProps {
+	label?: string;
+	placeholder?: string;
+}
+
+export function DatePickerStructure(props: DatePickerFlattenedProps) {
+	const { label, placeholder = "YYYY-MM-DD", selectionMode = "single" } = props;
+
+	return (
+		<>
+			{label && <DatePickerLabel>{label}</DatePickerLabel>}
+			<DatePickerControl>
+				{selectionMode === "range" ? (
+					<>
+						<DatePickerInput index={0} placeholder="Start date" />
+						<DatePickerInput index={1} placeholder="End date" />
+					</>
+				) : (
+					<DatePickerInput placeholder={placeholder} />
+				)}
+				<DatePickerTrigger />
+			</DatePickerControl>
+			<DatePickerPositioner>
+				<DatePickerContent>
+					<DatePickerView view="day">
+						<DatePickerContext>
+							{(datePicker) => (
+								<>
+									<DatePickerViewControl>
+										<DatePickerPrevTrigger />
+										<DatePickerViewTrigger>
+											<DatePickerRangeText />
+										</DatePickerViewTrigger>
+										<DatePickerNextTrigger />
+									</DatePickerViewControl>
+									<DatePickerTable>
+										<DatePickerTableHead>
+											<DatePickerTableRow>
+												{datePicker.weekDays.map((weekDay, id) => (
+													<DatePickerTableHeader key={id}>
+														{weekDay.short}
+													</DatePickerTableHeader>
+												))}
+											</DatePickerTableRow>
+										</DatePickerTableHead>
+										<DatePickerTableBody>
+											{datePicker.weeks.map((week, id) => (
+												<DatePickerTableRow key={id}>
+													{week.map((day, id) => (
+														<DatePickerTableCell key={id} value={day}>
+															<DatePickerTableCellTrigger>
+																{day.day}
+															</DatePickerTableCellTrigger>
+														</DatePickerTableCell>
+													))}
+												</DatePickerTableRow>
+											))}
+										</DatePickerTableBody>
+									</DatePickerTable>
+								</>
+							)}
+						</DatePickerContext>
+					</DatePickerView>
+				</DatePickerContent>
+			</DatePickerPositioner>
+		</>
+	);
 }

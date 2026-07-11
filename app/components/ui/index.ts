@@ -21,7 +21,7 @@ export { Checkbox, type CheckboxProps } from "./checkbox";
 export { Code, type CodeProps } from "./code";
 export { Collapsible, type CollapsibleProps } from "./collapsible";
 export { Combobox, type ComboboxProps } from "./combobox";
-export * as DatePicker from "./date-picker";
+export { DatePicker, type DatePickerProps } from "./date-picker";
 export { Dialog, type DialogProps } from "./dialog";
 export { Drawer, type DrawerProps } from "./drawer";
 export { Field, type FieldProps } from "./field";

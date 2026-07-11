@@ -5,6 +5,10 @@ import {
 	DatePickerRoot,
 	type DatePickerRootProps,
 	parseDate,
+	parseValue,
+	parseSingleDate,
+	getMonthWeeks,
+	DatePickerStructure,
 } from "../components/ui/date-picker-primitive";
 
 export default function DatePickerIsland(props: DatePickerRootProps) {
@@ -32,9 +36,9 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 	const open = openProp !== undefined ? openProp : isOpen;
 
 	// value state
-	const initialValue = valueProp ?? defaultValue ?? [];
+	const initialValue = parseValue(valueProp ?? defaultValue);
 	const [value, setValue] = useState<CalendarDate[]>(initialValue);
-	const currentValue = valueProp !== undefined ? valueProp : value;
+	const currentValue = valueProp !== undefined ? parseValue(valueProp) : value;
 
 	// view state
 	const [view, setView] = useState<"day" | "month" | "year">(viewProp ?? "day");
@@ -42,11 +46,10 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 
 	// focusedValue state
 	const initialFocused =
-		focusedValueProp ??
-		defaultFocusedValue ??
+		parseSingleDate(focusedValueProp ?? defaultFocusedValue) ??
 		(currentValue[0] || fromJSDate(new Date()));
 	const [focusedValue, setFocusedValue] = useState<CalendarDate>(initialFocused);
-	const currentFocusedValue = focusedValueProp !== undefined ? focusedValueProp : focusedValue;
+	const currentFocusedValue = focusedValueProp !== undefined ? parseSingleDate(focusedValueProp)! : focusedValue;
 
 	// Keep refs for event handlers to avoid closure stale state
 	const stateRef = useRef({
@@ -235,10 +238,8 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 				const activeView = stateRef.current.view;
 				if (activeView === "day") {
 					const cell = cellTrigger.closest('[data-part="table-cell"]');
-					// Re-evaluate cells from weeks grid or compute from index
 					const dayCellIndex = Array.from(root.querySelectorAll('[data-part="table-cell"]')).indexOf(cell as any);
 					if (dayCellIndex !== -1) {
-						// Map index to weeks 2D array
 						const flatWeeks = stateRef.current.focusedValue ? getMonthWeeks(stateRef.current.focusedValue.year, stateRef.current.focusedValue.month).flat() : [];
 						const dateValue = flatWeeks[dayCellIndex];
 						if (dateValue) {
@@ -296,7 +297,7 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 			view={currentView}
 			selectionMode={selectionMode}
 		>
-			{children}
+			{children || <DatePickerStructure selectionMode={selectionMode} {...rest} />}
 		</DatePickerRoot>
 	);
 }

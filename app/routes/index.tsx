@@ -15,6 +15,7 @@ import {
 	Code,
 	Collapsible,
 	Combobox,
+	DatePicker,
 	Dialog,
 	Drawer,
 	Field,
@@ -1122,6 +1123,7 @@ export default createRoute((c) => {
 				/>
 			</div>
 
+
 			{/* Group Examples */}
 			<div
 				class={css({
@@ -1984,6 +1986,48 @@ export default createRoute((c) => {
 						},
 					]}
 				/>
+			</div>
+
+			{/* DatePicker Examples */}
+			<div
+				class={css({
+					mt: "8",
+					display: "flex",
+					flexDirection: "column",
+					gap: "4",
+					alignItems: "center",
+					maxWidth: "xl",
+					mx: "auto",
+				})}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					DatePicker Component Examples
+				</Heading>
+
+				<div
+					class={css({
+						width: "full",
+						display: "flex",
+						flexDirection: "column",
+						gap: "8",
+					})}
+				>
+					{/* Basic DatePicker (Single selection) */}
+					<div class={css({ display: "flex", flexDirection: "column", gap: "2" })}>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic DatePicker (Single selection)
+						</Text>
+						<DatePicker interactive label="Choose Date" selectionMode="single" />
+					</div>
+
+					{/* Range Selection DatePicker */}
+					<div class={css({ display: "flex", flexDirection: "column", gap: "2" })}>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Range Selection DatePicker
+						</Text>
+						<DatePicker interactive label="Select Date Range" selectionMode="range" />
+					</div>
+				</div>
 			</div>
 
 			{/* Progress Examples */}
