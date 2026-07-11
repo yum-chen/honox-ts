@@ -3,8 +3,10 @@ import { css } from "styled-system/css";
 import HoverCardIsland from "../../islands/hover-card";
 import {
 	HoverCardArrow as Arrow,
+	HoverCardArrowTip as ArrowTip,
 	HoverCardContent as Content,
-	type HoverCardRootProps,
+	Context,
+	type InteractiveHoverCardProps,
 	HoverCardPositioner as Positioner,
 	HoverCardRoot as RootPrimitive,
 	HoverCardTrigger as Trigger,
@@ -12,7 +14,7 @@ import {
 import { shouldHydrate } from "./island-utils";
 import { Text } from "./text";
 
-interface HoverCardProps extends HoverCardRootProps {
+interface HoverCardProps extends InteractiveHoverCardProps {
 	interactive?: boolean; // keep — forces island hydration (default true)
 	trigger?: JSX.Element; // rendered asChild inside HoverCardTrigger
 	showArrow?: boolean; // default false (matches the home-page "Basic" demo)
@@ -25,6 +27,10 @@ function Root(props: HoverCardProps) {
 	const { interactive, ...rest } = props;
 	if (shouldHydrate(interactive, true)) return <HoverCardIsland {...rest} />;
 	return <RootPrimitive {...rest} />;
+}
+
+function RootProvider(props: HoverCardProps) {
+	return <Root {...props} />;
 }
 
 function HoverCard(props: HoverCardProps) {
@@ -54,7 +60,11 @@ function HoverCard(props: HoverCardProps) {
 			{trigger && <Trigger asChild>{trigger}</Trigger>}
 			<Positioner>
 				<Content>
-					{showArrow && <Arrow />}
+					{showArrow && (
+						<Arrow>
+							<ArrowTip />
+						</Arrow>
+					)}
 					{body}
 				</Content>
 			</Positioner>
@@ -62,5 +72,28 @@ function HoverCard(props: HoverCardProps) {
 	);
 }
 
-export { HoverCard, type HoverCardProps };
-export default HoverCard;
+const HoverCardComponent = Object.assign(HoverCard, {
+	Root,
+	RootProvider,
+	Arrow,
+	ArrowTip,
+	Content,
+	Positioner,
+	Trigger,
+	Context,
+});
+
+export {
+	Arrow,
+	ArrowTip,
+	Content,
+	Context,
+	HoverCardComponent as HoverCard,
+	type HoverCardProps,
+	Positioner,
+	Root,
+	RootProvider,
+	Trigger,
+};
+
+export default HoverCardComponent;

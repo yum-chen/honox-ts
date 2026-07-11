@@ -19,6 +19,44 @@ interface HoverCardContextValue {
 	styles: HoverCardStyles;
 }
 
+interface HoverCardRootProps extends PropsWithChildren {
+	id?: string;
+	open?: boolean;
+	defaultOpen?: boolean;
+	openDelay?: number;
+	closeDelay?: number;
+}
+
+interface HoverCardTriggerProps extends PropsWithChildren {
+	class?: string;
+	asChild?: boolean;
+	[key: string]: unknown;
+}
+
+interface HoverCardPositionerProps extends PropsWithChildren {
+	class?: string;
+	[key: string]: unknown;
+}
+
+interface HoverCardContentProps extends PropsWithChildren {
+	class?: string;
+	[key: string]: unknown;
+}
+
+interface HoverCardArrowProps extends PropsWithChildren {
+	class?: string;
+	[key: string]: unknown;
+}
+
+interface HoverCardArrowTipProps {
+	class?: string;
+	[key: string]: unknown;
+}
+
+interface InteractiveHoverCardProps extends HoverCardRootProps {
+	onOpenChange?: (details: { open: boolean }) => void;
+}
+
 const HoverCardContext = createContext<HoverCardContextValue | null>(null);
 
 const useHoverCardContext = () => {
@@ -26,14 +64,7 @@ const useHoverCardContext = () => {
 	return context;
 };
 
-export interface HoverCardRootProps extends PropsWithChildren {
-	id?: string;
-	open?: boolean;
-	openDelay?: number;
-	closeDelay?: number;
-}
-
-export function HoverCardRoot(props: HoverCardRootProps) {
+function HoverCardRoot(props: HoverCardRootProps) {
 	const { id: idProp, open = false, children } = props;
 	const autoId = useId();
 	const id = idProp || autoId;
@@ -46,18 +77,12 @@ export function HoverCardRoot(props: HoverCardRootProps) {
 	);
 }
 
-export interface HoverCardTriggerProps extends PropsWithChildren {
-	class?: string;
-	asChild?: boolean;
-	[key: string]: unknown;
-}
-
-export function HoverCardTrigger(props: HoverCardTriggerProps) {
+function HoverCardTrigger(props: HoverCardTriggerProps) {
 	const { children, class: classProp, asChild, ...restProps } = props;
 	const context = useHoverCardContext();
 	const id = context?.id;
 	const open = context?.open;
-	const styles = context?.styles;
+	const styles = context?.styles || hoverCard();
 
 	const triggerProps = {
 		id: id ? `hover-card-trigger-${id}` : undefined,
@@ -73,32 +98,27 @@ export function HoverCardTrigger(props: HoverCardTriggerProps) {
 		const child = children as { props?: { class?: string } };
 		return cloneElement(children as unknown as JSX.Element, {
 			...triggerProps,
-			class: cx(styles?.trigger, classProp, child.props?.class),
+			class: cx(styles.trigger, classProp, child.props?.class),
 		});
 	}
 
 	return (
-		<div class={cx(styles?.trigger, classProp)} {...triggerProps}>
+		<div class={cx(styles.trigger, classProp)} {...triggerProps}>
 			{children}
 		</div>
 	);
 }
 
-export interface HoverCardPositionerProps extends PropsWithChildren {
-	class?: string;
-	[key: string]: unknown;
-}
-
-export function HoverCardPositioner(props: HoverCardPositionerProps) {
+function HoverCardPositioner(props: HoverCardPositionerProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useHoverCardContext();
 	const open = context?.open;
-	const styles = context?.styles;
+	const styles = context?.styles || hoverCard();
 
 	return (
 		<div
 			class={cx(
-				styles?.positioner,
+				styles.positioner,
 				classProp,
 				!open && css({ display: "none" }),
 			)}
@@ -117,23 +137,18 @@ export function HoverCardPositioner(props: HoverCardPositionerProps) {
 	);
 }
 
-export interface HoverCardContentProps extends PropsWithChildren {
-	class?: string;
-	[key: string]: unknown;
-}
-
-export function HoverCardContent(props: HoverCardContentProps) {
+function HoverCardContent(props: HoverCardContentProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useHoverCardContext();
 	const id = context?.id;
 	const open = context?.open;
-	const styles = context?.styles;
+	const styles = context?.styles || hoverCard();
 
 	return (
 		<div
 			id={id ? `hover-card-content-${id}` : undefined}
 			role="dialog"
-			class={cx(styles?.content, classProp)}
+			class={cx(styles.content, classProp)}
 			data-state={open ? "open" : "closed"}
 			data-part="content"
 			{...restProps}
@@ -143,40 +158,51 @@ export function HoverCardContent(props: HoverCardContentProps) {
 	);
 }
 
-export function HoverCardArrow(props: PropsWithChildren<{ class?: string }>) {
+function HoverCardArrow(props: HoverCardArrowProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useHoverCardContext();
-	const styles = context?.styles;
+	const styles = context?.styles || hoverCard();
 	return (
-		<div class={cx(styles?.arrow, classProp)} data-part="arrow" {...restProps}>
+		<div class={cx(styles.arrow, classProp)} data-part="arrow" {...restProps}>
 			{children || <HoverCardArrowTip />}
 		</div>
 	);
 }
 
-export function HoverCardArrowTip(props: { class?: string }) {
+function HoverCardArrowTip(props: HoverCardArrowTipProps) {
 	const { class: classProp, ...restProps } = props;
 	const context = useHoverCardContext();
-	const styles = context?.styles;
+	const styles = context?.styles || hoverCard();
 	return (
 		<div
-			class={cx(styles?.arrowTip, classProp)}
+			class={cx(styles.arrowTip, classProp)}
 			data-part="arrow-tip"
 			{...restProps}
 		/>
 	);
 }
 
-export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
+function HoverCardContextComponent(props: {
+	children: (context: HoverCardContextValue | null) => JSX.Element;
+}) {
+	const context = useHoverCardContext();
+	return props.children(context);
+}
+
+function InteractiveHoverCardRoot(props: InteractiveHoverCardProps) {
 	const {
 		open: openProp,
+		defaultOpen,
 		children,
 		id: idProp,
 		openDelay = 600,
 		closeDelay = 300,
+		onOpenChange,
 		...rest
 	} = props;
-	const [isOpen, setIsOpen] = useState(openProp ?? false);
+	const [isOpen, setIsOpen] = useState(openProp ?? defaultOpen ?? false);
+	const isControlled = openProp !== undefined;
+	const open = isControlled ? openProp : isOpen;
 
 	const fallbackId = useId();
 	const rootId = idProp || `hover-card-${fallbackId}`;
@@ -184,46 +210,96 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 	const openTimerRef = useRef<number | null>(null);
 	const closeTimerRef = useRef<number | null>(null);
 
-	const handleOpen = () => {
-		if (closeTimerRef.current) {
-			clearTimeout(closeTimerRef.current);
-			closeTimerRef.current = null;
+	const handleOpenChange = (nextOpen: boolean) => {
+		if (!isControlled) {
+			setIsOpen(nextOpen);
 		}
-		if (openTimerRef.current) return;
-
-		openTimerRef.current = window.setTimeout(() => {
-			setIsOpen(true);
-			openTimerRef.current = null;
-
-			// Manual style update for immediate visibility in Hono islands
-			const positioner = rootRef.current?.querySelector(
-				'[data-part="positioner"]',
-			) as HTMLElement | null;
-			if (positioner) {
-				positioner.style.display = "block";
-			}
-		}, openDelay);
+		onOpenChange?.({ open: nextOpen });
 	};
 
-	const handleClose = () => {
-		if (openTimerRef.current) {
-			clearTimeout(openTimerRef.current);
-			openTimerRef.current = null;
+	const configRef = useRef({
+		openDelay,
+		closeDelay,
+		isControlled,
+		open,
+		handleOpenChange,
+	});
+
+	useEffect(() => {
+		configRef.current = {
+			openDelay,
+			closeDelay,
+			isControlled,
+			open,
+			handleOpenChange,
+		};
+	});
+
+	useEffect(() => {
+		if (typeof document === "undefined") {
+			return;
 		}
-		if (closeTimerRef.current) return;
 
-		closeTimerRef.current = window.setTimeout(() => {
-			setIsOpen(false);
-			closeTimerRef.current = null;
+		const root = document.getElementById(rootId);
+		if (!root) {
+			return;
+		}
 
-			const positioner = rootRef.current?.querySelector(
-				'[data-part="positioner"]',
-			) as HTMLElement | null;
-			if (positioner) {
-				positioner.style.display = "none";
+		const getPositioners = () =>
+			Array.from(
+				root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
+			);
+
+		const openHoverCard = () => {
+			root.setAttribute("data-state", "open");
+			getPositioners().forEach((p) => {
+				p.style.cssText =
+					"display: block !important; position: absolute; top: 100%; left: 0; z-index: 1000;";
+				p.setAttribute("data-state", "open");
+			});
+			const content = root.querySelector<HTMLElement>('[data-part="content"]');
+			if (content) {
+				content.setAttribute("data-state", "open");
 			}
-		}, closeDelay);
-	};
+			const trigger = root.querySelector<HTMLElement>('[data-part="trigger"]');
+			if (trigger) {
+				trigger.setAttribute("data-state", "open");
+				trigger.setAttribute("aria-expanded", "true");
+			}
+			const arrows = root.querySelectorAll<HTMLElement>('[data-part="arrow"]');
+			arrows.forEach((a) => {
+				a.setAttribute("data-state", "open");
+			});
+		};
+
+		const closeHoverCard = () => {
+			root.setAttribute("data-state", "closed");
+			getPositioners().forEach((p) => {
+				p.style.cssText =
+					"display: none !important; position: absolute; top: 100%; left: 0; z-index: 1000;";
+				p.setAttribute("data-state", "closed");
+			});
+			const content = root.querySelector<HTMLElement>('[data-part="content"]');
+			if (content) {
+				content.setAttribute("data-state", "closed");
+			}
+			const trigger = root.querySelector<HTMLElement>('[data-part="trigger"]');
+			if (trigger) {
+				trigger.setAttribute("data-state", "closed");
+				trigger.setAttribute("aria-expanded", "false");
+			}
+			const arrows = root.querySelectorAll<HTMLElement>('[data-part="arrow"]');
+			arrows.forEach((a) => {
+				a.setAttribute("data-state", "closed");
+			});
+		};
+
+		if (open) {
+			openHoverCard();
+		} else {
+			closeHoverCard();
+		}
+	}, [rootId, open]);
 
 	useEffect(() => {
 		const root = rootRef.current;
@@ -231,6 +307,34 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 
 		const trigger = root.querySelector('[data-part="trigger"]');
 		const content = root.querySelector('[data-part="content"]');
+
+		const handleOpen = () => {
+			const { openDelay, handleOpenChange } = configRef.current;
+			if (closeTimerRef.current) {
+				clearTimeout(closeTimerRef.current);
+				closeTimerRef.current = null;
+			}
+			if (openTimerRef.current) return;
+
+			openTimerRef.current = window.setTimeout(() => {
+				handleOpenChange(true);
+				openTimerRef.current = null;
+			}, openDelay);
+		};
+
+		const handleClose = () => {
+			const { closeDelay, handleOpenChange } = configRef.current;
+			if (openTimerRef.current) {
+				clearTimeout(openTimerRef.current);
+				openTimerRef.current = null;
+			}
+			if (closeTimerRef.current) return;
+
+			closeTimerRef.current = window.setTimeout(() => {
+				handleOpenChange(false);
+				closeTimerRef.current = null;
+			}, closeDelay);
+		};
 
 		if (trigger) {
 			trigger.addEventListener("mouseenter", handleOpen);
@@ -242,9 +346,6 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 			content.addEventListener("mouseleave", handleClose);
 		}
 
-		// If the pointer is already over the trigger at hydration time, open.
-		// A one-time hover fired before hydration would otherwise be missed
-		// since no further mouseenter is dispatched while the pointer is still.
 		if (trigger?.matches(":hover")) {
 			handleOpen();
 		}
@@ -261,13 +362,36 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 			if (openTimerRef.current) clearTimeout(openTimerRef.current);
 			if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
 		};
-	}, [handleOpen, handleClose, openDelay, closeDelay]);
+	}, [rootId]);
 
 	return (
 		<div id={rootId} ref={rootRef}>
-			<HoverCardRoot {...rest} open={isOpen}>
+			<HoverCardRoot {...rest} open={open}>
 				{children}
 			</HoverCardRoot>
 		</div>
 	);
 }
+
+export type {
+	HoverCardArrowProps,
+	HoverCardArrowTipProps,
+	HoverCardContentProps,
+	HoverCardContextValue,
+	HoverCardPositionerProps,
+	HoverCardRootProps,
+	HoverCardStyles,
+	HoverCardTriggerProps,
+	InteractiveHoverCardProps,
+};
+
+export {
+	HoverCardArrow,
+	HoverCardArrowTip,
+	HoverCardContent,
+	HoverCardContextComponent as Context,
+	HoverCardPositioner,
+	HoverCardRoot,
+	HoverCardTrigger,
+	InteractiveHoverCardRoot,
+};

@@ -1,6 +1,6 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
-export const hoverCard = defineSlotRecipe({
+const hoverCard = defineSlotRecipe({
 	className: "hover-card",
 	slots: ["trigger", "positioner", "content", "arrow", "arrowTip"],
 	base: {
@@ -38,3 +38,5 @@ export const hoverCard = defineSlotRecipe({
 		},
 	},
 });
+
+export { hoverCard };
