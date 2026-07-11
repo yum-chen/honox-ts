@@ -1778,22 +1778,14 @@ export default createRoute((c) => {
 						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
 					>
 						<Text size="sm" class={css({ color: "fg.muted" })}>
-							Static
-						</Text>
-						<Textarea placeholder="Basic Textarea" />
-					</div>
-
-					<div
-						class={css({ display: "flex", flexDirection: "column", gap: "2" })}
-					>
-						<Text size="sm" class={css({ color: "fg.muted" })}>
-							Interactive (Validated)
+							Textarea (with `validator`)
 						</Text>
 						<Textarea
 							label="Feedback"
 							placeholder="Tell us what you think..."
-							interactive
-							minLength={10}
+							validator={(value) =>
+								value.length > 10 ? true : "Minimum 10 characters required."
+							}
 							helperText="Minimum 10 characters required."
 						/>
 					</div>
