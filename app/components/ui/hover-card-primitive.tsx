@@ -19,6 +19,29 @@ interface HoverCardContextValue {
 	styles: HoverCardStyles;
 }
 
+interface HoverCardRootProps extends PropsWithChildren {
+	id?: string;
+	open?: boolean;
+	openDelay?: number;
+	closeDelay?: number;
+}
+
+interface HoverCardTriggerProps extends PropsWithChildren {
+	class?: string;
+	asChild?: boolean;
+	[key: string]: unknown;
+}
+
+interface HoverCardPositionerProps extends PropsWithChildren {
+	class?: string;
+	[key: string]: unknown;
+}
+
+interface HoverCardContentProps extends PropsWithChildren {
+	class?: string;
+	[key: string]: unknown;
+}
+
 const HoverCardContext = createContext<HoverCardContextValue | null>(null);
 
 const useHoverCardContext = () => {
@@ -26,14 +49,7 @@ const useHoverCardContext = () => {
 	return context;
 };
 
-export interface HoverCardRootProps extends PropsWithChildren {
-	id?: string;
-	open?: boolean;
-	openDelay?: number;
-	closeDelay?: number;
-}
-
-export function HoverCardRoot(props: HoverCardRootProps) {
+function HoverCardRoot(props: HoverCardRootProps) {
 	const { id: idProp, open = false, children } = props;
 	const autoId = useId();
 	const id = idProp || autoId;
@@ -46,18 +62,16 @@ export function HoverCardRoot(props: HoverCardRootProps) {
 	);
 }
 
-export interface HoverCardTriggerProps extends PropsWithChildren {
-	class?: string;
-	asChild?: boolean;
-	[key: string]: unknown;
+function RootProvider(props: HoverCardRootProps) {
+	return <HoverCardRoot {...props} />;
 }
 
-export function HoverCardTrigger(props: HoverCardTriggerProps) {
+function HoverCardTrigger(props: HoverCardTriggerProps) {
 	const { children, class: classProp, asChild, ...restProps } = props;
 	const context = useHoverCardContext();
 	const id = context?.id;
 	const open = context?.open;
-	const styles = context?.styles;
+	const styles = context?.styles || hoverCard();
 
 	const triggerProps = {
 		id: id ? `hover-card-trigger-${id}` : undefined,
@@ -73,32 +87,27 @@ export function HoverCardTrigger(props: HoverCardTriggerProps) {
 		const child = children as { props?: { class?: string } };
 		return cloneElement(children as unknown as JSX.Element, {
 			...triggerProps,
-			class: cx(styles?.trigger, classProp, child.props?.class),
+			class: cx(styles.trigger, classProp, child.props?.class),
 		});
 	}
 
 	return (
-		<div class={cx(styles?.trigger, classProp)} {...triggerProps}>
+		<div class={cx(styles.trigger, classProp)} {...triggerProps}>
 			{children}
 		</div>
 	);
 }
 
-export interface HoverCardPositionerProps extends PropsWithChildren {
-	class?: string;
-	[key: string]: unknown;
-}
-
-export function HoverCardPositioner(props: HoverCardPositionerProps) {
+function HoverCardPositioner(props: HoverCardPositionerProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useHoverCardContext();
 	const open = context?.open;
-	const styles = context?.styles;
+	const styles = context?.styles || hoverCard();
 
 	return (
 		<div
 			class={cx(
-				styles?.positioner,
+				styles.positioner,
 				classProp,
 				!open && css({ display: "none" }),
 			)}
@@ -117,23 +126,18 @@ export function HoverCardPositioner(props: HoverCardPositionerProps) {
 	);
 }
 
-export interface HoverCardContentProps extends PropsWithChildren {
-	class?: string;
-	[key: string]: unknown;
-}
-
-export function HoverCardContent(props: HoverCardContentProps) {
+function HoverCardContent(props: HoverCardContentProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useHoverCardContext();
 	const id = context?.id;
 	const open = context?.open;
-	const styles = context?.styles;
+	const styles = context?.styles || hoverCard();
 
 	return (
 		<div
 			id={id ? `hover-card-content-${id}` : undefined}
 			role="dialog"
-			class={cx(styles?.content, classProp)}
+			class={cx(styles.content, classProp)}
 			data-state={open ? "open" : "closed"}
 			data-part="content"
 			{...restProps}
@@ -143,31 +147,36 @@ export function HoverCardContent(props: HoverCardContentProps) {
 	);
 }
 
-export function HoverCardArrow(props: PropsWithChildren<{ class?: string }>) {
+function HoverCardArrow(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useHoverCardContext();
-	const styles = context?.styles;
+	const styles = context?.styles || hoverCard();
 	return (
-		<div class={cx(styles?.arrow, classProp)} data-part="arrow" {...restProps}>
+		<div class={cx(styles.arrow, classProp)} data-part="arrow" {...restProps}>
 			{children || <HoverCardArrowTip />}
 		</div>
 	);
 }
 
-export function HoverCardArrowTip(props: { class?: string }) {
+function HoverCardArrowTip(props: { class?: string }) {
 	const { class: classProp, ...restProps } = props;
 	const context = useHoverCardContext();
-	const styles = context?.styles;
+	const styles = context?.styles || hoverCard();
 	return (
 		<div
-			class={cx(styles?.arrowTip, classProp)}
+			class={cx(styles.arrowTip, classProp)}
 			data-part="arrow-tip"
 			{...restProps}
 		/>
 	);
 }
 
-export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
+function Context(props: { children: (context: any) => any }) {
+	const context = useHoverCardContext();
+	return props.children(context);
+}
+
+function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 	const {
 		open: openProp,
 		children,
@@ -271,3 +280,23 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 		</div>
 	);
 }
+
+export type {
+	HoverCardContentProps,
+	HoverCardContextValue,
+	HoverCardPositionerProps,
+	HoverCardRootProps,
+	HoverCardStyles,
+	HoverCardTriggerProps,
+};
+export {
+	Context,
+	HoverCardArrow as Arrow,
+	HoverCardArrowTip as ArrowTip,
+	HoverCardContent as Content,
+	HoverCardPositioner as Positioner,
+	HoverCardRoot as Root,
+	HoverCardTrigger as Trigger,
+	InteractiveHoverCardRoot,
+	RootProvider,
+};
