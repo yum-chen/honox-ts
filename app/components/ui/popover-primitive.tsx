@@ -31,6 +31,7 @@ interface PopoverRootProps extends PropsWithChildren {
 	closeOnEscape?: boolean;
 	/** Close when interaction occurs outside the popover. Default: true. */
 	closeOnInteractOutside?: boolean;
+	rootRef?: any;
 }
 
 interface PopoverTriggerProps extends PropsWithChildren {
@@ -87,15 +88,29 @@ const usePopoverContext = () => {
 };
 
 function Root(props: PopoverRootProps) {
-	const { id: idProp, open = false, children, onClose, onToggle } = props;
+	const {
+		id: idProp,
+		open = false,
+		children,
+		onClose,
+		onToggle,
+		rootRef,
+	} = props;
 	const autoId = useId();
 	const id = idProp || autoId;
 	const styles = popover();
 
 	return (
-		<PopoverContext.Provider value={{ id, open, styles, onClose, onToggle }}>
-			{children}
-		</PopoverContext.Provider>
+		<div
+			id={id}
+			ref={rootRef}
+			data-state={open ? "open" : "closed"}
+			style={{ position: "relative", display: "inline-block" }}
+		>
+			<PopoverContext.Provider value={{ id, open, styles, onClose, onToggle }}>
+				{children}
+			</PopoverContext.Provider>
+		</div>
 	);
 }
 
@@ -626,11 +641,9 @@ function InteractivePopoverRoot(props: InteractivePopoverProps) {
 	}, [rootId]);
 
 	return (
-		<div id={rootId} data-state={open ? "open" : "closed"}>
-			<Root {...rest} open={open}>
-				{children}
-			</Root>
-		</div>
+		<Root {...rest} id={rootId} open={open}>
+			{children}
+		</Root>
 	);
 }
 
