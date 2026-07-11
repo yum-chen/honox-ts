@@ -22,4 +22,23 @@ describe("Avatar component", () => {
 		expect(htmlString).toContain("<svg");
 		expect(htmlString).toContain("<title>User</title>");
 	});
+
+	it("should support compound API (dot-notation)", () => {
+		expect(Avatar.Root).toBeDefined();
+		expect(Avatar.Image).toBeDefined();
+		expect(Avatar.Fallback).toBeDefined();
+
+		const html = (
+			<Avatar.Root>
+				<Avatar.Image src="test.jpg" alt="Test Avatar" />
+				<Avatar.Fallback>T</Avatar.Fallback>
+			</Avatar.Root>
+		).toString();
+
+		expect(html).toContain("class=\"avatar__root");
+		expect(html).toContain("class=\"avatar__image");
+		expect(html).toContain("class=\"avatar__fallback");
+		expect(html).toContain("test.jpg");
+		expect(html).toContain("T");
+	});
 });

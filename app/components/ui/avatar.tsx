@@ -1,12 +1,18 @@
 import { InteractiveAvatar } from "../../islands/avatar";
-import { AvatarBase, type AvatarBaseProps } from "./avatar-primitive";
+import {
+	AvatarBase,
+	type AvatarBaseProps,
+	Fallback,
+	Image,
+	Root,
+} from "./avatar-primitive";
 import { shouldHydrate } from "./island-utils";
 
-export interface AvatarProps extends AvatarBaseProps {
+interface AvatarProps extends AvatarBaseProps {
 	interactive?: boolean;
 }
 
-export function Avatar(props: AvatarProps) {
+function Avatar(props: AvatarProps) {
 	const { interactive, ...rest } = props;
 
 	// Hydrate the interactive avatar when an async image (src) needs client-side
@@ -17,3 +23,12 @@ export function Avatar(props: AvatarProps) {
 
 	return <AvatarBase {...rest} />;
 }
+
+const AvatarComponent = Object.assign(Avatar, {
+	Root,
+	Image,
+	Fallback,
+});
+
+export type { AvatarProps };
+export { AvatarComponent as Avatar };
