@@ -14,6 +14,7 @@ Live demo: [https://honox.chen.so](https://honox.chen.so)
 | **Styling** | [PandaCSS](https://panda-css.com) — type-safe, zero-runtime CSS-in-JS |
 | **CMS** | [Sveltia CMS](https://sveltiacms.app) — Git-backed, runs at `/admin/` |
 | **Blog** | Markdown posts in `content/posts/`, rendered at `/blog` |
+| **Page Builder** | Rich nested page templates in `content/pages/` using a variable-type component system |
 | **SSG** | Static site generation via `@hono/vite-ssg` |
 | **Deploy** | Cloudflare Pages (`wrangler.jsonc`) |
 
@@ -29,6 +30,7 @@ Live demo: [https://honox.chen.so](https://honox.chen.so)
 | `/blog` | `app/routes/blog.tsx` | Post list with tag filtering |
 | `/blog/tag/:tag` | `app/routes/blog/tag/[tag].tsx` | Tag-filtered post list (static) |
 | `/blog/:slug` | `app/routes/blog/[slug].tsx` | Individual post |
+| `/pages/:slug` | `app/routes/pages/[slug].tsx` | Custom built pages with PageRenderer |
 | `/admin/` | `public/admin/index.html` | Sveltia CMS UI |
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for UI components architecture details.
@@ -58,6 +60,44 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for UI components architecture 
    - `dist/blog/index.html` — post list
    - `dist/blog/[slug].html` — individual post pages
    - `dist/blog/tag/[tag].html` — tag-filtered post lists (static, no JS needed)
+
+---
+
+## Variable Type Page Builder
+
+The starter supports a recursive, polymorphic Page Builder in `content/pages/` configured via Sveltia CMS. Users can compose custom pages using nested component blocks up to 3 levels deep!
+
+### Supported Page Components
+
+All components fully map their CMS fields directly to their code props:
+
+- **Containers / Structural:**
+  - `Stack` — Direction, alignment, justify, spacing gap.
+  - `Card` — Title, description, body, image position, sub-children.
+  - `Group` — Button/control groups, vertical/horizontal, attached, grow.
+  - `Fieldset` — Form field groups with legend, helper text, and error text.
+- **Interactive Triggers / Modals:**
+  - `Collapsible` — Expand/collapse with custom triggers (text or custom nested components list) and transition indicators.
+  - `Dialog` — Interactive modal dialogues with customized actions (confirm/cancel) and custom triggers (text or custom nested components list).
+  - `Drawer` — Interactive slide-out panels with customizable triggers (text or custom nested components list).
+  - `HoverCard` — Instant context overlays on hover with customizable triggers (text or custom nested components list).
+  - `Popover` — Popover context triggers with title, description, body, and custom trigger components.
+  - `Menu` — Interactive context dropdowns with customizable menu list items, submenus, and triggers.
+- **Form Controls:**
+  - `Field` — Text input controls with labels, helper texts, constraints, and validation.
+  - `Checkbox` — Interactive checkbox states with sizing and color control.
+  - `Switch` — Beautiful interactive boolean toggles.
+  - `Combobox` — Accessible dropdown selection with searchable lists.
+  - `RadioGroup` — Choose-one list of custom items.
+  - `SegmentGroup` — Fitted slide choice selections.
+  - `Slider` — Interactive range/volume inputs with numeric tooltips.
+- **Presentational & Status:**
+  - `Button` & `Badge` — Customizable sizes, solid/subtle/surface variants, and color palettes.
+  - `Heading` & `Text` — Configurable HTML level tags (h1-h6), sizing, and typography.
+  - `Alert` — Muted warnings/alerts (info, success, warning, error) with indicators.
+  - `PaginatedTable` & `Pagination` — Responsive lists and data navigation.
+  - `Progress` — Linear or circular percentage indicators.
+  - `Skeleton` — Circle, multi-line, or plain layouts for loading states.
 
 ---
 
