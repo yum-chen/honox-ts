@@ -224,7 +224,8 @@ export function PopoverDescription(props: PopoverDescriptionProps) {
 		<p
 			id={id ? `popover-description-${id}` : undefined}
 			class={cx(styles?.description, classProp)}
-			{...restProps}>
+			{...restProps}
+		>
 			{children}
 		</p>
 	);
@@ -338,9 +339,7 @@ export function InteractivePopoverRoot(props: PopoverRootProps) {
 			getPositioners().forEach((p) => {
 				p.style.cssText = "display: block !important;";
 			});
-			const content = root.querySelector<HTMLElement>(
-				'[data-part="content"]',
-			);
+			const content = root.querySelector<HTMLElement>('[data-part="content"]');
 			if (content) {
 				const focusable = getFocusable(content);
 				(focusable[0] ?? content).focus();
@@ -382,11 +381,7 @@ export function InteractivePopoverRoot(props: PopoverRootProps) {
 		};
 
 		const handleKeyDown = (e: KeyboardEvent) => {
-			if (
-				!isCurrentlyOpen() ||
-				e.key !== "Escape" ||
-				!closeOnEscapeRef.current
-			)
+			if (!isCurrentlyOpen() || e.key !== "Escape" || !closeOnEscapeRef.current)
 				return;
 			e.preventDefault();
 			closePopover();
