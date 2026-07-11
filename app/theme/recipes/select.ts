@@ -1,9 +1,25 @@
-import { selectAnatomy } from "@ark-ui/react/anatomy";
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const select = defineSlotRecipe({
 	className: "select",
-	slots: selectAnatomy.extendWith("indicatorGroup").keys(),
+	slots: [
+		"root",
+		"label",
+		"control",
+		"trigger",
+		"valueText",
+		"indicator",
+		"indicatorGroup",
+		"positioner",
+		"content",
+		"list",
+		"item",
+		"itemText",
+		"itemIndicator",
+		"itemGroup",
+		"itemGroupLabel",
+		"clearTrigger",
+	],
 	base: {
 		root: {
 			display: "flex",

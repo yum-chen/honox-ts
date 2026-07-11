@@ -14,6 +14,12 @@ import { select } from "styled-system/recipes";
 
 type SelectStyles = ReturnType<typeof select>;
 
+interface SelectItem {
+	label: string;
+	value: string;
+	disabled?: boolean;
+}
+
 interface SelectContextValue {
 	styles: SelectStyles;
 	open: boolean;
@@ -35,19 +41,15 @@ interface SelectContextValue {
 
 const SelectContext = createContext<SelectContextValue | null>(null);
 
-export const useSelectContext = () => {
+const useSelectContext = () => {
 	const context = useContext(SelectContext);
 	return context;
 };
 
-export interface SelectItem {
-	label: string;
-	value: string;
-	disabled?: boolean;
-}
-
-export interface RootProps extends SelectVariantProps, PropsWithChildren {
+interface RootProps extends SelectVariantProps, PropsWithChildren {
 	open?: boolean;
+	defaultValue?: string[];
+	value?: string[];
 	selectedValues?: string[];
 	highlightedIndex?: number;
 	items?: SelectItem[];
@@ -60,6 +62,8 @@ export interface RootProps extends SelectVariantProps, PropsWithChildren {
 	onToggle?: () => void;
 	onClose?: () => void;
 	onItemSelect?: (value: string) => void;
+	onValueChange?: (details: { value: string[]; items: SelectItem[] }) => void;
+	onOpenChange?: (details: { open: boolean }) => void;
 	setHighlightedIndex?: (index: number) => void;
 	class?: string;
 	id?: string;
@@ -67,7 +71,7 @@ export interface RootProps extends SelectVariantProps, PropsWithChildren {
 	[key: string]: any;
 }
 
-export function Root(props: RootProps) {
+function Root(props: RootProps) {
 	const [variantProps, localProps] = select.splitVariantProps(props);
 	const {
 		children,
@@ -129,9 +133,7 @@ export function Root(props: RootProps) {
 	);
 }
 
-export function Label(
-	props: PropsWithChildren<{ class?: string; htmlFor?: string }>,
-) {
+function Label(props: PropsWithChildren<{ class?: string; htmlFor?: string }>) {
 	const { children, class: classProp, htmlFor, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -153,7 +155,7 @@ export function Label(
 	);
 }
 
-export function Control(props: PropsWithChildren<{ class?: string }>) {
+function Control(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -171,7 +173,7 @@ export function Control(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function Trigger(props: PropsWithChildren<{ class?: string }>) {
+function Trigger(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -182,6 +184,13 @@ export function Trigger(props: PropsWithChildren<{ class?: string }>) {
 			aria-haspopup="listbox"
 			aria-expanded={context?.open}
 			aria-controls={context?.rootId ? `${context.rootId}-listbox` : undefined}
+			aria-activedescendant={
+				context?.highlightedIndex !== undefined &&
+				context.highlightedIndex >= 0 &&
+				context?.rootId
+					? `${context.rootId}-item-${context.highlightedIndex}`
+					: undefined
+			}
 			data-scope="select"
 			data-part="trigger"
 			data-state={context?.open ? "open" : "closed"}
@@ -197,7 +206,7 @@ export function Trigger(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function ValueText(
+function ValueText(
 	props: PropsWithChildren<{ class?: string; placeholder?: string }>,
 ) {
 	const {
@@ -232,7 +241,7 @@ export function ValueText(
 	);
 }
 
-export function Indicator(props: PropsWithChildren<{ class?: string }>) {
+function Indicator(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -263,7 +272,7 @@ export function Indicator(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function IndicatorGroup(props: PropsWithChildren<{ class?: string }>) {
+function IndicatorGroup(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -278,7 +287,7 @@ export function IndicatorGroup(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function Positioner(props: PropsWithChildren<{ class?: string }>) {
+function Positioner(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -302,7 +311,7 @@ export function Positioner(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function Content(props: PropsWithChildren<{ class?: string }>) {
+function Content(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -322,7 +331,7 @@ export function Content(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function List(props: PropsWithChildren<{ class?: string }>) {
+function List(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -342,12 +351,12 @@ export function List(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export const ItemContext = createContext<{
+const ItemContext = createContext<{
 	value: string;
 	disabled?: boolean;
 } | null>(null);
 
-export function Item(
+function Item(
 	props: PropsWithChildren<{
 		value: string;
 		disabled?: boolean;
@@ -384,7 +393,7 @@ export function Item(
 	);
 }
 
-export function ItemText(props: PropsWithChildren<{ class?: string }>) {
+function ItemText(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	const item = useContext(ItemContext);
@@ -405,7 +414,7 @@ export function ItemText(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function ItemIndicator(props: PropsWithChildren<{ class?: string }>) {
+function ItemIndicator(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	const item = useContext(ItemContext);
@@ -442,23 +451,22 @@ export function ItemIndicator(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function ItemGroup(props: PropsWithChildren<{ class?: string }>) {
+function ItemGroup(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
-		<div
-			role="group"
+		<fieldset
 			data-scope="select"
 			data-part="item-group"
 			class={cx(context?.styles.itemGroup, classProp)}
 			{...rest}
 		>
 			{children}
-		</div>
+		</fieldset>
 	);
 }
 
-export function ItemGroupLabel(props: PropsWithChildren<{ class?: string }>) {
+function ItemGroupLabel(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -473,7 +481,7 @@ export function ItemGroupLabel(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function ClearTrigger(props: PropsWithChildren<{ class?: string }>) {
+function ClearTrigger(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -507,7 +515,7 @@ export function ClearTrigger(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function HiddenSelect(props: { items?: SelectItem[] }) {
+function HiddenSelect(props: { items?: SelectItem[] }) {
 	const context = useSelectContext();
 	const selectItems = props.items || context?.items || [];
 	return (
@@ -545,15 +553,19 @@ export function HiddenSelect(props: { items?: SelectItem[] }) {
 	);
 }
 
-export interface SelectFlattenedProps extends RootProps {
+interface SelectFlattenedProps extends RootProps {
 	items?: SelectItem[];
 	label?: Child;
 	placeholder?: string;
 	allowClear?: boolean;
 }
 
-export function SelectStructure(props: SelectFlattenedProps) {
+function SelectStructure(props: SelectFlattenedProps) {
 	const { items = [], label, placeholder, allowClear, children } = props;
+
+	if (children) {
+		return <>{children}</>;
+	}
 
 	return (
 		<>
@@ -585,19 +597,20 @@ export function SelectStructure(props: SelectFlattenedProps) {
 				</Content>
 			</Positioner>
 			<HiddenSelect items={items} />
-			{children}
 		</>
 	);
 }
 
-export interface InteractiveSelectProps extends SelectFlattenedProps {
+interface InteractiveSelectProps extends SelectFlattenedProps {
 	id?: string;
 }
 
-export function InteractiveSelect(props: InteractiveSelectProps) {
+function InteractiveSelect(props: InteractiveSelectProps) {
 	const {
 		open: openProp,
 		selectedValues: selectedValuesProp,
+		value: valueProp,
+		defaultValue: defaultValueProp,
 		highlightedIndex: highlightedIndexProp,
 		id: idProp,
 		items = [],
@@ -606,15 +619,18 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 	} = props;
 
 	const [isOpen, setIsOpen] = useState(openProp ?? false);
-	const [selectedValues, setSelectedValues] = useState<string[]>(
-		selectedValuesProp ?? [],
-	);
+
+	const initialValues =
+		valueProp ?? defaultValueProp ?? selectedValuesProp ?? [];
+	const [localSelectedValues, setSelectedValues] =
+		useState<string[]>(initialValues);
 	const [highlightedIndex, setHighlightedIndex] = useState(
 		highlightedIndexProp ?? -1,
 	);
 
 	const isControlled = openProp !== undefined;
 	const open = isControlled ? openProp : isOpen;
+	const selectedValues = valueProp ?? selectedValuesProp ?? localSelectedValues;
 
 	const fallbackId = useId();
 	const rootId = idProp || `select-${fallbackId}`;
@@ -629,13 +645,22 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 
 	const handleToggle = () => {
 		if (!isControlled) {
-			setIsOpen((prev) => !prev);
+			setIsOpen((prev) => {
+				const next = !prev;
+				props.onOpenChange?.({ open: next });
+				return next;
+			});
+		} else {
+			props.onOpenChange?.({ open: !open });
 		}
 	};
 
 	const handleClose = () => {
 		if (!isControlled) {
 			setIsOpen(false);
+			props.onOpenChange?.({ open: false });
+		} else {
+			props.onOpenChange?.({ open: false });
 		}
 	};
 
@@ -651,14 +676,21 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 			nextValues = [val];
 			if (!isControlled) {
 				setIsOpen(false);
+				props.onOpenChange?.({ open: false });
 			}
 		}
 		setSelectedValues(nextValues);
+
+		const selectedItems = items.filter((item) =>
+			nextValues.includes(item.value),
+		);
+		props.onValueChange?.({ value: nextValues, items: selectedItems });
 		props.onItemSelect?.(val);
 	};
 
 	const handleClear = () => {
 		setSelectedValues([]);
+		props.onValueChange?.({ value: [], items: [] });
 	};
 
 	const handleSetHighlightedIndex = (index: number) => {
@@ -845,3 +877,34 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 		</Root>
 	);
 }
+
+export type {
+	InteractiveSelectProps,
+	RootProps,
+	SelectFlattenedProps,
+	SelectItem,
+};
+
+export {
+	ClearTrigger,
+	Content,
+	Control,
+	HiddenSelect,
+	Indicator,
+	IndicatorGroup,
+	InteractiveSelect,
+	Item,
+	ItemContext,
+	ItemGroup,
+	ItemGroupLabel,
+	ItemIndicator,
+	ItemText,
+	Label,
+	List,
+	Positioner,
+	Root,
+	SelectStructure,
+	Trigger,
+	useSelectContext,
+	ValueText,
+};
