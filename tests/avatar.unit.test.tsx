@@ -14,6 +14,10 @@ describe("Avatar component", () => {
 		// Hono JSX returns a string or an object with toString/toStringAsync
 		const htmlString = html.toString();
 		expect(htmlString).toContain("JD");
+		expect(htmlString).toContain('data-scope="avatar"');
+		expect(htmlString).toContain('data-part="root"');
+		expect(htmlString).toContain('data-part="fallback"');
+		expect(htmlString).toContain('data-state="visible"');
 	});
 
 	it("should render fallback icon when no name or src is provided", async () => {
@@ -21,5 +25,13 @@ describe("Avatar component", () => {
 		const htmlString = html.toString();
 		expect(htmlString).toContain("<svg");
 		expect(htmlString).toContain("<title>User</title>");
+	});
+
+	it("should render image part and hide fallback when src and loaded status are provided", async () => {
+		const html = (await Avatar({ src: "https://example.com/avatar.png", status: "loaded" })) as any;
+		const htmlString = html.toString();
+		expect(htmlString).toContain('data-part="image"');
+		expect(htmlString).toContain('data-state="visible"');
+		expect(htmlString).toContain('style="display:none"'); // fallback gets hidden
 	});
 });

@@ -5,8 +5,14 @@ import type { AvatarVariantProps } from "styled-system/recipes";
 import { avatar } from "styled-system/recipes";
 
 type AvatarStyles = ReturnType<typeof avatar>;
+type AvatarStatus = "idle" | "loading" | "loaded" | "error";
 
-const AvatarContext = createContext<AvatarStyles | null>(null);
+interface AvatarContextValue {
+	styles: AvatarStyles;
+	status: AvatarStatus;
+}
+
+const AvatarContext = createContext<AvatarContextValue | null>(null);
 
 const useAvatarContext = () => {
 	const context = useContext(AvatarContext);
@@ -18,16 +24,28 @@ const useAvatarContext = () => {
 
 interface RootProps extends AvatarVariantProps, PropsWithChildren {
 	class?: string;
+	status?: AvatarStatus;
 }
 
 function Root(props: RootProps) {
 	const [variantProps, localProps] = avatar.splitVariantProps(props);
-	const { children, class: classProp, ...restProps } = localProps;
+	const {
+		children,
+		class: classProp,
+		status = "idle",
+		...restProps
+	} = localProps;
 	const styles = avatar(variantProps);
 
 	return (
-		<AvatarContext.Provider value={styles}>
-			<div class={cx(styles.root, classProp)} {...restProps}>
+		<AvatarContext.Provider value={{ styles, status }}>
+			<div
+				class={cx(styles.root, classProp)}
+				data-scope="avatar"
+				data-part="root"
+				data-state={status}
+				{...restProps}
+			>
 				{children}
 			</div>
 		</AvatarContext.Provider>
@@ -44,7 +62,7 @@ interface ImageProps {
 
 function Image(props: ImageProps) {
 	const { src, alt, class: classProp, ...rest } = props;
-	const styles = useAvatarContext();
+	const { styles, status } = useAvatarContext();
 
 	return (
 		<img
@@ -54,6 +72,9 @@ function Image(props: ImageProps) {
 			draggable="false"
 			// @ts-expect-error - referrerPolicy is valid on img
 			referrerPolicy="no-referrer"
+			data-scope="avatar"
+			data-part="image"
+			data-state={status}
 			{...rest}
 		/>
 	);
@@ -65,10 +86,16 @@ interface FallbackProps extends PropsWithChildren {
 
 function Fallback(props: FallbackProps) {
 	const { children, class: classProp, ...rest } = props;
-	const styles = useAvatarContext();
+	const { styles, status } = useAvatarContext();
 
 	return (
-		<span class={cx(styles.fallback, classProp)} {...rest}>
+		<span
+			class={cx(styles.fallback, classProp)}
+			data-scope="avatar"
+			data-part="fallback"
+			data-state={status}
+			{...rest}
+		>
 			{children}
 		</span>
 	);
@@ -121,7 +148,7 @@ function AvatarBase(props: AvatarBaseProps) {
 	const showImage = src && (status === "loaded" || status === "idle");
 
 	return (
-		<Root {...rest}>
+		<Root {...rest} status={status}>
 			{showImage && <Image src={src} alt={alt} />}
 			{!showImage && (
 				<Fallback>

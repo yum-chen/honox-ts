@@ -1,9 +1,16 @@
-import { paginationAnatomy } from "@ark-ui/react/anatomy";
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const pagination = defineSlotRecipe({
 	className: "pagination",
-	slots: paginationAnatomy.keys(),
+	slots: [
+		"root",
+		"item",
+		"ellipsis",
+		"prevTrigger",
+		"nextTrigger",
+		"firstTrigger",
+		"lastTrigger",
+	],
 	base: {
 		root: {
 			display: "flex",

@@ -202,6 +202,7 @@ export function Item(props: ItemProps) {
 		"data-selected": isSelected ? "" : undefined,
 		"aria-current": isSelected ? ("page" as const) : undefined,
 		"aria-label": `Page ${value}`,
+		tabIndex: isSelected ? -1 : undefined,
 	};
 
 	if (context.type === "link" && context.getPageUrl) {
@@ -210,6 +211,11 @@ export function Item(props: ItemProps) {
 				href={context.getPageUrl({ page: value })}
 				class={cx(context.styles.item, classProp)}
 				{...itemProps}
+				onClick={(e) => {
+					if (isSelected) {
+						e.preventDefault();
+					}
+				}}
 			>
 				{children || String(value)}
 			</a>
@@ -222,7 +228,9 @@ export function Item(props: ItemProps) {
 			class={cx(context.styles.item, classProp)}
 			{...itemProps}
 			onClick={() => {
-				context.onPageChange?.({ page: value, pageSize: context.pageSize });
+				if (!isSelected) {
+					context.onPageChange?.({ page: value, pageSize: context.pageSize });
+				}
 			}}
 		>
 			{children || String(value)}
