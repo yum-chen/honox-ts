@@ -48,11 +48,11 @@ interface MenuRadioGroupContextValue {
 	onValueChange?: (details: { value: string }) => void;
 }
 
-const MenuRadioGroupContext =
-	createContext<MenuRadioGroupContextValue | null>(null);
+const MenuRadioGroupContext = createContext<MenuRadioGroupContextValue | null>(
+	null,
+);
 
-export const useMenuRadioGroupContext = () =>
-	useContext(MenuRadioGroupContext);
+export const useMenuRadioGroupContext = () => useContext(MenuRadioGroupContext);
 
 export function MenuRoot(props: MenuRootProps) {
 	const [variantProps, localProps] = menu.splitVariantProps(props);
