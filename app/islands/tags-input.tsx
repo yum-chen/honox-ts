@@ -103,7 +103,7 @@ export default function TagsInputIsland(props: TagsInputIslandProps) {
 			);
 			if (deleteTrigger) {
 				const index = Number(deleteTrigger.getAttribute("data-index"));
-				if (!isNaN(index)) {
+				if (!Number.isNaN(index)) {
 					const nextValue = [...valueRef.current];
 					nextValue.splice(index, 1);
 					setValue(nextValue);

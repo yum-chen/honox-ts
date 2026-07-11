@@ -1,5 +1,4 @@
 import {
-	type Child,
 	createContext,
 	type PropsWithChildren,
 	useContext,

@@ -6,7 +6,6 @@ import {
 	DatePickerStructure,
 	fromJSDate,
 	getMonthWeeks,
-	parseDate,
 	parseSingleDate,
 	parseValue,
 } from "../components/ui/date-picker-primitive";
