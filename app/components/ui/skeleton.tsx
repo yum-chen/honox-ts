@@ -3,30 +3,49 @@ import { css, cx } from "styled-system/css";
 import { stack } from "styled-system/patterns";
 import { type SkeletonVariantProps, skeleton } from "styled-system/recipes";
 
-export interface SkeletonProps
+interface SkeletonProps
 	extends PropsWithChildren<SkeletonVariantProps>,
-		Omit<import("hono/jsx").JSX.IntrinsicElements["div"], "children"> {
+		Omit<import("hono/jsx").JSX.IntrinsicElements["div"], "children" | "width" | "height" | "size"> {
 	class?: string;
+	width?: string | number;
+	height?: string | number;
+	size?: string | number;
 }
 
-export function Skeleton(props: SkeletonProps) {
+function Skeleton(props: SkeletonProps) {
 	const [variantProps, localProps] = skeleton.splitVariantProps(props);
-	const { children, class: classProp, ...restProps } = localProps;
+	const { children, class: classProp, width, height, size, ...restProps } = localProps;
+
+	const styles: Record<string, any> = {};
+	if (size !== undefined) {
+		styles.boxSize = size;
+	}
+	if (width !== undefined) {
+		styles.width = width;
+	}
+	if (height !== undefined) {
+		styles.height = height;
+	}
+
+	const hasStyles = Object.keys(styles).length > 0;
 
 	return (
-		<div class={cx(skeleton(variantProps), classProp)} {...restProps}>
+		<div
+			class={cx(skeleton(variantProps), hasStyles ? css(styles) : undefined, classProp)}
+			{...restProps}
+		>
 			{children}
 		</div>
 	);
 }
 
-export interface SkeletonCircleProps extends SkeletonProps {}
+interface SkeletonCircleProps extends SkeletonProps {}
 
-export function SkeletonCircle(props: SkeletonCircleProps) {
+function SkeletonCircle(props: SkeletonCircleProps) {
 	return <Skeleton circle {...props} />;
 }
 
-export interface SkeletonTextProps extends SkeletonProps {
+interface SkeletonTextProps extends SkeletonProps {
 	/**
 	 * Number of lines to display
 	 * @default 3
@@ -35,7 +54,7 @@ export interface SkeletonTextProps extends SkeletonProps {
 	gap?: string | number;
 }
 
-export function SkeletonText(props: SkeletonTextProps) {
+function SkeletonText(props: SkeletonTextProps) {
 	const {
 		noOfLines = 3,
 		gap = "2",
@@ -58,3 +77,12 @@ export function SkeletonText(props: SkeletonTextProps) {
 		</div>
 	);
 }
+
+export {
+	Skeleton,
+	SkeletonCircle,
+	SkeletonText,
+	type SkeletonProps,
+	type SkeletonCircleProps,
+	type SkeletonTextProps,
+};

@@ -1396,7 +1396,7 @@ export default createRoute((c) => {
 						<Text size="sm" class={css({ color: "fg.muted" })}>
 							Skeleton Circle
 						</Text>
-						<SkeletonCircle class={css({ size: "12" })} />
+						<SkeletonCircle class={css({ boxSize: "12" })} />
 					</div>
 
 					<div
