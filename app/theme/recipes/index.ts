@@ -1,3 +1,4 @@
+import { datePicker } from "./date-picker";
 import { input } from "./input";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
@@ -49,7 +50,8 @@ export const recipes = {
     textarea,
     skeleton,
     code,
-    input
+    input,
+    datePicker
 };
 
 export const slotRecipes = {

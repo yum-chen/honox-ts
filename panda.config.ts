@@ -36,6 +36,7 @@ export default defineConfig({
 		// would require adding `jsx: [...]` to each recipe first — a separate,
 		// larger change — not just trimming this list.
 		recipes: {
+			datePicker: ["*"],
 			select: ["*"],
 			pagination: ["*"],
 			absoluteCenter: ["*"],
