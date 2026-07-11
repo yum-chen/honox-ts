@@ -69,17 +69,17 @@ export function DatePickerRoot(props: DatePickerProps) {
 			? parseSingleDate(defaultFocusedValue)?.toString()
 			: undefined;
 
-		const { children, ...islandRest } = rest as any;
+		const { children: _, ...islandRest } = rest as Record<string, unknown>;
 
 		return (
 			<DatePickerIsland
-				{...islandRest}
-				value={serializedValue as any}
-				defaultValue={serializedDefaultValue as any}
-				min={serializedMin as any}
-				max={serializedMax as any}
-				focusedValue={serializedFocusedValue as any}
-				defaultFocusedValue={serializedDefaultFocusedValue as any}
+				{...(islandRest as Record<string, unknown>)}
+				value={serializedValue}
+				defaultValue={serializedDefaultValue}
+				min={serializedMin}
+				max={serializedMax}
+				focusedValue={serializedFocusedValue}
+				defaultFocusedValue={serializedDefaultFocusedValue}
 			/>
 		);
 	}

@@ -51,7 +51,7 @@ function Button(props: ButtonProps) {
 			aria-busy={loading}
 			aria-disabled={loading || disabled}
 			data-loading={loading ? "" : undefined}
-			{...(rest as any)}
+			{...(rest as Record<string, unknown>)}
 		>
 			{loading ? (
 				<Loader
@@ -76,7 +76,7 @@ function ButtonGroup(props: ButtonGroupProps) {
 
 	return (
 		<ButtonContext.Provider value={variantProps}>
-			<Group {...(rest as any)}>{children}</Group>
+			<Group {...(rest as Record<string, unknown>)}>{children}</Group>
 		</ButtonContext.Provider>
 	);
 }

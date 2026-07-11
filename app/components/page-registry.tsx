@@ -153,7 +153,7 @@ const registry: Record<string, BlockRenderer> = {
 			...rest
 		} = propsOf(b);
 
-		let trigger: any;
+		let trigger: JSX.Element | string | undefined;
 		if (cmsTrigger) {
 			if (Array.isArray(cmsTrigger)) {
 				if (cmsTrigger.length > 0) {
@@ -162,7 +162,7 @@ const registry: Record<string, BlockRenderer> = {
 			} else if (typeof cmsTrigger === "object") {
 				trigger = renderBlocks([cmsTrigger])[0];
 			} else if (typeof cmsTrigger === "string") {
-				trigger = cmsTrigger;
+				trigger = cmsTrigger as string;
 			}
 		}
 
@@ -230,7 +230,7 @@ const registry: Record<string, BlockRenderer> = {
 			...rest
 		} = propsOf(b);
 
-		let trigger: any;
+		let trigger: JSX.Element | string | undefined;
 		if (cmsTrigger) {
 			if (Array.isArray(cmsTrigger)) {
 				if (cmsTrigger.length > 0) {
@@ -239,7 +239,7 @@ const registry: Record<string, BlockRenderer> = {
 			} else if (typeof cmsTrigger === "object") {
 				trigger = renderBlocks([cmsTrigger])[0];
 			} else if (typeof cmsTrigger === "string") {
-				trigger = cmsTrigger;
+				trigger = cmsTrigger as string;
 			}
 		}
 
@@ -275,7 +275,7 @@ const registry: Record<string, BlockRenderer> = {
 			...rest
 		} = propsOf(b);
 
-		let trigger: any;
+		let trigger: JSX.Element | string | undefined;
 		if (cmsTrigger) {
 			if (Array.isArray(cmsTrigger)) {
 				if (cmsTrigger.length > 0) {
@@ -284,7 +284,7 @@ const registry: Record<string, BlockRenderer> = {
 			} else if (typeof cmsTrigger === "object") {
 				trigger = renderBlocks([cmsTrigger])[0];
 			} else if (typeof cmsTrigger === "string") {
-				trigger = cmsTrigger;
+				trigger = cmsTrigger as string;
 			}
 		}
 
@@ -453,8 +453,8 @@ const registry: Record<string, BlockRenderer> = {
 
 		return (
 			<Skeleton
-				shape={resolvedShape as any}
-				variant={resolvedVariant as any}
+				shape={resolvedShape as "circle" | "text" | "children"}
+				variant={resolvedVariant as "shine" | "fade" | undefined}
 				noOfLines={noOfLines}
 				loaded={loaded}
 				{...rest}
@@ -504,7 +504,7 @@ function RenderBlock({
 	...extraProps
 }: {
 	block: ComponentBlock;
-	[key: string]: any;
+	[key: string]: unknown;
 }): JSX.Element {
 	const render = registry[resolveType(block.type)];
 	return render ? render({ ...block, ...extraProps }) : renderUnknown(block);
@@ -512,7 +512,7 @@ function RenderBlock({
 
 function renderBlocks(
 	content?: ComponentBlock[] | null,
-	extraProps?: any,
+	extraProps?: Record<string, unknown>,
 ): JSX.Element[] {
 	if (!content || !Array.isArray(content)) return [];
 	return content.map((block, index) => (

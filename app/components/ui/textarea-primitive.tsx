@@ -4,8 +4,8 @@ import type { TextareaVariantProps } from "styled-system/recipes";
 import { textarea } from "styled-system/recipes";
 import {
 	FieldRoot,
-	type ValidatorFn,
 	useFieldContext,
+	type ValidatorFn,
 } from "./field-primitive";
 
 export interface TextareaPrimitiveProps extends TextareaVariantProps {

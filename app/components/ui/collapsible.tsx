@@ -104,7 +104,9 @@ function Collapsible(props: CollapsibleProps) {
 		defaultOpen,
 	};
 
-	const Root = isInteractive ? (CollapsibleIsland as any) : RootPrimitive;
+	const Root = isInteractive
+		? (CollapsibleIsland as unknown as typeof RootPrimitive)
+		: RootPrimitive;
 
 	const triggerElement =
 		typeof trigger === "string" ? (
@@ -114,19 +116,19 @@ function Collapsible(props: CollapsibleProps) {
 		);
 
 	const triggerWithIndicator = indicator
-		? cloneElement(triggerElement as any, {
+		? cloneElement(triggerElement, {
 				children: (
 					<>
 						{indicatorPlacement === "start" && (
 							<Indicator class={indicatorClass}>{indicator}</Indicator>
 						)}
-						{(triggerElement as any).props?.children}
+						{triggerElement.props?.children}
 						{indicatorPlacement === "end" && (
 							<Indicator class={indicatorClass}>{indicator}</Indicator>
 						)}
 					</>
 				),
-			})
+			} as Record<string, unknown>)
 		: triggerElement;
 
 	return (
