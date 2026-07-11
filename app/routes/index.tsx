@@ -919,17 +919,9 @@ export default createRoute((c) => {
 						gap: "8",
 					})}
 				>
-					{/* Basic Slider */}
-					<Slider
-						label="Basic Slider"
-						defaultValue={30}
-						class={css({ width: "full" })}
-					/>
-
 					{/* Interactive Slider with Value Text */}
 					<Slider
-						interactive
-						label="Interactive Slider"
+						label="Basic Slider"
 						defaultValue={50}
 						showValueText
 						formatValue={(v) => `${v}%`}
