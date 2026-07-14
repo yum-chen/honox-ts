@@ -7,7 +7,6 @@ import {
 	Button,
 	Card,
 	Checkbox,
-	Col,
 	Collapsible,
 	Combobox,
 	Dialog,
@@ -94,22 +93,6 @@ const registry: Record<string, BlockRenderer> = {
 			<Grid {...resolvedProps}>
 				{renderChildren(children as ComponentBlock[])}
 			</Grid>
-		);
-	},
-
-	gridCol: (b) => {
-		const { children } = b;
-		const props = propsOf(b);
-
-		const resolvedProps: Record<string, unknown> = {};
-		for (const key of Object.keys(props)) {
-			resolvedProps[key] = tryParseJSON(props[key]);
-		}
-
-		return (
-			<Col {...resolvedProps}>
-				{renderChildren(children as ComponentBlock[])}
-			</Col>
 		);
 	},
 
