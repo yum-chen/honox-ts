@@ -331,13 +331,20 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 			}
 		};
 
+		const handleScroll = (e: Event) => {
+			if (rootRef.current && rootRef.current.contains(e.target as Node)) {
+				return;
+			}
+			handleClose();
+		};
+
 		root.addEventListener("click", handleClick as any);
 		root.addEventListener("contextmenu", handleContextMenu as any);
 		root.addEventListener("mouseover", handleMouseOver as any);
 		root.addEventListener("keydown", handleKeyDown);
 		window.addEventListener("mousedown", handleClickOutside);
 		if (isOpen) {
-			window.addEventListener("scroll", handleReposition, true);
+			window.addEventListener("scroll", handleScroll, true);
 			window.addEventListener("resize", handleReposition);
 		}
 
@@ -347,7 +354,7 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 			root.removeEventListener("mouseover", handleMouseOver as any);
 			root.removeEventListener("keydown", handleKeyDown);
 			window.removeEventListener("mousedown", handleClickOutside);
-			window.removeEventListener("scroll", handleReposition, true);
+			window.removeEventListener("scroll", handleScroll, true);
 			window.removeEventListener("resize", handleReposition);
 		};
 	}, [rootId, isOpen]);
