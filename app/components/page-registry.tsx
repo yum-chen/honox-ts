@@ -14,6 +14,7 @@ import {
 	Drawer,
 	Field,
 	Fieldset,
+	Grid,
 	Group,
 	Heading,
 	HoverCard,
@@ -23,7 +24,6 @@ import {
 	Popover,
 	Progress,
 	RadioGroup,
-	Row,
 	SegmentGroup,
 	Select,
 	Skeleton,
@@ -83,20 +83,17 @@ function tryParseJSON(val: unknown): unknown {
 const registry: Record<string, BlockRenderer> = {
 	grid: (b) => {
 		const { children } = b;
-		const { align, justify, gutter, wrap, ...rest } = propsOf(b);
+		const props = propsOf(b);
 
-		const resolvedGutter = tryParseJSON(gutter);
+		const resolvedProps: Record<string, unknown> = {};
+		for (const key of Object.keys(props)) {
+			resolvedProps[key] = tryParseJSON(props[key]);
+		}
 
 		return (
-			<Row
-				align={align}
-				justify={justify}
-				gutter={resolvedGutter}
-				wrap={wrap}
-				{...rest}
-			>
+			<Grid {...resolvedProps}>
 				{renderChildren(children as ComponentBlock[])}
-			</Row>
+			</Grid>
 		);
 	},
 

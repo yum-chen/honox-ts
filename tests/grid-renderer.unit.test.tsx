@@ -1,28 +1,22 @@
 import { expect, test } from "bun:test";
 import { PageRenderer } from "../app/components/page-renderer";
 
-test("PageRenderer renders grid (Row) and gridCol (Col) components correctly", () => {
+test("PageRenderer renders flat grid component correctly", () => {
 	const content = [
 		{
 			type: "grid",
-			align: "middle",
-			justify: "center",
-			gutter: "[16, 24]",
-			wrap: false,
+			columns: 3,
+			rows: 2,
+			gap: "4",
+			minChildWidth: "200px",
 			children: [
 				{
-					type: "gridCol",
-					span: 12,
-					offset: 2,
-					xs: 24,
-					md: '{"span": 12, "offset": 2}',
-					children: [
-						{
-							type: "button",
-							text: "Grid Button",
-							variant: "solid",
-						}
-					]
+					type: "button",
+					text: "Grid Button 1",
+				},
+				{
+					type: "button",
+					text: "Grid Button 2",
 				}
 			]
 		}
@@ -30,54 +24,30 @@ test("PageRenderer renders grid (Row) and gridCol (Col) components correctly", (
 
 	const html = (<PageRenderer content={content} />).toString();
 
-	// Verify grid/Row class and attributes are rendered correctly
-	expect(html).toContain("grid-row");
-	expect(html).toContain("grid-row--align_middle");
-	expect(html).toContain("grid-row--justify_center");
-	expect(html).toContain("grid-row--wrap_false");
+	// Verify grid element and layout attributes are rendered correctly as compiled classes
+	expect(html).toContain("d_grid");
+	expect(html).toContain("grid-tc_repeat(3,_minmax(0,_1fr))");
+	expect(html).toContain("grid-tr_repeat(2,_minmax(0,_1fr))");
+	expect(html).toContain("gap_4");
 
-	// Verify gutter negative margins are calculated and applied
-	expect(html).toContain("ml_-8px");
-	expect(html).toContain("mr_-8px");
-	expect(html).toContain("mt_-12px");
-	expect(html).toContain("mb_-12px");
-
-	// Verify gridCol/Col class and attributes are rendered correctly
-	expect(html).toContain("grid-col");
-	expect(html).toContain("grid-col--span_12");
-	expect(html).toContain("grid-col--offset_2");
-
-	// Verify responsive Col props (direct or parsed objects) are correctly resolved and rendered
-	expect(html).toContain("grid-col--span_24"); // from xs=24
-	expect(html).toContain("md:grid-col--span_12"); // from md: { span: 12 }
-	expect(html).toContain("md:grid-col--offset_2"); // from md: { offset: 2 }
-
-	// Verify child component in grid is rendered
-	expect(html).toContain("Grid Button");
+	// Verify child components are rendered inside the grid directly
+	expect(html).toContain("Grid Button 1");
+	expect(html).toContain("Grid Button 2");
 });
 
-test("PageRenderer handles kebab-case aliases grid-row and grid-col", () => {
+test("PageRenderer parses responsive grid columns and gap props", () => {
 	const content = [
 		{
-			type: "grid-row",
-			children: [
-				{
-					type: "grid-col",
-					span: "6",
-					children: [
-						{
-							type: "badge",
-							text: "Grid Badge",
-						}
-					]
-				}
-			]
+			type: "grid",
+			columns: '{"base": 1, "md": 3}',
+			gap: "6",
 		}
 	];
 
 	const html = (<PageRenderer content={content} />).toString();
 
-	expect(html).toContain("grid-row");
-	expect(html).toContain("grid-col");
-	expect(html).toContain("Grid Badge");
+	expect(html).toContain("d_grid");
+	// Check for responsive styles
+	expect(html).toContain("grid-tc_repeat(1,_minmax(0,_1fr))");
+	expect(html).toContain("md:grid-tc_repeat(3,_minmax(0,_1fr))");
 });
