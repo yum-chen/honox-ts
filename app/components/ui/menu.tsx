@@ -17,6 +17,7 @@ import {
 	MenuRoot as RootPrimitive,
 	MenuSeparator as Separator,
 	MenuTrigger as Trigger,
+	MenuTriggerItem as TriggerItem,
 } from "./menu-primitive";
 
 // ============= Flattened API Types =============
@@ -87,7 +88,8 @@ type MenuItem =
 	| MenuSubmenuItem;
 
 interface MenuProps extends MenuVariantProps {
-	trigger?: JSX.Element;
+	trigger?: JSX.Element | ("click" | "hover" | "contextMenu")[];
+	triggerMode?: ("click" | "hover" | "contextMenu")[];
 	items?: MenuItem[];
 	defaultOpen?: boolean;
 	interactive?: boolean;
@@ -95,6 +97,8 @@ interface MenuProps extends MenuVariantProps {
 	contentClass?: string;
 	positionerClass?: string;
 	children?: any;
+	placement?: "bottom-start" | "bottom-end" | "top-start" | "top-end" | "left-start" | "left-end" | "right-start" | "right-end" | string;
+	destroyOnHidden?: boolean;
 }
 
 // ============= Rendering Functions =============
@@ -152,6 +156,19 @@ function renderMenuItem(item: MenuItem, index: number): JSX.Element {
 
 		case "submenu": {
 			const submenuItem = item as MenuSubmenuItem;
+			if (submenuItem.items && submenuItem.items.length > 0) {
+				return (
+					<Menu
+						key={index}
+						trigger={
+							<TriggerItem>
+								<ItemText>{submenuItem.label}</ItemText>
+							</TriggerItem>
+						}
+						items={submenuItem.items}
+					/>
+				);
+			}
 			return (
 				<Item key={index} value={`submenu:${submenuItem.label}`} disabled>
 					<ItemText>{submenuItem.label}</ItemText>
@@ -181,6 +198,7 @@ function renderMenuItem(item: MenuItem, index: number): JSX.Element {
 function MenuRoot(props: MenuProps) {
 	const {
 		trigger,
+		triggerMode,
 		items,
 		defaultOpen = false,
 		interactive,
@@ -188,15 +206,28 @@ function MenuRoot(props: MenuProps) {
 		contentClass,
 		positionerClass,
 		children,
+		placement,
+		destroyOnHidden,
 		...variantProps
 	} = props;
 
 	const styles = menu(variantProps);
 
+	const triggerActions = Array.isArray(triggerMode)
+		? triggerMode
+		: (Array.isArray(trigger) ? trigger : undefined);
+
+	const triggerElement = Array.isArray(trigger) ? undefined : trigger;
+
 	if (shouldHydrate(interactive, true)) {
 		return (
-			<InteractiveMenuRoot open={defaultOpen}>
-				{trigger && <Trigger asChild>{trigger}</Trigger>}
+			<InteractiveMenuRoot
+				open={defaultOpen}
+				trigger={triggerActions}
+				placement={placement}
+				destroyOnHidden={destroyOnHidden}
+			>
+				{triggerElement && <Trigger asChild>{triggerElement}</Trigger>}
 				{children}
 				{items && (
 					<Positioner class={cx(styles.positioner, positionerClass)}>
@@ -210,8 +241,13 @@ function MenuRoot(props: MenuProps) {
 	}
 
 	return (
-		<RootPrimitive open={defaultOpen}>
-			{trigger && <Trigger asChild>{trigger}</Trigger>}
+		<RootPrimitive
+			open={defaultOpen}
+			trigger={triggerActions}
+			placement={placement}
+			destroyOnHidden={destroyOnHidden}
+		>
+			{triggerElement && <Trigger asChild>{triggerElement}</Trigger>}
 			{children}
 			{items && (
 				<Positioner class={cx(styles.positioner, positionerClass)}>

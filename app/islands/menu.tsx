@@ -11,6 +11,9 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 		onOpenChange,
 		onSelect,
 		onClose,
+		trigger,
+		placement = "bottom-start",
+		destroyOnHidden = false,
 		...rest
 	} = props;
 	const [isOpen, setIsOpen] = useState(openProp ?? false);
@@ -121,8 +124,8 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 		const menuWidth = content?.offsetWidth || 200;
 		const menuHeight = content?.offsetHeight || 200;
 
-		let x: number;
-		let y: number;
+		let x = 0;
+		let y = 0;
 
 		if (part === "context-trigger" && e) {
 			// Context menu: open at the pointer.
@@ -140,12 +143,63 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 				y = Math.max(0, window.innerHeight - menuHeight);
 			}
 		} else {
-			// Dropdown: open below the trigger, flip above when it overflows.
 			const rect = trigger.getBoundingClientRect();
-			x = rect.left;
-			y = rect.bottom + 4;
-			if (x + menuWidth > window.innerWidth) x = rect.right - menuWidth;
-			if (y + menuHeight > window.innerHeight) y = rect.top - menuHeight - 4;
+			// Compute coordinate offsets based on placement options
+			switch (placement) {
+				case "bottom-end":
+					x = rect.right - menuWidth;
+					y = rect.bottom + 4;
+					if (x < 0) x = rect.left;
+					if (y + menuHeight > window.innerHeight) y = rect.top - menuHeight - 4;
+					break;
+				case "top-start":
+					x = rect.left;
+					y = rect.top - menuHeight - 4;
+					if (x + menuWidth > window.innerWidth) x = rect.right - menuWidth;
+					if (y < 0) y = rect.bottom + 4;
+					break;
+				case "top-end":
+					x = rect.right - menuWidth;
+					y = rect.top - menuHeight - 4;
+					if (x < 0) x = rect.left;
+					if (y < 0) y = rect.bottom + 4;
+					break;
+				case "left-start":
+					x = rect.left - menuWidth - 4;
+					y = rect.top;
+					if (x < 0) x = rect.right + 4;
+					if (y + menuHeight > window.innerHeight) {
+						y = Math.max(0, window.innerHeight - menuHeight);
+					}
+					break;
+				case "left-end":
+					x = rect.left - menuWidth - 4;
+					y = rect.bottom - menuHeight;
+					if (x < 0) x = rect.right + 4;
+					if (y < 0) y = Math.max(0, rect.top);
+					break;
+				case "right-start":
+					x = rect.right + 4;
+					y = rect.top;
+					if (x + menuWidth > window.innerWidth) x = rect.left - menuWidth - 4;
+					if (y + menuHeight > window.innerHeight) {
+						y = Math.max(0, window.innerHeight - menuHeight);
+					}
+					break;
+				case "right-end":
+					x = rect.right + 4;
+					y = rect.bottom - menuHeight;
+					if (x + menuWidth > window.innerWidth) x = rect.left - menuWidth - 4;
+					if (y < 0) y = Math.max(0, rect.top);
+					break;
+				case "bottom-start":
+				default:
+					x = rect.left;
+					y = rect.bottom + 4;
+					if (x + menuWidth > window.innerWidth) x = rect.right - menuWidth;
+					if (y + menuHeight > window.innerHeight) y = rect.top - menuHeight - 4;
+					break;
+			}
 		}
 
 		positioner.style.top = `${Math.max(0, y)}px`;
@@ -155,9 +209,10 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 	const handleOpen = (
 		e?: MouseEvent,
 		focusItem: "first" | "last" = "first",
+		source = "trigger",
 	) => {
 		setIsOpen(true);
-		onOpenChange?.(true);
+		onOpenChange?.(true, { source });
 		setTimeout(() => {
 			applyCheckedOverrides();
 			updatePosition(e);
@@ -166,10 +221,10 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 		}, 0);
 	};
 
-	const handleClose = () => {
+	const handleClose = (source = "trigger") => {
 		setIsOpen(false);
 		if (positionerRef.current) positionerRef.current.style.display = "none";
-		onOpenChange?.(false);
+		onOpenChange?.(false, { source });
 		onClose?.();
 	};
 
@@ -178,6 +233,8 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 
 		const root = rootRef.current;
 		if (!root) return;
+
+		const triggerActions = trigger || ["click"];
 
 		// State changes re-render the subtree from the original props; restore
 		// any client-side checkbox/radio toggles.
@@ -198,8 +255,10 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 				if (!ownsTarget(target) || target.hasAttribute("data-disabled")) {
 					return;
 				}
-				if (isOpen) handleClose();
-				else handleOpen(e);
+				if (triggerActions.includes("click")) {
+					if (isOpen) handleClose("trigger");
+					else handleOpen(e, "first", "trigger");
+				}
 			} else if (dataPart === "item") {
 				if (target.hasAttribute("data-disabled")) return;
 				const role = target.getAttribute("role") || "";
@@ -218,7 +277,7 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 				if (ownsTarget(target)) {
 					onSelect?.(value);
 				}
-				handleClose();
+				handleClose("menu");
 				if (triggerRef.current?.getAttribute("data-part") === "trigger") {
 					triggerRef.current.focus();
 				}
@@ -226,12 +285,13 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 		};
 
 		const handleContextMenu = (e: MouseEvent) => {
+			if (!triggerActions.includes("contextMenu")) return;
 			const target = (e.target as HTMLElement).closest<HTMLElement>(
 				'[data-part="context-trigger"]',
 			);
 			if (target && ownsTarget(target)) {
 				e.preventDefault();
-				handleOpen(e);
+				handleOpen(e, "first", "trigger");
 			}
 		};
 
@@ -261,7 +321,7 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 					e.key === "ArrowUp")
 			) {
 				if (eventTarget.closest('[data-part="trigger"]')) {
-					handleOpen(undefined, e.key === "ArrowUp" ? "last" : "first");
+					handleOpen(undefined, e.key === "ArrowUp" ? "last" : "first", "keyboard");
 					e.preventDefault();
 				}
 				return;
@@ -274,12 +334,12 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 				);
 
 				if (e.key === "Escape") {
-					handleClose();
+					handleClose("keyboard");
 					triggerRef.current?.focus();
 					e.preventDefault();
 					e.stopPropagation();
 				} else if (e.key === "Tab") {
-					handleClose();
+					handleClose("keyboard");
 				} else if (e.key === "ArrowDown") {
 					items[(currentIndex + 1) % items.length]?.focus();
 					e.preventDefault();
@@ -296,7 +356,7 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 					if (
 						triggerRef.current?.getAttribute("data-part") === "trigger-item"
 					) {
-						handleClose();
+						handleClose("keyboard");
 						triggerRef.current?.focus();
 						e.preventDefault();
 						e.stopPropagation();
@@ -319,7 +379,7 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 
 		const handleClickOutside = (e: MouseEvent) => {
 			if (isOpen && root && !root.contains(e.target as Node)) {
-				handleClose();
+				handleClose("outside");
 			}
 		};
 
@@ -331,13 +391,75 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 			}
 		};
 
+		const handleScroll = (e: Event) => {
+			if (rootRef.current && rootRef.current.contains(e.target as Node)) {
+				return;
+			}
+			handleClose("scroll");
+		};
+
+		// Hover trigger handlers
+		let openTimeoutId: any = null;
+		let closeTimeoutId: any = null;
+
+		const handleMouseEnterTrigger = (e: MouseEvent) => {
+			if (triggerActions.includes("hover")) {
+				clearTimeout(closeTimeoutId);
+				openTimeoutId = setTimeout(() => {
+					if (!isOpen) {
+						handleOpen(e, "first", "hover");
+					}
+				}, 150);
+			}
+		};
+
+		const handleMouseLeaveTrigger = () => {
+			if (triggerActions.includes("hover")) {
+				clearTimeout(openTimeoutId);
+				closeTimeoutId = setTimeout(() => {
+					if (isOpen) {
+						handleClose("hover");
+					}
+				}, 100);
+			}
+		};
+
+		const handleMouseEnterContent = () => {
+			if (triggerActions.includes("hover")) {
+				clearTimeout(closeTimeoutId);
+			}
+		};
+
+		const handleMouseLeaveContent = () => {
+			if (triggerActions.includes("hover")) {
+				closeTimeoutId = setTimeout(() => {
+					if (isOpen) {
+						handleClose("hover");
+					}
+				}, 100);
+			}
+		};
+
 		root.addEventListener("click", handleClick as any);
 		root.addEventListener("contextmenu", handleContextMenu as any);
 		root.addEventListener("mouseover", handleMouseOver as any);
 		root.addEventListener("keydown", handleKeyDown);
 		window.addEventListener("mousedown", handleClickOutside);
+
+		const triggerEl = triggerRef.current;
+		const contentEl = contentRef.current;
+
+		if (triggerEl && triggerActions.includes("hover")) {
+			triggerEl.addEventListener("mouseenter", handleMouseEnterTrigger);
+			triggerEl.addEventListener("mouseleave", handleMouseLeaveTrigger);
+		}
+		if (contentEl && triggerActions.includes("hover")) {
+			contentEl.addEventListener("mouseenter", handleMouseEnterContent);
+			contentEl.addEventListener("mouseleave", handleMouseLeaveContent);
+		}
+
 		if (isOpen) {
-			window.addEventListener("scroll", handleReposition, true);
+			window.addEventListener("scroll", handleScroll, true);
 			window.addEventListener("resize", handleReposition);
 		}
 
@@ -347,10 +469,20 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 			root.removeEventListener("mouseover", handleMouseOver as any);
 			root.removeEventListener("keydown", handleKeyDown);
 			window.removeEventListener("mousedown", handleClickOutside);
-			window.removeEventListener("scroll", handleReposition, true);
+			window.removeEventListener("scroll", handleScroll, true);
 			window.removeEventListener("resize", handleReposition);
+			if (triggerEl) {
+				triggerEl.removeEventListener("mouseenter", handleMouseEnterTrigger);
+				triggerEl.removeEventListener("mouseleave", handleMouseLeaveTrigger);
+			}
+			if (contentEl) {
+				contentEl.removeEventListener("mouseenter", handleMouseEnterContent);
+				contentEl.removeEventListener("mouseleave", handleMouseLeaveContent);
+			}
+			clearTimeout(openTimeoutId);
+			clearTimeout(closeTimeoutId);
 		};
-	}, [rootId, isOpen]);
+	}, [rootId, isOpen, trigger]);
 
 	return (
 		<div
@@ -361,7 +493,7 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 			style={{ display: "contents" }}
 		>
 			<MenuRoot {...rest} open={isOpen} id={rootId} onClose={onClose}>
-				{children}
+				{destroyOnHidden && !isOpen ? null : children}
 			</MenuRoot>
 		</div>
 	);
