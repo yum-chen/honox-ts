@@ -141,3 +141,76 @@ test("PageRenderer renders menu correctly with items", () => {
 	expect(html).toContain("Edit Profile");
 	expect(html).toContain("Receive Notifications");
 });
+
+test("PageRenderer renders flexbox grid components and parses responsive properties", () => {
+	const content = [
+		{
+			type: "grid",
+			align: "middle",
+			justify: "center",
+			gutter: "{\"base\": 8, \"md\": 16}",
+			wrap: "false",
+			children: [
+				{
+					type: "grid-col",
+					span: "{\"base\": 24, \"md\": 12}",
+					offset: "4",
+					children: [
+						{
+							type: "text",
+							content: "Grid Content",
+						}
+					]
+				}
+			]
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+
+	expect(html).toContain("grid-row");
+	expect(html).toContain("grid-row--align_middle");
+	expect(html).toContain("grid-row--justify_center");
+	expect(html).toContain("grid-row--wrap_false");
+	expect(html).toContain("ml_-4px");
+	expect(html).toContain("md:ml_-8px");
+	expect(html).toContain("grid-col");
+	expect(html).toContain("grid-col--span_24");
+	expect(html).toContain("md:grid-col--span_12");
+	expect(html).toContain("grid-col--offset_4");
+	expect(html).toContain("Grid Content");
+});
+
+test("PageRenderer renders CSS Grid components and parses responsive properties", () => {
+	const content = [
+		{
+			type: "css-grid",
+			columns: "{\"base\": 1, \"md\": 3}",
+			gap: "4",
+			children: [
+				{
+					type: "css-grid-item",
+					colSpan: "{\"base\": 1, \"md\": 2}",
+					rowSpan: "2",
+					children: [
+						{
+							type: "text",
+							content: "Flat Grid Content",
+						}
+					]
+				}
+			]
+		}
+	];
+
+	const html = (<PageRenderer content={content} />).toString();
+
+	expect(html).toContain("grid");
+	expect(html).toContain("grid-tc_repeat(1,_minmax(0,_1fr))");
+	expect(html).toContain("md:grid-tc_repeat(3,_minmax(0,_1fr))");
+	expect(html).toContain("gap_4");
+	expect(html).toContain("grid-c_span_1");
+	expect(html).toContain("md:grid-c_span_2");
+	expect(html).toContain("grid-r_span_2");
+	expect(html).toContain("Flat Grid Content");
+});

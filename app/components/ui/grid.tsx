@@ -1,6 +1,12 @@
 import type { PropsWithChildren } from "hono/jsx";
 import { createContext, useContext } from "hono/jsx";
 import { css, cx } from "styled-system/css";
+import {
+	type GridItemProperties,
+	type GridProperties,
+	gridItem as gridItemPattern,
+	grid as gridPattern,
+} from "styled-system/patterns";
 import { gridCol, gridRow } from "styled-system/recipes";
 
 type Breakpoint = "base" | "sm" | "md" | "lg" | "xl" | "2xl";
@@ -349,5 +355,92 @@ function Col(props: ColProps) {
 	);
 }
 
-export type { ColProps, RowProps };
-export { Col, Row };
+interface GridProps
+	extends PropsWithChildren<{
+		class?: string;
+		columns?: Responsive<number | string>;
+		gap?: Responsive<string | number>;
+		columnGap?: Responsive<string | number>;
+		rowGap?: Responsive<string | number>;
+		minChildWidth?: Responsive<string | number>;
+		[key: string]: unknown;
+	}> {}
+
+interface GridItemProps
+	extends PropsWithChildren<{
+		class?: string;
+		colSpan?: Responsive<number | string>;
+		rowSpan?: Responsive<number | string>;
+		colStart?: Responsive<number | string>;
+		rowStart?: Responsive<number | string>;
+		colEnd?: Responsive<number | string>;
+		rowEnd?: Responsive<number | string>;
+		[key: string]: unknown;
+	}> {}
+
+function Grid(props: GridProps) {
+	const {
+		children,
+		class: classProp,
+		columns,
+		gap,
+		columnGap,
+		rowGap,
+		minChildWidth,
+		...rest
+	} = props;
+
+	const styles = {
+		columns,
+		gap,
+		columnGap,
+		rowGap,
+		minChildWidth,
+	};
+
+	return (
+		<div
+			// biome-ignore lint/suspicious/noExplicitAny: style properties are dynamic
+			class={cx(gridPattern(styles as any), classProp)}
+			{...(rest as Record<string, unknown>)}
+		>
+			{children}
+		</div>
+	);
+}
+
+function GridItem(props: GridItemProps) {
+	const {
+		children,
+		class: classProp,
+		colSpan,
+		rowSpan,
+		colStart,
+		rowStart,
+		colEnd,
+		rowEnd,
+		...rest
+	} = props;
+
+	const styles = {
+		colSpan,
+		rowSpan,
+		colStart,
+		rowStart,
+		colEnd,
+		rowEnd,
+	};
+
+	return (
+		<div
+			// biome-ignore lint/suspicious/noExplicitAny: style properties are dynamic
+			class={cx(gridItemPattern(styles as any), classProp)}
+			{...(rest as Record<string, unknown>)}
+		>
+			{children}
+		</div>
+	);
+}
+
+export type { ColProps, GridItemProps, GridProps, RowProps };
+export { Col, Grid, GridItem, Row };
