@@ -625,6 +625,84 @@ collections:
                     widget: object
                     fields: *switch_fields
 
+                  - label: Grid
+                    name: grid
+                    widget: object
+                    fields: &grid_fields
+                      - &grid_align { label: Align, name: align, widget: select, options: [top, middle, bottom, stretch], required: false }
+                      - &grid_justify { label: Justify, name: justify, widget: select, options: [start, end, center, space-around, space-between, space-evenly], required: false }
+                      - &grid_gutter { label: Gutter, name: gutter, widget: string, required: false }
+                      - &grid_wrap { label: Wrap, name: wrap, widget: boolean, default: true }
+                      - label: Children
+                        name: children
+                        widget: list
+                        types: *leaf_components
+                        required: false
+
+                  - label: Grid Column
+                    name: gridCol
+                    widget: object
+                    fields: &grid_col_fields
+                      - &grid_col_span { label: Span, name: span, widget: string, required: false }
+                      - &grid_col_offset { label: Offset, name: offset, widget: string, required: false }
+                      - &grid_col_order { label: Order, name: order, widget: string, required: false }
+                      - &grid_col_pull { label: Pull, name: pull, widget: string, required: false }
+                      - &grid_col_push { label: Push, name: push, widget: string, required: false }
+                      - &grid_col_flex { label: Flex, name: flex, widget: string, required: false }
+                      - &grid_col_xs { label: XS, name: xs, widget: string, required: false }
+                      - &grid_col_sm { label: SM, name: sm, widget: string, required: false }
+                      - &grid_col_md { label: MD, name: md, widget: string, required: false }
+                      - &grid_col_lg { label: LG, name: lg, widget: string, required: false }
+                      - &grid_col_xl { label: XL, name: xl, widget: string, required: false }
+                      - &grid_col_2xl { label: 2XL, name: 2xl, widget: string, required: false }
+                      - label: Children
+                        name: children
+                        widget: list
+                        types: *leaf_components
+                        required: false
+
+          # ==========================================
+          # 1b. GRID
+          # ==========================================
+          - label: Grid
+            name: grid
+            widget: object
+            fields:
+              - *grid_align
+              - *grid_justify
+              - *grid_gutter
+              - *grid_wrap
+              - label: Children
+                name: children
+                widget: list
+                types: *nestable_components
+                required: false
+
+          # ==========================================
+          # 1c. GRID COLUMN
+          # ==========================================
+          - label: Grid Column
+            name: gridCol
+            widget: object
+            fields:
+              - *grid_col_span
+              - *grid_col_offset
+              - *grid_col_order
+              - *grid_col_pull
+              - *grid_col_push
+              - *grid_col_flex
+              - *grid_col_xs
+              - *grid_col_sm
+              - *grid_col_md
+              - *grid_col_lg
+              - *grid_col_xl
+              - *grid_col_2xl
+              - label: Children
+                name: children
+                widget: list
+                types: *nestable_components
+                required: false
+
           # ==========================================
           # 2. CARD
           # ==========================================

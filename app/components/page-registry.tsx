@@ -7,6 +7,7 @@ import {
 	Button,
 	Card,
 	Checkbox,
+	Col,
 	Collapsible,
 	Combobox,
 	Dialog,
@@ -22,6 +23,7 @@ import {
 	Popover,
 	Progress,
 	RadioGroup,
+	Row,
 	SegmentGroup,
 	Select,
 	Skeleton,
@@ -41,6 +43,8 @@ const TYPE_ALIASES: Record<string, string> = {
 	"paginated-table": "paginatedTable",
 	"radio-group": "radioGroup",
 	"segment-group": "segmentGroup",
+	"grid-col": "gridCol",
+	"grid-row": "grid",
 };
 
 function resolveType(type: string): string {
@@ -57,12 +61,61 @@ function renderChildren(children?: ComponentBlock[]): JSX.Element[] {
 	));
 }
 
+function tryParseJSON(val: unknown): unknown {
+	if (typeof val === "string") {
+		try {
+			return JSON.parse(val);
+		} catch (_) {
+			const num = Number(val);
+			if (!Number.isNaN(num)) {
+				return num;
+			}
+		}
+	}
+	return val;
+}
+
 // One entry per supported block type. Each body ports the previous renderer
 // verbatim, with the single change that cleaned props come from `propsOf(block)`
 // (which strips `type`/`children`) so those meta-keys can never reach the DOM.
 // Containers that nest children destructure `children` from the full block `b`
 // and the remaining props from `propsOf(b)`.
 const registry: Record<string, BlockRenderer> = {
+	grid: (b) => {
+		const { children } = b;
+		const { align, justify, gutter, wrap, ...rest } = propsOf(b);
+
+		const resolvedGutter = tryParseJSON(gutter);
+
+		return (
+			<Row
+				align={align}
+				justify={justify}
+				gutter={resolvedGutter}
+				wrap={wrap}
+				{...rest}
+			>
+				{renderChildren(children as ComponentBlock[])}
+			</Row>
+		);
+	},
+
+	gridCol: (b) => {
+		const { children } = b;
+		const props = propsOf(b);
+
+		const resolvedProps: Record<string, unknown> = {};
+		for (const key of Object.keys(props)) {
+			resolvedProps[key] = tryParseJSON(props[key]);
+		}
+
+		return (
+			<Col {...resolvedProps}>
+				{renderChildren(children as ComponentBlock[])}
+			</Col>
+		);
+	},
+
 	stack: (b) => {
 		const { children } = b;
 		return (
