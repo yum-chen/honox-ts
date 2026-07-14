@@ -722,6 +722,69 @@ export default createRoute((c) => {
 						},
 					]}
 				/>
+
+				<Text size="sm" class={css({ color: "fg.muted", mt: "4", mb: "2" })}>
+					Menu with Cascading Submenus (Interactive)
+				</Text>
+				<Menu
+					trigger={
+						<Button variant="outline" colorPalette="green">
+							Preferences
+						</Button>
+					}
+					triggerMode="hover"
+					items={[
+						{ type: "item", label: "Account Settings", value: "account" },
+						{
+							type: "submenu",
+							label: "Theme & Layout",
+							items: [
+								{ type: "item", label: "Light Theme", value: "theme-light" },
+								{ type: "item", label: "Dark Theme", value: "theme-dark" },
+								{
+									type: "submenu",
+									label: "More Options",
+									items: [
+										{
+											type: "item",
+											label: "Compact Density",
+											value: "density-compact",
+										},
+										{
+											type: "item",
+											label: "Comfortable Density",
+											value: "density-comfortable",
+										},
+									],
+								},
+							],
+						},
+					]}
+				/>
+
+				<Text size="sm" class={css({ color: "fg.muted", mt: "4", mb: "2" })}>
+					Menu with Context Mode (Interactive - Right Click)
+				</Text>
+				<Menu
+					trigger={
+						<div
+							class={css({
+								p: "6",
+								border: "2px dashed {colors.border}",
+								bg: "bg.subtle",
+								borderRadius: "md",
+								cursor: "context-menu",
+							})}
+						>
+							Right Click Area
+						</div>
+					}
+					triggerMode="contextMenu"
+					items={[
+						{ type: "item", label: "Inspect Element", value: "inspect" },
+						{ type: "item", label: "View Page Source", value: "view-source" },
+					]}
+				/>
 			</Stack>
 
 			{/* Slider Examples */}

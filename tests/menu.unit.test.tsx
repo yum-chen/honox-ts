@@ -39,7 +39,7 @@ describe("Menu Unit Tests", () => {
 		expect(html).toContain('aria-checked="true"');
 	});
 
-	test("should degrade submenu to a disabled item (no debug leak)", () => {
+	test("should support cascading submenus with trigger-item", () => {
 		const html = (
 			<Menu.Root
 				interactive={false}
@@ -47,9 +47,19 @@ describe("Menu Unit Tests", () => {
 			/>
 		).toString();
 
-		expect(html).toContain('data-part="item"');
-		expect(html).toContain("data-disabled");
+		expect(html).toContain('data-part="trigger-item"');
 		expect(html).toContain("More");
-		expect(html).not.toContain("not supported in simplified API");
+	});
+
+	test("should support triggerMode parameter", () => {
+		const html = (
+			<Menu.Root
+				interactive={false}
+				triggerMode="hover"
+				items={[{ type: "item", label: "HoverItem", value: "hover" }]}
+			/>
+		).toString();
+
+		expect(html).toContain("HoverItem");
 	});
 });

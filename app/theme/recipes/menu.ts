@@ -53,11 +53,20 @@ export const menu = defineSlotRecipe({
 			textDecoration: "none",
 			userSelect: "none",
 			width: "100%",
+			cursor: "pointer",
+			_hover: {
+				bg: "gray.surface.bg.hover",
+			},
+			_focus: {
+				bg: "gray.surface.bg.hover",
+				outline: "none",
+			},
 			_highlighted: {
 				bg: "gray.surface.bg.hover",
 			},
 			_disabled: {
 				layerStyle: "disabled",
+				cursor: "not-allowed",
 			},
 		},
 		trigger: {

@@ -16,11 +16,12 @@ interface MenuContextValue {
 	styles: MenuStyles;
 	onClose?: () => void;
 	parentMenuId?: string;
+	triggerMode?: "click" | "hover" | "contextMenu";
 }
 
 const MenuContext = createContext<MenuContextValue | null>(null);
 
-export const useMenuContext = () => {
+const useMenuContext = () => {
 	const context = useContext(MenuContext);
 	if (!context) {
 		// During SSR, return a default context to avoid errors
@@ -37,10 +38,11 @@ export const useMenuContext = () => {
 	return context;
 };
 
-export interface MenuRootProps extends MenuVariantProps, PropsWithChildren {
+interface MenuRootProps extends MenuVariantProps, PropsWithChildren {
 	id?: string;
 	open?: boolean;
 	onClose?: () => void;
+	triggerMode?: "click" | "hover" | "contextMenu";
 }
 
 interface MenuRadioGroupContextValue {
@@ -52,11 +54,17 @@ const MenuRadioGroupContext = createContext<MenuRadioGroupContextValue | null>(
 	null,
 );
 
-export const useMenuRadioGroupContext = () => useContext(MenuRadioGroupContext);
+const useMenuRadioGroupContext = () => useContext(MenuRadioGroupContext);
 
-export function MenuRoot(props: MenuRootProps) {
+function MenuRoot(props: MenuRootProps) {
 	const [variantProps, localProps] = menu.splitVariantProps(props);
-	const { id: idProp, open = false, children, onClose } = localProps;
+	const {
+		id: idProp,
+		open = false,
+		children,
+		onClose,
+		triggerMode,
+	} = localProps;
 	const autoId = useId();
 	const id = idProp || autoId;
 	const styles = menu(variantProps);
@@ -65,20 +73,27 @@ export function MenuRoot(props: MenuRootProps) {
 
 	return (
 		<MenuContext.Provider
-			value={{ id, open, styles, onClose, parentMenuId: parentContext?.id }}
+			value={{
+				id,
+				open,
+				styles,
+				onClose,
+				parentMenuId: parentContext?.id,
+				triggerMode,
+			}}
 		>
 			{children}
 		</MenuContext.Provider>
 	);
 }
 
-export interface MenuTriggerProps extends PropsWithChildren {
+interface MenuTriggerProps extends PropsWithChildren {
 	class?: string;
 	asChild?: boolean;
 	[key: string]: unknown;
 }
 
-export function MenuTrigger(props: MenuTriggerProps) {
+function MenuTrigger(props: MenuTriggerProps) {
 	const { children, class: classProp, asChild, ...restProps } = props;
 	const context = useMenuContext();
 
@@ -111,7 +126,7 @@ export function MenuTrigger(props: MenuTriggerProps) {
 	);
 }
 
-export function MenuContextTrigger(props: MenuTriggerProps) {
+function MenuContextTrigger(props: MenuTriggerProps) {
 	const { children, class: classProp, asChild, ...restProps } = props;
 	const context = useMenuContext();
 
@@ -138,12 +153,12 @@ export function MenuContextTrigger(props: MenuTriggerProps) {
 	);
 }
 
-export interface MenuPositionerProps extends PropsWithChildren {
+interface MenuPositionerProps extends PropsWithChildren {
 	class?: string;
 	[key: string]: unknown;
 }
 
-export function MenuPositioner(props: MenuPositionerProps) {
+function MenuPositioner(props: MenuPositionerProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useMenuContext();
 
@@ -163,12 +178,12 @@ export function MenuPositioner(props: MenuPositionerProps) {
 	);
 }
 
-export interface MenuContentProps extends PropsWithChildren {
+interface MenuContentProps extends PropsWithChildren {
 	class?: string;
 	[key: string]: unknown;
 }
 
-export function MenuContent(props: MenuContentProps) {
+function MenuContent(props: MenuContentProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useMenuContext();
 
@@ -188,7 +203,7 @@ export function MenuContent(props: MenuContentProps) {
 	);
 }
 
-export interface MenuItemProps extends PropsWithChildren {
+interface MenuItemProps extends PropsWithChildren {
 	id?: string;
 	disabled?: boolean;
 	class?: string;
@@ -197,7 +212,7 @@ export interface MenuItemProps extends PropsWithChildren {
 	[key: string]: unknown;
 }
 
-export function MenuItem(props: MenuItemProps) {
+function MenuItem(props: MenuItemProps) {
 	const {
 		children,
 		id,
@@ -235,7 +250,7 @@ export function MenuItem(props: MenuItemProps) {
 	);
 }
 
-export function MenuTriggerItem(props: MenuItemProps) {
+function MenuTriggerItem(props: MenuItemProps) {
 	const { children, class: classProp, asChild, ...restProps } = props;
 	const context = useMenuContext();
 
@@ -264,13 +279,13 @@ export function MenuTriggerItem(props: MenuItemProps) {
 	);
 }
 
-export interface MenuItemGroupProps extends PropsWithChildren {
+interface MenuItemGroupProps extends PropsWithChildren {
 	id?: string;
 	class?: string;
 	[key: string]: unknown;
 }
 
-export function MenuItemGroup(props: MenuItemGroupProps) {
+function MenuItemGroup(props: MenuItemGroupProps) {
 	const { children, id, class: classProp, ...restProps } = props;
 	const context = useMenuContext();
 
@@ -286,13 +301,13 @@ export function MenuItemGroup(props: MenuItemGroupProps) {
 	);
 }
 
-export interface MenuItemGroupLabelProps extends PropsWithChildren {
+interface MenuItemGroupLabelProps extends PropsWithChildren {
 	htmlFor?: string;
 	class?: string;
 	[key: string]: unknown;
 }
 
-export function MenuItemGroupLabel(props: MenuItemGroupLabelProps) {
+function MenuItemGroupLabel(props: MenuItemGroupLabelProps) {
 	const { children, htmlFor, class: classProp, ...restProps } = props;
 	const context = useMenuContext();
 
@@ -307,12 +322,12 @@ export function MenuItemGroupLabel(props: MenuItemGroupLabelProps) {
 	);
 }
 
-export interface MenuItemTextProps extends PropsWithChildren {
+interface MenuItemTextProps extends PropsWithChildren {
 	class?: string;
 	[key: string]: unknown;
 }
 
-export function MenuItemText(props: MenuItemTextProps) {
+function MenuItemText(props: MenuItemTextProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useMenuContext();
 
@@ -327,12 +342,12 @@ export function MenuItemText(props: MenuItemTextProps) {
 	);
 }
 
-export interface MenuSeparatorProps {
+interface MenuSeparatorProps {
 	class?: string;
 	[key: string]: unknown;
 }
 
-export function MenuSeparator(props: MenuSeparatorProps) {
+function MenuSeparator(props: MenuSeparatorProps) {
 	const { class: classProp, ...restProps } = props;
 	const context = useMenuContext();
 
@@ -345,12 +360,12 @@ export function MenuSeparator(props: MenuSeparatorProps) {
 	);
 }
 
-export interface MenuIndicatorProps extends PropsWithChildren {
+interface MenuIndicatorProps extends PropsWithChildren {
 	class?: string;
 	[key: string]: unknown;
 }
 
-export function MenuIndicator(props: MenuIndicatorProps) {
+function MenuIndicator(props: MenuIndicatorProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useMenuContext();
 
@@ -365,11 +380,11 @@ export function MenuIndicator(props: MenuIndicatorProps) {
 	);
 }
 
-export interface MenuCheckboxItemProps extends MenuItemProps {
+interface MenuCheckboxItemProps extends MenuItemProps {
 	checked?: boolean;
 }
 
-export function MenuCheckboxItem(props: MenuCheckboxItemProps) {
+function MenuCheckboxItem(props: MenuCheckboxItemProps) {
 	const { children, checked, class: classProp, ...restProps } = props;
 	const context = useMenuContext();
 
@@ -388,12 +403,12 @@ export function MenuCheckboxItem(props: MenuCheckboxItemProps) {
 	);
 }
 
-export interface MenuRadioItemGroupProps extends MenuItemGroupProps {
+interface MenuRadioItemGroupProps extends MenuItemGroupProps {
 	value?: string;
 	onValueChange?: (details: { value: string }) => void;
 }
 
-export function MenuRadioItemGroup(props: MenuRadioItemGroupProps) {
+function MenuRadioItemGroup(props: MenuRadioItemGroupProps) {
 	const { children, value, onValueChange, ...restProps } = props;
 	return (
 		<MenuRadioGroupContext.Provider value={{ value, onValueChange }}>
@@ -402,12 +417,12 @@ export function MenuRadioItemGroup(props: MenuRadioItemGroupProps) {
 	);
 }
 
-export interface MenuRadioItemProps extends MenuItemProps {
+interface MenuRadioItemProps extends MenuItemProps {
 	value: string;
 	checked?: boolean;
 }
 
-export function MenuRadioItem(props: MenuRadioItemProps) {
+function MenuRadioItem(props: MenuRadioItemProps) {
 	const { children, value, checked, class: classProp, ...restProps } = props;
 	const context = useMenuContext();
 	const radioGroup = useMenuRadioGroupContext();
@@ -429,12 +444,12 @@ export function MenuRadioItem(props: MenuRadioItemProps) {
 	);
 }
 
-export interface MenuItemIndicatorProps extends PropsWithChildren {
+interface MenuItemIndicatorProps extends PropsWithChildren {
 	class?: string;
 	[key: string]: unknown;
 }
 
-export function MenuItemIndicator(props: MenuItemIndicatorProps) {
+function MenuItemIndicator(props: MenuItemIndicatorProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useMenuContext();
 
@@ -449,7 +464,7 @@ export function MenuItemIndicator(props: MenuItemIndicatorProps) {
 	);
 }
 
-export function MenuArrow(props: PropsWithChildren<{ class?: string }>) {
+function MenuArrow(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useMenuContext();
 	return (
@@ -459,10 +474,46 @@ export function MenuArrow(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function MenuArrowTip(props: { class?: string }) {
+function MenuArrowTip(props: { class?: string }) {
 	const { class: classProp, ...restProps } = props;
 	const context = useMenuContext();
 	return <div class={cx(context.styles.arrowTip, classProp)} {...restProps} />;
 }
 
-export { MenuContext as Context };
+export {
+	MenuArrow,
+	MenuArrowTip,
+	MenuCheckboxItem,
+	type MenuCheckboxItemProps,
+	MenuContent,
+	type MenuContentProps,
+	MenuContext as Context,
+	MenuContextTrigger,
+	MenuIndicator,
+	type MenuIndicatorProps,
+	MenuItem,
+	MenuItemGroup,
+	MenuItemGroupLabel,
+	type MenuItemGroupLabelProps,
+	type MenuItemGroupProps,
+	MenuItemIndicator,
+	type MenuItemIndicatorProps,
+	type MenuItemProps,
+	MenuItemText,
+	type MenuItemTextProps,
+	MenuPositioner,
+	type MenuPositionerProps,
+	MenuRadioItem,
+	MenuRadioItemGroup,
+	type MenuRadioItemGroupProps,
+	type MenuRadioItemProps,
+	MenuRoot,
+	type MenuRootProps,
+	MenuSeparator,
+	type MenuSeparatorProps,
+	MenuTrigger,
+	MenuTriggerItem,
+	type MenuTriggerProps,
+	useMenuContext,
+	useMenuRadioGroupContext,
+};

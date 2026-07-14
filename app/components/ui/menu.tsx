@@ -7,6 +7,7 @@ import { shouldHydrate } from "./island-utils";
 import {
 	MenuCheckboxItem as CheckboxItem,
 	MenuContent as Content,
+	MenuContextTrigger as ContextTrigger,
 	MenuItem as Item,
 	MenuItemGroupLabel as ItemGroupLabel,
 	MenuItemIndicator as ItemIndicator,
@@ -17,6 +18,7 @@ import {
 	MenuRoot as RootPrimitive,
 	MenuSeparator as Separator,
 	MenuTrigger as Trigger,
+	MenuTriggerItem as TriggerItem,
 } from "./menu-primitive";
 
 // ============= Flattened API Types =============
@@ -75,7 +77,7 @@ interface MenuSubmenuItem extends BaseMenuItem {
 	type: "submenu";
 	label: string;
 	icon?: JSX.Element;
-	items: (MenuItemItem | MenuSeparatorItem | MenuCheckboxItem)[];
+	items: MenuItem[];
 }
 
 type MenuItem =
@@ -88,18 +90,24 @@ type MenuItem =
 
 interface MenuProps extends MenuVariantProps {
 	trigger?: JSX.Element;
+	triggerType?: "trigger" | "trigger-item" | "context-trigger";
 	items?: MenuItem[];
 	defaultOpen?: boolean;
 	interactive?: boolean;
 	class?: string;
 	contentClass?: string;
 	positionerClass?: string;
+	triggerMode?: "click" | "hover" | "contextMenu";
 	children?: any;
 }
 
 // ============= Rendering Functions =============
 
-function renderMenuItem(item: MenuItem, index: number): JSX.Element {
+function renderMenuItem(
+	item: MenuItem,
+	index: number,
+	triggerMode?: "click" | "hover" | "contextMenu",
+): JSX.Element {
 	switch (item.type) {
 		case "separator":
 			return <Separator key={index} />;
@@ -144,7 +152,7 @@ function renderMenuItem(item: MenuItem, index: number): JSX.Element {
 						<ItemGroupLabel>{radioGroup.label}</ItemGroupLabel>
 					)}
 					{radioGroup.items.map((radioItem, idx) =>
-						renderMenuItem(radioItem, idx),
+						renderMenuItem(radioItem, idx, triggerMode),
 					)}
 				</RadioItemGroup>
 			);
@@ -153,9 +161,42 @@ function renderMenuItem(item: MenuItem, index: number): JSX.Element {
 		case "submenu": {
 			const submenuItem = item as MenuSubmenuItem;
 			return (
-				<Item key={index} value={`submenu:${submenuItem.label}`} disabled>
-					<ItemText>{submenuItem.label}</ItemText>
-				</Item>
+				<MenuRootComponent
+					key={index}
+					triggerMode={triggerMode || "hover"}
+					triggerType="trigger-item"
+					trigger={
+						<>
+							{submenuItem.icon && (
+								<ItemIndicator>{submenuItem.icon}</ItemIndicator>
+							)}
+							<ItemText>{submenuItem.label}</ItemText>
+							<span
+								style={{
+									marginLeft: "auto",
+									display: "inline-flex",
+									alignItems: "center",
+								}}
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<title>Submenu Chevron</title>
+									<path d="m9 18 6-6-6-6" />
+								</svg>
+							</span>
+						</>
+					}
+					items={submenuItem.items}
+				/>
 			);
 		}
 
@@ -178,30 +219,49 @@ function renderMenuItem(item: MenuItem, index: number): JSX.Element {
 
 // ============= Flattened Menu Component =============
 
-function MenuRoot(props: MenuProps) {
+function MenuRootComponent(props: MenuProps) {
 	const {
 		trigger,
+		triggerType = "trigger",
 		items,
 		defaultOpen = false,
 		interactive,
 		class: classProp,
 		contentClass,
 		positionerClass,
+		triggerMode = "click",
 		children,
 		...variantProps
 	} = props;
 
 	const styles = menu(variantProps);
 
+	let triggerElement = null;
+	if (trigger) {
+		if (triggerType === "context-trigger") {
+			triggerElement = (
+				<ContextTrigger asChild={triggerMode === "contextMenu"}>
+					{trigger}
+				</ContextTrigger>
+			);
+		} else if (triggerType === "trigger-item") {
+			triggerElement = <TriggerItem>{trigger}</TriggerItem>;
+		} else {
+			triggerElement = <Trigger asChild>{trigger}</Trigger>;
+		}
+	}
+
 	if (shouldHydrate(interactive, true)) {
 		return (
-			<InteractiveMenuRoot open={defaultOpen}>
-				{trigger && <Trigger asChild>{trigger}</Trigger>}
+			<InteractiveMenuRoot open={defaultOpen} triggerMode={triggerMode}>
+				{triggerElement}
 				{children}
 				{items && (
 					<Positioner class={cx(styles.positioner, positionerClass)}>
 						<Content class={cx(styles.content, contentClass)}>
-							{items.map((item, index) => renderMenuItem(item, index))}
+							{items.map((item, index) =>
+								renderMenuItem(item, index, triggerMode),
+							)}
 						</Content>
 					</Positioner>
 				)}
@@ -210,13 +270,15 @@ function MenuRoot(props: MenuProps) {
 	}
 
 	return (
-		<RootPrimitive open={defaultOpen}>
-			{trigger && <Trigger asChild>{trigger}</Trigger>}
+		<RootPrimitive open={defaultOpen} triggerMode={triggerMode}>
+			{triggerElement}
 			{children}
 			{items && (
 				<Positioner class={cx(styles.positioner, positionerClass)}>
 					<Content class={cx(styles.content, contentClass)}>
-						{items.map((item, index) => renderMenuItem(item, index))}
+						{items.map((item, index) =>
+							renderMenuItem(item, index, triggerMode),
+						)}
 					</Content>
 				</Positioner>
 			)}
@@ -226,9 +288,11 @@ function MenuRoot(props: MenuProps) {
 
 // ============= Exports =============
 
-export const Menu = Object.assign(MenuRoot, {
-	Root: MenuRoot,
+const Menu = Object.assign(MenuRootComponent, {
+	Root: MenuRootComponent,
 	Trigger: Trigger,
+	TriggerItem: TriggerItem,
+	ContextTrigger: ContextTrigger,
 	Positioner: Positioner,
 	Content: Content,
 	Item: Item,
@@ -243,6 +307,7 @@ export const Menu = Object.assign(MenuRoot, {
 export {
 	type BaseMenuItem,
 	Menu as default,
+	Menu,
 	type MenuCheckboxItem,
 	type MenuItem,
 	type MenuItemItem,

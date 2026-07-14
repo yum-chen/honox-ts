@@ -2,7 +2,7 @@
 
 # Introduction
 
-A list of actions or options that appears when triggered, supporting items, separators, checkboxes, and radio groups.
+A list of actions or options that appears when triggered, supporting items, separators, checkboxes, radio groups, trigger modes, and cascading submenus.
 
 # Props
 
@@ -11,6 +11,8 @@ A list of actions or options that appears when triggered, supporting items, sepa
 | Prop | Type | Description |
 | :--- | :--- | :--- |
 | `trigger` | `JSX.Element` | Element that opens the menu when activated. |
+| `triggerType` | `"trigger" \| "trigger-item" \| "context-trigger"` | The type of trigger rendered for positioning. Default: `"trigger"`. |
+| `triggerMode` | `"click" \| "hover" \| "contextMenu"` | The mode that triggers the menu action. Default: `"click"`. |
 | `items` | `MenuItem[]` | The menu items to render. |
 | `defaultOpen` | `boolean` | Whether the menu is open by default. Default: `false`. |
 | `interactive` | `boolean` | Enable client-side hydration. Default: `true`. |
@@ -32,8 +34,6 @@ A list of actions or options that appears when triggered, supporting items, sepa
 | `items` | `MenuItem[]` | Nested items (for `radio-group`, `submenu`). |
 | `disabled` | `boolean` | Whether the item is disabled. |
 | `class` | `string` | Custom CSS classes for the item. |
-
-> Note: `submenu` entries are not supported by the simplified API and fall back to plain text. Use the primitive sub-components for nested menus.
 
 # Usage
 
@@ -59,6 +59,51 @@ export default function MyPage() {
             { type: "radio", label: "Dark", value: "dark" },
           ],
         },
+      ]}
+    />
+  );
+}
+```
+
+## Hover trigger & Cascading Submenu
+
+```tsx
+import { Menu, Button } from "../components/ui";
+
+export default function HoverMenuPage() {
+  return (
+    <Menu
+      trigger={<Button>Preferences</Button>}
+      triggerMode="hover"
+      items={[
+        { type: "item", label: "Profile", value: "profile" },
+        {
+          type: "submenu",
+          label: "Cascading Options",
+          items: [
+            { type: "item", label: "Advanced Setting 1", value: "adv-1" },
+            { type: "item", label: "Advanced Setting 2", value: "adv-2" },
+          ],
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Context Menu Trigger Mode
+
+```tsx
+import { Menu, Button } from "../components/ui";
+
+export default function ContextMenuPage() {
+  return (
+    <Menu
+      trigger={<div style={{ padding: "40px", border: "1px dashed gray" }}>Right click here</div>}
+      triggerMode="contextMenu"
+      items={[
+        { type: "item", label: "Refactor", value: "refactor" },
+        { type: "item", label: "Format Code", value: "format" },
       ]}
     />
   );

@@ -2,7 +2,13 @@ import { useEffect, useId, useRef, useState } from "hono/jsx";
 import { MenuRoot, type MenuRootProps } from "../components/ui/menu-primitive";
 
 export default function InteractiveMenuRoot(props: MenuRootProps) {
-	const { open: openProp, children, id: idProp, ...rest } = props;
+	const {
+		open: openProp,
+		children,
+		id: idProp,
+		triggerMode = "click",
+		...rest
+	} = props;
 	const [isOpen, setIsOpen] = useState(openProp ?? false);
 
 	const fallbackId = useId();
@@ -13,6 +19,8 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 	const contentRef = useRef<HTMLElement | null>(null);
 	const positionerRef = useRef<HTMLElement | null>(null);
 
+	const hoverTimeoutRef = useRef<any>(null);
+
 	// Update refs after render
 	useEffect(() => {
 		if (typeof document === "undefined") return;
@@ -21,15 +29,22 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 		if (!root) return;
 
 		rootRef.current = root;
-		triggerRef.current = root.querySelector<HTMLElement>(
-			'[data-part="trigger"], [data-part="context-trigger"], [data-part="trigger-item"]',
-		);
-		contentRef.current = root.querySelector<HTMLElement>(
-			'[data-part="content"]',
-		);
-		positionerRef.current = root.querySelector<HTMLElement>(
-			'[data-part="positioner"]',
-		);
+		triggerRef.current =
+			Array.from(
+				root.querySelectorAll<HTMLElement>(
+					'[data-part="trigger"], [data-part="context-trigger"], [data-part="trigger-item"]',
+				),
+			).find((el) => el.closest("[data-menu-root]") === root) || null;
+
+		contentRef.current =
+			Array.from(
+				root.querySelectorAll<HTMLElement>('[data-part="content"]'),
+			).find((el) => el.closest("[data-menu-root]") === root) || null;
+
+		positionerRef.current =
+			Array.from(
+				root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
+			).find((el) => el.closest("[data-menu-root]") === root) || null;
 	}, [rootId]);
 
 	const getItems = () => {
@@ -38,6 +53,8 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 			contentRef.current.querySelectorAll<HTMLElement>(
 				'[data-part="item"]:not([data-disabled]), [data-part="trigger-item"]:not([data-disabled])',
 			),
+		).filter(
+			(el) => el.closest('[data-part="content"]') === contentRef.current,
 		);
 	};
 
@@ -104,7 +121,9 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 			triggerRef.current?.setAttribute("aria-expanded", "true");
 			triggerRef.current?.setAttribute("data-state", "open");
 			contentRef.current?.setAttribute("data-state", "open");
-			getItems()[0]?.focus();
+			if (triggerMode !== "hover") {
+				getItems()[0]?.focus();
+			}
 		}, 0);
 	};
 
@@ -126,28 +145,95 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 			const target = (e.target as HTMLElement).closest("[data-part]");
 			if (!target) return;
 
+			// Narrow check to make sure the targeted action is inside this menu root
+			if (target.closest("[data-menu-root]") !== root) return;
+
 			const dataPart = target.getAttribute("data-part");
 
 			if (dataPart === "trigger" || dataPart === "trigger-item") {
-				if (isOpen) handleClose();
-				else handleOpen(e);
+				if (triggerMode === "click" || dataPart === "trigger-item") {
+					if (isOpen) handleClose();
+					else handleOpen(e);
+				}
 			} else if (dataPart === "item") {
 				handleClose();
-				// Find top-level root to focus
+				// Bubble close to ancestors
+				let parent = root.parentElement;
+				while (parent) {
+					if (parent.hasAttribute("data-menu-root")) {
+						// Close parent menu too!
+						const parentTrigger = parent.querySelector(
+							'[data-part="trigger"], [data-part="trigger-item"]',
+						);
+						if (parentTrigger) {
+							parentTrigger.setAttribute("aria-expanded", "false");
+							parentTrigger.setAttribute("data-state", "closed");
+						}
+						const parentContent = parent.querySelector('[data-part="content"]');
+						if (parentContent)
+							parentContent.setAttribute("data-state", "closed");
+						const parentPos = parent.querySelector(
+							'[data-part="positioner"]',
+						) as HTMLElement;
+						if (parentPos) parentPos.style.display = "none";
+					}
+					parent = parent.parentElement;
+				}
+
+				// Find absolute top-level trigger and focus it
+				let topRoot = root;
 				let p = root.parentElement;
-				while (p && !p.id.startsWith("menu-")) p = p.parentElement;
-				(p?.querySelector('[data-part="trigger"]') as HTMLElement)?.focus();
+				while (p) {
+					if (p.hasAttribute("data-menu-root")) {
+						topRoot = p;
+					}
+					p = p.parentElement;
+				}
+				const topTrigger = topRoot.querySelector<HTMLElement>(
+					'[data-part="trigger"]',
+				);
+				topTrigger?.focus();
 			}
 		};
 
 		const handleContextMenu = (e: MouseEvent) => {
+			if (triggerMode !== "contextMenu") return;
 			const target = (e.target as HTMLElement).closest(
 				'[data-part="context-trigger"]',
 			);
-			if (target) {
+			if (target && target.closest("[data-menu-root]") === root) {
 				e.preventDefault();
 				handleOpen(e);
 			}
+		};
+
+		const handleMouseEnter = (e: MouseEvent) => {
+			if (
+				triggerMode !== "hover" &&
+				triggerRef.current?.getAttribute("data-part") !== "trigger-item"
+			)
+				return;
+			if (hoverTimeoutRef.current) {
+				clearTimeout(hoverTimeoutRef.current);
+				hoverTimeoutRef.current = null;
+			}
+			if (!isOpen) {
+				handleOpen(e);
+			}
+		};
+
+		const handleMouseLeave = () => {
+			if (
+				triggerMode !== "hover" &&
+				triggerRef.current?.getAttribute("data-part") !== "trigger-item"
+			)
+				return;
+			if (hoverTimeoutRef.current) {
+				clearTimeout(hoverTimeoutRef.current);
+			}
+			hoverTimeoutRef.current = setTimeout(() => {
+				handleClose();
+			}, 150) as any;
 		};
 
 		const handleKeyDown = (e: KeyboardEvent) => {
@@ -155,7 +241,10 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 				!isOpen &&
 				(e.key === "Enter" || e.key === " " || e.key === "ArrowDown")
 			) {
-				if ((e.target as HTMLElement).closest('[data-part="trigger"]')) {
+				const target = (e.target as HTMLElement).closest(
+					'[data-part="trigger"]',
+				);
+				if (target && target.closest("[data-menu-root]") === root) {
 					handleOpen();
 					e.preventDefault();
 				}
@@ -215,17 +304,47 @@ export default function InteractiveMenuRoot(props: MenuRootProps) {
 		root.addEventListener("keydown", handleKeyDown);
 		window.addEventListener("mousedown", handleClickOutside);
 
+		// Hover triggers
+		const triggerEl = triggerRef.current;
+		const positionerEl = positionerRef.current;
+
+		if (triggerEl) {
+			triggerEl.addEventListener("mouseenter", handleMouseEnter as any);
+			triggerEl.addEventListener("mouseleave", handleMouseLeave);
+		}
+		if (positionerEl) {
+			positionerEl.addEventListener("mouseenter", handleMouseEnter as any);
+			positionerEl.addEventListener("mouseleave", handleMouseLeave);
+		}
+
 		return () => {
 			root.removeEventListener("click", handleClick as any);
 			root.removeEventListener("contextmenu", handleContextMenu as any);
 			root.removeEventListener("keydown", handleKeyDown);
 			window.removeEventListener("mousedown", handleClickOutside);
+
+			if (triggerEl) {
+				triggerEl.removeEventListener("mouseenter", handleMouseEnter as any);
+				triggerEl.removeEventListener("mouseleave", handleMouseLeave);
+			}
+			if (positionerEl) {
+				positionerEl.removeEventListener("mouseenter", handleMouseEnter as any);
+				positionerEl.removeEventListener("mouseleave", handleMouseLeave);
+			}
+			if (hoverTimeoutRef.current) {
+				clearTimeout(hoverTimeoutRef.current);
+			}
 		};
-	}, [rootId, isOpen]);
+	}, [rootId, isOpen, triggerMode]);
 
 	return (
-		<div id={rootId} ref={rootRef} style={{ display: "contents" }}>
-			<MenuRoot {...rest} open={isOpen} id={rootId}>
+		<div
+			id={rootId}
+			ref={rootRef}
+			data-menu-root
+			style={{ display: "contents" }}
+		>
+			<MenuRoot {...rest} open={isOpen} id={rootId} triggerMode={triggerMode}>
 				{children}
 			</MenuRoot>
 		</div>
