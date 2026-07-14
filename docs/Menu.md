@@ -8,16 +8,19 @@ A list of actions or options that appears when triggered, supporting items, sepa
 
 ## Menu
 
-| Prop | Type | Description |
-| :--- | :--- | :--- |
-| `trigger` | `JSX.Element` | Element that opens the menu when activated. |
-| `items` | `MenuItem[]` | The menu items to render. |
-| `defaultOpen` | `boolean` | Whether the menu is open by default. Default: `false`. |
-| `interactive` | `boolean` | Enable client-side hydration. Default: `true`. |
-| `size` | `"xs" \| "sm" \| "md" \| "lg" \| "xl"` | The size of the menu. |
-| `class` | `string` | Custom CSS classes for the root element. |
-| `contentClass` | `string` | Custom CSS classes for the content element. |
-| `positionerClass` | `string` | Custom CSS classes for the positioner element. |
+| Prop | Type | Description | Default |
+| :--- | :--- | :--- | :--- |
+| `trigger` | `JSX.Element \| ("click" \| "hover" \| "contextMenu")[]` | Element that opens the menu when activated, or an array of trigger modes. | - |
+| `triggerMode` | `("click" \| "hover" \| "contextMenu")[]` | The trigger mode which executes the dropdown/menu action. | `["click"]` |
+| `items` | `MenuItem[]` | The menu items to render. | - |
+| `defaultOpen` | `boolean` | Whether the menu is open by default. | `false` |
+| `interactive` | `boolean` | Enable client-side hydration. | `true` |
+| `size` | `"xs" \| "sm" \| "md" \| "lg" \| "xl"` | The size of the menu. | `"md"` |
+| `class` | `string` | Custom CSS classes for the root element. | - |
+| `contentClass` | `string` | Custom CSS classes for the content element. | - |
+| `positionerClass` | `string` | Custom CSS classes for the positioner element. | - |
+| `placement` | `'bottom-start' \| 'bottom-end' \| 'top-start' \| 'top-end' \| 'left-start' \| 'left-end' \| 'right-start' \| 'right-end'` | Align/placement of popup menu. | `'bottom-start'` |
+| `destroyOnHidden` | `boolean` | Whether to destroy (unmount) the menu content when hidden. | `false` |
 
 ### MenuItem
 
@@ -33,7 +36,7 @@ A list of actions or options that appears when triggered, supporting items, sepa
 | `disabled` | `boolean` | Whether the item is disabled. |
 | `class` | `string` | Custom CSS classes for the item. |
 
-> Note: `submenu` entries are not supported by the simplified API and fall back to plain text. Use the primitive sub-components for nested menus.
+> Note: `submenu` entries with items are fully supported recursively in the flattened API. Use primitive sub-components if you need custom markup.
 
 # Usage
 
@@ -61,6 +64,63 @@ export default function MyPage() {
         },
       ]}
     />
+  );
+}
+```
+
+## Cascading Submenu
+
+```tsx
+import { Menu, Button } from "../components/ui";
+
+export default function SubmenuPage() {
+  return (
+    <Menu
+      trigger={<Button>More Options</Button>}
+      items={[
+        { type: "item", label: "New Window", value: "new-window" },
+        {
+          type: "submenu",
+          label: "Recent Files",
+          items: [
+            { type: "item", label: "project1.zip", value: "p1" },
+            { type: "item", label: "notes.txt", value: "notes" },
+          ]
+        }
+      ]}
+    />
+  );
+}
+```
+
+## Trigger Modes (Hover / ContextMenu)
+
+```tsx
+import { Menu, Button } from "../components/ui";
+
+export default function TriggerModesPage() {
+  return (
+    <div>
+      {/* Opens on hover */}
+      <Menu
+        trigger={<Button>Hover Me</Button>}
+        triggerMode={["hover"]}
+        items={[
+          { type: "item", label: "Option 1", value: "1" },
+          { type: "item", label: "Option 2", value: "2" },
+        ]}
+      />
+
+      {/* Right-click Context Menu */}
+      <Menu
+        triggerMode={["contextMenu"]}
+        trigger={<div style={{ padding: "50px", border: "1px dashed gray" }}>Right-click inside this area</div>}
+        items={[
+          { type: "item", label: "Copy", value: "copy" },
+          { type: "item", label: "Paste", value: "paste" },
+        ]}
+      />
+    </div>
   );
 }
 ```

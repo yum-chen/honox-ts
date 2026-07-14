@@ -42,9 +42,12 @@ export interface MenuRootProps extends MenuVariantProps, PropsWithChildren {
 	open?: boolean;
 	onClose?: () => void;
 	/** Called when the menu opens or closes (interactive islands only). */
-	onOpenChange?: (open: boolean) => void;
+	onOpenChange?: (open: boolean, info?: { source: string }) => void;
 	/** Called with an item's `value` when it is activated (interactive islands only). */
 	onSelect?: (value: string) => void;
+	trigger?: ("click" | "hover" | "contextMenu")[];
+	placement?: "bottom-start" | "bottom-end" | "top-start" | "top-end" | "left-start" | "left-end" | "right-start" | "right-end" | string;
+	destroyOnHidden?: boolean;
 }
 
 interface MenuRadioGroupContextValue {

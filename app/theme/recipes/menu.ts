@@ -21,8 +21,9 @@ export const menu = defineSlotRecipe({
 	base: {
 		content: {
 			"--menu-z-index": "zIndex.dropdown",
+			"--menu-bg": "colors.gray.surface.bg",
 
-			bg: "gray.surface.bg",
+			bg: "var(--menu-bg)",
 			borderRadius: "l3",
 			boxShadow: "md",
 			display: "flex",
@@ -42,6 +43,14 @@ export const menu = defineSlotRecipe({
 				animationStyle: "slide-fade-out",
 				animationDuration: "faster",
 			},
+		},
+		arrow: {
+			"--arrow-size": "sizes.3",
+			"--arrow-background": "var(--menu-bg)",
+		},
+		arrowTip: {
+			borderTopWidth: "0.5px",
+			borderInlineStartWidth: "0.5px",
 		},
 		item: {
 			alignItems: "center",

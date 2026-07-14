@@ -52,4 +52,19 @@ describe("Menu Unit Tests", () => {
 		expect(html).toContain("More");
 		expect(html).not.toContain("not supported in simplified API");
 	});
+
+	test("should render correct placement and destroyOnHidden on the root elements", () => {
+		const html = (
+			<Menu.Root interactive={false} placement="top-start" destroyOnHidden>
+				<Menu.Trigger>Open</Menu.Trigger>
+				<Menu.Positioner>
+					<Menu.Content>
+						<Menu.Item value="item-1">Item 1</Menu.Item>
+					</Menu.Content>
+				</Menu.Positioner>
+			</Menu.Root>
+		).toString();
+
+		expect(html).toContain('data-part="trigger"');
+	});
 });
