@@ -584,6 +584,7 @@ export default createRoute((c) => {
 					<Alert
 						status="info"
 						title="Info Alert"
+						variant="outline"
 						description="This is an informational alert."
 						indicator={AlertIcon()}
 					/>
