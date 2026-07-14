@@ -14,6 +14,12 @@ import { select } from "styled-system/recipes";
 
 type SelectStyles = ReturnType<typeof select>;
 
+interface SelectItem {
+	label: string;
+	value: string;
+	disabled?: boolean;
+}
+
 interface SelectContextValue {
 	styles: SelectStyles;
 	open: boolean;
@@ -34,20 +40,7 @@ interface SelectContextValue {
 	setHighlightedIndex?: (index: number) => void;
 }
 
-const SelectContext = createContext<SelectContextValue | null>(null);
-
-export const useSelectContext = () => {
-	const context = useContext(SelectContext);
-	return context;
-};
-
-export interface SelectItem {
-	label: string;
-	value: string;
-	disabled?: boolean;
-}
-
-export interface RootProps extends SelectVariantProps, PropsWithChildren {
+interface RootProps extends SelectVariantProps, PropsWithChildren {
 	open?: boolean;
 	selectedValues?: string[];
 	highlightedIndex?: number;
@@ -71,7 +64,32 @@ export interface RootProps extends SelectVariantProps, PropsWithChildren {
 	[key: string]: any;
 }
 
-export function Root(props: RootProps) {
+interface SelectFlattenedProps extends RootProps {
+	items?: SelectItem[];
+	label?: Child;
+	placeholder?: string;
+	allowClear?: boolean;
+	defaultValue?: string[];
+	deselectable?: boolean;
+}
+
+interface InteractiveSelectProps extends SelectFlattenedProps {
+	id?: string;
+}
+
+const SelectContext = createContext<SelectContextValue | null>(null);
+
+const ItemContext = createContext<{
+	value: string;
+	disabled?: boolean;
+} | null>(null);
+
+const useSelectContext = () => {
+	const context = useContext(SelectContext);
+	return context;
+};
+
+function Root(props: RootProps) {
 	const [variantProps, localProps] = select.splitVariantProps(props);
 	const {
 		children,
@@ -141,7 +159,7 @@ export function Root(props: RootProps) {
 				data-disabled={disabled ? "" : undefined}
 				data-invalid={invalid ? "" : undefined}
 				class={cx(styles.root, classProp)}
-				style={style}
+				style={{ position: "relative", ...style }}
 				{...domProps}
 			>
 				{children}
@@ -150,9 +168,7 @@ export function Root(props: RootProps) {
 	);
 }
 
-export function Label(
-	props: PropsWithChildren<{ class?: string; htmlFor?: string }>,
-) {
+function Label(props: PropsWithChildren<{ class?: string; htmlFor?: string }>) {
 	const { children, class: classProp, htmlFor, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -174,7 +190,7 @@ export function Label(
 	);
 }
 
-export function Control(props: PropsWithChildren<{ class?: string }>) {
+function Control(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -192,13 +208,14 @@ export function Control(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function Trigger(props: PropsWithChildren<{ class?: string }>) {
+function Trigger(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	const activeDescendant =
 		context?.open && context.highlightedIndex >= 0
 			? `${context.rootId}-item-${context.highlightedIndex}`
 			: undefined;
+
 	return (
 		<button
 			id={context?.rootId ? `${context.rootId}-trigger` : undefined}
@@ -228,7 +245,7 @@ export function Trigger(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function ValueText(
+function ValueText(
 	props: PropsWithChildren<{ class?: string; placeholder?: string }>,
 ) {
 	const {
@@ -266,7 +283,7 @@ export function ValueText(
 	);
 }
 
-export function Indicator(props: PropsWithChildren<{ class?: string }>) {
+function Indicator(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -298,7 +315,7 @@ export function Indicator(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function IndicatorGroup(props: PropsWithChildren<{ class?: string }>) {
+function IndicatorGroup(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -313,7 +330,7 @@ export function IndicatorGroup(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function Positioner(props: PropsWithChildren<{ class?: string }>) {
+function Positioner(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -329,7 +346,7 @@ export function Positioner(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function Content(props: PropsWithChildren<{ class?: string }>) {
+function Content(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -345,7 +362,7 @@ export function Content(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function List(props: PropsWithChildren<{ class?: string }>) {
+function List(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -365,12 +382,7 @@ export function List(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export const ItemContext = createContext<{
-	value: string;
-	disabled?: boolean;
-} | null>(null);
-
-export function Item(
+function Item(
 	props: PropsWithChildren<{
 		value: string;
 		disabled?: boolean;
@@ -379,7 +391,14 @@ export function Item(
 		[key: string]: any;
 	}>,
 ) {
-	const { children, value, disabled, index, class: classProp, ...rest } = props;
+	const {
+		children,
+		value,
+		disabled,
+		index = 0,
+		class: classProp,
+		...rest
+	} = props;
 	const context = useSelectContext();
 	const isSelected = context?.selectedValues.includes(value) ?? false;
 	const isHighlighted = context?.highlightedIndex === index;
@@ -408,7 +427,7 @@ export function Item(
 	);
 }
 
-export function ItemText(props: PropsWithChildren<{ class?: string }>) {
+function ItemText(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	const item = useContext(ItemContext);
@@ -429,7 +448,7 @@ export function ItemText(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function ItemIndicator(props: PropsWithChildren<{ class?: string }>) {
+function ItemIndicator(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	const item = useContext(ItemContext);
@@ -466,7 +485,7 @@ export function ItemIndicator(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function ItemGroup(props: PropsWithChildren<{ class?: string }>) {
+function ItemGroup(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -482,7 +501,7 @@ export function ItemGroup(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function ItemGroupLabel(props: PropsWithChildren<{ class?: string }>) {
+function ItemGroupLabel(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -497,18 +516,19 @@ export function ItemGroupLabel(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function ClearTrigger(props: PropsWithChildren<{ class?: string }>) {
+function ClearTrigger(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	const hasSelection = (context?.selectedValues.length ?? 0) > 0;
+
 	return (
 		<button
 			type="button"
 			aria-label="Clear selection"
 			data-scope="select"
 			data-part="clear-trigger"
-			hidden={!hasSelection}
 			disabled={context?.disabled || context?.readOnly}
+			hidden={!hasSelection}
 			class={cx(context?.styles.clearTrigger, classProp)}
 			{...rest}
 		>
@@ -533,7 +553,7 @@ export function ClearTrigger(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function HiddenSelect(props: { items?: SelectItem[] }) {
+function HiddenSelect(props: { items?: SelectItem[] }) {
 	const context = useSelectContext();
 	const selectItems = props.items || context?.items || [];
 	return (
@@ -573,18 +593,7 @@ export function HiddenSelect(props: { items?: SelectItem[] }) {
 	);
 }
 
-export interface SelectFlattenedProps extends RootProps {
-	items?: SelectItem[];
-	label?: Child;
-	placeholder?: string;
-	allowClear?: boolean;
-	/** Initial selection for the uncontrolled island. Alias of `selectedValues`. */
-	defaultValue?: string[];
-	/** Deselect a selected option when it is clicked again (single mode only). */
-	deselectable?: boolean;
-}
-
-export function SelectStructure(props: SelectFlattenedProps) {
+function SelectStructure(props: SelectFlattenedProps) {
 	const { items = [], label, placeholder, allowClear, children } = props;
 
 	return (
@@ -622,11 +631,7 @@ export function SelectStructure(props: SelectFlattenedProps) {
 	);
 }
 
-export interface InteractiveSelectProps extends SelectFlattenedProps {
-	id?: string;
-}
-
-export function InteractiveSelect(props: InteractiveSelectProps) {
+function InteractiveSelect(props: InteractiveSelectProps) {
 	const {
 		open: openProp,
 		selectedValues: selectedValuesProp,
@@ -636,6 +641,15 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 		items = [],
 		multiple = false,
 		deselectable = false,
+		onValueChange,
+		onItemSelect,
+		onClear,
+		onOpenChange,
+		disabled,
+		invalid,
+		readOnly,
+		required,
+		name,
 		...rest
 	} = props;
 
@@ -653,6 +667,27 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 	const fallbackId = useId();
 	const rootId = idProp || `select-${fallbackId}`;
 
+	// Sync controlled props
+	useEffect(() => {
+		if (selectedValuesProp !== undefined) {
+			setSelectedValues(selectedValuesProp);
+		}
+	}, [selectedValuesProp]);
+
+	useEffect(() => {
+		if (openProp !== undefined) {
+			setIsOpen(openProp);
+		}
+	}, [openProp]);
+
+	useEffect(() => {
+		if (highlightedIndexProp !== undefined) {
+			setHighlightedIndex(highlightedIndexProp);
+		}
+	}, [highlightedIndexProp]);
+
+	const handleToggleRef = useRef<() => void>(() => {});
+	const handleCloseRef = useRef<() => void>(() => {});
 	const handleOpenRef = useRef<(next: boolean, hint?: "last") => void>(
 		() => {},
 	);
@@ -687,7 +722,7 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 	};
 
 	const handleOpen = (next: boolean, hint?: "last") => {
-		if (props.readOnly) {
+		if (disabled || readOnly) {
 			return;
 		}
 		if (!isControlled) {
@@ -695,7 +730,7 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 		}
 		setHighlightedIndex(next ? initialHighlight(hint) : -1);
 		if (next !== open) {
-			props.onOpenChange?.(next);
+			onOpenChange?.(next);
 		}
 	};
 
@@ -724,17 +759,18 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 			handleOpen(false);
 		}
 		setSelectedValues(nextValues);
-		props.onItemSelect?.(val);
-		props.onValueChange?.(nextValues);
+		onItemSelect?.(val);
+		onValueChange?.(nextValues);
 	};
 
 	const handleClear = () => {
 		if (selectedValues.length === 0) {
 			return;
 		}
-		setSelectedValues([]);
-		props.onClear?.();
-		props.onValueChange?.([]);
+		const nextValues: string[] = [];
+		setSelectedValues(nextValues);
+		onClear?.();
+		onValueChange?.(nextValues);
 	};
 
 	const handleSetHighlightedIndex = (index: number) => {
@@ -742,19 +778,30 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 	};
 
 	useEffect(() => {
+		handleToggleRef.current = handleToggle;
+		handleCloseRef.current = handleClose;
 		handleOpenRef.current = handleOpen;
 		handleItemSelectRef.current = handleItemSelect;
 		handleClearRef.current = handleClear;
 		handleSetHighlightedIndexRef.current = handleSetHighlightedIndex;
-	}, [handleOpen, handleItemSelect, handleClear, handleSetHighlightedIndex]);
+	}, [
+		handleToggle,
+		handleClose,
+		handleOpen,
+		handleItemSelect,
+		handleClear,
+		handleSetHighlightedIndex,
+	]);
 
 	// Keep the highlighted option visible while navigating with the keyboard.
 	useEffect(() => {
 		if (!open || highlightedIndex < 0) {
 			return;
 		}
-		const highlighted = document.querySelector(
-			`#${CSS.escape(rootId)} [data-part="item"][data-index="${highlightedIndex}"]`,
+		const root = document.getElementById(rootId);
+		if (!root) return;
+		const highlighted = root.querySelector(
+			`[data-part="item"][data-index="${highlightedIndex}"]`,
 		);
 		highlighted?.scrollIntoView({ block: "nearest" });
 	}, [rootId, open, highlightedIndex]);
@@ -782,6 +829,7 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 				.filter((index) => Number.isInteger(index) && index >= 0);
 
 		const handleClick = (e: Event) => {
+			if (disabled || readOnly) return;
 			const target = e.target as HTMLElement;
 			const clearTrigger = target.closest('[data-part="clear-trigger"]');
 			const trigger = target.closest('[data-part="trigger"]');
@@ -802,6 +850,7 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 		};
 
 		const handleMouseOver = (e: MouseEvent) => {
+			if (disabled || readOnly) return;
 			const item = (e.target as HTMLElement).closest('[data-part="item"]');
 			if (item && !item.hasAttribute("data-disabled")) {
 				const index = Number(item.getAttribute("data-index"));
@@ -851,13 +900,13 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 				}
 				handleSetHighlightedIndexRef.current(match);
 			} else {
-				// Closed single select: commit the match directly, like a native
-				// <select>.
+				// Closed single select: commit the match directly, like a native <select>
 				handleItemSelectRef.current?.(itemsRef.current[match]?.value ?? "");
 			}
 		};
 
 		const handleKeyDown = (e: KeyboardEvent) => {
+			if (disabled || readOnly) return;
 			const currentOpen = root.getAttribute("data-state") === "open";
 			const enabledIndices = getEnabledIndices();
 
@@ -962,7 +1011,7 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 				clearTimeout(typeaheadRef.current.timer);
 			}
 		};
-	}, [rootId, multiple]);
+	}, [rootId, multiple, disabled, readOnly]);
 
 	return (
 		<Root
@@ -973,13 +1022,58 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 			highlightedIndex={highlightedIndex}
 			items={items}
 			multiple={multiple}
+			disabled={disabled}
+			invalid={invalid}
+			readOnly={readOnly}
+			required={required}
+			name={name}
 			onToggle={handleToggle}
 			onClose={handleClose}
 			onItemSelect={handleItemSelect}
 			onClear={handleClear}
 			setHighlightedIndex={setHighlightedIndex}
 		>
-			<SelectStructure {...props} />
+			<SelectStructure
+				items={items}
+				multiple={multiple}
+				disabled={disabled}
+				invalid={invalid}
+				readOnly={readOnly}
+				required={required}
+				name={name}
+				{...rest}
+			/>
 		</Root>
 	);
 }
+
+export type {
+	InteractiveSelectProps,
+	RootProps,
+	SelectContextValue,
+	SelectFlattenedProps,
+	SelectItem,
+	SelectStyles,
+};
+export {
+	ClearTrigger,
+	Content,
+	Control,
+	HiddenSelect,
+	Indicator,
+	IndicatorGroup,
+	InteractiveSelect,
+	Item,
+	ItemGroup,
+	ItemGroupLabel,
+	ItemIndicator,
+	ItemText,
+	Label,
+	List,
+	Positioner,
+	Root,
+	SelectStructure,
+	Trigger,
+	useSelectContext,
+	ValueText,
+};
