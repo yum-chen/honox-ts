@@ -1,5 +1,6 @@
 import { expect, test, describe } from "bun:test";
 import { Select } from "../app/components/ui/select";
+import { InteractiveSelect } from "../app/components/ui/select-primitive";
 
 describe("Select Unit Tests", () => {
 	test("should render correctly with flattened API (static)", () => {
@@ -221,5 +222,69 @@ describe("Select Unit Tests", () => {
 		expect(html).toContain('data-part="item"');
 		expect(html).toContain('data-part="item-text"');
 		expect(html).toContain('data-part="item-indicator"');
+	});
+
+	test("should render status and warning visual styling", () => {
+		const html = (
+			<Select
+				interactive={false}
+				status="warning"
+				items={[{ label: "Hono", value: "hono" }]}
+			/>
+		).toString();
+
+		expect(html).toContain('data-status="warning"');
+	});
+
+	test("should render loading state and spinner", () => {
+		const html = (
+			<Select
+				interactive={false}
+				loading
+				items={[{ label: "Hono", value: "hono" }]}
+			/>
+		).toString();
+
+		expect(html).toContain('role="status"');
+	});
+
+	test("should render custom loading icon if provided", () => {
+		const html = (
+			<Select
+				interactive={false}
+				loading
+				loadingIcon={<span id="custom-loading">Loading...</span>}
+				items={[{ label: "Hono", value: "hono" }]}
+			/>
+		).toString();
+
+		expect(html).toContain('id="custom-loading"');
+	});
+
+	test("should support borderless variant", () => {
+		const html = (
+			<Select
+				interactive={false}
+				variant="borderless"
+				items={[{ label: "Hono", value: "hono" }]}
+			/>
+		).toString();
+
+		expect(html).toContain('data-scope="select"');
+	});
+
+	test("should render search input when showSearch is true", () => {
+		const html = (
+			<InteractiveSelect
+				showSearch
+				items={[
+					{ label: "React", value: "react" },
+					{ label: "Solid", value: "solid" },
+				]}
+			/>
+		).toString();
+
+		expect(html).toContain('data-part="search-input"');
+		expect(html).toContain('placeholder="Search..."');
 	});
 });

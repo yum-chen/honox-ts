@@ -142,6 +142,14 @@ export const select = defineSlotRecipe({
 			_disabled: {
 				layerStyle: "disabled",
 			},
+			"&[data-status=warning]": {
+				borderColor: "amber.outline.border",
+				focusRingColor: "amber",
+			},
+			"&[data-status=error]": {
+				borderColor: "error",
+				focusRingColor: "error",
+			},
 		},
 		valueText: {
 			overflow: "hidden",
@@ -189,6 +197,17 @@ export const select = defineSlotRecipe({
 					},
 				},
 			},
+			outlined: {
+				trigger: {
+					borderWidth: "1px",
+					borderColor: "gray.outline.border",
+					focusVisibleRing: "inside",
+					_invalid: {
+						borderColor: "error",
+						focusRingColor: "error",
+					},
+				},
+			},
 			surface: {
 				trigger: {
 					bg: "gray.surface.bg",
@@ -199,6 +218,53 @@ export const select = defineSlotRecipe({
 						borderColor: "error",
 						focusRingColor: "error",
 					},
+				},
+			},
+			filled: {
+				trigger: {
+					bg: "gray.subtle.bg",
+					borderWidth: "1px",
+					borderColor: "transparent",
+					focusVisibleRing: "inside",
+					_invalid: {
+						borderColor: "error",
+						focusRingColor: "error",
+					},
+				},
+			},
+			flushed: {
+				trigger: {
+					borderBottomWidth: "1px",
+					borderBottomColor: "gray.outline.border",
+					borderRadius: "0",
+					px: "0",
+					_invalid: {
+						borderColor: "error",
+					},
+					_focus: {
+						borderColor: "colorPalette.solid.bg",
+					},
+				},
+			},
+			underlined: {
+				trigger: {
+					borderBottomWidth: "1px",
+					borderBottomColor: "gray.outline.border",
+					borderRadius: "0",
+					px: "0",
+					_invalid: {
+						borderColor: "error",
+					},
+					_focus: {
+						borderColor: "colorPalette.solid.bg",
+					},
+				},
+			},
+			borderless: {
+				trigger: {
+					borderWidth: "0",
+					bg: "transparent",
+					px: "0",
 				},
 			},
 		},

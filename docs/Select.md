@@ -1,45 +1,55 @@
 # Select
 
-# Introduction
-
 A dropdown control for picking one or more options from a list — an accessible, styleable alternative to the native `<select>` element.
 
-When to reach for something else:
+## When To Use
 
-- With fewer than ~5 options, a `RadioGroup` is usually clearer.
-- If the user should be able to type to filter the options, use `Combobox`.
+- A dropdown menu for displaying choices - an elegant alternative to the native `<select>` element.
+- Utilizing [Radio](/components/radio/) is recommended when there are fewer total options (less than 5).
+- You probably need [AutoComplete](/components/auto-complete/) if you're looking for an input box that can be typed or selected.
 
-The component renders a visually hidden native `<select>` alongside the custom UI, so a `name` prop makes it participate in regular form submission with no extra wiring.
+## Props
 
-# Props
+| Prop | Type | Description | Default |
+| :--- | :--- | :--- | :--- |
+| `items` | `SelectItem[]` | The options to display in the list. | `[]` |
+| `label` | `Child` | Label rendered above the trigger and associated with it. | - |
+| `placeholder` | `string` | Text shown in the trigger while nothing is selected. | `"Select option"` |
+| `allowClear` | `boolean` | Shows a clear button once a selection exists. | `false` |
+| `multiple` | `boolean` | Allows selecting several options; the list stays open while toggling. | `false` |
+| `mode` | `"multiple" \| "tags"` | Alternate way to configure selection mode. | - |
+| `defaultValue` | `string[]` | Initial selection (uncontrolled). Alias of `selectedValues`. | `[]` |
+| `selectedValues` | `string[]` | Controlled selection list. | `[]` |
+| `deselectable` | `boolean` | In single mode, clicking the selected option again clears it. | `false` |
+| `name` | `string` | Name of the hidden native `<select>`, for form submission. | - |
+| `disabled` | `boolean` | Disables the whole control. | `false` |
+| `invalid` | `boolean` | Marks the control invalid (`aria-invalid`, error border). | `false` |
+| `readOnly` | `boolean` | Selection is visible but the list cannot be opened. | `false` |
+| `required` | `boolean` | Marks the control required (`aria-required`, hidden select `required`). | `false` |
+| `open` | `boolean` | Controlled open state of the dropdown. | `false` |
+| `size` | `"xs" \| "sm" \| "md" \| "lg" \| "xl"` | Size of the trigger and list. Defaults to `md`. | `"md"` |
+| `variant` | `"outline" \| "outlined" \| "surface" \| "filled" \| "flushed" \| "underlined" \| "borderless"` | Visual variant of the trigger. | `"outline"` |
+| `status` | `"error" \| "warning"` | Visual validation status of the trigger. | - |
+| `loading` | `boolean` | Displays a loading spinner inside the indicator group. | `false` |
+| `loadingIcon` | `Child` | Custom loading icon to display when `loading` is active. | `<Spinner />` |
+| `showSearch` | `boolean \| ShowSearchConfig` | Whether the select dropdown is searchable with an inline input. | `false` |
+| `interactive` | `boolean` | Overrides the hydration decision. | - |
+| `onValueChange` | `(values: string[]) => void` | Called with the full selection whenever it changes (select, deselect, clear). | - |
+| `onItemSelect` | `(value: string) => void` | Called with the value of the option that was interacted with. | - |
+| `onClear` | `() => void` | Called when the clear button empties the selection. | - |
+| `onOpenChange` | `(open: boolean) => void` | Called when the dropdown opens or closes. | - |
 
-| Prop | Type | Description |
-| :--- | :--- | :--- |
-| `items` | `SelectItem[]` | The options to display in the list. |
-| `label` | `Child` | Label rendered above the trigger and associated with it. |
-| `placeholder` | `string` | Text shown in the trigger while nothing is selected. |
-| `allowClear` | `boolean` | Shows a clear button once a selection exists. |
-| `multiple` | `boolean` | Allows selecting several options; the list stays open while toggling. |
-| `defaultValue` | `string[]` | Initial selection (uncontrolled). Alias of `selectedValues`. |
-| `selectedValues` | `string[]` | Initial selection (same as `defaultValue`). |
-| `deselectable` | `boolean` | In single mode, clicking the selected option again clears it. |
-| `name` | `string` | Name of the hidden native `<select>`, for form submission. |
-| `disabled` | `boolean` | Disables the whole control. |
-| `invalid` | `boolean` | Marks the control invalid (`aria-invalid`, error border). |
-| `readOnly` | `boolean` | Selection is visible but the list cannot be opened. |
-| `required` | `boolean` | Marks the control required (`aria-required`, hidden select `required`). |
-| `open` | `boolean` | Controlled open state of the dropdown. |
-| `size` | `"xs" \| "sm" \| "md" \| "lg" \| "xl"` | Size of the trigger and list. Defaults to `md`. |
-| `variant` | `"outline" \| "surface"` | Visual variant of the trigger. Defaults to `outline`. |
-| `interactive` | `boolean` | Overrides the hydration decision (see below). |
-| `onValueChange` | `(values: string[]) => void` | Called with the full selection whenever it changes (select, deselect, clear). |
-| `onItemSelect` | `(value: string) => void` | Called with the value of the option that was interacted with. |
-| `onClear` | `() => void` | Called when the clear button empties the selection. |
-| `onOpenChange` | `(open: boolean) => void` | Called when the dropdown opens or closes. |
+### ShowSearchConfig
 
-> Callback props only work when the Select is composed from client-side code (inside another island). Props serialized from a server-rendered route must be plain data.
+| Property | Description | Type | Default |
+| :--- | :--- | :--- | :--- |
+| `autoClearSearchValue` | Whether the current search will be cleared on selecting an item. Only applies when `multiple` or `mode` is multiple/tags. | `boolean` | `true` |
+| `filterOption` | If false, disables filtering. If a custom function, filters items using it: `(searchValue, item) => boolean`. | `boolean \| ((searchValue: string, item: SelectItem) => boolean)` | `true` |
+| `optionFilterProp` | Property field name of SelectItem to filter against. Supports string array for multiple properties matching. | `string \| string[]` | `"label"` |
+| `filterSort` | Custom sorting compare function for matching search options. | `(optionA: SelectItem, optionB: SelectItem, info: { searchValue: string }) => number` | - |
+| `placeholder` | Search input placeholder text. | `string` | `"Search..."` |
 
-## SelectItem
+### SelectItem
 
 | Prop | Type | Description |
 | :--- | :--- | :--- |
@@ -49,18 +59,16 @@ The component renders a visually hidden native `<select>` alongside the custom U
 
 # Keyboard Interaction
 
-The trigger is a `role="combobox"` button; focus stays on it while the highlighted option is reported through `aria-activedescendant`.
+The trigger is a `role="combobox"` button; focus stays on it while the highlighted option is reported through `aria-activedescendant`. When search input is rendered and focused, keyboard events are routed seamlessly to handle navigation and selection perfectly.
 
 | Key | Behavior |
 | :--- | :--- |
-| `Enter` / `Space` | Open the list; when open, select the highlighted option. |
+| `Enter` / `Space` | Open the list; when open, select the highlighted option (space is ignored when search input is focused). |
 | `ArrowDown` / `ArrowUp` | Open the list, or move the highlight (wraps, skips disabled options). |
 | `Home` / `End` | Highlight the first / last enabled option. |
 | `Escape` | Close the list. |
 | `Tab` | Close the list and move focus on. |
-| Printable characters | Typeahead: jumps to the first option whose label matches the typed prefix. When the list is closed (single mode), the match is selected directly, like a native `<select>`. |
-
-Opening the list highlights the currently selected option (or the first enabled one), and keyboard navigation keeps the highlighted option scrolled into view.
+| Printable characters | Typeahead matching when search input is closed/disabled. |
 
 # Hydration
 
@@ -72,9 +80,9 @@ Opening the list highlights the currently selected option (or the first enabled 
 | `true` | Hydrates as an island |
 | `false` | Static — no client JS |
 
-All interactivity decisions in the library route through the shared `shouldHydrate()` helper in `app/components/ui/island-utils.ts`.
+# Usage Examples
 
-# Usage
+### Basic Usage
 
 ```tsx
 import { Select } from "../components/ui";
@@ -99,9 +107,20 @@ export default function MyPage() {
 }
 ```
 
-## Multiple selection
+### Search and Select
 
-The list stays open while options are toggled, and the trigger shows the selected labels joined with commas.
+Make select searchable easily by passing `showSearch`:
+
+```tsx
+<Select
+  showSearch
+  items={items}
+  label="Searchable Frameworks"
+  placeholder="Type to filter..."
+/>
+```
+
+### Multiple Selection
 
 ```tsx
 <Select
@@ -113,22 +132,31 @@ The list stays open while options are toggled, and the trigger shows the selecte
 />
 ```
 
-## In a form
-
-The hidden native `<select>` carries the selection, so a plain form post works:
+### Custom Validation Status
 
 ```tsx
-<form method="post" action="/frameworks">
-  <Select name="framework" items={items} label="Framework" required />
-  <Button type="submit">Save</Button>
-</form>
+<Select
+  status="warning"
+  items={items}
+  label="Warning Status"
+  placeholder="Warning state illustration"
+/>
+
+<Select
+  status="error"
+  items={items}
+  label="Error Status"
+  placeholder="Error state illustration"
+/>
 ```
 
-## Sizes and variants
+### Loading State
 
 ```tsx
-<Select items={items} size="sm" placeholder="Small" />
-<Select items={items} size="lg" variant="surface" placeholder="Large surface" />
-<Select items={items} invalid placeholder="Invalid state" />
+<Select
+  loading
+  items={items}
+  label="Frameworks"
+  placeholder="Loading frameworks..."
+/>
 ```
-

@@ -906,6 +906,7 @@ export default createRoute((c) => {
 					Select Component Examples
 				</Heading>
 				<Select
+					showSearch
 					items={items}
 					label="Framework"
 					placeholder="Select a Framework"

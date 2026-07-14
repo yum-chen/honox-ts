@@ -22,11 +22,11 @@ import {
 	ValueText,
 } from "./select-primitive";
 
-export interface SelectProps extends SelectFlattenedProps {
+interface SelectProps extends SelectFlattenedProps {
 	interactive?: boolean;
 }
 
-export function SelectRoot(props: SelectProps) {
+function SelectRoot(props: SelectProps) {
 	const { interactive, ...rest } = props;
 
 	// The Select component forces hydration by default using shouldHydrate(interactive, true)
@@ -45,7 +45,7 @@ export function SelectRoot(props: SelectProps) {
 	);
 }
 
-export const Select = Object.assign(SelectRoot, {
+const Select = Object.assign(SelectRoot, {
 	Root,
 	Label,
 	Control,
@@ -65,6 +65,7 @@ export const Select = Object.assign(SelectRoot, {
 	HiddenSelect,
 });
 
+export type { SelectProps };
 export {
 	ClearTrigger,
 	Content,
@@ -81,6 +82,8 @@ export {
 	List,
 	Positioner,
 	Root,
+	Select,
+	SelectRoot,
 	Trigger,
 	ValueText,
 };

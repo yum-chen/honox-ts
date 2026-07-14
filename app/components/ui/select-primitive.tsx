@@ -8,9 +8,10 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { cx } from "styled-system/css";
+import { css, cx } from "styled-system/css";
 import type { SelectVariantProps } from "styled-system/recipes";
 import { select } from "styled-system/recipes";
+import { Spinner } from "./spinner";
 
 type SelectStyles = ReturnType<typeof select>;
 
@@ -27,27 +28,31 @@ interface SelectContextValue {
 	readOnly?: boolean;
 	required?: boolean;
 	name?: string;
+	status?: "error" | "warning";
 	onToggle?: () => void;
 	onClose?: () => void;
 	onItemSelect?: (value: string) => void;
 	onClear?: () => void;
 	setHighlightedIndex?: (index: number) => void;
+	showSearch?: boolean | any;
+	searchValue?: string;
+	onSearchChange?: (val: string) => void;
 }
 
 const SelectContext = createContext<SelectContextValue | null>(null);
 
-export const useSelectContext = () => {
+const useSelectContext = () => {
 	const context = useContext(SelectContext);
 	return context;
 };
 
-export interface SelectItem {
+interface SelectItem {
 	label: string;
 	value: string;
 	disabled?: boolean;
 }
 
-export interface RootProps extends SelectVariantProps, PropsWithChildren {
+interface RootProps extends SelectVariantProps, PropsWithChildren {
 	open?: boolean;
 	selectedValues?: string[];
 	highlightedIndex?: number;
@@ -58,6 +63,7 @@ export interface RootProps extends SelectVariantProps, PropsWithChildren {
 	readOnly?: boolean;
 	required?: boolean;
 	name?: string;
+	status?: "error" | "warning";
 	onToggle?: () => void;
 	onClose?: () => void;
 	onItemSelect?: (value: string) => void;
@@ -71,7 +77,7 @@ export interface RootProps extends SelectVariantProps, PropsWithChildren {
 	[key: string]: any;
 }
 
-export function Root(props: RootProps) {
+function Root(props: RootProps) {
 	const [variantProps, localProps] = select.splitVariantProps(props);
 	const {
 		children,
@@ -85,6 +91,7 @@ export function Root(props: RootProps) {
 		readOnly,
 		required,
 		name,
+		status,
 		onToggle,
 		onClose,
 		onItemSelect,
@@ -105,6 +112,9 @@ export function Root(props: RootProps) {
 		allowClear: _allowClear,
 		defaultValue: _defaultValue,
 		deselectable: _deselectable,
+		showSearch: _showSearch,
+		searchValue: _searchValue,
+		onSearchChange: _onSearchChange,
 		...domProps
 	} = rest;
 
@@ -126,11 +136,15 @@ export function Root(props: RootProps) {
 				readOnly,
 				required,
 				name,
+				status,
 				onToggle,
 				onClose,
 				onItemSelect,
 				onClear,
 				setHighlightedIndex,
+				showSearch: rest.showSearch,
+				searchValue: rest.searchValue,
+				onSearchChange: rest.onSearchChange,
 			}}
 		>
 			<div
@@ -139,7 +153,8 @@ export function Root(props: RootProps) {
 				data-part="root"
 				data-state={open ? "open" : "closed"}
 				data-disabled={disabled ? "" : undefined}
-				data-invalid={invalid ? "" : undefined}
+				data-invalid={invalid || status === "error" ? "" : undefined}
+				data-status={status}
 				class={cx(styles.root, classProp)}
 				style={style}
 				{...domProps}
@@ -150,9 +165,7 @@ export function Root(props: RootProps) {
 	);
 }
 
-export function Label(
-	props: PropsWithChildren<{ class?: string; htmlFor?: string }>,
-) {
+function Label(props: PropsWithChildren<{ class?: string; htmlFor?: string }>) {
 	const { children, class: classProp, htmlFor, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -163,7 +176,10 @@ export function Label(
 			data-scope="select"
 			data-part="label"
 			data-disabled={context?.disabled ? "" : undefined}
-			data-invalid={context?.invalid ? "" : undefined}
+			data-invalid={
+				context?.invalid || context?.status === "error" ? "" : undefined
+			}
+			data-status={context?.status}
 			data-readonly={context?.readOnly ? "" : undefined}
 			data-required={context?.required ? "" : undefined}
 			class={cx(context?.styles.label, classProp)}
@@ -174,7 +190,7 @@ export function Label(
 	);
 }
 
-export function Control(props: PropsWithChildren<{ class?: string }>) {
+function Control(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -183,7 +199,10 @@ export function Control(props: PropsWithChildren<{ class?: string }>) {
 			data-part="control"
 			data-state={context?.open ? "open" : "closed"}
 			data-disabled={context?.disabled ? "" : undefined}
-			data-invalid={context?.invalid ? "" : undefined}
+			data-invalid={
+				context?.invalid || context?.status === "error" ? "" : undefined
+			}
+			data-status={context?.status}
 			class={cx(context?.styles.control, classProp)}
 			{...rest}
 		>
@@ -192,7 +211,7 @@ export function Control(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function Trigger(props: PropsWithChildren<{ class?: string }>) {
+function Trigger(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	const activeDescendant =
@@ -208,13 +227,16 @@ export function Trigger(props: PropsWithChildren<{ class?: string }>) {
 			aria-expanded={context?.open}
 			aria-controls={context?.rootId ? `${context.rootId}-listbox` : undefined}
 			aria-activedescendant={activeDescendant}
-			aria-invalid={context?.invalid}
+			aria-invalid={context?.invalid || context?.status === "error"}
 			aria-required={context?.required}
 			data-scope="select"
 			data-part="trigger"
 			data-state={context?.open ? "open" : "closed"}
 			data-disabled={context?.disabled ? "" : undefined}
-			data-invalid={context?.invalid ? "" : undefined}
+			data-invalid={
+				context?.invalid || context?.status === "error" ? "" : undefined
+			}
+			data-status={context?.status}
 			data-readonly={context?.readOnly ? "" : undefined}
 			data-placeholder={
 				context && context.selectedValues.length === 0 ? "" : undefined
@@ -228,7 +250,7 @@ export function Trigger(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function ValueText(
+function ValueText(
 	props: PropsWithChildren<{ class?: string; placeholder?: string }>,
 ) {
 	const {
@@ -266,7 +288,7 @@ export function ValueText(
 	);
 }
 
-export function Indicator(props: PropsWithChildren<{ class?: string }>) {
+function Indicator(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -298,7 +320,7 @@ export function Indicator(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function IndicatorGroup(props: PropsWithChildren<{ class?: string }>) {
+function IndicatorGroup(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -313,7 +335,7 @@ export function IndicatorGroup(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function Positioner(props: PropsWithChildren<{ class?: string }>) {
+function Positioner(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -329,7 +351,7 @@ export function Positioner(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function Content(props: PropsWithChildren<{ class?: string }>) {
+function Content(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -345,7 +367,7 @@ export function Content(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function List(props: PropsWithChildren<{ class?: string }>) {
+function List(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -365,12 +387,12 @@ export function List(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export const ItemContext = createContext<{
+const ItemContext = createContext<{
 	value: string;
 	disabled?: boolean;
 } | null>(null);
 
-export function Item(
+function Item(
 	props: PropsWithChildren<{
 		value: string;
 		disabled?: boolean;
@@ -408,7 +430,7 @@ export function Item(
 	);
 }
 
-export function ItemText(props: PropsWithChildren<{ class?: string }>) {
+function ItemText(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	const item = useContext(ItemContext);
@@ -429,7 +451,7 @@ export function ItemText(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function ItemIndicator(props: PropsWithChildren<{ class?: string }>) {
+function ItemIndicator(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	const item = useContext(ItemContext);
@@ -466,23 +488,22 @@ export function ItemIndicator(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function ItemGroup(props: PropsWithChildren<{ class?: string }>) {
+function ItemGroup(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
-		<div
-			role="group"
+		<fieldset
 			data-scope="select"
 			data-part="item-group"
 			class={cx(context?.styles.itemGroup, classProp)}
 			{...rest}
 		>
 			{children}
-		</div>
+		</fieldset>
 	);
 }
 
-export function ItemGroupLabel(props: PropsWithChildren<{ class?: string }>) {
+function ItemGroupLabel(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	return (
@@ -497,7 +518,7 @@ export function ItemGroupLabel(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function ClearTrigger(props: PropsWithChildren<{ class?: string }>) {
+function ClearTrigger(props: PropsWithChildren<{ class?: string }>) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useSelectContext();
 	const hasSelection = (context?.selectedValues.length ?? 0) > 0;
@@ -533,7 +554,7 @@ export function ClearTrigger(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function HiddenSelect(props: { items?: SelectItem[] }) {
+function HiddenSelect(props: { items?: SelectItem[] }) {
 	const context = useSelectContext();
 	const selectItems = props.items || context?.items || [];
 	return (
@@ -573,19 +594,38 @@ export function HiddenSelect(props: { items?: SelectItem[] }) {
 	);
 }
 
-export interface SelectFlattenedProps extends RootProps {
+interface SelectFlattenedProps extends RootProps {
 	items?: SelectItem[];
 	label?: Child;
 	placeholder?: string;
 	allowClear?: boolean;
-	/** Initial selection for the uncontrolled island. Alias of `selectedValues`. */
 	defaultValue?: string[];
-	/** Deselect a selected option when it is clicked again (single mode only). */
 	deselectable?: boolean;
+	loading?: boolean;
+	loadingIcon?: Child;
+	showSearch?: boolean | any;
+	onSearch?: (value: string) => void;
+	suffixIcon?: Child;
+	removeIcon?: Child;
+	mode?: "multiple" | "tags";
 }
 
-export function SelectStructure(props: SelectFlattenedProps) {
-	const { items = [], label, placeholder, allowClear, children } = props;
+function SelectStructure(props: SelectFlattenedProps) {
+	const {
+		items = [],
+		label,
+		placeholder,
+		allowClear,
+		children,
+		loading,
+		loadingIcon,
+	} = props;
+	const context = useSelectContext();
+
+	const searchValue = context?.searchValue ?? "";
+	const handleSearchInput = (e: any) => {
+		context?.onSearchChange?.(e.target.value);
+	};
 
 	return (
 		<>
@@ -594,13 +634,56 @@ export function SelectStructure(props: SelectFlattenedProps) {
 				<Trigger>
 					<ValueText placeholder={placeholder} />
 					<IndicatorGroup>
-						<Indicator />
+						{loading ? (
+							loadingIcon || (
+								<Spinner size="sm" class={css({ color: "fg.subtle" })} />
+							)
+						) : (
+							<Indicator />
+						)}
 					</IndicatorGroup>
 				</Trigger>
 				{allowClear && <ClearTrigger />}
 			</Control>
 			<Positioner>
 				<Content>
+					{context?.showSearch && (
+						<div
+							class={css({
+								p: "2",
+								borderBottomWidth: "1px",
+								borderBottomColor: "gray.outline.border",
+							})}
+						>
+							<input
+								type="text"
+								data-part="search-input"
+								placeholder={
+									typeof context.showSearch === "object" &&
+									context.showSearch.placeholder
+										? context.showSearch.placeholder
+										: "Search..."
+								}
+								value={searchValue}
+								onInput={handleSearchInput}
+								class={css({
+									width: "full",
+									px: "3",
+									py: "1.5",
+									borderRadius: "l1",
+									borderWidth: "1px",
+									borderColor: "gray.outline.border",
+									fontSize: "sm",
+									bg: "transparent",
+									color: "fg.default",
+									outline: "none",
+									_focus: {
+										borderColor: "colorPalette.solid.bg",
+									},
+								})}
+							/>
+						</div>
+					)}
 					<List>
 						{items.map((item, index) => (
 							<Item
@@ -622,11 +705,11 @@ export function SelectStructure(props: SelectFlattenedProps) {
 	);
 }
 
-export interface InteractiveSelectProps extends SelectFlattenedProps {
+interface InteractiveSelectProps extends SelectFlattenedProps {
 	id?: string;
 }
 
-export function InteractiveSelect(props: InteractiveSelectProps) {
+function InteractiveSelect(props: InteractiveSelectProps) {
 	const {
 		open: openProp,
 		selectedValues: selectedValuesProp,
@@ -636,6 +719,8 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 		items = [],
 		multiple = false,
 		deselectable = false,
+		showSearch = false,
+		onSearch,
 		...rest
 	} = props;
 
@@ -646,13 +731,58 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 	const [highlightedIndex, setHighlightedIndex] = useState(
 		highlightedIndexProp ?? -1,
 	);
+	const [searchValue, setSearchValue] = useState("");
 
 	const isControlled = openProp !== undefined;
 	const open = isControlled ? openProp : isOpen;
 
+	const isMultiple =
+		multiple || props.mode === "multiple" || props.mode === "tags";
+
+	// Filter and Sort Items based on searchValue and showSearch config
+	const filteredItems = items.filter((item) => {
+		if (!searchValue) return true;
+
+		// Custom filterOption function if provided
+		if (
+			typeof showSearch === "object" &&
+			typeof showSearch.filterOption === "function"
+		) {
+			return showSearch.filterOption(searchValue, item);
+		}
+		if (
+			showSearch === true ||
+			(typeof showSearch === "object" && showSearch.filterOption !== false)
+		) {
+			// Default filtering: case-insensitive match of label or value
+			const optionFilterProp =
+				(typeof showSearch === "object" && showSearch.optionFilterProp) ||
+				"label";
+			const propsToSearch = Array.isArray(optionFilterProp)
+				? optionFilterProp
+				: [optionFilterProp];
+
+			return propsToSearch.some((prop) => {
+				const val = item[prop as keyof typeof item];
+				return (
+					val && String(val).toLowerCase().includes(searchValue.toLowerCase())
+				);
+			});
+		}
+		return true;
+	});
+
+	if (
+		typeof showSearch === "object" &&
+		typeof showSearch.filterSort === "function"
+	) {
+		filteredItems.sort((a, b) => showSearch.filterSort(a, b, { searchValue }));
+	}
+
 	const fallbackId = useId();
 	const rootId = idProp || `select-${fallbackId}`;
 
+	// Ref for handlers
 	const handleOpenRef = useRef<(next: boolean, hint?: "last") => void>(
 		() => {},
 	);
@@ -661,29 +791,29 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 	const handleSetHighlightedIndexRef = useRef<(index: number) => void>(
 		() => {},
 	);
-	const itemsRef = useRef<SelectItem[]>(items);
-	itemsRef.current = items;
+	const itemsRef = useRef<SelectItem[]>(filteredItems);
+	itemsRef.current = filteredItems;
+
 	const typeaheadRef = useRef<{ buffer: string; timer: number | undefined }>({
 		buffer: "",
 		timer: undefined,
 	});
 
-	// Initial highlight when the list opens: the first selected enabled item,
-	// otherwise the first (or last, for ArrowUp) enabled item.
+	// Initial highlight when the list opens
 	const initialHighlight = (hint?: "last") => {
-		const selectedIdx = items.findIndex(
+		const selectedIdx = filteredItems.findIndex(
 			(item) => !item.disabled && selectedValues.includes(item.value),
 		);
 		if (selectedIdx !== -1) {
 			return selectedIdx;
 		}
 		if (hint === "last") {
-			for (let i = items.length - 1; i >= 0; i--) {
-				if (!items[i].disabled) return i;
+			for (let i = filteredItems.length - 1; i >= 0; i--) {
+				if (!filteredItems[i].disabled) return i;
 			}
 			return -1;
 		}
-		return items.findIndex((item) => !item.disabled);
+		return filteredItems.findIndex((item) => !item.disabled);
 	};
 
 	const handleOpen = (next: boolean, hint?: "last") => {
@@ -709,7 +839,7 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 
 	const handleItemSelect = (val: string) => {
 		let nextValues: string[];
-		if (multiple) {
+		if (isMultiple) {
 			if (selectedValues.includes(val)) {
 				nextValues = selectedValues.filter((v) => v !== val);
 			} else {
@@ -726,6 +856,16 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 		setSelectedValues(nextValues);
 		props.onItemSelect?.(val);
 		props.onValueChange?.(nextValues);
+
+		const autoClear =
+			typeof showSearch === "object" &&
+			showSearch.autoClearSearchValue !== undefined
+				? showSearch.autoClearSearchValue
+				: true;
+		if (isMultiple && autoClear) {
+			setSearchValue("");
+			onSearch?.("");
+		}
 	};
 
 	const handleClear = () => {
@@ -735,20 +875,39 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 		setSelectedValues([]);
 		props.onClear?.();
 		props.onValueChange?.([]);
+		setSearchValue("");
+		onSearch?.("");
 	};
 
-	const handleSetHighlightedIndex = (index: number) => {
-		setHighlightedIndex(index);
+	const handleSearchChange = (val: string) => {
+		setSearchValue(val);
+		onSearch?.(val);
+		setHighlightedIndex(-1);
 	};
 
 	useEffect(() => {
 		handleOpenRef.current = handleOpen;
 		handleItemSelectRef.current = handleItemSelect;
 		handleClearRef.current = handleClear;
-		handleSetHighlightedIndexRef.current = handleSetHighlightedIndex;
-	}, [handleOpen, handleItemSelect, handleClear, handleSetHighlightedIndex]);
+		handleSetHighlightedIndexRef.current = setHighlightedIndex;
+	}, [handleOpen, handleItemSelect, handleClear]);
 
-	// Keep the highlighted option visible while navigating with the keyboard.
+	// Auto-focus search input when opening dropdown
+	useEffect(() => {
+		if (open && showSearch) {
+			const root = document.getElementById(rootId);
+			const searchInput = root?.querySelector(
+				'[data-part="search-input"]',
+			) as HTMLInputElement | null;
+			if (searchInput) {
+				setTimeout(() => {
+					searchInput.focus();
+				}, 10);
+			}
+		}
+	}, [open, showSearch, rootId]);
+
+	// Scroll highlighted option into view
 	useEffect(() => {
 		if (!open || highlightedIndex < 0) {
 			return;
@@ -759,7 +918,7 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 		highlighted?.scrollIntoView({ block: "nearest" });
 	}, [rootId, open, highlightedIndex]);
 
-	// Attach event listeners using event delegation
+	// Attach event listeners via event delegation
 	useEffect(() => {
 		const root = document.getElementById(rootId);
 		if (!root) {
@@ -771,7 +930,6 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 			trigger?.focus();
 		};
 
-		// Indices (into the full items list) of the enabled options, in DOM order.
 		const getEnabledIndices = () =>
 			Array.from(
 				root.querySelectorAll<HTMLElement>(
@@ -786,11 +944,15 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 			const clearTrigger = target.closest('[data-part="clear-trigger"]');
 			const trigger = target.closest('[data-part="trigger"]');
 			const item = target.closest('[data-part="item"]');
+			const searchInput = target.closest('[data-part="search-input"]');
 
 			if (clearTrigger) {
 				e.stopPropagation();
 				handleClearRef.current?.();
 				focusTrigger();
+			} else if (searchInput) {
+				// Don't toggle open/closed when clicking inside the search input
+				e.stopPropagation();
 			} else if (trigger) {
 				const currentOpen = root.getAttribute("data-state") === "open";
 				handleOpenRef.current?.(!currentOpen);
@@ -811,7 +973,6 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 			}
 		};
 
-		// Click outside handler
 		const handleDocumentClick = (e: MouseEvent) => {
 			if (!root.contains(e.target as Node)) {
 				if (root.getAttribute("data-state") === "open") {
@@ -824,8 +985,7 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 		root.addEventListener("mouseover", handleMouseOver as any);
 		document.addEventListener("click", handleDocumentClick);
 
-		// Native-select-style typeahead: accumulate printable keys and jump to
-		// the first enabled option whose label starts with the buffer.
+		// Typeahead implementation
 		const handleTypeahead = (key: string, currentOpen: boolean) => {
 			const typeahead = typeaheadRef.current;
 			if (typeahead.timer !== undefined) {
@@ -845,14 +1005,12 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 			if (match === -1) {
 				return;
 			}
-			if (currentOpen || multiple) {
+			if (currentOpen || isMultiple) {
 				if (!currentOpen) {
 					handleOpenRef.current?.(true);
 				}
 				handleSetHighlightedIndexRef.current(match);
 			} else {
-				// Closed single select: commit the match directly, like a native
-				// <select>.
 				handleItemSelectRef.current?.(itemsRef.current[match]?.value ?? "");
 			}
 		};
@@ -860,6 +1018,9 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 		const handleKeyDown = (e: KeyboardEvent) => {
 			const currentOpen = root.getAttribute("data-state") === "open";
 			const enabledIndices = getEnabledIndices();
+			const activeElement = document.activeElement;
+			const isSearchFocused =
+				activeElement?.getAttribute("data-part") === "search-input";
 
 			if (e.key === "ArrowDown") {
 				e.preventDefault();
@@ -896,6 +1057,11 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 					);
 				}
 			} else if (e.key === "Enter" || e.key === " ") {
+				// Don't trigger select on space key inside search input
+				if (e.key === " " && isSearchFocused) {
+					return;
+				}
+
 				if (currentOpen) {
 					const highlightedItem = root.querySelector(
 						'[data-part="item"][data-highlighted]',
@@ -916,13 +1082,16 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 				if (currentOpen) {
 					e.preventDefault();
 					handleOpenRef.current?.(false);
+					focusTrigger();
 				}
 			} else if (e.key === "Tab") {
 				if (currentOpen) {
 					handleOpenRef.current?.(false);
 				}
 			} else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-				handleTypeahead(e.key, currentOpen);
+				if (!isSearchFocused) {
+					handleTypeahead(e.key, currentOpen);
+				}
 			}
 		};
 
@@ -949,6 +1118,14 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 			triggerElement.addEventListener("blur", handleBlur);
 		}
 
+		// Also listen on search input keydown
+		const searchElement = root.querySelector(
+			'[data-part="search-input"]',
+		) as HTMLElement | null;
+		if (searchElement) {
+			searchElement.addEventListener("keydown", handleKeyDown as any);
+		}
+
 		return () => {
 			root.removeEventListener("click", handleClick);
 			root.removeEventListener("mouseover", handleMouseOver as any);
@@ -958,11 +1135,14 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 				triggerElement.removeEventListener("focus", handleFocus);
 				triggerElement.removeEventListener("blur", handleBlur);
 			}
+			if (searchElement) {
+				searchElement.removeEventListener("keydown", handleKeyDown as any);
+			}
 			if (typeaheadRef.current.timer !== undefined) {
 				clearTimeout(typeaheadRef.current.timer);
 			}
 		};
-	}, [rootId, multiple]);
+	}, [rootId, isMultiple, showSearch]);
 
 	return (
 		<Root
@@ -971,15 +1151,50 @@ export function InteractiveSelect(props: InteractiveSelectProps) {
 			open={open}
 			selectedValues={selectedValues}
 			highlightedIndex={highlightedIndex}
-			items={items}
-			multiple={multiple}
+			items={filteredItems}
+			multiple={isMultiple}
+			showSearch={showSearch}
+			searchValue={searchValue}
+			onSearchChange={handleSearchChange}
 			onToggle={handleToggle}
 			onClose={handleClose}
 			onItemSelect={handleItemSelect}
 			onClear={handleClear}
 			setHighlightedIndex={setHighlightedIndex}
 		>
-			<SelectStructure {...props} />
+			<SelectStructure {...props} items={filteredItems} />
 		</Root>
 	);
 }
+
+export type {
+	InteractiveSelectProps,
+	RootProps,
+	SelectContextValue,
+	SelectFlattenedProps,
+	SelectItem,
+	SelectStyles,
+};
+export {
+	ClearTrigger,
+	Content,
+	Control,
+	HiddenSelect,
+	Indicator,
+	IndicatorGroup,
+	InteractiveSelect,
+	Item,
+	ItemContext,
+	ItemGroup,
+	ItemGroupLabel,
+	ItemIndicator,
+	ItemText,
+	Label,
+	List,
+	Positioner,
+	Root,
+	SelectStructure,
+	Trigger,
+	useSelectContext,
+	ValueText,
+};
