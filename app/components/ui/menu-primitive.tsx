@@ -41,6 +41,10 @@ export interface MenuRootProps extends MenuVariantProps, PropsWithChildren {
 	id?: string;
 	open?: boolean;
 	onClose?: () => void;
+	/** Called when the menu opens or closes (interactive islands only). */
+	onOpenChange?: (open: boolean) => void;
+	/** Called with an item's `value` when it is activated (interactive islands only). */
+	onSelect?: (value: string) => void;
 }
 
 interface MenuRadioGroupContextValue {
@@ -86,8 +90,9 @@ export function MenuTrigger(props: MenuTriggerProps) {
 		id: `menu-trigger-${context.id}`,
 		"aria-haspopup": "menu",
 		"aria-expanded": context.open ? "true" : "false",
-		"aria-controls": context.open ? `menu-content-${context.id}` : undefined,
+		"aria-controls": `menu-content-${context.id}`,
 		"data-state": context.open ? "open" : "closed",
+		"data-scope": "menu",
 		"data-part": "trigger",
 		...restProps,
 	};
@@ -116,10 +121,13 @@ export function MenuContextTrigger(props: MenuTriggerProps) {
 	const context = useMenuContext();
 
 	const triggerProps = {
-		"data-part": "context-trigger",
+		id: `menu-trigger-${context.id}`,
 		"aria-haspopup": "menu",
 		"aria-expanded": context.open ? "true" : "false",
+		"aria-controls": `menu-content-${context.id}`,
 		"data-state": context.open ? "open" : "closed",
+		"data-scope": "menu",
+		"data-part": "context-trigger",
 		...restProps,
 	};
 
@@ -155,6 +163,7 @@ export function MenuPositioner(props: MenuPositionerProps) {
 				!context.open && css({ display: "none" }),
 			)}
 			data-state={context.open ? "open" : "closed"}
+			data-scope="menu"
 			data-part="positioner"
 			{...restProps}
 		>
@@ -180,6 +189,7 @@ export function MenuContent(props: MenuContentProps) {
 			class={cx(context.styles.content, classProp)}
 			data-state={context.open ? "open" : "closed"}
 			tabIndex={-1}
+			data-scope="menu"
 			data-part="content"
 			{...restProps}
 		>
@@ -212,6 +222,7 @@ export function MenuItem(props: MenuItemProps) {
 	const itemProps = {
 		id,
 		role: "menuitem",
+		"data-scope": "menu",
 		"data-part": "item",
 		"data-disabled": disabled ? "" : undefined,
 		"data-value": value,
@@ -236,15 +247,20 @@ export function MenuItem(props: MenuItemProps) {
 }
 
 export function MenuTriggerItem(props: MenuItemProps) {
-	const { children, class: classProp, asChild, ...restProps } = props;
+	const { children, disabled, class: classProp, asChild, ...restProps } = props;
 	const context = useMenuContext();
 
 	const itemProps = {
+		id: `menu-trigger-${context.id}`,
 		role: "menuitem",
 		"aria-haspopup": "menu",
 		"aria-expanded": context.open ? "true" : "false",
+		"aria-controls": `menu-content-${context.id}`,
+		"aria-disabled": disabled ? "true" : undefined,
 		"data-state": context.open ? "open" : "closed",
+		"data-scope": "menu",
 		"data-part": "trigger-item",
+		"data-disabled": disabled ? "" : undefined,
 		tabIndex: -1,
 		...restProps,
 	};
@@ -253,13 +269,35 @@ export function MenuTriggerItem(props: MenuItemProps) {
 		const child = children as any;
 		return cloneElement(child, {
 			...itemProps,
-			class: cx(context.styles.item, classProp, child.props?.class),
+			class: cx(
+				context.styles.item,
+				context.styles.triggerItem,
+				classProp,
+				child.props?.class,
+			),
 		});
 	}
 
 	return (
-		<div class={cx(context.styles.item, classProp)} {...itemProps}>
+		<div
+			class={cx(context.styles.item, context.styles.triggerItem, classProp)}
+			{...itemProps}
+		>
 			{children}
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="16"
+				height="16"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				strokeWidth="2"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				aria-hidden="true"
+			>
+				<path d="m9 18 6-6-6-6" />
+			</svg>
 		</div>
 	);
 }
@@ -370,15 +408,26 @@ export interface MenuCheckboxItemProps extends MenuItemProps {
 }
 
 export function MenuCheckboxItem(props: MenuCheckboxItemProps) {
-	const { children, checked, class: classProp, ...restProps } = props;
+	const {
+		children,
+		checked,
+		disabled,
+		value,
+		class: classProp,
+		...restProps
+	} = props;
 	const context = useMenuContext();
 
 	return (
 		<div
 			role="menuitemcheckbox"
 			aria-checked={checked ? "true" : "false"}
+			aria-disabled={disabled ? "true" : undefined}
 			data-state={checked ? "checked" : "unchecked"}
+			data-scope="menu"
 			data-part="item"
+			data-value={value}
+			data-disabled={disabled ? "" : undefined}
 			class={cx(context.styles.item, classProp)}
 			tabIndex={-1}
 			{...restProps}
@@ -408,7 +457,14 @@ export interface MenuRadioItemProps extends MenuItemProps {
 }
 
 export function MenuRadioItem(props: MenuRadioItemProps) {
-	const { children, value, checked, class: classProp, ...restProps } = props;
+	const {
+		children,
+		value,
+		checked,
+		disabled,
+		class: classProp,
+		...restProps
+	} = props;
 	const context = useMenuContext();
 	const radioGroup = useMenuRadioGroupContext();
 	const isChecked = checked ?? radioGroup?.value === value;
@@ -417,9 +473,12 @@ export function MenuRadioItem(props: MenuRadioItemProps) {
 		<div
 			role="menuitemradio"
 			aria-checked={isChecked ? "true" : "false"}
+			aria-disabled={disabled ? "true" : undefined}
 			data-state={isChecked ? "checked" : "unchecked"}
+			data-scope="menu"
 			data-part="item"
 			data-value={value}
+			data-disabled={disabled ? "" : undefined}
 			class={cx(context.styles.item, classProp)}
 			tabIndex={-1}
 			{...restProps}
@@ -431,16 +490,21 @@ export function MenuRadioItem(props: MenuRadioItemProps) {
 
 export interface MenuItemIndicatorProps extends PropsWithChildren {
 	class?: string;
+	checked?: boolean;
 	[key: string]: unknown;
 }
 
 export function MenuItemIndicator(props: MenuItemIndicatorProps) {
-	const { children, class: classProp, ...restProps } = props;
+	const { children, checked, class: classProp, ...restProps } = props;
 	const context = useMenuContext();
 
 	return (
 		<div
+			data-scope="menu"
 			data-part="item-indicator"
+			data-state={
+				checked === undefined ? undefined : checked ? "checked" : "unchecked"
+			}
 			class={cx(context.styles.itemIndicator, classProp)}
 			{...restProps}
 		>

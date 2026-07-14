@@ -46,24 +46,43 @@ export const menu = defineSlotRecipe({
 		item: {
 			alignItems: "center",
 			borderRadius: "l2",
+			cursor: "pointer",
 			display: "flex",
 			flex: "0 0 auto",
 			outline: "0",
 			textAlign: "start",
 			textDecoration: "none",
+			transition: "backgrounds",
+			transitionDuration: "fastest",
 			userSelect: "none",
 			width: "100%",
+			_hover: {
+				bg: "gray.surface.bg.hover",
+			},
+			_focus: {
+				bg: "gray.surface.bg.hover",
+			},
 			_highlighted: {
 				bg: "gray.surface.bg.hover",
 			},
 			_disabled: {
 				layerStyle: "disabled",
+				_hover: {
+					bg: "transparent",
+				},
 			},
+		},
+		separator: {
+			borderTopWidth: "1px",
+			borderColor: "border",
 		},
 		trigger: {
 			_focusVisible: {
 				focusVisibleRing: "outside",
 			},
+		},
+		triggerItem: {
+			justifyContent: "space-between",
 		},
 		itemGroupLabel: {
 			alignItems: "flex-start",
