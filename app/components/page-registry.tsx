@@ -7,12 +7,15 @@ import {
 	Button,
 	Card,
 	Checkbox,
+	Col,
 	Collapsible,
 	Combobox,
 	Dialog,
 	Drawer,
 	Field,
 	Fieldset,
+	Grid,
+	GridItem,
 	Group,
 	Heading,
 	HoverCard,
@@ -22,6 +25,7 @@ import {
 	Popover,
 	Progress,
 	RadioGroup,
+	Row,
 	SegmentGroup,
 	Select,
 	Skeleton,
@@ -37,6 +41,9 @@ type BlockRenderer = (block: ComponentBlock) => JSX.Element;
 // same renderer. Aliases are declared once here — renderers are registered
 // only under their canonical (camelCase) key.
 const TYPE_ALIASES: Record<string, string> = {
+	"css-grid": "cssGrid",
+	"css-grid-item": "cssGridItem",
+	"grid-col": "gridCol",
 	"hover-card": "hoverCard",
 	"paginated-table": "paginatedTable",
 	"radio-group": "radioGroup",
@@ -45,6 +52,15 @@ const TYPE_ALIASES: Record<string, string> = {
 
 function resolveType(type: string): string {
 	return TYPE_ALIASES[type] ?? type;
+}
+
+function tryParseJSON(val: unknown): unknown {
+	if (typeof val !== "string") return val;
+	try {
+		return JSON.parse(val);
+	} catch {
+		return val;
+	}
 }
 
 // Recursively render a list of nested blocks (used by container renderers).
@@ -354,6 +370,127 @@ const registry: Record<string, BlockRenderer> = {
 			>
 				{renderChildren(children as ComponentBlock[])}
 			</Fieldset>
+		);
+	},
+
+	grid: (b) => {
+		const { children } = b;
+		const { align, justify, gutter, wrap, ...rest } = propsOf(b);
+		return (
+			<Row
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				align={tryParseJSON(align) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				justify={tryParseJSON(justify) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				gutter={tryParseJSON(gutter) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				wrap={wrap !== undefined ? (tryParseJSON(wrap) as any) : undefined}
+				{...rest}
+			>
+				{renderChildren(children as ComponentBlock[])}
+			</Row>
+		);
+	},
+
+	gridCol: (b) => {
+		const { children } = b;
+		const {
+			span,
+			offset,
+			order,
+			pull,
+			push,
+			flex,
+			xs,
+			sm,
+			md,
+			lg,
+			xl,
+			xxl,
+			"2xl": panda2xl,
+			...rest
+		} = propsOf(b);
+		return (
+			<Col
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				span={tryParseJSON(span) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				offset={tryParseJSON(offset) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				order={tryParseJSON(order) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				pull={tryParseJSON(pull) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				push={tryParseJSON(push) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				flex={tryParseJSON(flex) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				xs={tryParseJSON(xs) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				sm={tryParseJSON(sm) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				md={tryParseJSON(md) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				lg={tryParseJSON(lg) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				xl={tryParseJSON(xl) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				xxl={tryParseJSON(xxl) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				{...({ "2xl": tryParseJSON(panda2xl) } as any)}
+				{...rest}
+			>
+				{renderChildren(children as ComponentBlock[])}
+			</Col>
+		);
+	},
+
+	cssGrid: (b) => {
+		const { children } = b;
+		const { columns, gap, columnGap, rowGap, minChildWidth, ...rest } =
+			propsOf(b);
+		return (
+			<Grid
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				columns={tryParseJSON(columns) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				gap={tryParseJSON(gap) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				columnGap={tryParseJSON(columnGap) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				rowGap={tryParseJSON(rowGap) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				minChildWidth={tryParseJSON(minChildWidth) as any}
+				{...rest}
+			>
+				{renderChildren(children as ComponentBlock[])}
+			</Grid>
+		);
+	},
+
+	cssGridItem: (b) => {
+		const { children } = b;
+		const { colSpan, rowSpan, colStart, rowStart, colEnd, rowEnd, ...rest } =
+			propsOf(b);
+		return (
+			<GridItem
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				colSpan={tryParseJSON(colSpan) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				rowSpan={tryParseJSON(rowSpan) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				colStart={tryParseJSON(colStart) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				rowStart={tryParseJSON(rowStart) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				colEnd={tryParseJSON(colEnd) as any}
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic props mapping
+				rowEnd={tryParseJSON(rowEnd) as any}
+				{...rest}
+			>
+				{renderChildren(children as ComponentBlock[])}
+			</GridItem>
 		);
 	},
 

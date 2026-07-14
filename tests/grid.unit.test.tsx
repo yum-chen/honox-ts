@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { Col, Row } from "../app/components/ui/grid";
+import { Col, Row, Grid, GridItem } from "../app/components/ui/grid";
 
 describe("Grid Components", () => {
 	it("should render basic Row and Col", () => {
@@ -99,5 +99,34 @@ describe("Grid Components", () => {
 
 		// Gutter Y: -6px
 		expect(treeHtml).toContain("mt_-6px");
+	});
+
+	it("should render flatter CSS Grid and GridItem", () => {
+		const gridHtml = (
+			<Grid columns={3} gap="4" minChildWidth="200px">
+				<GridItem colSpan={2} rowSpan={1}>
+					Item 1
+				</GridItem>
+				<GridItem>Item 2</GridItem>
+			</Grid>
+		).toString();
+
+		expect(gridHtml).toContain("grid");
+		expect(gridHtml).toContain("grid-tc_repeat(3,_minmax(0,_1fr))");
+		expect(gridHtml).toContain("gap_4");
+		expect(gridHtml).toContain("Item 1");
+		expect(gridHtml).toContain("Item 2");
+	});
+
+	it("should support responsive values on CSS Grid and GridItem", () => {
+		const gridHtml = (
+			<Grid columns={{ base: 1, md: 3 }} gap={4}>
+				<GridItem colSpan={{ base: 1, md: 2 }}>Item</GridItem>
+			</Grid>
+		).toString();
+
+		expect(gridHtml).toContain("grid-tc_repeat(1,_minmax(0,_1fr))");
+		expect(gridHtml).toContain("md:grid-tc_repeat(3,_minmax(0,_1fr))");
+		expect(gridHtml).toContain("md:grid-c_span_2");
 	});
 });
