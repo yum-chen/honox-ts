@@ -34,8 +34,8 @@
           "style": "text-align:center;max-width:38rem"
         },
         {
-          "type": "stack",
-          "direction": "horizontal",
+          "type": "grid",
+          "columns": "{\"base\": 1, \"sm\": 2}",
           "gap": "4",
           "children": [
             {
@@ -69,9 +69,8 @@
       "style": "text-align:center"
     },
     {
-      "type": "stack",
-      "direction": "horizontal",
-      "justify": "center",
+      "type": "grid",
+      "columns": "{\"base\": 2, \"sm\": 3, \"md\": 5}",
       "gap": "4",
       "children": [
         {
@@ -118,8 +117,8 @@
       "content": "One platform to replace your dashboard sprawl."
     },
     {
-      "type": "stack",
-      "direction": "horizontal",
+      "type": "grid",
+      "columns": "{\"base\": 1, \"md\": 3}",
       "gap": "6",
       "children": [
         {
@@ -213,8 +212,8 @@
       "content": "Start free. Upgrade when you're ready."
     },
     {
-      "type": "stack",
-      "direction": "horizontal",
+      "type": "grid",
+      "columns": "{\"base\": 1, \"md\": 3}",
       "gap": "6",
       "children": [
         {
@@ -388,8 +387,8 @@
           "style": "text-align:center"
         },
         {
-          "type": "stack",
-          "direction": "horizontal",
+          "type": "grid",
+          "columns": "{\"base\": 1, \"sm\": 2}",
           "gap": "4",
           "children": [
             {
