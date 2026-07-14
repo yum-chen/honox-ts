@@ -156,7 +156,7 @@ function Root(props: RootProps) {
 				data-invalid={invalid || status === "error" ? "" : undefined}
 				data-status={status}
 				class={cx(styles.root, classProp)}
-				style={style}
+				style={{ position: "relative", ...style }}
 				{...domProps}
 			>
 				{children}
@@ -817,7 +817,7 @@ function InteractiveSelect(props: InteractiveSelectProps) {
 	};
 
 	const handleOpen = (next: boolean, hint?: "last") => {
-		if (props.readOnly) {
+		if (props.readOnly || props.disabled) {
 			return;
 		}
 		if (!isControlled) {
@@ -940,6 +940,7 @@ function InteractiveSelect(props: InteractiveSelectProps) {
 				.filter((index) => Number.isInteger(index) && index >= 0);
 
 		const handleClick = (e: Event) => {
+			if (props.disabled || props.readOnly) return;
 			const target = e.target as HTMLElement;
 			const clearTrigger = target.closest('[data-part="clear-trigger"]');
 			const trigger = target.closest('[data-part="trigger"]');
@@ -964,6 +965,7 @@ function InteractiveSelect(props: InteractiveSelectProps) {
 		};
 
 		const handleMouseOver = (e: MouseEvent) => {
+			if (props.disabled || props.readOnly) return;
 			const item = (e.target as HTMLElement).closest('[data-part="item"]');
 			if (item && !item.hasAttribute("data-disabled")) {
 				const index = Number(item.getAttribute("data-index"));
@@ -1016,6 +1018,7 @@ function InteractiveSelect(props: InteractiveSelectProps) {
 		};
 
 		const handleKeyDown = (e: KeyboardEvent) => {
+			if (props.disabled || props.readOnly) return;
 			const currentOpen = root.getAttribute("data-state") === "open";
 			const enabledIndices = getEnabledIndices();
 			const activeElement = document.activeElement;

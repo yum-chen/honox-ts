@@ -87,6 +87,7 @@ export const select = defineSlotRecipe({
 			},
 			_disabled: {
 				layerStyle: "disabled",
+				cursor: "not-allowed",
 				_hover: {
 					background: "transparent",
 				},
@@ -126,6 +127,9 @@ export const select = defineSlotRecipe({
 			fontWeight: "medium",
 			userSelect: "none",
 			textStyle: "sm",
+			_disabled: {
+				color: "fg.muted",
+			},
 		},
 		trigger: {
 			alignItems: "center",
@@ -141,6 +145,7 @@ export const select = defineSlotRecipe({
 			width: "full",
 			_disabled: {
 				layerStyle: "disabled",
+				cursor: "not-allowed",
 			},
 			"&[data-status=warning]": {
 				borderColor: "amber.outline.border",
@@ -191,6 +196,9 @@ export const select = defineSlotRecipe({
 					borderWidth: "1px",
 					borderColor: "gray.outline.border",
 					focusVisibleRing: "inside",
+					_focus: {
+						borderColor: "colorPalette.solid.bg",
+					},
 					_invalid: {
 						borderColor: "error",
 						focusRingColor: "error",
@@ -202,6 +210,9 @@ export const select = defineSlotRecipe({
 					borderWidth: "1px",
 					borderColor: "gray.outline.border",
 					focusVisibleRing: "inside",
+					_focus: {
+						borderColor: "colorPalette.solid.bg",
+					},
 					_invalid: {
 						borderColor: "error",
 						focusRingColor: "error",
@@ -214,6 +225,9 @@ export const select = defineSlotRecipe({
 					borderWidth: "1px",
 					borderColor: "gray.surface.border",
 					focusVisibleRing: "inside",
+					_focus: {
+						borderColor: "colorPalette.solid.bg",
+					},
 					_invalid: {
 						borderColor: "error",
 						focusRingColor: "error",
