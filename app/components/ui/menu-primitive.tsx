@@ -15,6 +15,8 @@ interface MenuContextValue {
 	open: boolean;
 	styles: MenuStyles;
 	onClose?: () => void;
+	onOpenChange?: (open: boolean) => void;
+	onSelect?: (value: string) => void;
 	parentMenuId?: string;
 	triggerMode?: "click" | "hover" | "contextMenu";
 }
@@ -42,6 +44,8 @@ interface MenuRootProps extends MenuVariantProps, PropsWithChildren {
 	id?: string;
 	open?: boolean;
 	onClose?: () => void;
+	onOpenChange?: (open: boolean) => void;
+	onSelect?: (value: string) => void;
 	triggerMode?: "click" | "hover" | "contextMenu";
 }
 
@@ -63,6 +67,8 @@ function MenuRoot(props: MenuRootProps) {
 		open = false,
 		children,
 		onClose,
+		onOpenChange,
+		onSelect,
 		triggerMode,
 	} = localProps;
 	const autoId = useId();
@@ -78,6 +84,8 @@ function MenuRoot(props: MenuRootProps) {
 				open,
 				styles,
 				onClose,
+				onOpenChange,
+				onSelect,
 				parentMenuId: parentContext?.id,
 				triggerMode,
 			}}
@@ -481,39 +489,39 @@ function MenuArrowTip(props: { class?: string }) {
 }
 
 export {
-	MenuArrow,
-	MenuArrowTip,
-	MenuCheckboxItem,
-	type MenuCheckboxItemProps,
-	MenuContent,
-	type MenuContentProps,
-	MenuContext as Context,
-	MenuContextTrigger,
-	MenuIndicator,
-	type MenuIndicatorProps,
-	MenuItem,
-	MenuItemGroup,
-	MenuItemGroupLabel,
-	type MenuItemGroupLabelProps,
-	type MenuItemGroupProps,
-	MenuItemIndicator,
-	type MenuItemIndicatorProps,
-	type MenuItemProps,
-	MenuItemText,
-	type MenuItemTextProps,
-	MenuPositioner,
+	type MenuRootProps,
+	type MenuTriggerProps,
 	type MenuPositionerProps,
-	MenuRadioItem,
-	MenuRadioItemGroup,
+	type MenuContentProps,
+	type MenuItemProps,
+	type MenuItemGroupProps,
+	type MenuItemGroupLabelProps,
+	type MenuItemTextProps,
+	type MenuSeparatorProps,
+	type MenuIndicatorProps,
+	type MenuCheckboxItemProps,
 	type MenuRadioItemGroupProps,
 	type MenuRadioItemProps,
-	MenuRoot,
-	type MenuRootProps,
-	MenuSeparator,
-	type MenuSeparatorProps,
-	MenuTrigger,
-	MenuTriggerItem,
-	type MenuTriggerProps,
+	type MenuItemIndicatorProps,
 	useMenuContext,
 	useMenuRadioGroupContext,
+	MenuContext as Context,
+	MenuRoot,
+	MenuTrigger,
+	MenuContextTrigger,
+	MenuPositioner,
+	MenuContent,
+	MenuItem,
+	MenuTriggerItem,
+	MenuItemGroup,
+	MenuItemGroupLabel,
+	MenuItemText,
+	MenuSeparator,
+	MenuIndicator,
+	MenuCheckboxItem,
+	MenuRadioItemGroup,
+	MenuRadioItem,
+	MenuItemIndicator,
+	MenuArrow,
+	MenuArrowTip,
 };

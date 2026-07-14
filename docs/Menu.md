@@ -20,6 +20,9 @@ A list of actions or options that appears when triggered, supporting items, sepa
 | `class` | `string` | Custom CSS classes for the root element. |
 | `contentClass` | `string` | Custom CSS classes for the content element. |
 | `positionerClass` | `string` | Custom CSS classes for the positioner element. |
+| `onOpenChange` | `(open: boolean) => void` | Callback invoked when the menu is opened or closed (interactive islands only). |
+| `onSelect` | `(value: string) => void` | Callback invoked when a menu item is selected (interactive islands only). |
+| `onClose` | `() => void` | Callback invoked when the menu is closed. |
 
 ### MenuItem
 

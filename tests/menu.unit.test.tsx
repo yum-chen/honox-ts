@@ -16,7 +16,7 @@ describe("Menu Unit Tests", () => {
 
 		expect(html).toContain('data-part="trigger"');
 		expect(html).toContain("Open");
-        expect(html).toContain('role="menu"');
+		expect(html).toContain('role="menu"');
 	});
 
 	test("should render items correctly", () => {
@@ -61,5 +61,23 @@ describe("Menu Unit Tests", () => {
 		).toString();
 
 		expect(html).toContain("HoverItem");
+	});
+
+	test("should support callback function props", () => {
+		const onOpenChange = () => {};
+		const onSelect = () => {};
+		const onClose = () => {};
+
+		const html = (
+			<Menu.Root
+				interactive={false}
+				onOpenChange={onOpenChange}
+				onSelect={onSelect}
+				onClose={onClose}
+				items={[{ type: "item", label: "CallbackItem", value: "cb" }]}
+			/>
+		).toString();
+
+		expect(html).toContain("CallbackItem");
 	});
 });

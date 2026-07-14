@@ -7,7 +7,6 @@ import { shouldHydrate } from "./island-utils";
 import {
 	MenuCheckboxItem as CheckboxItem,
 	MenuContent as Content,
-	MenuContextTrigger as ContextTrigger,
 	MenuItem as Item,
 	MenuItemGroupLabel as ItemGroupLabel,
 	MenuItemIndicator as ItemIndicator,
@@ -19,6 +18,7 @@ import {
 	MenuSeparator as Separator,
 	MenuTrigger as Trigger,
 	MenuTriggerItem as TriggerItem,
+	MenuContextTrigger as ContextTrigger,
 } from "./menu-primitive";
 
 // ============= Flattened API Types =============
@@ -98,16 +98,15 @@ interface MenuProps extends MenuVariantProps {
 	contentClass?: string;
 	positionerClass?: string;
 	triggerMode?: "click" | "hover" | "contextMenu";
+	onOpenChange?: (open: boolean) => void;
+	onSelect?: (value: string) => void;
+	onClose?: () => void;
 	children?: any;
 }
 
 // ============= Rendering Functions =============
 
-function renderMenuItem(
-	item: MenuItem,
-	index: number,
-	triggerMode?: "click" | "hover" | "contextMenu",
-): JSX.Element {
+function renderMenuItem(item: MenuItem, index: number, triggerMode?: "click" | "hover" | "contextMenu"): JSX.Element {
 	switch (item.type) {
 		case "separator":
 			return <Separator key={index} />;
@@ -167,17 +166,9 @@ function renderMenuItem(
 					triggerType="trigger-item"
 					trigger={
 						<>
-							{submenuItem.icon && (
-								<ItemIndicator>{submenuItem.icon}</ItemIndicator>
-							)}
+							{submenuItem.icon && <ItemIndicator>{submenuItem.icon}</ItemIndicator>}
 							<ItemText>{submenuItem.label}</ItemText>
-							<span
-								style={{
-									marginLeft: "auto",
-									display: "inline-flex",
-									alignItems: "center",
-								}}
-							>
+							<span style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center" }}>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="16"
@@ -230,6 +221,9 @@ function MenuRootComponent(props: MenuProps) {
 		contentClass,
 		positionerClass,
 		triggerMode = "click",
+		onOpenChange,
+		onSelect,
+		onClose,
 		children,
 		...variantProps
 	} = props;
@@ -239,11 +233,7 @@ function MenuRootComponent(props: MenuProps) {
 	let triggerElement = null;
 	if (trigger) {
 		if (triggerType === "context-trigger") {
-			triggerElement = (
-				<ContextTrigger asChild={triggerMode === "contextMenu"}>
-					{trigger}
-				</ContextTrigger>
-			);
+			triggerElement = <ContextTrigger asChild={triggerMode === "contextMenu"}>{trigger}</ContextTrigger>;
 		} else if (triggerType === "trigger-item") {
 			triggerElement = <TriggerItem>{trigger}</TriggerItem>;
 		} else {
@@ -253,15 +243,19 @@ function MenuRootComponent(props: MenuProps) {
 
 	if (shouldHydrate(interactive, true)) {
 		return (
-			<InteractiveMenuRoot open={defaultOpen} triggerMode={triggerMode}>
+			<InteractiveMenuRoot
+				open={defaultOpen}
+				triggerMode={triggerMode}
+				onOpenChange={onOpenChange}
+				onSelect={onSelect}
+				onClose={onClose}
+			>
 				{triggerElement}
 				{children}
 				{items && (
 					<Positioner class={cx(styles.positioner, positionerClass)}>
 						<Content class={cx(styles.content, contentClass)}>
-							{items.map((item, index) =>
-								renderMenuItem(item, index, triggerMode),
-							)}
+							{items.map((item, index) => renderMenuItem(item, index, triggerMode))}
 						</Content>
 					</Positioner>
 				)}
@@ -270,15 +264,19 @@ function MenuRootComponent(props: MenuProps) {
 	}
 
 	return (
-		<RootPrimitive open={defaultOpen} triggerMode={triggerMode}>
+		<RootPrimitive
+			open={defaultOpen}
+			triggerMode={triggerMode}
+			onOpenChange={onOpenChange}
+			onSelect={onSelect}
+			onClose={onClose}
+		>
 			{triggerElement}
 			{children}
 			{items && (
 				<Positioner class={cx(styles.positioner, positionerClass)}>
 					<Content class={cx(styles.content, contentClass)}>
-						{items.map((item, index) =>
-							renderMenuItem(item, index, triggerMode),
-						)}
+						{items.map((item, index) => renderMenuItem(item, index, triggerMode))}
 					</Content>
 				</Positioner>
 			)}
@@ -307,7 +305,6 @@ const Menu = Object.assign(MenuRootComponent, {
 export {
 	type BaseMenuItem,
 	Menu as default,
-	Menu,
 	type MenuCheckboxItem,
 	type MenuItem,
 	type MenuItemItem,
@@ -317,4 +314,5 @@ export {
 	type MenuRadioItem,
 	type MenuSeparatorItem,
 	type MenuSubmenuItem,
+	Menu,
 };
