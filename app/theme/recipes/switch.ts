@@ -93,7 +93,7 @@ export const switchRecipe = defineSlotRecipe({
 					},
 				},
 				thumb: {
-					bg: "white",
+					bg: "colorPalette.solid.bg",
 					_peerChecked: {
 						bg: "colorPalette.solid.fg",
 					},
