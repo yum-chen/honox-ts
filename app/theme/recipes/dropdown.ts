@@ -21,8 +21,9 @@ export const dropdown = defineSlotRecipe({
 	base: {
 		content: {
 			"--dropdown-z-index": "zIndex.dropdown",
+			"--dropdown-bg": "colors.gray.surface.bg",
 
-			bg: "gray.surface.bg",
+			background: "var(--dropdown-bg)",
 			borderRadius: "l3",
 			boxShadow: "md",
 			display: "flex",
@@ -33,6 +34,7 @@ export const dropdown = defineSlotRecipe({
 			overflow: "hidden",
 			overflowY: "auto",
 			position: "relative",
+			transformOrigin: "var(--transform-origin)",
 			zIndex: "calc(var(--dropdown-z-index) + var(--layer-index, 0))",
 			_open: {
 				animationStyle: "slide-fade-in",
@@ -80,9 +82,18 @@ export const dropdown = defineSlotRecipe({
 			_focusVisible: {
 				focusVisibleRing: "outside",
 			},
+			_disabled: {
+				layerStyle: "disabled",
+			},
+		},
+		contextTrigger: {
+			cursor: "context-menu",
 		},
 		triggerItem: {
 			justifyContent: "space-between",
+			_expanded: {
+				bg: "gray.surface.bg.hover",
+			},
 		},
 		itemGroupLabel: {
 			alignItems: "flex-start",
@@ -111,7 +122,7 @@ export const dropdown = defineSlotRecipe({
 		},
 		arrow: {
 			"--arrow-size": "var(--sizes-3, 12px)",
-			"--arrow-background": "var(--colors-gray-surface-bg, white)",
+			"--arrow-background": "var(--dropdown-bg)",
 			position: "absolute",
 			width: "var(--arrow-size)",
 			height: "var(--arrow-size)",

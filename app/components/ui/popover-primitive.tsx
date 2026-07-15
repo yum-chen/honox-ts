@@ -56,6 +56,7 @@ interface PopoverTriggerProps extends PropsWithChildren {
 
 interface PopoverPositionerProps extends PropsWithChildren {
 	class?: string;
+	placement?: PopoverPlacement;
 	[key: string]: unknown;
 }
 
@@ -66,10 +67,12 @@ interface PopoverContentProps extends PropsWithChildren {
 
 interface PopoverTitleProps extends PropsWithChildren {
 	class?: string;
+	id?: string;
 }
 
 interface PopoverDescriptionProps extends PropsWithChildren {
 	class?: string;
+	id?: string;
 }
 
 interface PopoverCloseTriggerProps extends PropsWithChildren {
@@ -154,9 +157,18 @@ function Anchor(props: PopoverAnchorProps) {
 }
 
 function Trigger(props: PopoverTriggerProps) {
-	const { children, class: classProp, asChild, ...restProps } = props;
+	const {
+		children,
+		class: classProp,
+		asChild,
+		id: idProp,
+		...restProps
+	} = props;
 	const context = usePopoverContext();
-	const id = context?.id;
+	// An explicit `id` prop (threaded from the non-island composer) takes
+	// priority over context — see the note on `PopoverProps`'s `id` handling
+	// in popover.tsx for why context-derived ids don't survive hydration.
+	const id = (idProp as string | undefined) || context?.id;
 	const open = context?.open;
 	const styles = context?.styles || popover();
 
@@ -191,11 +203,19 @@ function Trigger(props: PopoverTriggerProps) {
 }
 
 function Positioner(props: PopoverPositionerProps) {
-	const { children, class: classProp, ...restProps } = props;
+	const {
+		children,
+		class: classProp,
+		placement: placementProp,
+		...restProps
+	} = props;
 	const context = usePopoverContext();
 	const open = context?.open;
 	const styles = context?.styles || popover();
-	const placement = context?.placement ?? "bottom";
+	// An explicit `placement` prop (threaded from the non-island composer)
+	// takes priority over context — see the note on `Trigger`'s `id` handling
+	// for why context-derived values don't survive hydration.
+	const placement = placementProp ?? context?.placement ?? "bottom";
 
 	return (
 		<div
@@ -221,9 +241,9 @@ function Positioner(props: PopoverPositionerProps) {
 }
 
 function Content(props: PopoverContentProps) {
-	const { children, class: classProp, ...restProps } = props;
+	const { children, class: classProp, id: idProp, ...restProps } = props;
 	const context = usePopoverContext();
-	const id = context?.id;
+	const id = (idProp as string | undefined) || context?.id;
 	const open = context?.open;
 	const styles = context?.styles || popover();
 
@@ -299,9 +319,9 @@ function Footer(props: PropsWithChildren<{ class?: string }>) {
 }
 
 function Title(props: PopoverTitleProps) {
-	const { children, class: classProp, ...restProps } = props;
+	const { children, class: classProp, id: idProp, ...restProps } = props;
 	const context = usePopoverContext();
-	const id = context?.id;
+	const id = idProp || context?.id;
 	const styles = context?.styles || popover();
 	return (
 		<h2
@@ -317,9 +337,9 @@ function Title(props: PopoverTitleProps) {
 }
 
 function Description(props: PopoverDescriptionProps) {
-	const { children, class: classProp, ...restProps } = props;
+	const { children, class: classProp, id: idProp, ...restProps } = props;
 	const context = usePopoverContext();
-	const id = context?.id;
+	const id = idProp || context?.id;
 	const styles = context?.styles || popover();
 	return (
 		<p
@@ -365,11 +385,18 @@ function CloseTrigger(props: PopoverCloseTriggerProps) {
 	);
 }
 
-function Arrow(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp, ...restProps } = props;
+function Arrow(
+	props: PropsWithChildren<{ class?: string; placement?: PopoverPlacement }>,
+) {
+	const {
+		children,
+		class: classProp,
+		placement: placementProp,
+		...restProps
+	} = props;
 	const context = usePopoverContext();
 	const styles = context?.styles || popover();
-	const placement = context?.placement ?? "bottom";
+	const placement = placementProp ?? context?.placement ?? "bottom";
 	return (
 		<div
 			class={cx(styles.arrow, classProp)}
@@ -383,11 +410,11 @@ function Arrow(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-function ArrowTip(props: { class?: string }) {
-	const { class: classProp, ...restProps } = props;
+function ArrowTip(props: { class?: string; placement?: PopoverPlacement }) {
+	const { class: classProp, placement: placementProp, ...restProps } = props;
 	const context = usePopoverContext();
 	const styles = context?.styles || popover();
-	const placement = context?.placement ?? "bottom";
+	const placement = placementProp ?? context?.placement ?? "bottom";
 	return (
 		<div
 			class={cx(styles.arrowTip, classProp)}
@@ -663,6 +690,7 @@ function InteractivePopoverRoot(props: InteractivePopoverProps) {
 		<div
 			id={rootId}
 			data-popover-root
+			data-overlay-root
 			data-state={open ? "open" : "closed"}
 			style={{ position: "relative", display: "inline-block" }}
 		>

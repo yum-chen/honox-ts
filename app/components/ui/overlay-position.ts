@@ -14,6 +14,21 @@
 
 const CENTER_ARROW_OFFSET = "50%";
 
+/**
+ * Elements owned by `root` — i.e. not belonging to a nested overlay instance
+ * mounted inside `root`'s own content (e.g. a submenu, or a Popover opened
+ * from within another Popover's content). Every overlay root must carry a
+ * `data-overlay-root` marker for this scoping to work.
+ */
+function ownedBy<T extends HTMLElement>(
+	root: HTMLElement,
+	selector: string,
+): T[] {
+	return Array.from(root.querySelectorAll<T>(selector)).filter(
+		(el) => el.closest("[data-overlay-root]") === root,
+	);
+}
+
 export type OverlayPlacement = "top" | "bottom" | "left" | "right";
 
 export interface OverlayPlacementConfig {
@@ -22,9 +37,12 @@ export interface OverlayPlacementConfig {
 	 * "start" aligns the positioner's leading edge with the trigger's
 	 * (Popover's convention, for wide content). "center" centers the
 	 * positioner over the trigger (Tooltip's convention, for narrow content).
+	 * "end" aligns the positioner's trailing edge with the trigger's
+	 * (Dropdown's convention, for menus that hang off either side of a
+	 * narrow trigger — e.g. `bottomRight`/`bottom-end`).
 	 */
-	align: "start" | "center";
-	/** Arrow inset from the aligned edge. Only used when `align` is "start". */
+	align: "start" | "center" | "end";
+	/** Arrow inset from the aligned edge. Only used when `align` is "start" or "end". */
 	arrowOffset?: string;
 	/** Minimum gap from the viewport edge, in pixels. Default: 8. */
 	viewportGap?: number;
@@ -36,25 +54,30 @@ export function getPlacementStyle(
 	config: OverlayPlacementConfig,
 ) {
 	const gap = "var(--arrow-size)";
-	const center = config.align === "center";
+	const { align } = config;
+	const center = align === "center";
 	const crossTransform = (axis: "X" | "Y") =>
 		center ? `translate${axis}(-50%)` : "none";
+	// For top/bottom placements the cross axis is horizontal (left/right);
+	// for left/right placements it's vertical (top/bottom).
+	const leading = center ? "50%" : align === "end" ? "auto" : "0";
+	const trailing = align === "end" ? "0" : "auto";
 
 	switch (placement) {
 		case "top":
 			return {
 				top: "auto",
 				bottom: "100%",
-				left: center ? "50%" : "0",
-				right: "auto",
+				left: leading,
+				right: trailing,
 				transform: crossTransform("X"),
 				marginBottom: gap,
 				marginTop: "0",
 			};
 		case "left":
 			return {
-				top: center ? "50%" : "0",
-				bottom: "auto",
+				top: leading,
+				bottom: trailing,
 				left: "auto",
 				right: "100%",
 				transform: crossTransform("Y"),
@@ -63,8 +86,8 @@ export function getPlacementStyle(
 			};
 		case "right":
 			return {
-				top: center ? "50%" : "0",
-				bottom: "auto",
+				top: leading,
+				bottom: trailing,
 				left: "100%",
 				right: "auto",
 				transform: crossTransform("Y"),
@@ -75,8 +98,8 @@ export function getPlacementStyle(
 			return {
 				top: "100%",
 				bottom: "auto",
-				left: center ? "50%" : "0",
-				right: "auto",
+				left: leading,
+				right: trailing,
 				transform: crossTransform("X"),
 				marginTop: gap,
 				marginBottom: "0",
@@ -91,32 +114,36 @@ export function getArrowStyle(
 ) {
 	const size = "var(--arrow-size)";
 	const neg = `calc(${size} * -0.5)`;
-	const center = config.align === "center";
+	const { align } = config;
+	const center = align === "center";
+	const isEnd = align === "end";
 	const inset = center ? CENTER_ARROW_OFFSET : (config.arrowOffset ?? "16px");
 	const crossTransform = (axis: "X" | "Y") =>
 		center ? `translate${axis}(-50%)` : "none";
+	const leading = isEnd ? "auto" : inset;
+	const trailing = isEnd ? inset : "auto";
 
 	switch (placement) {
 		case "top":
 			return {
 				top: "auto",
 				bottom: neg,
-				left: inset,
-				right: "auto",
+				left: leading,
+				right: trailing,
 				transform: crossTransform("X"),
 			};
 		case "left":
 			return {
-				top: inset,
-				bottom: "auto",
+				top: leading,
+				bottom: trailing,
 				left: "auto",
 				right: neg,
 				transform: crossTransform("Y"),
 			};
 		case "right":
 			return {
-				top: inset,
-				bottom: "auto",
+				top: leading,
+				bottom: trailing,
 				left: neg,
 				right: "auto",
 				transform: crossTransform("Y"),
@@ -125,8 +152,8 @@ export function getArrowStyle(
 			return {
 				top: neg,
 				bottom: "auto",
-				left: inset,
-				right: "auto",
+				left: leading,
+				right: trailing,
 				transform: crossTransform("X"),
 			};
 	}
@@ -150,25 +177,39 @@ export function getTransformOrigin(
 	placement: OverlayPlacement,
 	align: OverlayPlacementConfig["align"],
 ): string {
-	const center = align === "center";
+	if (align === "center") {
+		switch (placement) {
+			case "top":
+				return "bottom center";
+			case "left":
+				return "center right";
+			case "right":
+				return "center left";
+			default:
+				return "top center";
+		}
+	}
+	// For top/bottom placements the cross keyword is left/right; for
+	// left/right placements it's top/bottom.
+	const isEnd = align === "end";
 	switch (placement) {
 		case "top":
-			return center ? "bottom center" : "bottom left";
+			return `bottom ${isEnd ? "right" : "left"}`;
 		case "left":
-			return center ? "center right" : "top right";
+			return `${isEnd ? "bottom" : "top"} right`;
 		case "right":
-			return center ? "center left" : "top left";
+			return `${isEnd ? "bottom" : "top"} left`;
 		default:
-			return center ? "top center" : "top left";
+			return `top ${isEnd ? "right" : "left"}`;
 	}
 }
 
 /**
  * Resolves the effective placement and applies it to every positioner + arrow
- * within `root`, flipping to the opposite side when the requested placement
- * would overflow the viewport and the opposite side has more room. Also
- * re-clamps the cross axis so the content never renders off-screen, and is
- * meant to be re-run on open and on resize while open.
+ * owned by `root` (see {@link ownedBy}), flipping to the opposite side when
+ * the requested placement would overflow the viewport and the opposite side
+ * has more room. Also re-clamps the cross axis so the content never renders
+ * off-screen, and is meant to be re-run on open and on resize while open.
  */
 export function positionOverlay(
 	root: HTMLElement,
@@ -176,10 +217,11 @@ export function positionOverlay(
 ) {
 	if (typeof window === "undefined") return;
 	const gap = config.viewportGap ?? 8;
-	const trigger = root.querySelector<HTMLElement>('[data-part="trigger"]');
+	const trigger = ownedBy<HTMLElement>(root, '[data-part="trigger"]')[0];
 	const triggerRect = trigger?.getBoundingClientRect();
 
-	for (const positioner of root.querySelectorAll<HTMLElement>(
+	for (const positioner of ownedBy<HTMLElement>(
+		root,
 		'[data-part="positioner"]',
 	)) {
 		const preferred =

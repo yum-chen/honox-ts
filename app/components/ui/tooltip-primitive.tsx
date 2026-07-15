@@ -82,7 +82,7 @@ export function TooltipTrigger(props: TooltipTriggerProps) {
 	const context = useTooltipContext();
 	const id = context?.id;
 	const open = context?.open;
-	const styles = context?.styles;
+	const styles = context?.styles || tooltip();
 
 	const triggerProps = {
 		id: id ? `tooltip-trigger-${id}` : undefined,
@@ -116,15 +116,25 @@ export function TooltipTrigger(props: TooltipTriggerProps) {
 
 export interface TooltipPositionerProps extends PropsWithChildren {
 	class?: string;
+	placement?: TooltipPlacement;
 	[key: string]: unknown;
 }
 
 export function TooltipPositioner(props: TooltipPositionerProps) {
-	const { children, class: classProp, style: styleProp, ...restProps } = props;
+	const {
+		children,
+		class: classProp,
+		style: styleProp,
+		placement: placementProp,
+		...restProps
+	} = props;
 	const context = useTooltipContext();
 	const open = context?.open;
-	const styles = context?.styles;
-	const placement = context?.placement ?? "top";
+	const styles = context?.styles || tooltip();
+	// An explicit `placement` prop (threaded from the non-island composer)
+	// takes priority over context — see the note on `TooltipTrigger`'s `id`
+	// handling for why context-derived values don't survive hydration.
+	const placement = placementProp ?? context?.placement ?? "top";
 
 	return (
 		<div
@@ -161,7 +171,7 @@ export function TooltipContent(props: TooltipContentProps) {
 	const context = useTooltipContext();
 	const id = context?.id;
 	const open = context?.open;
-	const styles = context?.styles;
+	const styles = context?.styles || tooltip();
 
 	return (
 		<div
@@ -178,11 +188,18 @@ export function TooltipContent(props: TooltipContentProps) {
 	);
 }
 
-export function TooltipArrow(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp, ...restProps } = props;
+export function TooltipArrow(
+	props: PropsWithChildren<{ class?: string; placement?: TooltipPlacement }>,
+) {
+	const {
+		children,
+		class: classProp,
+		placement: placementProp,
+		...restProps
+	} = props;
 	const context = useTooltipContext();
-	const styles = context?.styles;
-	const placement = context?.placement ?? "top";
+	const styles = context?.styles || tooltip();
+	const placement = placementProp ?? context?.placement ?? "top";
 	return (
 		<div
 			class={cx(styles?.arrow, classProp)}
@@ -196,11 +213,14 @@ export function TooltipArrow(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-export function TooltipArrowTip(props: { class?: string }) {
-	const { class: classProp, ...restProps } = props;
+export function TooltipArrowTip(props: {
+	class?: string;
+	placement?: TooltipPlacement;
+}) {
+	const { class: classProp, placement: placementProp, ...restProps } = props;
 	const context = useTooltipContext();
-	const styles = context?.styles;
-	const placement = context?.placement ?? "top";
+	const styles = context?.styles || tooltip();
+	const placement = placementProp ?? context?.placement ?? "top";
 	return (
 		<div
 			class={cx(styles?.arrowTip, classProp)}
@@ -260,7 +280,35 @@ export function TooltipBase(props: TooltipBaseProps) {
 	);
 }
 
-export function InteractiveTooltip(props: TooltipBaseProps) {
+export interface InteractiveTooltipProps extends TooltipRootProps {
+	/**
+	 * The pre-built Trigger + Positioner + Content tree (see `TooltipParts`
+	 * in tooltip.tsx). MUST be constructed outside the island (i.e. by a
+	 * plain, non-island component) — see the note above `TooltipTrigger`'s
+	 * `asChild` handling for why.
+	 */
+	children?: Child;
+}
+
+/**
+ * The island-hydrated behavior layer: hover/focus delay, Escape dismiss,
+ * flip-aware positioning, and exit-animation-aware show/hide. Deliberately
+ * does NOT construct `TooltipTrigger`/`TooltipPositioner`/etc. itself —
+ * it receives them pre-built as `children` (from `tooltip.tsx`) and never
+ * touches them beyond reading `data-part` attributes off the live DOM.
+ *
+ * This split matters: `TooltipTrigger`'s `asChild` path calls `cloneElement`
+ * on its `children`. HonoX serializes an island's `children` prop across the
+ * server/client boundary via a `<template>` tag that the client reconstructs
+ * for hydration — but that reconstruction isn't a full hono/jsx vnode (it
+ * has no `.props`), so calling `cloneElement` on it during a *client-side*
+ * re-render crashes. Constructing `TooltipTrigger` outside the island (in a
+ * component that only ever runs at SSR time) means `cloneElement` runs
+ * exactly once, server-side, on the original, real vnode — the island then
+ * only ever re-renders its own wrapper + whatever it constructs directly
+ * (none of which clone anything), never the pre-built children it was handed.
+ */
+export function InteractiveTooltip(props: InteractiveTooltipProps) {
 	const {
 		open: openProp,
 		defaultOpen,
@@ -270,13 +318,7 @@ export function InteractiveTooltip(props: TooltipBaseProps) {
 		closeOnEscape = true,
 		openDelay = 100,
 		closeDelay = 100,
-		disabled,
 		children,
-		content,
-		showArrow,
-		triggerProps,
-		contentProps,
-		asChild,
 	} = props;
 
 	const [isOpen, setIsOpen] = useState(openProp ?? defaultOpen ?? false);
@@ -318,7 +360,7 @@ export function InteractiveTooltip(props: TooltipBaseProps) {
 	// imperatively so the `_closed` exit animation gets a chance to play),
 	// flip-aware positioning, and wires up hover/focus delay + Escape dismiss.
 	useEffect(() => {
-		if (typeof document === "undefined" || disabled) return;
+		if (typeof document === "undefined") return;
 
 		const root = document.getElementById(rootId);
 		if (!root) return;
@@ -476,31 +518,18 @@ export function InteractiveTooltip(props: TooltipBaseProps) {
 			document.removeEventListener("keydown", onKeyDown);
 			window.removeEventListener("resize", onResize);
 		};
-	}, [rootId, openDelay, closeDelay, disabled]);
-
-	if (disabled) return children;
+	}, [rootId, openDelay, closeDelay]);
 
 	return (
 		<div
 			id={rootId}
 			data-tooltip-root
+			data-overlay-root
 			data-state={open ? "open" : "closed"}
 			style={{ position: "relative", display: "inline-block" }}
 		>
 			<TooltipRoot id={idProp} open={open} placement={placement}>
-				<TooltipTrigger asChild={asChild} tabIndex={0} {...triggerProps}>
-					{children}
-				</TooltipTrigger>
-				<TooltipPositioner>
-					<TooltipContent {...contentProps}>
-						{showArrow && (
-							<TooltipArrow>
-								<TooltipArrowTip />
-							</TooltipArrow>
-						)}
-						{content}
-					</TooltipContent>
-				</TooltipPositioner>
+				{children}
 			</TooltipRoot>
 		</div>
 	);
