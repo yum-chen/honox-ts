@@ -82,7 +82,7 @@ export const search = defineSlotRecipe({
 			right: "0",
 			// `gray.surface.bg` (not `colorPalette.surface.bg`) so the panel stays
 			// a neutral opaque white/gray.1 regardless of accent — matches how
-			// menu/dialog keep their dropdown surfaces neutral. (`bg.default` was
+			// dropdown/dialog keep their dropdown surfaces neutral. (`bg.default` was
 			// dead: that token was stripped from the Panda preset by this repo's
 			// "Remove Panda Preset Colors" plugin and never replaced, so it
 			// silently compiled to invalid, ignored CSS and rendered transparent.)
