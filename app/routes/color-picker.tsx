@@ -1,5 +1,5 @@
 import { createRoute } from "honox/factory";
-import { css } from "styled-system/css";
+import { css } from "design-system/css";
 import { Card, Heading, Stack, Text, ColorPicker } from "../components/ui";
 
 const presets = [
