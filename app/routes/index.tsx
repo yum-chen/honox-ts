@@ -343,28 +343,7 @@ export default createRoute((c) => {
 				</Heading>
 
 				<Stack direction="column" gap="8" class={css({ width: "full" })}>
-					{/* Inline ColorPicker */}
-					<Stack direction="column" gap="2">
-						<Text size="sm" class={css({ color: "fg.muted" })}>
-							Inline ColorPicker (Static SSR & Default Preset Group)
-						</Text>
-						<ColorPicker
-							value="#7c3aed"
-							interactive={false}
-							label="Favorite Color"
-							presets={[
-								"#ef4444",
-								"#f97316",
-								"#eab308",
-								"#22c55e",
-								"#3b82f6",
-								"#7c3aed",
-								"#000000",
-							]}
-						/>
-					</Stack>
-
-					{/* Interactive ColorPicker as Trigger / Popover */}
+					{/* ColorPicker as Trigger / Popover */}
 					<Stack direction="column" gap="2" align="center">
 						<Text size="sm" class={css({ color: "fg.muted" })}>
 							Interactive ColorPicker (Swatch Trigger + Popover)
