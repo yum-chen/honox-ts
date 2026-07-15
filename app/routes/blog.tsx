@@ -5,8 +5,8 @@ import {
 	Badge,
 	Button,
 	Card,
-	Drawer,
 	Heading,
+	Popover,
 	Search,
 	Stack,
 	Text,
@@ -57,7 +57,7 @@ export default createRoute(async (c) => {
 					</div>
 
 					{/* Tag Browse Button */}
-					<Drawer
+					<Popover
 						interactive
 						trigger={
 							<Button
