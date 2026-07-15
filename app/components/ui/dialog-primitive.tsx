@@ -1,3 +1,6 @@
+import { css, cx } from "design-system/css";
+import type { DialogVariantProps } from "design-system/recipes";
+import { dialog } from "design-system/recipes";
 import type { PropsWithChildren } from "hono/jsx";
 import {
 	cloneElement,
@@ -7,9 +10,6 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { css, cx } from "styled-system/css";
-import type { DialogVariantProps } from "styled-system/recipes";
-import { dialog } from "styled-system/recipes";
 import { hasPart, useOverlay } from "./overlay-a11y";
 
 type DialogStyles = ReturnType<typeof dialog>;

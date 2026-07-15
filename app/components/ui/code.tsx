@@ -1,7 +1,7 @@
+import { cx } from "design-system/css";
+import type { CodeVariantProps } from "design-system/recipes";
+import { code } from "design-system/recipes";
 import type { PropsWithChildren } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { CodeVariantProps } from "styled-system/recipes";
-import { code } from "styled-system/recipes";
 
 interface CodeProps
 	extends CodeVariantProps,

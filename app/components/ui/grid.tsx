@@ -1,6 +1,6 @@
+import { cx } from "design-system/css";
+import { grid } from "design-system/patterns";
 import type { PropsWithChildren } from "hono/jsx";
-import { cx } from "styled-system/css";
-import { grid } from "styled-system/patterns";
 
 type Breakpoint = "base" | "sm" | "md" | "lg" | "xl" | "2xl";
 

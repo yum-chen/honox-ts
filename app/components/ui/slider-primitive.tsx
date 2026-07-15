@@ -1,3 +1,6 @@
+import { cx } from "design-system/css";
+import type { SliderVariantProps } from "design-system/recipes";
+import { slider } from "design-system/recipes";
 import type { PropsWithChildren } from "hono/jsx";
 import {
 	createContext,
@@ -7,9 +10,6 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { SliderVariantProps } from "styled-system/recipes";
-import { slider } from "styled-system/recipes";
 
 type SliderStyles = ReturnType<typeof slider>;
 

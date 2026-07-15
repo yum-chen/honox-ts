@@ -1,7 +1,7 @@
+import { cx } from "design-system/css";
+import type { GroupVariantProps } from "design-system/recipes";
+import { group } from "design-system/recipes";
 import type { PropsWithChildren } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { GroupVariantProps } from "styled-system/recipes";
-import { group } from "styled-system/recipes";
 
 export interface GroupProps
 	extends GroupVariantProps,

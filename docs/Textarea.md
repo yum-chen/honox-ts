@@ -50,7 +50,7 @@ export default function MyPage() {
 ## Variants
 
 ```tsx
-import { Stack } from "../styled-system/jsx";
+import { Stack } from "../design-system/jsx";
 import { Textarea } from "../components/ui";
 
 export default function MyPage() {
@@ -68,7 +68,7 @@ export default function MyPage() {
 ## Sizes
 
 ```tsx
-import { Stack } from "../styled-system/jsx";
+import { Stack } from "../design-system/jsx";
 import { Textarea } from "../components/ui";
 
 export default function MyPage() {

@@ -1,7 +1,7 @@
+import { cx } from "design-system/css";
+import { stack } from "design-system/patterns";
+import { type SkeletonVariantProps, skeleton } from "design-system/recipes";
 import type { PropsWithChildren } from "hono/jsx";
-import { cx } from "styled-system/css";
-import { stack } from "styled-system/patterns";
-import { type SkeletonVariantProps, skeleton } from "styled-system/recipes";
 
 interface SkeletonProps
 	extends PropsWithChildren<Omit<SkeletonVariantProps, "circle">>,

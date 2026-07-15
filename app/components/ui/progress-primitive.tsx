@@ -1,8 +1,8 @@
+import { cx } from "design-system/css";
+import type { ProgressVariantProps } from "design-system/recipes/index.mjs";
+import { progress } from "design-system/recipes/index.mjs";
 import type { PropsWithChildren } from "hono/jsx";
 import { createContext, useContext } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { ProgressVariantProps } from "styled-system/recipes/index.mjs";
-import { progress } from "styled-system/recipes/index.mjs";
 
 type ProgressStyles = ReturnType<typeof progress>;
 

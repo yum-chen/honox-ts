@@ -1,5 +1,5 @@
+import { css } from "design-system/css";
 import { useState } from "hono/jsx";
-import { css } from "styled-system/css";
 import { Badge } from "../components/ui/badge";
 import {
 	NextTrigger,

@@ -1,7 +1,7 @@
+import { cx } from "design-system/css";
+import { type PaginationVariantProps, pagination } from "design-system/recipes";
 import type { Child, PropsWithChildren } from "hono/jsx";
 import { createContext, useContext, useId } from "hono/jsx";
-import { cx } from "styled-system/css";
-import { type PaginationVariantProps, pagination } from "styled-system/recipes";
 
 type PaginationStyles = ReturnType<typeof pagination>;
 

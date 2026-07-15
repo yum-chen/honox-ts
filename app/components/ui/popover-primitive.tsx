@@ -1,3 +1,5 @@
+import { css, cx } from "design-system/css";
+import { popover } from "design-system/recipes";
 import {
 	cloneElement,
 	createContext,
@@ -8,8 +10,6 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { css, cx } from "styled-system/css";
-import { popover } from "styled-system/recipes";
 import { getFocusable, hasPart } from "./overlay-a11y";
 
 type PopoverStyles = ReturnType<typeof popover>;

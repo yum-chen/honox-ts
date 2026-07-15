@@ -1,3 +1,5 @@
+import { css, cx } from "design-system/css";
+import { type MenuVariantProps, menu } from "design-system/recipes";
 import {
 	cloneElement,
 	createContext,
@@ -5,8 +7,6 @@ import {
 	useContext,
 	useId,
 } from "hono/jsx";
-import { css, cx } from "styled-system/css";
-import { type MenuVariantProps, menu } from "styled-system/recipes";
 
 type MenuStyles = ReturnType<typeof menu>;
 
