@@ -1,11 +1,11 @@
 import { useEffect, useId, useMemo, useRef, useState } from "hono/jsx";
 import { css, cx } from "styled-system/css";
-import { search, type SearchVariantProps } from "styled-system/recipes";
+import { type SearchVariantProps, search } from "styled-system/recipes";
 import {
 	filterEntries,
+	rankSearchEntries,
 	type SearchIndexDocument,
 	type SearchIndexEntry,
-	rankSearchEntries,
 	tokenize,
 } from "../../utils/search";
 
@@ -89,8 +89,8 @@ function highlightSegments(
 	const regex = new RegExp(`(${pattern})`, "gi");
 	const segments: Array<{ match: boolean; text: string }> = [];
 	let last = 0;
-	let match: RegExpExecArray | null;
-	while ((match = regex.exec(text)) !== null) {
+	let match = regex.exec(text);
+	while (match !== null) {
 		const index = match.index;
 		const token = match[0];
 		if (index > last) {
@@ -99,9 +99,10 @@ function highlightSegments(
 		segments.push({ match: true, text: token });
 		last = index + token.length;
 		// Guard against zero-length matches causing an infinite loop
-		if (match.index === regex.lastIndex) {
+		if (index === regex.lastIndex) {
 			regex.lastIndex++;
 		}
+		match = regex.exec(text);
 	}
 	if (last < text.length) {
 		segments.push({ match: false, text: text.slice(last) });
@@ -458,6 +459,7 @@ export function InteractiveSearch(props: SearchBaseProps) {
 								key={entry.key}
 								id={`${listboxId}-option-${index}`}
 								role="option"
+								tabIndex={-1}
 								aria-selected={index === highlighted}
 								data-highlighted={index === highlighted || undefined}
 								data-part="item"
@@ -468,6 +470,7 @@ export function InteractiveSearch(props: SearchBaseProps) {
 									navigateTo(entry);
 								}}
 								onMouseOver={() => setHighlighted(index)}
+								onFocus={() => setHighlighted(index)}
 							>
 								<div
 									class={cx(classes.itemTitle, classNames?.itemTitle)}

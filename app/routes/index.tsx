@@ -1005,11 +1005,12 @@ export default createRoute((c) => {
 						Autocomplete over the SSG-generated /search-index.json — the index
 						is fetched lazily on focus. Try "islands" or "wcag".
 					</Text>
-					<Search
-						placeholder="Search blog posts..."
-						itemLabel="posts"
-						syncUrl={false}
-					/>
+				<Search
+					label="Search blog posts"
+					placeholder="Search blog posts..."
+					itemLabel="posts"
+					syncUrl={false}
+				/>
 				</Stack>
 
 				<Stack
@@ -1020,13 +1021,14 @@ export default createRoute((c) => {
 					<Text size="sm" class={css({ color: "fg.muted" })}>
 						Tuned: 400ms debounce, at most 3 suggestions
 					</Text>
-					<Search
-						placeholder="Slower, shorter..."
-						debounceMs={400}
-						maxSuggestions={3}
-						itemLabel="posts"
-						syncUrl={false}
-					/>
+				<Search
+					label="Search blog posts"
+					placeholder="Slower, shorter..."
+					debounceMs={400}
+					maxSuggestions={3}
+					itemLabel="posts"
+					syncUrl={false}
+				/>
 				</Stack>
 
 				<Stack
@@ -1038,12 +1040,32 @@ export default createRoute((c) => {
 						Static opt-out (interactive={"{false}"}): renders a plain GET form
 						that submits ?q= to /blog — no JavaScript shipped
 					</Text>
-					<Search
-						interactive={false}
-						action="/blog"
-						placeholder="Search without JS..."
-					/>
-				</Stack>
+				<Search
+					label="Search blog posts"
+					interactive={false}
+					action="/blog"
+					placeholder="Search without JS..."
+				/>
+			</Stack>
+
+			<Stack
+				direction="column"
+				gap="4"
+				class={css({ mt: "8", maxWidth: "xl", mx: "auto" })}
+			>
+				<Text size="sm" class={css({ color: "fg.muted" })}>
+					Themed via the design system: colorPalette + size variants flow through
+					the shared search recipe, so Search matches every other form control.
+				</Text>
+				<Search
+					label="Search (purple, large)"
+					placeholder="Purple accent, large size..."
+					colorPalette="purple"
+					size="lg"
+					itemLabel="posts"
+					syncUrl={false}
+				/>
+			</Stack>
 			</Stack>
 
 			{/* Select Examples */}
