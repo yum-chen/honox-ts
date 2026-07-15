@@ -9,12 +9,15 @@ The component is **headless by design**: `app/components/ui/date-picker-primitiv
 # What's new in this revision
 
 - **Keyboard-first calendar grid.** Full arrow-key, <kbd>Home</kbd>/<kbd>End</kbd>, <kbd>PageUp</kbd>/<kbd>PageDown</kbd> (with <kbd>Shift</kbd> for years), <kbd>Enter</kbd>/<kbd>Space</kbd> navigation, with a roving tab stop so the panel never traps focus across 42 cells.
+- **Navigation stays in bounds.** Arrow-key and PageUp/PageDown moves are clamped to the selectable `[min, max]` range, and month rollover no longer drifts past month end (Jan 31 → Feb 28, not Mar 3). Focus can never land on a disabled cell.
+- **Bounded month & year views.** Months and years that fall entirely outside `[min, max]` are now disabled and styled the same as out-of-range days, so the constraint is visible in every panel view.
 - **Range hover preview.** While picking a range, hovering a day previews the spanned interval in the accent colour — the same affordance users expect from native OS pickers.
 - **Free-text typing.** The input is now uncontrolled; you can type a full `YYYY-MM-DD` value and commit on <kbd>Enter</kbd> or blur. Invalid or out-of-range input reverts instead of fighting the caret.
+- **Native form submission.** Pass a `name` prop and a hidden input is rendered for each selected date, so the picker participates in plain `<form>` submissions without any extra wiring.
 - **Week numbers.** Pass `showWeekNumbers` to render ISO-8601 week numbers in a dedicated column.
 - **Clear trigger only when needed.** The clear button appears only when a value is present, reducing visual noise.
 - **Accessible grid.** The calendar is exposed as an ARIA `grid` (`role="grid"` / `row` / `gridcell` / `columnheader` / `rowheader`) with `aria-selected` and `aria-current="date"`, and focus moves into the grid when opened from the keyboard.
-- **Fixed popup animation.** The open/close animation now references the real `fade-in` / `fade-out` keyframes (previously a no-op due to a name mismatch).
+- **Fixed popup animation.** The open/close keyframes are now bound to the real `data-state="open"` / `data-state="closed"` attributes (the previous `_open`/`_closed` conditions targeted attributes this component never emits, so the open animation was a silent no-op).
 
 # Props
 
@@ -27,13 +30,15 @@ The component is **headless by design**: `app/components/ui/date-picker-primitiv
 | `defaultValue` | `CalendarDate[] \| string[] \| string \| Date[]` | Initial selected date(s) (uncontrolled). |
 | `focusedValue` | `CalendarDate \| string \| Date` | The date the calendar panel is focused on (controlled). |
 | `defaultFocusedValue` | `CalendarDate \| string \| Date` | Initial panel date (uncontrolled). |
-| `min` | `CalendarDate \| string \| Date` | Earliest selectable date. Earlier cells are disabled; typed dates outside the range are rejected. |
+| `min` | `CalendarDate \| string \| Date` | Earliest selectable date. Earlier days, months, and years are disabled; typed dates outside the range are rejected; keyboard focus is clamped to the range. |
 | `max` | `CalendarDate \| string \| Date` | Latest selectable date. |
 | `isDateUnavailable` | `(date, locale) => boolean` | Marks individual dates as unselectable (static/composed usage). |
 | `view` | `"day" \| "month" \| "year"` | The active panel view (controlled). |
 | `open` | `boolean` | Whether the popup calendar is open (controlled). |
 | `closeOnSelect` | `boolean` | Close the popup after a completed selection. Defaults to `true`. |
 | `showWeekNumbers` | `boolean` | Renders an ISO-8601 week-number column. Defaults to `false`. |
+| `numOfMonths` | `number` | Reserved for multi-month rendering. Currently a single month panel is always shown; values greater than `1` are accepted but not yet rendered. |
+| `name` | `string` | When set, renders a hidden input per selected date under this name, enabling native `<form>` submission. In range/multiple mode each selected date becomes a separate entry (ordered). |
 | `locale` | `string` | BCP 47 locale used for month/date formatting. Defaults to `en-US`. |
 | `disabled` | `boolean` | Disables the whole picker. |
 | `readOnly` | `boolean` | Makes the input read-only. |
@@ -59,10 +64,12 @@ Dates are represented by the `CalendarDate` class (`{ year, month, day }`, month
 
 - **Popup calendar** — opens from the calendar trigger or by focusing/clicking the input; closes on outside click, <kbd>Escape</kbd> (focus returns to the trigger), or after a completed selection when `closeOnSelect` is set.
 - **Panel views** — click the month/year heading to zoom out from days → months → years; selecting a year or month drills back down. The prev/next arrows page by month, year, or decade depending on the view.
+- **Bounded selection** — `min`/`max` are enforced in every view: out-of-range days are disabled, months and years that fall entirely outside the range are disabled too, and keyboard focus is clamped so it can never rest on a disabled cell.
 - **Manual entry** — type a date in the input and press <kbd>Enter</kbd> (or blur). Valid `YYYY-MM-DD` values are committed and normalised; invalid or out-of-range values revert to the last committed value. Clearing the input clears the selection.
 - **Range selection** — the first click sets the start, the second sets the end (automatically ordered); the days in between are highlighted, and hovering previews the span before you commit.
 - **Multiple selection** — clicking toggles individual days on and off.
 - **Week numbers** — with `showWeekNumbers`, an ISO week-number column is shown alongside the day grid.
+- **Form submission** — pass a `name` prop and a hidden input is rendered for each selected date, so the picker works inside a plain `<form>` with no extra glue code.
 - **Presets** — `DatePicker.PresetTrigger` supports the values `today`, `last3Days`, `last7Days`, `last14Days`, `last30Days`, and `last90Days`. In range mode a preset selects the whole span; otherwise it selects the single anchor date.
 
 # Keyboard support
@@ -94,9 +101,9 @@ The trigger and input are reachable by <kbd>Tab</kbd>; opening from the keyboard
 
 The Panda CSS slot recipe (`app/theme/recipes/date-picker.ts`) exposes the following `data-part` slots for theming. Override via the `class`/`className` props or a semantic `classNames` map:
 
-`root`, `label`, `control`, `input`, `trigger`, `clearTrigger`, `positioner`, `content`, `view`, `viewControl`, `prevTrigger`, `nextTrigger`, `viewTrigger`, `rangeText`, `table`, `tableHead`, `tableHeader`, `tableRow`, `tableBody`, `tableCell`, `tableCellTrigger`, `weekNumber`, `monthSelect`, `yearSelect`, `presetTrigger`, `valueText`.
+`root`, `label`, `control`, `input`, `trigger`, `clearTrigger`, `positioner`, `content`, `view`, `viewControl`, `prevTrigger`, `nextTrigger`, `viewTrigger`, `rangeText`, `table`, `tableHead`, `tableHeader`, `tableRow`, `tableBody`, `tableCell`, `tableCellTrigger`, `weekNumber`, `monthSelect`, `yearSelect`, `presetTrigger`, `valueText`. The `hidden-input` part is rendered only when `name` is set and carries no visible styling.
 
-The selected / today / in-range / range-preview states are driven by `data-selected`, `data-today`, `data-in-range`, `data-outside-range`, and `data-range-preview` attributes, so they can be re-skinned independently of the recipe.
+The selected / today / in-range / range-preview / disabled states are driven by `data-selected`, `data-today`, `data-in-range`, `data-outside-range`, `data-range-preview`, and `data-disabled` attributes (applied in all three panel views), so they can be re-skinned independently of the recipe. The open/close animation keys off `data-state="open"` / `data-state="closed"`.
 
 # Hydration
 
@@ -139,6 +146,22 @@ export default function MyPage() {
 
       {/* Preselected value */}
       <DatePicker label="Due Date" defaultValue="2026-07-15" />
+
+      {/* Inside a native form — the selected date submits as `due` */}
+      <form method="post" action="/submit">
+        <DatePicker label="Due Date" name="due" selectionMode="single" />
+        <button type="submit">Save</button>
+      </form>
+
+      {/* Range submission — start/end submit as two `range` entries */}
+      <form method="post" action="/report">
+        <DatePicker
+          label="Reporting Window"
+          name="range"
+          selectionMode="range"
+        />
+        <button type="submit">Run</button>
+      </form>
     </>
   );
 }
@@ -150,3 +173,6 @@ export default function MyPage() {
 - **SSR-safe.** Markup is rendered on the server; only the island branch pulls in client behaviour, and only when signalled.
 - **Token-driven.** Colours, spacing, radii, and shadows come from the shared theme tokens, so the picker inherits dark mode and the configured `colorPalette` automatically.
 - **Type-safe values.** `CalendarDate` avoids the timezone pitfalls of raw `Date`/`string` handling.
+- **Bounded by design.** `min`/`max` are enforced consistently across day, month, and year views — both for mouse selection and keyboard focus — so an out-of-range value can never be committed or focused.
+- **Form-ready.** The optional `name` prop renders hidden inputs, so the picker drops into native forms without custom submit handlers.
+- **Single-month panel.** `numOfMonths` is accepted for forward compatibility but currently renders a single month. Multi-month rendering is on the roadmap.
