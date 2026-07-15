@@ -13,15 +13,16 @@ export {
 export {
 	Button,
 	ButtonGroup,
-	type ButtonGroupProps,
-	type ButtonProps,
 	CloseButton,
 	IconButton,
+	type ButtonGroupProps,
+	type ButtonProps,
 } from "./button";
 export { Card, type CardProps } from "./card";
 export { Checkbox, type CheckboxProps } from "./checkbox";
 export { Code, type CodeProps } from "./code";
 export { Collapsible, type CollapsibleProps } from "./collapsible";
+export { ColorPicker, type ColorPickerProps } from "./color-picker";
 export { Combobox, type ComboboxProps } from "./combobox";
 export { DatePicker, type DatePickerProps } from "./date-picker";
 export { Dialog, type DialogProps } from "./dialog";
@@ -52,7 +53,7 @@ export {
 } from "./skeleton";
 export { Slider, type SliderProps } from "./slider";
 export { Spinner, type SpinnerProps } from "./spinner";
-export { type PanelConfig, Splitter, type SplitterProps } from "./splitter";
+export { Splitter, type PanelConfig, type SplitterProps } from "./splitter";
 export { Stack, type StackProps } from "./stack";
 export { Switch, type SwitchProps } from "./switch";
 export {

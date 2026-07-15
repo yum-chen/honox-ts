@@ -44,6 +44,7 @@ export default defineConfig({
 			checkbox: ["*"],
 			code: ["*"],
 			collapsible: ["*"],
+			colorPicker: ["*"],
 			combobox: ["*"],
 			dialog: ["*"],
 			drawer: ["*"],
