@@ -1047,7 +1047,10 @@ export function DatePickerTableCellTrigger(
 				daysInMonth(context.focusedValue.year, value),
 			);
 			const monthStart = new CalendarDate(context.focusedValue.year, value, 1);
-			if (context.min && monthEnd.toDate().getTime() < context.min.toDate().getTime()) {
+			if (
+				context.min &&
+				monthEnd.toDate().getTime() < context.min.toDate().getTime()
+			) {
 				isDisabled = true;
 			}
 			if (
@@ -1062,7 +1065,10 @@ export function DatePickerTableCellTrigger(
 
 			const yearStart = new CalendarDate(value, 1, 1);
 			const yearEnd = new CalendarDate(value, 12, 31);
-			if (context.min && yearEnd.toDate().getTime() < context.min.toDate().getTime()) {
+			if (
+				context.min &&
+				yearEnd.toDate().getTime() < context.min.toDate().getTime()
+			) {
 				isDisabled = true;
 			}
 			if (

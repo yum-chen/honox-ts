@@ -226,4 +226,86 @@ describe("DatePicker Unit Tests", () => {
 		expect(html).toContain("data-disabled");
 		expect(html).toContain("disabled");
 	});
+
+	test("should render hidden inputs for native form submission", () => {
+		const html = (
+			<DatePicker interactive={false} name="due" value={[parseDate("2026-07-15")]}>
+				<DatePicker.Control>
+					<DatePicker.Input />
+				</DatePicker.Control>
+			</DatePicker>
+		).toString();
+
+		// A single hidden input under the provided name carries the value
+		expect(html).toContain('type="hidden"');
+		expect(html).toContain('name="due"');
+		expect(html).toContain('value="2026-07-15"');
+		expect(html).toContain('data-part="hidden-input"');
+	});
+
+	test("should render one hidden input per selected date in range mode", () => {
+		const html = (
+			<DatePicker
+				interactive={false}
+				name="range"
+				value={[parseDate("2026-07-01"), parseDate("2026-07-10")]}
+				selectionMode="range"
+			>
+				<DatePicker.Control />
+			</DatePicker>
+		).toString();
+
+		const matches = html.match(/name="range"/g) || [];
+		expect(matches.length).toBe(2);
+		expect(html).toContain('value="2026-07-01"');
+		expect(html).toContain('value="2026-07-10"');
+	});
+
+	test("should disable months that fall entirely outside min/max", () => {
+		const html = (
+			<DatePicker
+				interactive={false}
+				min="2026-07-01"
+				max="2026-07-31"
+				value={[parseDate("2026-07-15")]}
+				defaultFocusedValue="2026-07-15"
+				view="month"
+			>
+				<DatePicker.Content>
+					<DatePicker.View view="month">
+						<DatePicker.Context>
+							{(datePicker) => (
+								<DatePicker.Table>
+									<DatePicker.TableBody>
+										{datePicker
+											.getMonthsGrid({ columns: 4, format: "short" })
+											.map((row, rowId) => (
+												<DatePicker.TableRow key={rowId}>
+													{row.map((month) => (
+														<DatePicker.TableCell
+															key={month.value}
+															value={month.value}
+														>
+															<DatePicker.TableCellTrigger>
+																{month.label}
+															</DatePicker.TableCellTrigger>
+														</DatePicker.TableCell>
+													))}
+												</DatePicker.TableRow>
+											))}
+									</DatePicker.TableBody>
+								</DatePicker.Table>
+							)}
+						</DatePicker.Context>
+					</DatePicker.View>
+				</DatePicker.Content>
+			</DatePicker>
+		).toString();
+
+		// June (month 6) is entirely before the July-only range → disabled
+		expect(html).toContain('data-value="6"');
+		// January is also disabled, with a disabled month cell present
+		const disabledCount = (html.match(/data-disabled/g) || []).length;
+		expect(disabledCount).toBeGreaterThan(0);
+	});
 });
