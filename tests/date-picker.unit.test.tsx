@@ -261,6 +261,92 @@ describe("DatePicker Unit Tests", () => {
 		expect(html).toContain('value="2026-07-10"');
 	});
 
+	test("should render the selected value as the input's value attribute in SSR", () => {
+		const html = (
+			<DatePicker interactive={false} value={[parseDate("2026-07-15")]}>
+				<DatePicker.Control>
+					<DatePicker.Input />
+				</DatePicker.Control>
+			</DatePicker>
+		).toString();
+
+		// `value` must be a real HTML attribute (defaultValue would serialize
+		// as a dead attribute and leave the input empty in static output)
+		expect(html).toMatch(/<input[^>]*value="2026-07-15"/);
+		expect(html).not.toContain("defaultValue");
+	});
+
+	test("should preselect focused month/year via option selected in SSR", () => {
+		const html = (
+			<DatePicker interactive={false} defaultFocusedValue="2026-07-15">
+				<DatePicker.MonthSelect />
+				<DatePicker.YearSelect />
+			</DatePicker>
+		).toString();
+
+		expect(html).toMatch(/<option[^>]*value="7"[^>]*selected[^>]*>July<\/option>/);
+		expect(html).toMatch(/<option[^>]*value="2026"[^>]*selected/);
+		// The invalid `value` attribute on <select> must be gone
+		expect(html).not.toMatch(/<select[^>]*value=/);
+	});
+
+	test("should mark range endpoints with data-range-start/end", () => {
+		const html = (
+			<DatePicker
+				interactive={false}
+				selectionMode="range"
+				value={[parseDate("2026-07-10"), parseDate("2026-07-20")]}
+				defaultFocusedValue="2026-07-15"
+			>
+				<DatePicker.Content>
+					<DatePicker.View view="day">
+						<DatePicker.Context>
+							{(datePicker) => (
+								<DatePicker.Table>
+									<DatePicker.TableBody>
+										{datePicker.weeks.map((week, id) => (
+											<DatePicker.TableRow key={id}>
+												{week.map((day, id) => (
+													<DatePicker.TableCell key={id} value={day}>
+														<DatePicker.TableCellTrigger>
+															{day.day}
+														</DatePicker.TableCellTrigger>
+													</DatePicker.TableCell>
+												))}
+											</DatePicker.TableRow>
+										))}
+									</DatePicker.TableBody>
+								</DatePicker.Table>
+							)}
+						</DatePicker.Context>
+					</DatePicker.View>
+				</DatePicker.Content>
+			</DatePicker>
+		).toString();
+
+		expect(html).toContain("data-range-start");
+		expect(html).toContain("data-range-end");
+		expect(html).toContain("data-in-range");
+		// Range mode is multi-selectable for assistive tech
+		expect(html).toContain('aria-multiselectable="true"');
+	});
+
+	test("should localise weekday and month names", () => {
+		const { getWeekDays, getMonthNames } = require(
+			"../app/components/ui/date-picker-primitive",
+		);
+		const en = getWeekDays("en-US");
+		expect(en[0].long).toBe("Sunday");
+		expect(en[1].short).toBe("Mon");
+
+		const de = getMonthNames("de-DE", "long");
+		expect(de[2]).toBe("März");
+
+		// Unknown locales fall back instead of throwing
+		const fallback = getWeekDays("no-such-locale-!!!");
+		expect(fallback.length).toBe(7);
+	});
+
 	test("should disable months that fall entirely outside min/max", () => {
 		const html = (
 			<DatePicker
