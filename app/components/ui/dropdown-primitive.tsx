@@ -37,7 +37,9 @@ export const useDropdownContext = () => {
 	return context;
 };
 
-export interface DropdownRootProps extends DropdownVariantProps, PropsWithChildren {
+export interface DropdownRootProps
+	extends DropdownVariantProps,
+		PropsWithChildren {
 	id?: string;
 	open?: boolean;
 	onClose?: () => void;
@@ -52,11 +54,11 @@ interface DropdownRadioGroupContextValue {
 	onValueChange?: (details: { value: string }) => void;
 }
 
-const DropdownRadioGroupContext = createContext<DropdownRadioGroupContextValue | null>(
-	null,
-);
+const DropdownRadioGroupContext =
+	createContext<DropdownRadioGroupContextValue | null>(null);
 
-export const useDropdownRadioGroupContext = () => useContext(DropdownRadioGroupContext);
+export const useDropdownRadioGroupContext = () =>
+	useContext(DropdownRadioGroupContext);
 
 export function DropdownRoot(props: DropdownRootProps) {
 	const [variantProps, localProps] = dropdown.splitVariantProps(props);

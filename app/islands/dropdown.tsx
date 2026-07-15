@@ -1,5 +1,8 @@
 import { useEffect, useId, useRef, useState } from "hono/jsx";
-import { DropdownRoot, type DropdownRootProps } from "../components/ui/dropdown-primitive";
+import {
+	DropdownRoot,
+	type DropdownRootProps,
+} from "../components/ui/dropdown-primitive";
 
 const ROOT_SELECTOR = '[data-scope="dropdown"][data-part="root"]';
 
@@ -15,7 +18,9 @@ export interface InteractiveDropdownRootProps extends DropdownRootProps {
 	arrow?: boolean;
 }
 
-export default function InteractiveDropdownRoot(props: InteractiveDropdownRootProps) {
+export default function InteractiveDropdownRoot(
+	props: InteractiveDropdownRootProps,
+) {
 	const {
 		open: openProp,
 		children,

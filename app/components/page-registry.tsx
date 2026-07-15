@@ -49,7 +49,7 @@ const TYPE_ALIASES: Record<string, string> = {
 	"grid-col": "gridCol",
 	"grid-row": "grid",
 	"color-picker": "colorPicker",
-	"menu": "dropdown",
+	menu: "dropdown",
 };
 
 function resolveType(type: string): string {
@@ -450,7 +450,9 @@ const registry: Record<string, BlockRenderer> = {
 		const trigger = triggerText ? (
 			<Button variant="outline">{triggerText}</Button>
 		) : undefined;
-		return <Dropdown interactive trigger={trigger} items={items || []} {...rest} />;
+		return (
+			<Dropdown interactive trigger={trigger} items={items || []} {...rest} />
+		);
 	},
 
 	popover: (b) => {
