@@ -1,3 +1,4 @@
+import { colorPicker } from "./color-picker";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { avatar } from "./avatar";
@@ -59,6 +60,7 @@ export const recipes = {
 	gridCol,
 	gridRow,
 	link,
+	colorPicker,
 };
 
 export const slotRecipes = {
