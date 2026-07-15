@@ -105,7 +105,8 @@ export const datePicker = defineSlotRecipe({
 			display: "flex",
 			flexDirection: "column",
 			gap: "3",
-			maxWidth: "100%",
+			// Keep the popup on-screen on narrow viewports.
+			maxWidth: "calc(100vw - {spacing.8})",
 			outline: "none",
 			p: "4",
 			width: "344px",
@@ -238,6 +239,16 @@ export const datePicker = defineSlotRecipe({
 				background: "colorPalette.subtle.bg",
 				borderRadius: "0",
 				color: "colorPalette.subtle.fg",
+			},
+			// Square the inner edge of the range endpoints so they connect
+			// seamlessly with the in-range band between them.
+			"&[data-range-start]": {
+				borderTopRightRadius: "0",
+				borderBottomRightRadius: "0",
+			},
+			"&[data-range-end]": {
+				borderTopLeftRadius: "0",
+				borderBottomLeftRadius: "0",
 			},
 			"&[data-range-preview]:not([data-selected])": {
 				background: "colorPalette.subtle.bg",

@@ -174,6 +174,9 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 		} else {
 			setView("day");
 		}
+		// The previous view (and the control that had focus) is now hidden, so
+		// move focus onto the active cell of the new view.
+		focusGrid.current = true;
 	};
 
 	const handleCellClick = (cellVal: CalendarDate | number) => {
@@ -220,10 +223,12 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 			const { focusedValue: fv } = stateRef.current;
 			setFocusedValue(new CalendarDate(fv.year, cellVal, 1));
 			setView("day");
+			focusGrid.current = true;
 		} else if (activeView === "year" && typeof cellVal === "number") {
 			const { focusedValue: fv } = stateRef.current;
 			setFocusedValue(new CalendarDate(cellVal, fv.month, 1));
 			setView("month");
+			focusGrid.current = true;
 		}
 	};
 
