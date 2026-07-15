@@ -11,32 +11,30 @@
  */
 import type { JSX } from "hono/jsx";
 import ColorPickerIsland from "../../islands/color-picker";
-import { shouldHydrate } from "./island-utils";
 import {
 	Area,
 	AreaBackground,
 	AreaThumb,
-	type ColorFormat,
-	type ColorPickerChangeDetails,
-	ColorPickerContent,
-	type ColorPickerVariantProps,
 	ChannelInput,
 	ChannelSlider,
 	ChannelSliderLabel,
 	ChannelSliderThumb,
 	ChannelSliderTrack,
 	ChannelSliderValueText,
+	type ColorFormat,
+	type ColorPickerChangeDetails,
+	ColorPickerContent,
+	Root as ColorPickerPrimitiveRoot,
+	type ColorPickerVariantProps,
 	Content,
 	Control,
 	EyeDropperTrigger,
 	FormatSelect,
 	FormatTrigger,
-	type HSVA,
 	HiddenInput,
-	InteractiveColorPicker,
+	type HSVA,
 	Label,
 	Positioner,
-	Root as ColorPickerPrimitiveRoot,
 	Swatch,
 	SwatchGroup,
 	SwatchIndicator,
@@ -47,12 +45,19 @@ import {
 	ValueText,
 	View,
 } from "./color-picker-primitive";
+import { shouldHydrate } from "./island-utils";
 
-export interface ColorPickerProps extends ColorPickerVariantProps {
+interface ColorPickerProps extends ColorPickerVariantProps {
 	value?: string | HSVA;
 	defaultValue?: string | HSVA;
 	format?: ColorFormat;
+	defaultFormat?: ColorFormat;
 	onValueChange?: (details: ColorPickerChangeDetails) => void;
+	onFormatChange?: (details: { format: ColorFormat }) => void;
+	open?: boolean;
+	defaultOpen?: boolean;
+	onOpenChange?: (details: { open: boolean }) => void;
+	closeOnSelect?: boolean;
 	presets?: string[];
 	name?: string;
 	disabled?: boolean;
@@ -76,7 +81,13 @@ function ColorPickerRoot(props: ColorPickerProps) {
 		value,
 		defaultValue,
 		format,
+		defaultFormat,
 		onValueChange,
+		onFormatChange,
+		open,
+		defaultOpen,
+		onOpenChange,
+		closeOnSelect,
 		presets,
 		name,
 		disabled,
@@ -94,8 +105,12 @@ function ColorPickerRoot(props: ColorPickerProps) {
 
 	const hasSignal =
 		onValueChange !== undefined ||
+		onFormatChange !== undefined ||
+		onOpenChange !== undefined ||
 		value !== undefined ||
 		defaultValue !== undefined ||
+		open !== undefined ||
+		defaultOpen !== undefined ||
 		trigger === true;
 	const isInteractive = shouldHydrate(interactive, hasSignal);
 
@@ -106,7 +121,13 @@ function ColorPickerRoot(props: ColorPickerProps) {
 				value={value}
 				defaultValue={defaultValue}
 				format={format}
+				defaultFormat={defaultFormat}
 				onValueChange={onValueChange}
+				onFormatChange={onFormatChange}
+				open={open}
+				defaultOpen={defaultOpen}
+				onOpenChange={onOpenChange}
+				closeOnSelect={closeOnSelect}
 				presets={presets}
 				name={name}
 				disabled={disabled}
@@ -128,7 +149,7 @@ function ColorPickerRoot(props: ColorPickerProps) {
 			{...rest}
 			value={value}
 			defaultValue={defaultValue}
-			format={format}
+			format={format ?? defaultFormat}
 			disabled={disabled}
 			readOnly={readOnly}
 			id={id}

@@ -8,6 +8,7 @@ import {
 	Card,
 	Checkbox,
 	Collapsible,
+	ColorPicker,
 	Combobox,
 	Dialog,
 	Drawer,
@@ -47,6 +48,7 @@ const TYPE_ALIASES: Record<string, string> = {
 	"segment-group": "segmentGroup",
 	"grid-col": "gridCol",
 	"grid-row": "grid",
+	"color-picker": "colorPicker",
 };
 
 function resolveType(type: string): string {
@@ -543,6 +545,7 @@ const registry: Record<string, BlockRenderer> = {
 
 	slider: (b) => <Slider interactive {...propsOf(b)} />,
 	switch: (b) => <Switch interactive {...propsOf(b)} />,
+	colorPicker: (b) => <ColorPicker interactive {...propsOf(b)} />,
 };
 
 // Safe fallback for an unrecognized block type. Previously this dumped the
