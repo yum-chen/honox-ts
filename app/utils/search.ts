@@ -1,10 +1,24 @@
-// Shared between the blog route (SSR filtering for the no-JS ?q= fallback)
-// and the blog-search island (instant client-side filtering), so both
-// always agree on what matches.
+// Shared search primitives used by the blog route (SSR filtering for the
+// no-JS ?q= fallback), the /search-index.json route (SSG static index), and
+// the Search island (instant client-side filtering + autocomplete), so
+// server, build output, and client always agree on what matches.
 
-export interface SearchEntry {
-	slug: string;
+export interface SearchIndexEntry {
+	/** Stable id (e.g. post slug) — matched against DOM filter attributes */
+	key: string;
+	/** Navigation target when the entry is picked from autocomplete */
+	href: string;
+	title: string;
+	description?: string;
+	tags?: string[];
+	/** Precomputed lowercase text blob the query tokens are matched against */
 	haystack: string;
+}
+
+/** Shape of the SSG-generated /search-index.json document */
+export interface SearchIndexDocument {
+	generated: string;
+	entries: SearchIndexEntry[];
 }
 
 export function buildHaystack(
@@ -17,14 +31,21 @@ export function buildHaystack(
 		.toLowerCase();
 }
 
+export function tokenize(query: string): string[] {
+	return query.toLowerCase().split(/\s+/).filter(Boolean);
+}
+
 // Every whitespace-separated token must appear somewhere in the haystack.
-// Returns the slugs of matching entries; an empty query matches everything.
-export function filterEntries(entries: SearchEntry[], query: string): string[] {
-	const tokens = query.toLowerCase().split(/\s+/).filter(Boolean);
+// An empty query matches everything.
+export function filterEntries<T extends { haystack: string }>(
+	entries: T[],
+	query: string,
+): T[] {
+	const tokens = tokenize(query);
 	if (tokens.length === 0) {
-		return entries.map((entry) => entry.slug);
+		return entries;
 	}
-	return entries
-		.filter((entry) => tokens.every((token) => entry.haystack.includes(token)))
-		.map((entry) => entry.slug);
+	return entries.filter((entry) =>
+		tokens.every((token) => entry.haystack.includes(token)),
+	);
 }

@@ -17,6 +17,9 @@ interface FrontmatterData {
 	description?: string;
 	tags?: string[];
 	draft?: boolean;
+	author?: string;
+	readTime?: string;
+	cover?: string;
 	[key: string]: unknown;
 }
 
@@ -40,8 +43,8 @@ export function parseFrontmatter(markdown: string): {
 		return { data: {}, content: markdown };
 	}
 
-	const frontmatter = match[1];
-	const content = match[2];
+	const frontmatter = match[1] ?? "";
+	const content = match[2] ?? "";
 
 	// Simple YAML parsing for basic types
 	const data: FrontmatterData = {};

@@ -6,117 +6,26 @@ import {
 	Card,
 	Drawer,
 	Heading,
+	Search,
 	Stack,
 	Text,
 } from "../components/ui";
-import BlogSearch from "../islands/blog-search";
-import { parseFrontmatter, stripMarkdown } from "../utils/markdown";
-import {
-	buildHaystack,
-	filterEntries,
-	type SearchEntry,
-} from "../utils/search";
-
-// Use Vite's import.meta.glob to import all markdown files at build time
-const posts = import.meta.glob("/content/posts/*.md", {
-	query: "?raw",
-	import: "default",
-});
-
-interface BlogPost {
-	slug: string;
-	title: string;
-	date: string;
-	description: string;
-	tags: string[];
-	draft: boolean;
-	author?: string;
-	readTime?: string;
-	cover?: string;
-}
+import { loadPosts } from "../lib/posts";
+import { filterEntries } from "../utils/search";
 
 export default createRoute(async (c) => {
-	// Load and parse all blog posts
-	const blogPosts: BlogPost[] = [];
-	const searchEntries: SearchEntry[] = [];
-
-	for (const [path, loader] of Object.entries(posts)) {
-		try {
-			const markdown = await (loader as () => Promise<string>)();
-			const { data, content } = parseFrontmatter(markdown);
-
-			// Skip drafts in production
-			if (data.draft === true && process.env.NODE_ENV === "production") {
-				continue;
-			}
-
-			const slug = path.replace("/content/posts/", "").replace(".md", "");
-
-			const postTags = Array.isArray(data.tags) ? data.tags : [];
-
-			blogPosts.push({
-				slug,
-				title: data.title || "Untitled",
-				date: data.date || "",
-				description: data.description || "",
-				tags: postTags,
-				draft: data.draft === true,
-				author: data.author || "Artefact Team",
-				readTime: data.readTime || "5 min read",
-				cover: data.cover || null,
-			});
-
-			searchEntries.push({
-				slug,
-				haystack: buildHaystack([
-					data.title,
-					data.description,
-					postTags,
-					stripMarkdown(content).slice(0, 5000),
-				]),
-			});
-		} catch (error) {
-			console.error(`Error loading ${path}:`, error);
-		}
-	}
-
-	// Sort posts by date (newest first)
-	blogPosts.sort((a, b) => {
-		const dateA = new Date(a.date).getTime();
-		const dateB = new Date(b.date).getTime();
-		return dateB - dateA;
-	});
-
-	// Get unique tags for filter UI
-	const allTags = new Set<string>();
-	for (const [_path, loader] of Object.entries(posts)) {
-		try {
-			const markdown = await (loader as () => Promise<string>)();
-			const { data } = parseFrontmatter(markdown);
-
-			if (data.draft === true && process.env.NODE_ENV === "production") {
-				continue;
-			}
-
-			const postTags = Array.isArray(data.tags) ? data.tags : [];
-			postTags.forEach((tag: string) => {
-				allTags.add(tag);
-			});
-		} catch (_error) {
-			// Ignore errors
-		}
-	}
-
-	const tags = Array.from(allTags).sort();
+	const { posts: blogPosts, searchEntries, tags } = await loadPosts();
 
 	// Get URL parameters for searching
 	const url = new URL(c.req.url);
 	const searchQuery = url.searchParams.get("q") || "";
 
 	// Server-side filtering for the no-JS ?q= fallback. All posts are still
-	// rendered (non-matches hidden) so the blog-search island can broaden
-	// results client-side without a round-trip.
-	const matchedSlugs = new Set(filterEntries(searchEntries, searchQuery));
+	// rendered (non-matches hidden) so the Search island can broaden results
+	// client-side without a round-trip.
+	const matchedSlugs = new Set(
+		filterEntries(searchEntries, searchQuery).map((entry) => entry.key),
+	);
 
 	return c.render(
 		<div
@@ -267,9 +176,18 @@ export default createRoute(async (c) => {
 			{/* Search + Tag Browse */}
 			<section class={css({ mb: "8" })}>
 				<Stack gap="4" align="flex-start" justify="space-between" wrap="wrap">
-					{/* Instant Search (island) */}
+					{/* Instant Search (island) — lazily fetches /search-index.json */}
 					<div class={css({ flex: "1", minWidth: "260px" })}>
-						<BlogSearch entries={searchEntries} initialQuery={searchQuery} />
+						<Search
+							src="/search-index.json"
+							action="/blog"
+							initialQuery={searchQuery}
+							placeholder="Search articles..."
+							itemLabel="articles"
+							total={blogPosts.length}
+							filterAttribute="data-post-slug"
+							emptyStateId="blog-search-empty"
+						/>
 					</div>
 
 					{/* Tag Browse Button */}
