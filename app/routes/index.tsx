@@ -25,6 +25,7 @@ import {
 	Heading,
 	HoverCard,
 	IconButton,
+	Link,
 	Loader,
 	Menu,
 	PaginatedTable,
@@ -181,6 +182,94 @@ export default createRoute((c) => {
 					<Button>Middle</Button>
 					<Button>Right</Button>
 				</ButtonGroup>
+			</Stack>
+
+			{/* Link Examples */}
+			<Stack direction="column" gap="4" align="center" class={css({ mt: "8" })}>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "2" })}>
+					Link Component Examples
+				</Heading>
+
+				{/* Variants */}
+				<Text
+					size="sm"
+					class={css({
+						color: "fg.muted",
+						mt: "4",
+						width: "100%",
+						textAlign: "left",
+					})}
+				>
+					Variants
+				</Text>
+				<Stack gap="4" justify="center" wrap="wrap">
+					<Link href="#" variant="underline" colorPalette="blue">
+						Underline (Blue)
+					</Link>
+					<Link href="#" variant="plain" colorPalette="green">
+						Plain (Green)
+					</Link>
+					<Link href="#" variant="underline" colorPalette="red">
+						Underline (Red)
+					</Link>
+				</Stack>
+
+				{/* Color Palettes */}
+				<Text
+					size="sm"
+					class={css({
+						color: "fg.muted",
+						mt: "4",
+						width: "100%",
+						textAlign: "left",
+					})}
+				>
+					Color Palettes
+				</Text>
+				<Stack gap="4" justify="center" wrap="wrap">
+					<Link href="#" colorPalette="blue">
+						Blue
+					</Link>
+					<Link href="#" colorPalette="green">
+						Green
+					</Link>
+					<Link href="#" colorPalette="red">
+						Red
+					</Link>
+					<Link href="#" colorPalette="orange">
+						Orange
+					</Link>
+					<Link href="#" colorPalette="amber">
+						Amber
+					</Link>
+					<Link href="#" colorPalette="purple">
+						Purple
+					</Link>
+					<Link href="#" colorPalette="cyan">
+						Cyan
+					</Link>
+					<Link href="#" colorPalette="slate">
+						Slate
+					</Link>
+				</Stack>
+
+				{/* External link safety */}
+				<Text
+					size="sm"
+					class={css({
+						color: "fg.muted",
+						mt: "4",
+						width: "100%",
+						textAlign: "left",
+					})}
+				>
+					External Link (target="_blank" gets rel="noopener noreferrer")
+				</Text>
+				<Stack gap="4" justify="center" wrap="wrap">
+					<Link href="https://hono.dev" target="_blank">
+						Hono (opens in new tab)
+					</Link>
+				</Stack>
 			</Stack>
 
 			{/* Heading Examples */}

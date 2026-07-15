@@ -166,6 +166,28 @@ collections:
                                 widget: select
                                 options: [xs, sm, md, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, 7xl]
                                 default: md
+                          - label: Link
+                            name: link
+                            widget: object
+                            fields: &link_fields
+                              - { label: Text, name: text, widget: string }
+                              - { label: Href, name: href, widget: string }
+                              - label: Variant
+                                name: variant
+                                widget: select
+                                options: [underline, plain]
+                                default: underline
+                              - label: Color Palette
+                                name: colorPalette
+                                widget: select
+                                options: [blue, green, red, purple, orange, amber, cyan, slate]
+                                required: false
+                              - label: Target
+                                name: target
+                                widget: select
+                                options: ["_blank", "_self", "_parent", "_top"]
+                                required: false
+                              - { label: Rel, name: rel, widget: string, required: false }
                           - label: Checkbox
                             name: checkbox
                             widget: object
@@ -584,6 +606,10 @@ collections:
                     name: text
                     widget: object
                     fields: *text_fields
+                  - label: Link
+                    name: link
+                    widget: object
+                    fields: *link_fields
                   - label: Checkbox
                     name: checkbox
                     widget: object

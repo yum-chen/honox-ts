@@ -42,6 +42,28 @@ test("every alias target resolves to a registered renderer", () => {
   }
 });
 
+test("link block renders an anchor with text, href and external rel safety", () => {
+  // Plain internal link.
+  const internal = (<PageRenderer content={[{ type: "link", text: "Docs", href: "/docs" }]} />).toString();
+  expect(internal).toContain('href="/docs"');
+  expect(internal).toContain("Docs");
+
+  // External link: target="_blank" without rel must gain rel="noopener noreferrer".
+  const external = (
+    <PageRenderer
+      content={[{ type: "link", text: "Hono", href: "https://hono.dev", target: "_blank" }]}
+    />
+  ).toString();
+  expect(external).toContain('href="https://hono.dev"');
+  expect(external).toContain('target="_blank"');
+  expect(external).toContain('rel="noopener noreferrer"');
+
+  // Explicit colorPalette passes through to the rendered element.
+  const themed = (
+    <PageRenderer content={[{ type: "link", text: "Go", href: "#", colorPalette: "green" }]} />
+  ).toString();
+  expect(themed).toContain("Go");
+});
 test("registry exposes a renderer for every canonical block type", () => {
   const types = [
     "stack",
@@ -49,6 +71,7 @@ test("registry exposes a renderer for every canonical block type", () => {
     "badge",
     "alert",
     "heading",
+    "link",
     "text",
     "card",
     "checkbox",

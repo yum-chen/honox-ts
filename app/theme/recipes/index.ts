@@ -1,3 +1,4 @@
+import { link } from "./link";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { avatar } from "./avatar";
@@ -56,6 +57,7 @@ export const recipes = {
 	datePicker,
 	gridCol,
 	gridRow,
+	link,
 };
 
 export const slotRecipes = {

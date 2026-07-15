@@ -17,6 +17,7 @@ import {
 	Group,
 	Heading,
 	HoverCard,
+	Link,
 	Menu,
 	PaginatedTable,
 	Pagination,
@@ -137,6 +138,11 @@ const registry: Record<string, BlockRenderer> = {
 	text: (b) => {
 		const { content, ...rest } = propsOf(b);
 		return <Text {...rest}>{content}</Text>;
+	},
+
+	link: (b) => {
+		const { text, ...rest } = propsOf(b);
+		return <Link {...rest}>{text}</Link>;
 	},
 
 	card: (b) => {

@@ -13,10 +13,10 @@ export {
 export {
 	Button,
 	ButtonGroup,
-	type ButtonGroupProps,
-	type ButtonProps,
 	CloseButton,
 	IconButton,
+	type ButtonGroupProps,
+	type ButtonProps,
 } from "./button";
 export { Card, type CardProps } from "./card";
 export { Checkbox, type CheckboxProps } from "./checkbox";
@@ -32,6 +32,7 @@ export { Grid, type GridProps } from "./grid";
 export { Group, type GroupProps } from "./group";
 export { Heading, type HeadingProps } from "./heading";
 export { HoverCard, type HoverCardProps } from "./hover-card";
+export { Link, type LinkProps } from "./link";
 export { Loader, type LoaderProps } from "./loader";
 export { Menu, type MenuItem, type MenuProps } from "./menu";
 export * as MenuPrimitive from "./menu-primitive";
@@ -48,7 +49,7 @@ export {
 } from "./skeleton";
 export { Slider, type SliderProps } from "./slider";
 export { Spinner, type SpinnerProps } from "./spinner";
-export { type PanelConfig, Splitter, type SplitterProps } from "./splitter";
+export { Splitter, type PanelConfig, type SplitterProps } from "./splitter";
 export { Stack, type StackProps } from "./stack";
 export { Switch, type SwitchProps } from "./switch";
 export {
