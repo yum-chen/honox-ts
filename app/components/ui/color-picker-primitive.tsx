@@ -21,9 +21,9 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { ColorPickerVariantProps } from "styled-system/recipes";
-import { colorPicker } from "styled-system/recipes";
+import { cx } from "design-system/css";
+import type { ColorPickerVariantProps } from "design-system/recipes";
+import { colorPicker } from "design-system/recipes";
 
 export type ColorFormat = "hex" | "rgba" | "hsla";
 

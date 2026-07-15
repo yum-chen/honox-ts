@@ -1,6 +1,6 @@
+import { cx } from "design-system/css";
+import { type MenuVariantProps, menu } from "design-system/recipes";
 import type { JSX } from "hono/jsx";
-import { cx } from "styled-system/css";
-import { type MenuVariantProps, menu } from "styled-system/recipes";
 import InteractiveMenuRoot from "../../islands/menu";
 import { shouldHydrate } from "./island-utils";
 // Import primitive components from menu-primitive

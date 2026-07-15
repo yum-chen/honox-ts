@@ -1,7 +1,7 @@
+import { cx } from "design-system/css";
+import type { HeadingVariantProps } from "design-system/recipes";
+import { heading } from "design-system/recipes";
 import type { Child, ElementType } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { HeadingVariantProps } from "styled-system/recipes";
-import { heading } from "styled-system/recipes";
 
 export interface HeadingProps extends HeadingVariantProps {
 	as?: ElementType;

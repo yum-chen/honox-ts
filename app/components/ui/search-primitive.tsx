@@ -1,5 +1,7 @@
+import { css, cx } from "design-system/css";
 import { useEffect, useId, useMemo, useRef, useState } from "hono/jsx";
-import { css, cx } from "styled-system/css";
+import { css, cx } from "design-system/css";
+import { type SearchVariantProps, search } from "design-system/recipes";
 import {
 	filterEntries,
 	type SearchIndexDocument,

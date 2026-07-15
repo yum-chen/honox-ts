@@ -1,8 +1,8 @@
+import { cx } from "design-system/css";
+import type { SwitchRecipeVariantProps } from "design-system/recipes";
+import { switchRecipe } from "design-system/recipes";
 import type { Child } from "hono/jsx";
 import { useState } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { SwitchRecipeVariantProps } from "styled-system/recipes";
-import { switchRecipe } from "styled-system/recipes";
 import { useFieldContext } from "./field-primitive";
 
 export interface SwitchProps extends SwitchRecipeVariantProps {

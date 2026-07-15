@@ -1,8 +1,8 @@
+import { cx } from "design-system/css";
+import type { CheckboxVariantProps } from "design-system/recipes";
+import { checkbox } from "design-system/recipes";
 import type { Child } from "hono/jsx";
 import { useEffect, useRef, useState } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { CheckboxVariantProps } from "styled-system/recipes";
-import { checkbox } from "styled-system/recipes";
 import { useFieldContext } from "./field-primitive";
 
 export interface CheckboxProps extends CheckboxVariantProps {

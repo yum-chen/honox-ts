@@ -1,5 +1,5 @@
 import type { JSX } from "hono/jsx";
-import { css, cx } from "styled-system/css";
+import { css, cx } from "design-system/css";
 import SliderIsland from "../../islands/slider";
 import { shouldHydrate } from "./island-utils";
 import {
@@ -59,7 +59,7 @@ interface SliderProps {
 	colorPalette?: string;
 }
 
-const serializeValue = (v: any) => {
+const serialiseValue = (v: any) => {
 	if (Array.isArray(v)) return v.join(",");
 	if (typeof v === "number" || typeof v === "string") return String(v);
 	return undefined;
@@ -167,8 +167,8 @@ function Slider(props: SliderProps) {
 		return (
 			<SliderIsland
 				{...rootProps}
-				value={serializeValue(value)}
-				defaultValue={serializeValue(defaultValue)}
+				value={serialiseValue(value)}
+				defaultValue={serialiseValue(defaultValue)}
 				onValueChange={onChange}
 				onDraggingChange={onDraggingChange}
 				formatValue={formatValue}

@@ -1,5 +1,5 @@
+import { css } from "design-system/css";
 import type { Child, PropsWithChildren } from "hono/jsx";
-import { css } from "styled-system/css";
 import { Spinner } from "./spinner";
 
 export interface LoaderProps extends PropsWithChildren {

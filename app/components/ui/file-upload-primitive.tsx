@@ -1,3 +1,6 @@
+import { cx } from "design-system/css";
+import type { FileUploadVariantProps } from "design-system/recipes";
+import { fileUpload } from "design-system/recipes";
 import type { PropsWithChildren } from "hono/jsx";
 import {
 	createContext,
@@ -6,9 +9,6 @@ import {
 	useId,
 	useState,
 } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { FileUploadVariantProps } from "styled-system/recipes";
-import { fileUpload } from "styled-system/recipes";
 
 type FileUploadStyles = ReturnType<typeof fileUpload>;
 

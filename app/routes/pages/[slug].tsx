@@ -1,6 +1,6 @@
+import { css } from "design-system/css";
 import { ssgParams } from "hono/ssg";
 import { createRoute } from "honox/factory";
-import { css } from "styled-system/css";
 import { PageRenderer } from "../../components/page-renderer";
 
 const pages = import.meta.glob("/content/pages/*.json", {

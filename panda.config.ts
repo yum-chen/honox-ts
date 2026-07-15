@@ -15,7 +15,7 @@ export default defineConfig({
 	theme: { extend: { ...theme.config } },
 
 	// The output directory for your css system
-	outdir: "styled-system",
+	outdir: "design-system",
 
 	staticCss: {
 		// Every recipe here must keep `["*"]`: none of them (aside from alert,

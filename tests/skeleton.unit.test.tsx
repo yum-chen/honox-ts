@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { Skeleton } from "../app/components/ui/skeleton";
-import { css } from "styled-system/css";
+import { css } from "design-system/css";
 
 test("Skeleton component renders with shape='circle' and class and boxSize", async () => {
 	const html = (await Skeleton({

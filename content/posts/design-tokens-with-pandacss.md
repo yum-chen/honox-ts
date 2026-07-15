@@ -52,7 +52,7 @@ export default defineConfig({
 ## Using Tokens
 
 ```tsx
-import { css } from "styled-system/css";
+import { css } from "design-system/css";
 
 function Button() {
   return (
