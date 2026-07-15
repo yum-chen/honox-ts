@@ -29,7 +29,7 @@ import {
 	IconButton,
 	Link,
 	Loader,
-	Menu,
+	Dropdown,
 	PaginatedTable,
 	Pagination,
 	Popover,
@@ -775,7 +775,7 @@ export default createRoute((c) => {
 				/>
 			</Stack>
 
-			{/* Menu Examples (Flattened API) */}
+			{/* Dropdown Examples (Flattened API) */}
 			<Stack
 				direction="column"
 				gap="4"
@@ -783,14 +783,14 @@ export default createRoute((c) => {
 				class={css({ mt: "8", maxWidth: "xl", mx: "auto" })}
 			>
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
-					Menu Component Examples (Flattened API)
+					Dropdown Component Examples (Flattened API)
 				</Heading>
 
 				<Text size="sm" class={css({ color: "fg.muted", mb: "2" })}>
-					Basic Menu with Items (Interactive)
+					Basic Dropdown with Items (Interactive)
 				</Text>
-				<Menu
-					trigger={<Button variant="outline">Open Menu</Button>}
+				<Dropdown
+					trigger={<Button variant="outline">Open Dropdown</Button>}
 					items={[
 						{ type: "item", label: "New Tab", value: "new-tab" },
 						{ type: "item", label: "New Window", value: "new-window" },
@@ -806,9 +806,9 @@ export default createRoute((c) => {
 				/>
 
 				<Text size="sm" class={css({ color: "fg.muted", mt: "4", mb: "2" })}>
-					Menu with Disabled Items (Interactive)
+					Dropdown with Disabled Items (Interactive)
 				</Text>
-				<Menu
+				<Dropdown
 					trigger={
 						<Button variant="outline" colorPalette="blue">
 							Options
@@ -823,9 +823,9 @@ export default createRoute((c) => {
 				/>
 
 				<Text size="sm" class={css({ color: "fg.muted", mt: "4", mb: "2" })}>
-					Menu with Radio Group (Interactive)
+					Dropdown with Radio Group (Interactive)
 				</Text>
-				<Menu
+				<Dropdown
 					trigger={<Button variant="outline">Sort By</Button>}
 					items={[
 						{
