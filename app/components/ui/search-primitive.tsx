@@ -144,6 +144,8 @@ export interface SearchBaseProps {
 	total?: number;
 	/** Noun used in the result count, e.g. "articles" */
 	itemLabel?: string;
+	/** Show the "Showing X of N" result count row (default true) */
+	showCount?: boolean;
 	/** No-JS fallback: submit ?q= to this path via a plain GET form */
 	action?: string;
 	/** Mirror the active query into the address bar as ?q= (default true) */
@@ -193,6 +195,7 @@ export function InteractiveSearch(props: SearchBaseProps) {
 		emptyStateId,
 		total,
 		itemLabel = "results",
+		showCount = true,
 		action,
 		syncUrl = true,
 	} = props;
@@ -424,37 +427,39 @@ export function InteractiveSearch(props: SearchBaseProps) {
 					</div>
 				)}
 			</div>
-			<div class={countRowClass}>
-				<span>
-					{matches
-						? `Showing ${matches.length} of ${entries?.length ?? 0} ${itemLabel}`
-						: total !== undefined
-							? `${total} ${itemLabel}`
-							: ""}
-					{matches && query ? ` for "${query}"` : ""}
-				</span>
-				{rawQuery && (
-					<button
-						type="button"
-						onClick={() => {
-							setRawQuery("");
-							setQuery("");
-						}}
-						class={css({
-							color: "blue.10",
-							fontWeight: "medium",
-							cursor: "pointer",
-							bg: "transparent",
-							border: "none",
-							p: "0",
-							fontSize: "sm",
-							_hover: { textDecoration: "underline" },
-						})}
-					>
-						Clear
-					</button>
-				)}
-			</div>
+			{showCount && (
+				<div class={countRowClass}>
+					<span>
+						{matches
+							? `Showing ${matches.length} of ${entries?.length ?? 0} ${itemLabel}`
+							: total !== undefined
+								? `${total} ${itemLabel}`
+								: ""}
+						{matches && query ? ` for "${query}"` : ""}
+					</span>
+					{rawQuery && (
+						<button
+							type="button"
+							onClick={() => {
+								setRawQuery("");
+								setQuery("");
+							}}
+							class={css({
+								color: "blue.10",
+								fontWeight: "medium",
+								cursor: "pointer",
+								bg: "transparent",
+								border: "none",
+								p: "0",
+								fontSize: "sm",
+								_hover: { textDecoration: "underline" },
+							})}
+						>
+							Clear
+						</button>
+					)}
+				</div>
+			)}
 		</>
 	);
 
