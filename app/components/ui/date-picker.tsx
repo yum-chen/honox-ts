@@ -54,18 +54,18 @@ export function DatePickerRoot(props: DatePickerProps) {
 	const isInteractive = shouldHydrate(interactive, true);
 
 	if (isInteractive) {
-		const serializedValue = value
+		const serialisedValue = value
 			? parseValue(value).map((v) => v.toString())
 			: undefined;
-		const serializedDefaultValue = defaultValue
+		const serialisedDefaultValue = defaultValue
 			? parseValue(defaultValue).map((v) => v.toString())
 			: undefined;
-		const serializedMin = min ? parseSingleDate(min)?.toString() : undefined;
-		const serializedMax = max ? parseSingleDate(max)?.toString() : undefined;
-		const serializedFocusedValue = focusedValue
+		const serialisedMin = min ? parseSingleDate(min)?.toString() : undefined;
+		const serialisedMax = max ? parseSingleDate(max)?.toString() : undefined;
+		const serialisedFocusedValue = focusedValue
 			? parseSingleDate(focusedValue)?.toString()
 			: undefined;
-		const serializedDefaultFocusedValue = defaultFocusedValue
+		const serialisedDefaultFocusedValue = defaultFocusedValue
 			? parseSingleDate(defaultFocusedValue)?.toString()
 			: undefined;
 
@@ -74,12 +74,12 @@ export function DatePickerRoot(props: DatePickerProps) {
 		return (
 			<DatePickerIsland
 				{...(islandRest as Record<string, unknown>)}
-				value={serializedValue}
-				defaultValue={serializedDefaultValue}
-				min={serializedMin}
-				max={serializedMax}
-				focusedValue={serializedFocusedValue}
-				defaultFocusedValue={serializedDefaultFocusedValue}
+				value={serialisedValue}
+				defaultValue={serialisedDefaultValue}
+				min={serialisedMin}
+				max={serialisedMax}
+				focusedValue={serialisedFocusedValue}
+				defaultFocusedValue={serialisedDefaultFocusedValue}
 			/>
 		);
 	}
