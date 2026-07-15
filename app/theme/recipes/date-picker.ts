@@ -96,30 +96,31 @@ export const datePicker = defineSlotRecipe({
 		positioner: {
 			zIndex: "dropdown",
 		},
-		content: {
-			background: "gray.surface.bg",
-			borderColor: "gray.surface.border",
-			borderRadius: "l3",
-			borderWidth: "1px",
-			boxShadow: "lg",
-			display: "flex",
-			flexDirection: "column",
-			gap: "3",
-			maxWidth: "100%",
-			outline: "none",
-			p: "4",
-			width: "344px",
-			zIndex: "dropdown",
-			_open: {
-				animation: "fade-in 0.2s ease-out",
-			},
-			_closed: {
-				animation: "fade-out 0.15s ease-in",
-			},
-			_hidden: {
-				display: "none",
-			},
+	content: {
+		background: "gray.surface.bg",
+		borderColor: "gray.surface.border",
+		borderRadius: "l3",
+		borderWidth: "1px",
+		boxShadow: "lg",
+		display: "flex",
+		flexDirection: "column",
+		gap: "3",
+		maxWidth: "100%",
+		outline: "none",
+		p: "4",
+		width: "344px",
+		zIndex: "dropdown",
+		// The content carries `data-state="open" | "closed"`. Use explicit
+		// attribute selectors — Panda's `_open`/`_closed` conditions target
+		// `[data-open]`/`[data-closed]`, which this component never sets, so
+		// the open animation would otherwise be a silent no-op.
+		'&[data-state="open"]': {
+			animation: "fade-in 0.2s ease-out",
 		},
+		'&[data-state="closed"]': {
+			animation: "fade-out 0.15s ease-in",
+		},
+	},
 		view: {
 			display: "flex",
 			flexDirection: "column",

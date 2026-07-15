@@ -178,6 +178,12 @@ export interface DatePickerRootProps
 	min?: CalendarDate | string | Date;
 	max?: CalendarDate | string | Date;
 	isDateUnavailable?: (date: CalendarDate, locale: string) => boolean;
+	/**
+	 * When set, a hidden input is rendered so the selected value(s) submit
+	 * with a native <form>. Each selected date becomes a separate entry under
+	 * the same name (single → one value, range/multiple → ordered values).
+	 */
+	name?: string;
 	onValueChange?: (details: { value: CalendarDate[] }) => void;
 	onOpenChange?: (details: { open: boolean }) => void;
 	class?: string;
@@ -242,6 +248,7 @@ export function DatePickerRoot(props: DatePickerRootProps) {
 		min: minProp,
 		max: maxProp,
 		isDateUnavailable,
+		name,
 		onValueChange,
 		onOpenChange,
 		class: classProp,
@@ -458,6 +465,18 @@ export function DatePickerRoot(props: DatePickerRootProps) {
 				{...rest}
 			>
 				{children}
+				{/** Hidden inputs enable native form submission when `name` is set. */}
+				{name &&
+					value.map((v) => (
+						<input
+							key={v.toString()}
+							type="hidden"
+							name={name}
+							value={v.toString()}
+							data-scope="date-picker"
+							data-part="hidden-input"
+						/>
+					))}
 			</div>
 		</DatePickerCtx.Provider>
 	);
@@ -624,16 +643,14 @@ export function DatePickerPositioner(
 		<div
 			data-scope="date-picker"
 			data-part="positioner"
-			class={cx(
-				context?.styles.positioner,
-				classProp,
-				!context?.open && css({ display: "none" }),
-			)}
+			data-state={context?.open ? "open" : "closed"}
+			class={cx(context?.styles.positioner, classProp)}
 			style={{
 				position: "absolute",
 				top: "100%",
 				left: "0",
-				zIndex: 1000,
+				// Inline display keeps the popup reliably hidden when closed,
+				// without depending on a timed unmount for the close animation.
 				display: context?.open ? "block" : "none",
 			}}
 			{...rest}
@@ -1021,9 +1038,39 @@ export function DatePickerTableCellTrigger(
 			isSelected =
 				context.value[0]?.month === value &&
 				context.value[0]?.year === context.focusedValue.year;
+
+			// A month is selectable when any day of that month falls inside
+			// [min, max]; otherwise the whole month is disabled.
+			const monthEnd = new CalendarDate(
+				context.focusedValue.year,
+				value,
+				daysInMonth(context.focusedValue.year, value),
+			);
+			const monthStart = new CalendarDate(context.focusedValue.year, value, 1);
+			if (context.min && monthEnd.toDate().getTime() < context.min.toDate().getTime()) {
+				isDisabled = true;
+			}
+			if (
+				context.max &&
+				monthStart.toDate().getTime() > context.max.toDate().getTime()
+			) {
+				isDisabled = true;
+			}
 		} else if (context.view === "year") {
 			isToday = value === new Date().getFullYear();
 			isSelected = context.value[0]?.year === value;
+
+			const yearStart = new CalendarDate(value, 1, 1);
+			const yearEnd = new CalendarDate(value, 12, 31);
+			if (context.min && yearEnd.toDate().getTime() < context.min.toDate().getTime()) {
+				isDisabled = true;
+			}
+			if (
+				context.max &&
+				yearStart.toDate().getTime() > context.max.toDate().getTime()
+			) {
+				isDisabled = true;
+			}
 		}
 	}
 
