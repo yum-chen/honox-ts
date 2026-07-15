@@ -61,11 +61,12 @@
         },
         {
           "type": "link",
+          "variant": "underline",
           "text": "Watch the 2-minute overview →",
+          "colorPalette": "blue",
           "href": "https://www.youtube.com/@pulse",
           "target": "_blank",
-          "variant": "underline",
-          "colorPalette": "blue"
+          "rel": ""
         }
       ]
     },
@@ -78,7 +79,6 @@
     },
     {
       "type": "grid",
-      "columns": "{\"base\": 2, \"sm\": 3, \"md\": 5}",
       "gap": "4",
       "children": [
         {
@@ -111,7 +111,10 @@
           "text": "Soylent",
           "colorPalette": "slate"
         }
-      ]
+      ],
+      "columns": "{\"base\": 2, \"sm\": 3, \"md\": 5}",
+      "rows": "",
+      "minChildWidth": ""
     },
     {
       "type": "heading",
@@ -126,7 +129,6 @@
     },
     {
       "type": "grid",
-      "columns": "{\"base\": 1, \"md\": 3}",
       "gap": "6",
       "children": [
         {
@@ -175,7 +177,8 @@
           "body": "Annotate charts, leave comments, and share saved views so everyone works from the same source of truth.",
           "imagePosition": "top"
         }
-      ]
+      ],
+      "columns": "{\"base\": 1, \"md\": 3}"
     },
     {
       "type": "card",
@@ -221,7 +224,6 @@
     },
     {
       "type": "grid",
-      "columns": "{\"base\": 1, \"md\": 3}",
       "gap": "6",
       "children": [
         {
@@ -280,13 +282,14 @@
           "body": "SSO & SAML. Dedicated support engineer. Custom data retention. SLA guarantees.",
           "imagePosition": "top"
         }
-      ]
+      ],
+      "columns": "{\"base\": 1, \"md\": 3}"
     },
     {
       "type": "stack",
       "direction": "vertical",
-      "gap": "4",
       "align": "center",
+      "gap": "4",
       "children": [
         {
           "type": "heading",
@@ -298,41 +301,41 @@
         {
           "type": "stack",
           "direction": "horizontal",
-          "gap": "6",
           "align": "center",
           "justify": "center",
-          "wrap": "wrap",
+          "gap": "6",
           "children": [
             {
               "type": "link",
               "text": "Read the docs",
-              "href": "/docs",
               "variant": "underline",
-              "colorPalette": "blue"
+              "colorPalette": "blue",
+              "href": "/docs"
             },
             {
               "type": "link",
               "text": "Changelog",
-              "href": "/changelog",
               "variant": "plain",
-              "colorPalette": "slate"
+              "colorPalette": "slate",
+              "href": "/changelog"
             },
             {
               "type": "link",
               "text": "API reference",
-              "href": "/api",
               "variant": "underline",
-              "colorPalette": "purple"
+              "colorPalette": "purple",
+              "href": "/api"
             },
             {
               "type": "link",
               "text": "Follow on X",
-              "href": "https://x.com/pulse",
-              "target": "_blank",
               "variant": "underline",
-              "colorPalette": "green"
+              "colorPalette": "green",
+              "href": "https://x.com/pulse",
+              "target": "_blank"
             }
-          ]
+          ],
+          "wrap": "wrap"
         }
       ]
     },
@@ -471,10 +474,10 @@
         },
         {
           "type": "link",
-          "text": "Read customer stories",
-          "href": "/customers",
           "variant": "plain",
-          "colorPalette": "blue"
+          "text": "Read customer stories",
+          "colorPalette": "blue",
+          "href": "/customers"
         }
       ]
     }
