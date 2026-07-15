@@ -18,10 +18,19 @@ export default function BlogSearch({ entries, initialQuery }: BlogSearchProps) {
 		[entries, query],
 	);
 
+	// On static (SSG) deployments the page is prerendered without query
+	// params, so pick up ?q= from the URL once hydrated.
+	useEffect(() => {
+		const urlQuery = new URLSearchParams(window.location.search).get("q");
+		if (urlQuery !== null && urlQuery !== initialQuery) {
+			setQuery(urlQuery);
+		}
+	}, [initialQuery]);
+
 	useEffect(() => {
 		const cards = document.querySelectorAll<HTMLElement>("[data-post-slug]");
 		for (const card of cards) {
-			card.hidden = !matched.has(card.dataset["postSlug"] ?? "");
+			card.hidden = !matched.has(card.getAttribute("data-post-slug") ?? "");
 		}
 		const emptyState = document.getElementById("blog-search-empty");
 		if (emptyState) {
@@ -41,7 +50,7 @@ export default function BlogSearch({ entries, initialQuery }: BlogSearchProps) {
 	return (
 		<form
 			action="/blog"
-			method="GET"
+			method="get"
 			onSubmit={(event) => event.preventDefault()}
 			class={css({ width: "full" })}
 		>

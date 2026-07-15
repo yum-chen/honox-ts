@@ -19,10 +19,7 @@ export function buildHaystack(
 
 // Every whitespace-separated token must appear somewhere in the haystack.
 // Returns the slugs of matching entries; an empty query matches everything.
-export function filterEntries(
-	entries: SearchEntry[],
-	query: string,
-): string[] {
+export function filterEntries(entries: SearchEntry[], query: string): string[] {
 	const tokens = query.toLowerCase().split(/\s+/).filter(Boolean);
 	if (tokens.length === 0) {
 		return entries.map((entry) => entry.slug);

@@ -20,6 +20,16 @@ interface FrontmatterData {
 	[key: string]: unknown;
 }
 
+function unquote(value: string): string {
+	if (
+		(value.startsWith('"') && value.endsWith('"')) ||
+		(value.startsWith("'") && value.endsWith("'"))
+	) {
+		return value.slice(1, -1);
+	}
+	return value;
+}
+
 export function parseFrontmatter(markdown: string): {
 	data: FrontmatterData;
 	content: string;
@@ -87,16 +97,6 @@ export function parseFrontmatter(markdown: string): {
 	}
 
 	return { data, content };
-}
-
-function unquote(value: string): string {
-	if (
-		(value.startsWith('"') && value.endsWith('"')) ||
-		(value.startsWith("'") && value.endsWith("'"))
-	) {
-		return value.slice(1, -1);
-	}
-	return value;
 }
 
 // Reduce markdown to plain text for search indexing
