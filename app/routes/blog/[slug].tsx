@@ -45,6 +45,12 @@ export default createRoute(
 			const { data, content } = parseFrontmatter(markdown);
 			const htmlContent = markdownToHtml(content);
 
+			const seoData = data.seo as { title?: string; description?: string; keywords?: string; image?: string } | undefined;
+			const seoTitle = seoData?.title || data.title || "Untitled";
+			const seoDesc = seoData?.description || data.description || "Read this article on our blog.";
+			const seoKeywords = seoData?.keywords || (Array.isArray(data.tags) ? data.tags.join(", ") : "");
+			const seoImage = seoData?.image || (data.cover as string) || undefined;
+
 			// Get all posts for reading time calculation and related posts
 			const allPosts: Array<{
 				slug: string;
@@ -87,8 +93,6 @@ export default createRoute(
 						bg: "bg.subtle",
 					})}
 				>
-					<title>{data.title || "Untitled"} - Blog</title>
-
 					{/* Article Content */}
 					<section
 						class={css({
@@ -667,6 +671,13 @@ export default createRoute(
 						</a>
 					</section>
 				</div>,
+				{
+					title: seoTitle,
+					description: seoDesc,
+					keywords: seoKeywords,
+					image: seoImage,
+					type: "article",
+				}
 			);
 		} catch (error) {
 			console.error(`Error loading post ${slug}:`, error);

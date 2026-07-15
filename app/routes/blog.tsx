@@ -109,6 +109,11 @@ export default createRoute(async (c) => {
 		return matchesSearch;
 	});
 
+	const seoTitle = searchQuery ? `Search results for "${searchQuery}"` : "Blog";
+	const seoDescription = searchQuery
+		? `Search results for "${searchQuery}" on Artefact blog.`
+		: "Thoughts on web development, design systems, and building better developer experiences. Stay updated with the latest trends and best practices.";
+
 	return c.render(
 		<div
 			class={css({
@@ -118,7 +123,6 @@ export default createRoute(async (c) => {
 				mx: "auto",
 			})}
 		>
-			<title>Blog - Artefact</title>
 
 			{/* Decorative background element */}
 			<div
@@ -1016,5 +1020,9 @@ export default createRoute(async (c) => {
 				</div>
 			</section>
 		</div>,
+		{
+			title: seoTitle,
+			description: seoDescription,
+		}
 	);
 });

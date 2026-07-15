@@ -33,11 +33,15 @@ export function parseFrontmatter(markdown: string): {
 	const frontmatter = match[1];
 	const content = match[2];
 
-	// Simple YAML parsing for basic types
+	// Simple YAML parsing for basic types supporting 1-level nesting
 	const data: FrontmatterData = {};
 	const lines = frontmatter.split("\n");
+	let currentParentKey: string | null = null;
 
 	for (const line of lines) {
+		const trimmedLine = line.trim();
+		if (!trimmedLine) continue;
+
 		const colonIndex = line.indexOf(":");
 		if (colonIndex === -1) continue;
 
@@ -52,19 +56,34 @@ export function parseFrontmatter(markdown: string): {
 			value = value.slice(1, -1);
 		}
 
-		// Parse arrays (simple format: ["item1", "item2"])
+		const isIndented = line.startsWith(" ") || line.startsWith("\t");
+
+		let parsedValue: any = value;
 		if (value.startsWith("[") && value.endsWith("]")) {
 			try {
-				data[key] = JSON.parse(value);
+				parsedValue = JSON.parse(value);
 			} catch {
-				data[key] = value;
+				parsedValue = value;
 			}
 		} else if (value === "true") {
-			data[key] = true;
+			parsedValue = true;
 		} else if (value === "false") {
-			data[key] = false;
+			parsedValue = false;
+		}
+
+		if (isIndented && currentParentKey) {
+			if (typeof data[currentParentKey] !== "object" || data[currentParentKey] === null) {
+				data[currentParentKey] = {};
+			}
+			(data[currentParentKey] as any)[key] = parsedValue;
 		} else {
-			data[key] = value;
+			if (value === "") {
+				currentParentKey = key;
+				data[key] = {};
+			} else {
+				currentParentKey = null;
+				data[key] = parsedValue;
+			}
 		}
 	}
 

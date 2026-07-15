@@ -139,8 +139,6 @@ export default createRoute(
 					mx: "auto",
 				})}
 			>
-				<title>Posts tagged: {tagFilter} - Artefact Blog</title>
-
 				{/* Decorative background element */}
 				<div
 					class={css({
@@ -746,6 +744,10 @@ export default createRoute(
 					</div>
 				)}
 			</div>,
+			{
+				title: `Posts tagged: ${tagFilter}`,
+				description: `Explore all blog posts tagged with ${tagFilter} on Artefact blog.`,
+			}
 		);
 	},
 );

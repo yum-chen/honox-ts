@@ -41,6 +41,15 @@ collections:
         name: draft
         widget: boolean
         default: false
+      - label: SEO Settings
+        name: seo
+        widget: object
+        required: false
+        fields:
+          - { label: SEO Title, name: title, widget: string, required: false }
+          - { label: SEO Description, name: description, widget: text, required: false }
+          - { label: SEO Keywords, name: keywords, widget: string, required: false }
+          - { label: SEO Image, name: image, widget: image, required: false }
 
   - name: pages
     label: Pages
@@ -52,6 +61,15 @@ collections:
     slug: "{{slug}}"
     fields:
       - { label: Title, name: title, widget: string }
+      - label: SEO Settings
+        name: seo
+        widget: object
+        required: false
+        fields:
+          - { label: SEO Title, name: title, widget: string, required: false }
+          - { label: SEO Description, name: description, widget: text, required: false }
+          - { label: SEO Keywords, name: keywords, widget: string, required: false }
+          - { label: SEO Image, name: image, widget: image, required: false }
       - label: Content
         name: content
         widget: list

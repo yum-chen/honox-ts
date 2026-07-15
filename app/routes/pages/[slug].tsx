@@ -26,6 +26,12 @@ export default createRoute(
 		try {
 			const data = (await loader()) as any;
 
+			const seoData = data.seo as { title?: string; description?: string; keywords?: string; image?: string } | undefined;
+			const seoTitle = seoData?.title || data.title || "Page";
+			const seoDesc = seoData?.description || "Dynamic page built with Sveltia CMS.";
+			const seoKeywords = seoData?.keywords || "";
+			const seoImage = seoData?.image || undefined;
+
 			return c.render(
 				<div
 					class={css({
@@ -35,9 +41,14 @@ export default createRoute(
 						py: "12",
 					})}
 				>
-					<title>{data.title}</title>
 					<PageRenderer content={data.content} />
 				</div>,
+				{
+					title: seoTitle,
+					description: seoDesc,
+					keywords: seoKeywords,
+					image: seoImage,
+				}
 			);
 		} catch (error) {
 			console.error(`Error loading page ${slug}:`, error);
