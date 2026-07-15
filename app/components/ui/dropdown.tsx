@@ -21,7 +21,7 @@ import {
 	DropdownTrigger as Trigger,
 } from "./dropdown-primitive";
 
-// ============= Flattened API Types =============
+// ============= API Types =============
 
 type DropdownItemType =
 	| "item"
@@ -187,7 +187,7 @@ function renderDropdownItem(item: DropdownItem, index: number): JSX.Element {
 	}
 }
 
-// ============= Flattened Dropdown Component =============
+// ============= Dropdown Component =============
 
 function DropdownRoot(props: DropdownProps) {
 	const {
