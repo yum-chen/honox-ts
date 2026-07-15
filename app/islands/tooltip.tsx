@@ -1,8 +1,8 @@
 import {
 	InteractiveTooltip,
-	type TooltipBaseProps,
+	type InteractiveTooltipProps,
 } from "../components/ui/tooltip-primitive";
 
-export default function TooltipIsland(props: TooltipBaseProps) {
+export default function TooltipIsland(props: InteractiveTooltipProps) {
 	return <InteractiveTooltip {...props} />;
 }

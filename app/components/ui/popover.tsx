@@ -1,4 +1,4 @@
-import type { JSX } from "hono/jsx";
+import { type JSX, useId } from "hono/jsx";
 import PopoverIsland from "../../islands/popover";
 import { IconButton } from "./button";
 import { shouldHydrate } from "./island-utils";
@@ -74,17 +74,36 @@ function Popover(props: PopoverProps) {
 		closable = true,
 		closeIcon,
 		children,
+		id,
+		placement,
 		...rest
 	} = props;
+	const autoId = useId();
+	// Threaded explicitly to Trigger/Content/Title/Positioner/Arrow (instead
+	// of leaving them to derive it from PopoverContext) because HonoX
+	// reconstructs an island's `children` for hydration from a context-less
+	// snapshot — context-derived id/aria-*/placement wiring would silently
+	// disappear (or reset to its default) once the client hydrates, while an
+	// explicit prop survives.
+	const resolvedId = id || autoId;
 
 	return (
-		<Root {...rest} interactive={interactive}>
-			{trigger && <Trigger asChild>{trigger}</Trigger>}
-			<Positioner>
-				<Content>
+		<Root
+			{...rest}
+			id={resolvedId}
+			placement={placement}
+			interactive={interactive}
+		>
+			{trigger && (
+				<Trigger id={resolvedId} asChild>
+					{trigger}
+				</Trigger>
+			)}
+			<Positioner placement={placement}>
+				<Content id={resolvedId}>
 					{showArrow && (
-						<Arrow>
-							<ArrowTip />
+						<Arrow placement={placement}>
+							<ArrowTip placement={placement} />
 						</Arrow>
 					)}
 					{closable && (
@@ -96,8 +115,10 @@ function Popover(props: PopoverProps) {
 					)}
 					{(title || description) && (
 						<Header>
-							{title && <Title>{title}</Title>}
-							{description && <Description>{description}</Description>}
+							{title && <Title id={resolvedId}>{title}</Title>}
+							{description && (
+								<Description id={resolvedId}>{description}</Description>
+							)}
 						</Header>
 					)}
 					{body && <Body>{body}</Body>}

@@ -346,7 +346,7 @@ export default createRoute((c) => {
 					{/* ColorPicker as Trigger / Popover */}
 					<Stack direction="column" gap="2" align="center">
 						<Text size="sm" class={css({ color: "fg.muted" })}>
-							Interactive ColorPicker (Swatch Trigger + Popover)
+							ColorPicker (Swatch Trigger + Popover)
 						</Text>
 						<ColorPicker
 							interactive
@@ -838,6 +838,73 @@ export default createRoute((c) => {
 						},
 					]}
 				/>
+
+				<Text size="sm" class={css({ color: "fg.muted", mt: "4", mb: "2" })}>
+					Hover Trigger with Arrow and Groups
+				</Text>
+				<Dropdown
+					trigger={<Button variant="outline">Hover Me</Button>}
+					triggerMode="hover"
+					arrow
+					items={[
+						{
+							type: "group",
+							label: "Account",
+							items: [
+								{ type: "item", label: "Profile", value: "profile" },
+								{ type: "item", label: "Settings", value: "settings" },
+							],
+						},
+						{ type: "separator" },
+						{
+							type: "submenu",
+							label: "Share",
+							items: [
+								{ type: "item", label: "Email", value: "email" },
+								{ type: "item", label: "Link", value: "link" },
+							],
+						},
+						{ type: "separator" },
+						{ type: "item", label: "Logout", value: "logout" },
+					]}
+				/>
+
+				<Text size="sm" class={css({ color: "fg.muted", mt: "4", mb: "2" })}>
+					Disabled Dropdown
+				</Text>
+				<Dropdown
+					disabled
+					trigger={<Button variant="outline">Can't Open Me</Button>}
+					items={[{ type: "item", label: "Unreachable", value: "unreachable" }]}
+				/>
+
+				<Text size="sm" class={css({ color: "fg.muted", mt: "4", mb: "2" })}>
+					Context Menu (Right-Click)
+				</Text>
+				<div
+					class={css({
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+						w: "full",
+						h: "24",
+						borderWidth: "1px",
+						borderStyle: "dashed",
+						borderColor: "border",
+						borderRadius: "l2",
+						color: "fg.muted",
+						textStyle: "sm",
+					})}
+				>
+					<Dropdown
+						trigger={<div>Right-click this area</div>}
+						triggerMode="contextDropdown"
+						items={[
+							{ type: "item", label: "Copy", value: "copy" },
+							{ type: "item", label: "Paste", value: "paste" },
+						]}
+					/>
+				</div>
 			</Stack>
 
 			{/* Slider Examples */}
@@ -1868,11 +1935,11 @@ export default createRoute((c) => {
 					Tooltip Component Examples
 				</Heading>
 				<Stack gap="8">
-					<Tooltip content="This is a tooltip">
+					<Tooltip content="This is a tooltip" asChild>
 						<Button variant="outline">Tooltip</Button>
 					</Tooltip>
 
-					<Tooltip content="Tooltip with Arrow" showArrow>
+					<Tooltip content="Tooltip with Arrow" showArrow asChild>
 						<Button variant="outline">With Arrow</Button>
 					</Tooltip>
 				</Stack>

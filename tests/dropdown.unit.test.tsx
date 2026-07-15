@@ -16,7 +16,7 @@ describe("Dropdown Unit Tests", () => {
 
 		expect(html).toContain('data-part="trigger"');
 		expect(html).toContain("Open");
-        expect(html).toContain('role="menu"');
+		expect(html).toContain('role="menu"');
 	});
 
 	test("should render items correctly", () => {
@@ -39,18 +39,44 @@ describe("Dropdown Unit Tests", () => {
 		expect(html).toContain('aria-checked="true"');
 	});
 
-	test("should degrade submenu to a disabled item (no debug leak)", () => {
+	test("should render a group with a label", () => {
 		const html = (
 			<Dropdown.Root
 				interactive={false}
-				items={[{ type: "submenu", label: "More", items: [] }]}
+				items={[
+					{
+						type: "group",
+						label: "Actions",
+						items: [{ type: "item", label: "Edit", value: "edit" }],
+					},
+				]}
 			/>
 		).toString();
 
-		expect(html).toContain('data-part="item"');
-		expect(html).toContain("data-disabled");
+		expect(html).toContain('data-part="item-group"');
+		expect(html).toContain("Actions");
+		expect(html).toContain('data-value="edit"');
+	});
+
+	test("should render a cascading submenu as real nested trigger + content, not a disabled placeholder", () => {
+		const html = (
+			<Dropdown.Root
+				interactive={false}
+				items={[
+					{
+						type: "submenu",
+						label: "More",
+						items: [{ type: "item", label: "Nested", value: "nested" }],
+					},
+				]}
+			/>
+		).toString();
+
+		expect(html).toContain('data-part="trigger-item"');
+		expect(html).toContain('aria-haspopup="menu"');
 		expect(html).toContain("More");
-		expect(html).not.toContain("not supported in simplified API");
+		expect(html).toContain('data-value="nested"');
+		expect(html).not.toContain("data-disabled");
 	});
 
 	test("should render arrow and arrow tip when arrow is true", () => {
@@ -79,5 +105,45 @@ describe("Dropdown Unit Tests", () => {
 
 		expect(html).toContain('data-part="trigger"');
 		expect(html).toContain('role="menu"');
+	});
+
+	test("should render aria-disabled and data-disabled on the trigger when disabled", () => {
+		const html = (
+			<Dropdown.Root
+				interactive={false}
+				disabled
+				trigger={<button type="button">Open</button>}
+				items={[{ type: "item", label: "Item 1", value: "item-1" }]}
+			/>
+		).toString();
+
+		expect(html).toContain('aria-disabled="true"');
+		expect(html).toContain('data-disabled=""');
+	});
+
+	test("should render a context-menu-only trigger as a context-trigger, not a button", () => {
+		const html = (
+			<Dropdown.Root
+				interactive={false}
+				trigger={<div>Right-click me</div>}
+				triggerMode="contextDropdown"
+				items={[{ type: "item", label: "Item 1", value: "item-1" }]}
+			/>
+		).toString();
+
+		expect(html).toContain('data-part="context-trigger"');
+		expect(html).not.toContain('data-part="trigger"');
+	});
+
+	test("should support a controlled open prop", () => {
+		const html = (
+			<Dropdown.Root
+				interactive={false}
+				open={true}
+				items={[{ type: "item", label: "Item 1", value: "item-1" }]}
+			/>
+		).toString();
+
+		expect(html).toContain('data-state="open"');
 	});
 });
