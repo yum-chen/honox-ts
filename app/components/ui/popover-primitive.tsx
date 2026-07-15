@@ -12,6 +12,28 @@ import {
 } from "hono/jsx";
 import { getFocusable, hasPart } from "./overlay-a11y";
 
+/**
+ * Positioner defaults to `left: 0`, which anchors it to the trigger's left
+ * edge. Near the right edge of the viewport that pushes the positioner past
+ * `100vw`, growing the document's scrollable width instead of clipping.
+ * Shift it left just enough to stay inside the viewport.
+ */
+function clampPositionerToViewport(positioner: HTMLElement) {
+	if (typeof window === "undefined") return;
+	const gap = 8;
+	positioner.style.left = "0px";
+	const rect = positioner.getBoundingClientRect();
+	let left = 0;
+	const overflowRight = rect.right - (window.innerWidth - gap);
+	if (overflowRight > 0) {
+		left -= overflowRight;
+	}
+	if (rect.left + left < gap) {
+		left += gap - (rect.left + left);
+	}
+	positioner.style.left = `${left}px`;
+}
+
 type PopoverStyles = ReturnType<typeof popover>;
 
 interface PopoverContextValue {
@@ -460,6 +482,7 @@ function InteractivePopoverRoot(props: InteractivePopoverProps) {
 			getPositioners().forEach((p) => {
 				p.style.setProperty("display", "block", "important");
 				p.setAttribute("data-state", "open");
+				clampPositionerToViewport(p);
 			});
 			const content = root.querySelector<HTMLElement>('[data-part="content"]');
 			if (content) {
@@ -536,6 +559,7 @@ function InteractivePopoverRoot(props: InteractivePopoverProps) {
 			positioners.forEach((p) => {
 				p.style.setProperty("display", "block", "important");
 				p.setAttribute("data-state", "open");
+				clampPositionerToViewport(p);
 			});
 			const content = root.querySelector<HTMLElement>('[data-part="content"]');
 			if (content) {

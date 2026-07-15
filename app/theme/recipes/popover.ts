@@ -33,6 +33,7 @@ export const popover = defineSlotRecipe({
 			textStyle: "sm",
 			transformOrigin: "var(--transform-origin)",
 			width: "xs",
+			maxWidth: "calc(100vw - (2 * var(--popover-edge-gap, 1rem)))",
 			zIndex: "calc(var(--z-index-popover) + var(--layer-index, 0))",
 			_open: {
 				animationStyle: "scale-fade-in",
