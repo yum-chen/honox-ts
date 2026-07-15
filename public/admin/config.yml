@@ -24,15 +24,39 @@ collections:
     folder: /content/posts
     create: true
     slug: "{{slug}}"
+    summary: "{{title}} — {{date}}"
+    sortable_fields: [title, date]
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
+      - label: Published
+        field: draft
+        pattern: false
+    view_groups:
+      - label: Year
+        field: date
+        pattern: '\d{4}'
     fields:
       - { label: Title, name: title, widget: string }
       - { label: Date, name: date, widget: datetime, type: date, default: "" }
       - { label: Description, name: description, widget: string }
       - { label: Body, name: body, widget: markdown }
-      - label: Featured Image
-        name: image
+      # Field name must stay `cover` — app/routes/blog.tsx reads data.cover
+      - label: Cover Image
+        name: cover
         widget: image
         required: false
+      - label: Author
+        name: author
+        widget: string
+        required: false
+        default: Artefact Team
+      - label: Read Time
+        name: readTime
+        widget: string
+        required: false
+        hint: "e.g. 5 min read"
       - label: Tags
         name: tags
         widget: list

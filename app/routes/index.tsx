@@ -33,6 +33,7 @@ import {
 	Popover,
 	Progress,
 	RadioGroup,
+	Search,
 	SegmentGroup,
 	Select,
 	Skeleton,
@@ -982,6 +983,66 @@ export default createRoute((c) => {
 					label="Framework"
 					placeholder="Select a Framework"
 				/>
+			</Stack>
+
+			{/* Search Examples */}
+			<Stack
+				direction="column"
+				gap="6"
+				class={css({ mt: "8", maxWidth: "xl", mx: "auto" })}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Search Component Examples
+				</Heading>
+
+				<Stack
+					direction="column"
+					gap="2"
+					class={css({ textAlign: "left", width: "full" })}
+				>
+					<Text size="sm" class={css({ color: "fg.muted" })}>
+						Autocomplete over the SSG-generated /search-index.json — the index
+						is fetched lazily on focus. Try "islands" or "wcag".
+					</Text>
+					<Search
+						placeholder="Search blog posts..."
+						itemLabel="posts"
+						syncUrl={false}
+					/>
+				</Stack>
+
+				<Stack
+					direction="column"
+					gap="2"
+					class={css({ textAlign: "left", width: "full" })}
+				>
+					<Text size="sm" class={css({ color: "fg.muted" })}>
+						Tuned: 400ms debounce, at most 3 suggestions
+					</Text>
+					<Search
+						placeholder="Slower, shorter..."
+						debounceMs={400}
+						maxSuggestions={3}
+						itemLabel="posts"
+						syncUrl={false}
+					/>
+				</Stack>
+
+				<Stack
+					direction="column"
+					gap="2"
+					class={css({ textAlign: "left", width: "full" })}
+				>
+					<Text size="sm" class={css({ color: "fg.muted" })}>
+						Static opt-out (interactive={"{false}"}): renders a plain GET form
+						that submits ?q= to /blog — no JavaScript shipped
+					</Text>
+					<Search
+						interactive={false}
+						action="/blog"
+						placeholder="Search without JS..."
+					/>
+				</Stack>
 			</Stack>
 
 			{/* Select Examples */}

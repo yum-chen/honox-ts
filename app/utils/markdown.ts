@@ -17,7 +17,20 @@ interface FrontmatterData {
 	description?: string;
 	tags?: string[];
 	draft?: boolean;
+	author?: string;
+	readTime?: string;
+	cover?: string;
 	[key: string]: unknown;
+}
+
+function unquote(value: string): string {
+	if (
+		(value.startsWith('"') && value.endsWith('"')) ||
+		(value.startsWith("'") && value.endsWith("'"))
+	) {
+		return value.slice(1, -1);
+	}
+	return value;
 }
 
 export function parseFrontmatter(markdown: string): {
@@ -30,8 +43,8 @@ export function parseFrontmatter(markdown: string): {
 		return { data: {}, content: markdown };
 	}
 
-	const frontmatter = match[1];
-	const content = match[2];
+	const frontmatter = match[1] ?? "";
+	const content = match[2] ?? "";
 
 	// Simple YAML parsing for basic types
 	const data: FrontmatterData = {};
@@ -87,16 +100,6 @@ export function parseFrontmatter(markdown: string): {
 	}
 
 	return { data, content };
-}
-
-function unquote(value: string): string {
-	if (
-		(value.startsWith('"') && value.endsWith('"')) ||
-		(value.startsWith("'") && value.endsWith("'"))
-	) {
-		return value.slice(1, -1);
-	}
-	return value;
 }
 
 // Reduce markdown to plain text for search indexing
