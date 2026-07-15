@@ -48,7 +48,7 @@ export default createRoute((c) => {
 						Inline picker
 					</Heading>
 					<ColorPicker
-						value="#7c3aed"
+						defaultValue="#7c3aed"
 						name="brand"
 						label="Brand colour"
 						presets={presets}
@@ -73,7 +73,7 @@ export default createRoute((c) => {
 					Trigger with alpha &amp; HSLA format
 				</Heading>
 				<ColorPicker
-					value={{ h: 280, s: 70, v: 90, a: 0.6 }}
+					defaultValue={{ h: 280, s: 70, v: 90, a: 0.6 }}
 					format="hsla"
 					label="Accent"
 					trigger

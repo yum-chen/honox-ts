@@ -351,7 +351,7 @@ export default createRoute((c) => {
 						<ColorPicker
 							interactive
 							trigger
-							value="#eab308"
+							defaultValue="#eab308"
 							label="Popover Trigger Picker"
 						/>
 					</Stack>
