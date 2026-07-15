@@ -26,6 +26,7 @@ export const datePicker = defineSlotRecipe({
 		"trigger",
 		"view",
 		"viewControl",
+		"weekNumber",
 		"viewTrigger",
 		"yearSelect",
 		"valueText",
@@ -104,14 +105,16 @@ export const datePicker = defineSlotRecipe({
 			display: "flex",
 			flexDirection: "column",
 			gap: "3",
+			maxWidth: "100%",
+			outline: "none",
 			p: "4",
 			width: "344px",
 			zIndex: "dropdown",
 			_open: {
-				animation: "fadeIn 0.25s ease-out",
+				animation: "fade-in 0.2s ease-out",
 			},
 			_closed: {
-				animation: "fadeOut 0.2s ease-out",
+				animation: "fade-out 0.15s ease-in",
 			},
 			_hidden: {
 				display: "none",
@@ -216,6 +219,7 @@ export const datePicker = defineSlotRecipe({
 			color: "fg.default",
 			cursor: "pointer",
 			display: "inline-flex",
+			fontVariantNumeric: "tabular-nums",
 			height: "10",
 			justifyContent: "center",
 			position: "relative",
@@ -230,6 +234,11 @@ export const datePicker = defineSlotRecipe({
 				color: "fg.subtle",
 			},
 			"&[data-in-range]:not([data-selected])": {
+				background: "colorPalette.subtle.bg",
+				borderRadius: "0",
+				color: "colorPalette.subtle.fg",
+			},
+			"&[data-range-preview]:not([data-selected])": {
 				background: "colorPalette.subtle.bg",
 				borderRadius: "0",
 				color: "colorPalette.subtle.fg",
@@ -255,7 +264,7 @@ export const datePicker = defineSlotRecipe({
 					background: "colorPalette.solid.bg.hover",
 				},
 				_after: {
-					background: "colorPalette.solid.fg",
+					display: "none",
 				},
 			},
 			_disabled: {
@@ -264,6 +273,13 @@ export const datePicker = defineSlotRecipe({
 					background: "transparent",
 				},
 			},
+		},
+		weekNumber: {
+			color: "fg.subtle",
+			fontVariantNumeric: "tabular-nums",
+			fontSize: "xs",
+			height: "10",
+			textAlign: "center",
 		},
 		monthSelect: {
 			background: "transparent",
