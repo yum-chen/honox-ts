@@ -1,6 +1,11 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 import { input } from "./input";
 
+// `input`'s size variants set the shorthand `px`, which would otherwise
+// collide with the fixed `pl`/`pr` search reserves for its icon and clear
+// button below — strip it so those never fight over the same padding.
+const withoutPx = <T extends { px?: unknown }>({ px: _px, ...rest }: T) => rest;
+
 // Search slot recipe — joins the design system by reusing the shared `input`
 // recipe for the field and resolving all accent colors through `colorPalette`
 // semantic tokens (so the component themes with the rest of the system instead
@@ -75,15 +80,28 @@ export const search = defineSlotRecipe({
 			top: "calc(100% + 6px)",
 			left: "0",
 			right: "0",
-			bg: "bg.default",
+			// `gray.surface.bg` (not `colorPalette.surface.bg`) so the panel stays
+			// a neutral opaque white/gray.1 regardless of accent — matches how
+			// menu/dialog keep their dropdown surfaces neutral. (`bg.default` was
+			// dead: that token was stripped from the Panda preset by this repo's
+			// "Remove Panda Preset Colors" plugin and never replaced, so it
+			// silently compiled to invalid, ignored CSS and rendered transparent.)
+			bg: "gray.surface.bg",
 			borderWidth: "1px",
 			borderColor: "gray.outline.border",
 			borderRadius: "l2",
 			boxShadow: "lg",
 			zIndex: "dropdown",
-			maxHeight: "80",
+			// Viewport-aware so the dropdown never runs off-screen when the input
+			// sits low on the page (this component has no positioner supplying
+			// `--available-height`, so clamp against the viewport directly).
+			maxHeight: "min(20rem, 60vh)",
 			overflowY: "auto",
+			overscrollBehavior: "contain",
 			padding: "1",
+			transformOrigin: "top",
+			animationStyle: "slide-fade-in",
+			animationDuration: "fast",
 		},
 		item: {
 			display: "flex",
@@ -91,12 +109,13 @@ export const search = defineSlotRecipe({
 			gap: "0.5",
 			px: "3",
 			py: "2.5",
-			borderRadius: "md",
+			borderRadius: "l1",
 			cursor: "pointer",
 			transition: "colors",
+			// Highlight tints only the background; title/description keep their
+			// neutral colors so contrast stays predictable across all palettes.
 			_highlighted: {
 				bg: "colorPalette.subtle.bg",
-				color: "colorPalette.subtle.fg",
 			},
 		},
 		itemTitle: {
@@ -111,7 +130,9 @@ export const search = defineSlotRecipe({
 		},
 		itemTags: {
 			textStyle: "2xs",
-			color: "colorPalette.solid.fg",
+			// `plain.fg` (accent-tinted, readable) — not `solid.fg`, which is
+			// white and only legible on the solid accent fill, not this plain bg.
+			color: "colorPalette.plain.fg",
 			mt: "1",
 		},
 		countText: {
@@ -130,9 +151,15 @@ export const search = defineSlotRecipe({
 	},
 	variants: {
 		size: {
-			sm: { input: { ...input.variants.size.sm } },
-			md: { input: { ...input.variants.size.md } },
-			lg: { input: { ...input.variants.size.lg } },
+			sm: {
+				input: { ...withoutPx(input.variants.size.sm), pl: "9", pr: "9" },
+			},
+			md: {
+				input: { ...withoutPx(input.variants.size.md), pl: "10", pr: "10" },
+			},
+			lg: {
+				input: { ...withoutPx(input.variants.size.lg), pl: "11", pr: "11" },
+			},
 		},
 		variant: {
 			outline: { input: { ...input.variants.variant.outline } },
