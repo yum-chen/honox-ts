@@ -1977,6 +1977,20 @@ export default createRoute((c) => {
 							selectionMode="range"
 						/>
 					</Stack>
+
+					{/* Week numbers + accent colour */}
+					<Stack direction="column" gap="2">
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Single · week numbers · purple accent
+						</Text>
+						<DatePicker
+							interactive
+							label="Pick a day"
+							selectionMode="single"
+							showWeekNumbers
+							colorPalette="purple"
+						/>
+					</Stack>
 				</Stack>
 			</Stack>
 
