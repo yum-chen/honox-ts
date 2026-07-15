@@ -10,214 +10,19 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { getFocusable, hasPart } from "./overlay-a11y";
+import { getFocusable, hasPart, whenAnimationEnds } from "./overlay-a11y";
+import {
+	getArrowRotation,
+	getArrowStyle,
+	getPlacementStyle,
+	type OverlayPlacement,
+	positionOverlay,
+} from "./overlay-position";
 
-type PopoverPlacement = "top" | "bottom" | "left" | "right";
+type PopoverPlacement = OverlayPlacement;
 
 const ARROW_OFFSET = "16px";
-const PLACEMENT_GAP = "var(--arrow-size)";
-
-/** Base (non-flipped) positioner offset for each requested placement. */
-function getPlacementStyle(placement: PopoverPlacement) {
-	switch (placement) {
-		case "top":
-			return {
-				top: "auto",
-				bottom: "100%",
-				left: "0",
-				right: "auto",
-				marginBottom: PLACEMENT_GAP,
-				marginTop: "0",
-			};
-		case "left":
-			return {
-				top: "0",
-				bottom: "auto",
-				left: "auto",
-				right: "100%",
-				marginRight: PLACEMENT_GAP,
-				marginLeft: "0",
-			};
-		case "right":
-			return {
-				top: "0",
-				bottom: "auto",
-				left: "100%",
-				right: "auto",
-				marginLeft: PLACEMENT_GAP,
-				marginRight: "0",
-			};
-		default:
-			return {
-				top: "100%",
-				bottom: "auto",
-				left: "0",
-				right: "auto",
-				marginTop: PLACEMENT_GAP,
-				marginBottom: "0",
-			};
-	}
-}
-
-/** Arrow inset from the positioner's aligned edge, per placement. */
-function getArrowStyle(placement: PopoverPlacement) {
-	switch (placement) {
-		case "top":
-			return {
-				top: "auto",
-				bottom: "calc(var(--arrow-size) * -0.5)",
-				left: ARROW_OFFSET,
-				right: "auto",
-			};
-		case "left":
-			return {
-				top: ARROW_OFFSET,
-				bottom: "auto",
-				left: "auto",
-				right: "calc(var(--arrow-size) * -0.5)",
-			};
-		case "right":
-			return {
-				top: ARROW_OFFSET,
-				bottom: "auto",
-				left: "calc(var(--arrow-size) * -0.5)",
-				right: "auto",
-			};
-		default:
-			return {
-				top: "calc(var(--arrow-size) * -0.5)",
-				bottom: "auto",
-				left: ARROW_OFFSET,
-				right: "auto",
-			};
-	}
-}
-
-/** Diamond rotation that points the arrow tip back at the trigger. */
-function getArrowRotation(placement: PopoverPlacement): number {
-	switch (placement) {
-		case "top":
-			return 225;
-		case "left":
-			return 135;
-		case "right":
-			return 315;
-		default:
-			return 45;
-	}
-}
-
-function getTransformOrigin(placement: PopoverPlacement): string {
-	switch (placement) {
-		case "top":
-			return "bottom left";
-		case "left":
-			return "top right";
-		case "right":
-			return "top left";
-		default:
-			return "top left";
-	}
-}
-
-/**
- * Resolves the effective placement and applies it to the positioner + arrow,
- * flipping to the opposite side when the requested placement would overflow
- * the viewport and the opposite side has more room. Also re-clamps the
- * cross axis (e.g. horizontal for a top/bottom placement) so the content
- * never renders off-screen, and re-runs on resize while open.
- */
-function positionPopover(root: HTMLElement) {
-	if (typeof window === "undefined") return;
-	const gap = 8;
-	const trigger = root.querySelector<HTMLElement>('[data-part="trigger"]');
-	const triggerRect = trigger?.getBoundingClientRect();
-
-	for (const positioner of root.querySelectorAll<HTMLElement>(
-		'[data-part="positioner"]',
-	)) {
-		const preferred =
-			(positioner.getAttribute("data-placement") as PopoverPlacement) ||
-			"bottom";
-		let placement = preferred;
-		Object.assign(positioner.style, getPlacementStyle(placement));
-
-		const content = positioner.querySelector<HTMLElement>(
-			'[data-part="content"]',
-		);
-		const contentRect = (content ?? positioner).getBoundingClientRect();
-
-		if (triggerRect) {
-			const spaceBelow = window.innerHeight - triggerRect.bottom;
-			const spaceAbove = triggerRect.top;
-			const spaceRight = window.innerWidth - triggerRect.right;
-			const spaceLeft = triggerRect.left;
-
-			if (
-				placement === "bottom" &&
-				contentRect.height > spaceBelow - gap &&
-				spaceAbove > spaceBelow
-			) {
-				placement = "top";
-			} else if (
-				placement === "top" &&
-				contentRect.height > spaceAbove - gap &&
-				spaceBelow > spaceAbove
-			) {
-				placement = "bottom";
-			} else if (
-				placement === "right" &&
-				contentRect.width > spaceRight - gap &&
-				spaceLeft > spaceRight
-			) {
-				placement = "left";
-			} else if (
-				placement === "left" &&
-				contentRect.width > spaceLeft - gap &&
-				spaceRight > spaceLeft
-			) {
-				placement = "right";
-			}
-
-			if (placement !== preferred) {
-				Object.assign(positioner.style, getPlacementStyle(placement));
-			}
-		}
-
-		// Clamp the cross axis so the content stays within the viewport.
-		const rect = positioner.getBoundingClientRect();
-		if (placement === "top" || placement === "bottom") {
-			let shift = 0;
-			const overflowRight = rect.right - (window.innerWidth - gap);
-			if (overflowRight > 0) shift -= overflowRight;
-			if (rect.left + shift < gap) shift += gap - (rect.left + shift);
-			positioner.style.left = `${shift}px`;
-			positioner.style.right = "auto";
-		} else {
-			let shift = 0;
-			const overflowBottom = rect.bottom - (window.innerHeight - gap);
-			if (overflowBottom > 0) shift -= overflowBottom;
-			if (rect.top + shift < gap) shift += gap - (rect.top + shift);
-			positioner.style.top = `${shift}px`;
-			positioner.style.bottom = "auto";
-		}
-
-		positioner.setAttribute("data-effective-placement", placement);
-		positioner.style.setProperty(
-			"--transform-origin",
-			getTransformOrigin(placement),
-		);
-
-		const arrow = positioner.querySelector<HTMLElement>('[data-part="arrow"]');
-		if (arrow) {
-			Object.assign(arrow.style, getArrowStyle(placement));
-			const tip = arrow.querySelector<HTMLElement>('[data-part="arrow-tip"]');
-			if (tip) {
-				tip.style.transform = `rotate(${getArrowRotation(placement)}deg)`;
-			}
-		}
-	}
-}
+const PLACEMENT_CONFIG = { align: "start", arrowOffset: ARROW_OFFSET } as const;
 
 type PopoverStyles = ReturnType<typeof popover>;
 
@@ -405,8 +210,8 @@ function Positioner(props: PopoverPositionerProps) {
 			data-placement={placement}
 			style={{
 				position: "absolute",
-				zIndex: 1000,
-				...getPlacementStyle(placement),
+				zIndex: "calc(var(--z-index-popover) + var(--layer-index, 0))",
+				...getPlacementStyle(placement, PLACEMENT_CONFIG),
 			}}
 			{...restProps}
 		>
@@ -570,7 +375,7 @@ function Arrow(props: PropsWithChildren<{ class?: string }>) {
 			class={cx(styles.arrow, classProp)}
 			data-scope="popover"
 			data-part="arrow"
-			style={getArrowStyle(placement)}
+			style={getArrowStyle(placement, PLACEMENT_CONFIG)}
 			{...restProps}
 		>
 			{children}
@@ -691,8 +496,10 @@ function InteractivePopoverRoot(props: InteractivePopoverProps) {
 		}
 
 		const isCurrentlyOpen = () => root.getAttribute("data-state") === "open";
+		let cancelPendingHide = () => {};
 
 		const show = () => {
+			cancelPendingHide();
 			if (isCurrentlyOpen()) return;
 			prevFocusRef.current = document.activeElement as HTMLElement | null;
 			root.setAttribute("data-state", "open");
@@ -703,7 +510,7 @@ function InteractivePopoverRoot(props: InteractivePopoverProps) {
 				p.style.setProperty("display", "block", "important");
 				p.setAttribute("data-state", "open");
 			});
-			positionPopover(root);
+			positionOverlay(root, PLACEMENT_CONFIG);
 			const content = root.querySelector<HTMLElement>('[data-part="content"]');
 			if (content) {
 				content.setAttribute("data-state", "open");
@@ -723,17 +530,19 @@ function InteractivePopoverRoot(props: InteractivePopoverProps) {
 			});
 		};
 
+		// Defers `display: none` on the positioner until the `_closed`
+		// (scale-fade-out) animation actually finishes, so it gets a chance
+		// to play instead of being cut off by an instant hide.
 		const hide = (shouldFocus = true) => {
 			if (!isCurrentlyOpen()) return;
 			root.setAttribute("data-state", "closed");
 			const positioners = Array.from(
 				root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
 			);
+			const content = root.querySelector<HTMLElement>('[data-part="content"]');
 			positioners.forEach((p) => {
-				p.style.setProperty("display", "none", "important");
 				p.setAttribute("data-state", "closed");
 			});
-			const content = root.querySelector<HTMLElement>('[data-part="content"]');
 			if (content) {
 				content.setAttribute("data-state", "closed");
 			}
@@ -751,6 +560,22 @@ function InteractivePopoverRoot(props: InteractivePopoverProps) {
 			if (shouldFocus) {
 				(trigger ?? prevFocusRef.current)?.focus();
 			}
+
+			cancelPendingHide();
+			const animatedEl = content ?? positioners[0];
+			if (animatedEl) {
+				cancelPendingHide = whenAnimationEnds(animatedEl, () => {
+					if (!isCurrentlyOpen()) {
+						positioners.forEach((p) => {
+							p.style.setProperty("display", "none", "important");
+						});
+					}
+				});
+			} else {
+				positioners.forEach((p) => {
+					p.style.setProperty("display", "none", "important");
+				});
+			}
 		};
 
 		showRef.current = show;
@@ -765,6 +590,11 @@ function InteractivePopoverRoot(props: InteractivePopoverProps) {
 				"[data-part]",
 			) as HTMLElement;
 			if (!target) return;
+			// A click inside a nested popover (e.g. a "more options" trigger
+			// rendered within this popover's content) belongs to that nested
+			// popover's own root — ignore it here so it isn't double-handled.
+			const owner = target.closest("[data-popover-root]");
+			if (owner && owner !== root) return;
 			const dataPart = target.getAttribute("data-part");
 
 			if (dataPart === "trigger") {
@@ -809,7 +639,7 @@ function InteractivePopoverRoot(props: InteractivePopoverProps) {
 
 		const handleResize = () => {
 			if (isCurrentlyOpen()) {
-				positionPopover(root);
+				positionOverlay(root, PLACEMENT_CONFIG);
 			}
 		};
 
@@ -820,6 +650,7 @@ function InteractivePopoverRoot(props: InteractivePopoverProps) {
 		window.addEventListener("resize", handleResize);
 
 		return () => {
+			cancelPendingHide();
 			root.removeEventListener("click", handleClick);
 			root.removeEventListener("focusout", handleFocusOut);
 			document.removeEventListener("mousedown", handleDocumentPointerDown);
@@ -831,10 +662,11 @@ function InteractivePopoverRoot(props: InteractivePopoverProps) {
 	return (
 		<div
 			id={rootId}
+			data-popover-root
 			data-state={open ? "open" : "closed"}
 			style={{ position: "relative", display: "inline-block" }}
 		>
-			<Root {...rest} open={open}>
+			<Root id={idProp} {...rest} open={open}>
 				{children}
 			</Root>
 		</div>
