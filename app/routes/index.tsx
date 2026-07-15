@@ -743,10 +743,9 @@ export default createRoute((c) => {
 					Dialog Component Examples
 				</Heading>
 				<Dialog
-					interactive
 					trigger={<Button variant="outline">Open Dialog</Button>}
 					title="Dialog Title"
-					description="This dialog uses the simplified flattened API."
+					description="This dialog uses the Dialog component API."
 					body="This is the dialog body content."
 					cancel={<Button variant="outline">Cancel</Button>}
 					confirm={<Button>Confirm</Button>}
@@ -765,17 +764,16 @@ export default createRoute((c) => {
 				</Heading>
 
 				<Drawer
-					interactive
 					trigger={<Button variant="outline">Open Drawer</Button>}
 					title="Drawer Title"
-					description="This drawer uses the simplified flattened API."
+					description="This drawer uses the Drawer component API."
 					body="This is the main content of the drawer, passed via the body prop."
 					cancel={<Button variant="outline">Close</Button>}
 					confirm={<Button>Action</Button>}
 				/>
 			</Stack>
 
-			{/* Dropdown Examples (Flattened API) */}
+			{/* Dropdown Examples */}
 			<Stack
 				direction="column"
 				gap="4"
@@ -783,11 +781,11 @@ export default createRoute((c) => {
 				class={css({ mt: "8", maxWidth: "xl", mx: "auto" })}
 			>
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
-					Dropdown Component Examples (Flattened API)
+					Dropdown Component Examples
 				</Heading>
 
 				<Text size="sm" class={css({ color: "fg.muted", mb: "2" })}>
-					Basic Dropdown with Items (Interactive)
+					Basic Dropdown with Items
 				</Text>
 				<Dropdown
 					trigger={<Button variant="outline">Open Dropdown</Button>}
@@ -1555,7 +1553,7 @@ export default createRoute((c) => {
 						class={css({ width: "full" })}
 					>
 						<Text size="sm" class={css({ color: "fg.muted" })}>
-							Basic Breadcrumb (Flattened API)
+							Basic Breadcrumb
 						</Text>
 						<Breadcrumb
 							items={[
@@ -1677,7 +1675,7 @@ export default createRoute((c) => {
 						width: "full",
 					})}
 				>
-					{/* Basic Flattened Card */}
+					{/* Card */}
 					<Card
 						title="Team Members"
 						description="Add new members to your organization."
@@ -1888,7 +1886,7 @@ export default createRoute((c) => {
 				class={css({ mt: "8", maxWidth: "3xl", mx: "auto" })}
 			>
 				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
-					Table Component Examples (Flattened API)
+					Table Component Examples
 				</Heading>
 
 				<Text size="sm" class={css({ mb: "2", color: "fg.muted" })}>
