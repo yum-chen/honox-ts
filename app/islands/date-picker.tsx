@@ -34,6 +34,8 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 		onOpenChange,
 		id: idProp,
 		children,
+		label,
+		placeholder,
 		...rest
 	} = props;
 
@@ -365,17 +367,19 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 		};
 
 		const handleKeyDown = (e: KeyboardEvent) => {
-			if (e.key === "Escape" && stateRef.current.open) {
-				e.stopPropagation();
-				closeAndRestoreFocus();
-				return;
-			}
 			if (e.key === "Enter") {
 				const target = e.target as HTMLElement;
 				if (target.getAttribute("data-part") === "input") {
 					e.preventDefault();
 					handleInputCommit(target as HTMLInputElement);
 				}
+			}
+		};
+
+		const handleDocumentKeyDown = (e: KeyboardEvent) => {
+			if (e.key === "Escape" && stateRef.current.open) {
+				e.stopPropagation();
+				closeAndRestoreFocus();
 			}
 		};
 
@@ -389,12 +393,14 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 		root.addEventListener("change", handleChange);
 		root.addEventListener("keydown", handleKeyDown);
 		document.addEventListener("click", handleDocumentClick);
+		document.addEventListener("keydown", handleDocumentKeyDown);
 
 		return () => {
 			root.removeEventListener("click", handleClick);
 			root.removeEventListener("change", handleChange);
 			root.removeEventListener("keydown", handleKeyDown);
 			document.removeEventListener("click", handleDocumentClick);
+			document.removeEventListener("keydown", handleDocumentKeyDown);
 		};
 	}, [rootId]);
 
@@ -409,7 +415,11 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 			selectionMode={selectionMode}
 		>
 			{children || (
-				<DatePickerStructure selectionMode={selectionMode} {...rest} />
+				<DatePickerStructure
+					selectionMode={selectionMode}
+					label={label}
+					placeholder={placeholder}
+				/>
 			)}
 		</DatePickerRoot>
 	);
