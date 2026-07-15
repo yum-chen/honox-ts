@@ -2,17 +2,16 @@ import { cx } from "design-system/css";
 import { type DropdownVariantProps, dropdown } from "design-system/recipes";
 import type { JSX } from "hono/jsx";
 import InteractiveDropdownRoot from "../../islands/dropdown";
-import { shouldHydrate } from "./island-utils";
 // Import primitive components from dropdown-primitive
 import {
 	DropdownCheckboxItem as CheckboxItem,
 	DropdownContent as Content,
+	DropdownArrow,
+	DropdownArrowTip,
 	DropdownItem as Item,
 	DropdownItemGroupLabel as ItemGroupLabel,
 	DropdownItemIndicator as ItemIndicator,
 	DropdownItemText as ItemText,
-	DropdownArrow,
-	DropdownArrowTip,
 	DropdownPositioner as Positioner,
 	DropdownRadioItem as RadioItem,
 	DropdownRadioItemGroup as RadioItemGroup,
@@ -20,6 +19,7 @@ import {
 	DropdownSeparator as Separator,
 	DropdownTrigger as Trigger,
 } from "./dropdown-primitive";
+import { shouldHydrate } from "./island-utils";
 
 // ============= API Types =============
 

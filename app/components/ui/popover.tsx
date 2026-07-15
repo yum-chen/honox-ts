@@ -33,6 +33,34 @@ interface PopoverProps extends InteractivePopoverProps {
 	closable?: boolean; // render CloseTrigger (default true)
 	closeIcon?: JSX.Element; // custom close icon; defaults to built-in X
 	children?: JSX.Element; // extra content after body
+	classNames?: {
+		root?: string;
+		trigger?: string;
+		positioner?: string;
+		content?: string;
+		arrow?: string;
+		arrowTip?: string;
+		closeTrigger?: string;
+		header?: string;
+		body?: string;
+		footer?: string;
+		title?: string;
+		description?: string;
+	};
+	styles?: {
+		root?: Record<string, string>;
+		trigger?: Record<string, string>;
+		positioner?: Record<string, string>;
+		content?: Record<string, string>;
+		arrow?: Record<string, string>;
+		arrowTip?: Record<string, string>;
+		closeTrigger?: Record<string, string>;
+		header?: Record<string, string>;
+		body?: Record<string, string>;
+		footer?: Record<string, string>;
+		title?: Record<string, string>;
+		description?: Record<string, string>;
+	};
 }
 
 const DefaultCloseIcon = () => (
@@ -53,10 +81,10 @@ const DefaultCloseIcon = () => (
 );
 
 function Root(props: PopoverProps) {
-	const { interactive, ...rest } = props;
+	const { interactive, classNames, styles, ...rest } = props;
 
 	if (shouldHydrate(interactive, true)) {
-		return <PopoverIsland {...rest} />;
+		return <PopoverIsland {...rest} classNames={classNames} styles={styles} />;
 	}
 
 	return <RootPrimitive {...rest} />;
@@ -74,35 +102,41 @@ function Popover(props: PopoverProps) {
 		closable = true,
 		closeIcon,
 		children,
+		classNames,
+		styles,
 		...rest
 	} = props;
 
 	return (
-		<Root {...rest} interactive={interactive}>
-			{trigger && <Trigger asChild>{trigger}</Trigger>}
-			<Positioner>
-				<Content>
+		<Root {...rest} interactive={interactive} classNames={classNames} styles={styles}>
+			{trigger && (
+				<Trigger asChild class={classNames?.trigger} style={styles?.trigger}>
+					{trigger}
+				</Trigger>
+			)}
+			<Positioner class={classNames?.positioner} style={styles?.positioner}>
+				<Content class={classNames?.content} style={styles?.content}>
 					{showArrow && (
-						<Arrow>
-							<ArrowTip />
+						<Arrow class={classNames?.arrow} style={styles?.arrow}>
+							<ArrowTip class={classNames?.arrowTip} style={styles?.arrowTip} />
 						</Arrow>
 					)}
 					{closable && (
-						<CloseTrigger asChild>
+						<CloseTrigger asChild class={classNames?.closeTrigger} style={styles?.closeTrigger}>
 							<IconButton variant="plain" size="sm" aria-label="Close">
 								{closeIcon ?? <DefaultCloseIcon />}
 							</IconButton>
 						</CloseTrigger>
 					)}
 					{(title || description) && (
-						<Header>
-							{title && <Title>{title}</Title>}
-							{description && <Description>{description}</Description>}
+						<Header class={classNames?.header} style={styles?.header}>
+							{title && <Title class={classNames?.title} style={styles?.title}>{title}</Title>}
+							{description && <Description class={classNames?.description} style={styles?.description}>{description}</Description>}
 						</Header>
 					)}
-					{body && <Body>{body}</Body>}
+					{body && <Body class={classNames?.body} style={styles?.body}>{body}</Body>}
 					{children}
-					{footer && <Footer>{footer}</Footer>}
+					{footer && <Footer class={classNames?.footer} style={styles?.footer}>{footer}</Footer>}
 				</Content>
 			</Positioner>
 		</Root>

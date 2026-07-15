@@ -6,7 +6,7 @@ An interactive element that displays additional content in a layer over its anch
 
 # Props
 
-## Root
+## Root / Popover
 
 | Prop                      | Type                                        | Description                                                    |
 | :------------------------ | :------------------------------------------ | :--------------------------------------------------------------- |
@@ -21,6 +21,23 @@ An interactive element that displays additional content in a layer over its anch
 | `closeOnInteractOutside`  | `boolean`                                    | Close on pointer interaction outside, or when focus tabs away from the popover. Default `true`. |
 | `onClose`                 | `() => void`                                 | Callback triggered when the popover closes.                      |
 | `onToggle`                | `() => void`                                 | Callback triggered when the popover toggles.                     |
+| `classNames`              | `object`                                    | Dictionary of custom CSS classes for individual popover slots.     |
+| `styles`                  | `object`                                    | Dictionary of custom inline styles for individual popover slots.   |
+
+### Semantic Slots for `classNames` and `styles`
+
+*   `root` - The root wrapper element.
+*   `trigger` - The trigger button or element.
+*   `positioner` - The absolute-positioned overlay container.
+*   `content` - The actual content container box.
+*   `arrow` - The outer arrow container.
+*   `arrowTip` - The inner rotated arrow tip diamond.
+*   `closeTrigger` - The close trigger button.
+*   `header` - The header element of the content.
+*   `body` - The body element of the content.
+*   `footer` - The footer element of the content.
+*   `title` - The title text element.
+*   `description` - The description text element.
 
 ## Trigger
 
@@ -29,6 +46,8 @@ An interactive element that displays additional content in a layer over its anch
 | `asChild` | `boolean` | Whether to merge props onto the immediate child element. |
 
 # Usage
+
+## Basic Usage
 
 ```tsx
 import { Popover } from "../components/ui/popover";
@@ -40,6 +59,30 @@ import { Button } from "../components/ui/button";
   title="Title"
   description="Description"
   body="Popover Body"
+/>;
+```
+
+## Advanced Styling with Slots
+
+You can custom-style individual parts of the Popover using the `classNames` and `styles` props:
+
+```tsx
+import { Popover } from "../components/ui/popover";
+import { Button } from "../components/ui/button";
+
+<Popover
+  placement="top"
+  trigger={<Button>Custom Styled Popover</Button>}
+  title="Title"
+  body="This popover has custom styling applied to the content slot."
+  classNames={{
+    content: "custom-popover-content",
+    arrowTip: "custom-popover-arrow-tip",
+  }}
+  styles={{
+    content: { background: "var(--colors-bg-canvas)", border: "2px solid red" },
+    title: { color: "var(--colors-red-solid)" },
+  }}
 />;
 ```
 

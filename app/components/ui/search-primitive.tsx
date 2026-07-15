@@ -1,6 +1,6 @@
 import { css, cx } from "design-system/css";
-import { useEffect, useId, useMemo, useRef, useState } from "hono/jsx";
 import { type SearchVariantProps, search } from "design-system/recipes";
+import { useEffect, useId, useMemo, useRef, useState } from "hono/jsx";
 import {
 	filterEntries,
 	rankSearchEntries,

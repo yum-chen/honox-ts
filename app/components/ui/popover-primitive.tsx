@@ -246,41 +246,49 @@ interface PopoverRootProps extends PropsWithChildren {
 interface PopoverTriggerProps extends PropsWithChildren {
 	class?: string;
 	asChild?: boolean;
+	style?: any;
 	[key: string]: unknown;
 }
 
 interface PopoverPositionerProps extends PropsWithChildren {
 	class?: string;
+	style?: any;
 	[key: string]: unknown;
 }
 
 interface PopoverContentProps extends PropsWithChildren {
 	class?: string;
+	style?: any;
 	[key: string]: unknown;
 }
 
 interface PopoverTitleProps extends PropsWithChildren {
 	class?: string;
+	style?: any;
 }
 
 interface PopoverDescriptionProps extends PropsWithChildren {
 	class?: string;
+	style?: any;
 }
 
 interface PopoverCloseTriggerProps extends PropsWithChildren {
 	class?: string;
 	asChild?: boolean;
+	style?: any;
 }
 
 interface PopoverAnchorProps extends PropsWithChildren {
 	class?: string;
 	asChild?: boolean;
+	style?: any;
 	[key: string]: unknown;
 }
 
 interface PopoverIndicatorProps extends PropsWithChildren {
 	class?: string;
 	asChild?: boolean;
+	style?: any;
 	[key: string]: unknown;
 }
 
@@ -323,7 +331,7 @@ function RootProvider(props: PopoverRootProps) {
 }
 
 function Anchor(props: PopoverAnchorProps) {
-	const { children, class: classProp, asChild, ...restProps } = props;
+	const { children, class: classProp, asChild, style: styleProp, ...restProps } = props;
 	const context = usePopoverContext();
 	const styles = context?.styles || popover();
 
@@ -338,18 +346,19 @@ function Anchor(props: PopoverAnchorProps) {
 		return cloneElement(child, {
 			...anchorProps,
 			class: cx(styles.anchor, classProp, child.props?.class),
+			style: { ...(styleProp as any), ...(child.props?.style as any) },
 		});
 	}
 
 	return (
-		<div class={cx(styles.anchor, classProp)} {...anchorProps}>
+		<div class={cx(styles.anchor, classProp)} style={styleProp as any} {...anchorProps}>
 			{children}
 		</div>
 	);
 }
 
 function Trigger(props: PopoverTriggerProps) {
-	const { children, class: classProp, asChild, ...restProps } = props;
+	const { children, class: classProp, asChild, style: styleProp, ...restProps } = props;
 	const context = usePopoverContext();
 	const id = context?.id;
 	const open = context?.open;
@@ -371,6 +380,7 @@ function Trigger(props: PopoverTriggerProps) {
 		return cloneElement(child, {
 			...triggerProps,
 			class: cx(styles.trigger, classProp, child.props?.class),
+			style: { ...(styleProp as any), ...(child.props?.style as any) },
 		});
 	}
 
@@ -378,6 +388,7 @@ function Trigger(props: PopoverTriggerProps) {
 		<button
 			type="button"
 			class={cx(styles.trigger, classProp)}
+			style={styleProp as any}
 			{...triggerProps}
 		>
 			{children}
@@ -386,7 +397,7 @@ function Trigger(props: PopoverTriggerProps) {
 }
 
 function Positioner(props: PopoverPositionerProps) {
-	const { children, class: classProp, ...restProps } = props;
+	const { children, class: classProp, style: styleProp, ...restProps } = props;
 	const context = usePopoverContext();
 	const open = context?.open;
 	const styles = context?.styles || popover();
@@ -407,6 +418,7 @@ function Positioner(props: PopoverPositionerProps) {
 				position: "absolute",
 				zIndex: 1000,
 				...getPlacementStyle(placement),
+				...(styleProp as any),
 			}}
 			{...restProps}
 		>
@@ -416,7 +428,7 @@ function Positioner(props: PopoverPositionerProps) {
 }
 
 function Content(props: PopoverContentProps) {
-	const { children, class: classProp, ...restProps } = props;
+	const { children, class: classProp, style: styleProp, ...restProps } = props;
 	const context = usePopoverContext();
 	const id = context?.id;
 	const open = context?.open;
@@ -438,6 +450,7 @@ function Content(props: PopoverContentProps) {
 			class={cx(styles.content, classProp)}
 			data-state={open ? "open" : "closed"}
 			tabIndex={-1}
+			style={styleProp as any}
 			{...restProps}
 		>
 			{children}
@@ -445,8 +458,8 @@ function Content(props: PopoverContentProps) {
 	);
 }
 
-function Header(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp, ...restProps } = props;
+function Header(props: PropsWithChildren<{ class?: string; style?: any }>) {
+	const { children, class: classProp, style: styleProp, ...restProps } = props;
 	const context = usePopoverContext();
 	const styles = context?.styles || popover();
 	return (
@@ -454,6 +467,7 @@ function Header(props: PropsWithChildren<{ class?: string }>) {
 			class={cx(styles.header, classProp)}
 			data-scope="popover"
 			data-part="header"
+			style={styleProp as any}
 			{...restProps}
 		>
 			{children}
@@ -461,8 +475,8 @@ function Header(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-function Body(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp, ...restProps } = props;
+function Body(props: PropsWithChildren<{ class?: string; style?: any }>) {
+	const { children, class: classProp, style: styleProp, ...restProps } = props;
 	const context = usePopoverContext();
 	const styles = context?.styles || popover();
 	return (
@@ -470,6 +484,7 @@ function Body(props: PropsWithChildren<{ class?: string }>) {
 			class={cx(styles.body, classProp)}
 			data-scope="popover"
 			data-part="body"
+			style={styleProp as any}
 			{...restProps}
 		>
 			{children}
@@ -477,8 +492,8 @@ function Body(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-function Footer(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp, ...restProps } = props;
+function Footer(props: PropsWithChildren<{ class?: string; style?: any }>) {
+	const { children, class: classProp, style: styleProp, ...restProps } = props;
 	const context = usePopoverContext();
 	const styles = context?.styles || popover();
 	return (
@@ -486,6 +501,7 @@ function Footer(props: PropsWithChildren<{ class?: string }>) {
 			class={cx(styles.footer, classProp)}
 			data-scope="popover"
 			data-part="footer"
+			style={styleProp as any}
 			{...restProps}
 		>
 			{children}
@@ -494,7 +510,7 @@ function Footer(props: PropsWithChildren<{ class?: string }>) {
 }
 
 function Title(props: PopoverTitleProps) {
-	const { children, class: classProp, ...restProps } = props;
+	const { children, class: classProp, style: styleProp, ...restProps } = props;
 	const context = usePopoverContext();
 	const id = context?.id;
 	const styles = context?.styles || popover();
@@ -504,6 +520,7 @@ function Title(props: PopoverTitleProps) {
 			class={cx(styles.title, classProp)}
 			data-scope="popover"
 			data-part="title"
+			style={styleProp as any}
 			{...restProps}
 		>
 			{children}
@@ -512,7 +529,7 @@ function Title(props: PopoverTitleProps) {
 }
 
 function Description(props: PopoverDescriptionProps) {
-	const { children, class: classProp, ...restProps } = props;
+	const { children, class: classProp, style: styleProp, ...restProps } = props;
 	const context = usePopoverContext();
 	const id = context?.id;
 	const styles = context?.styles || popover();
@@ -522,6 +539,7 @@ function Description(props: PopoverDescriptionProps) {
 			class={cx(styles.description, classProp)}
 			data-scope="popover"
 			data-part="description"
+			style={styleProp as any}
 			{...restProps}
 		>
 			{children}
@@ -530,7 +548,7 @@ function Description(props: PopoverDescriptionProps) {
 }
 
 function CloseTrigger(props: PopoverCloseTriggerProps) {
-	const { children, class: classProp, asChild, ...restProps } = props;
+	const { children, class: classProp, asChild, style: styleProp, ...restProps } = props;
 	const context = usePopoverContext();
 	const styles = context?.styles || popover();
 
@@ -546,6 +564,7 @@ function CloseTrigger(props: PopoverCloseTriggerProps) {
 		return cloneElement(child, {
 			...triggerProps,
 			class: cx(styles.closeTrigger, classProp, child.props?.class),
+			style: { ...(styleProp as any), ...(child.props?.style as any) },
 		});
 	}
 
@@ -553,6 +572,7 @@ function CloseTrigger(props: PopoverCloseTriggerProps) {
 		<button
 			type="button"
 			class={cx(styles.closeTrigger, classProp)}
+			style={styleProp as any}
 			{...triggerProps}
 		>
 			{children}
@@ -560,8 +580,8 @@ function CloseTrigger(props: PopoverCloseTriggerProps) {
 	);
 }
 
-function Arrow(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp, ...restProps } = props;
+function Arrow(props: PropsWithChildren<{ class?: string; style?: any }>) {
+	const { children, class: classProp, style: styleProp, ...restProps } = props;
 	const context = usePopoverContext();
 	const styles = context?.styles || popover();
 	const placement = context?.placement ?? "bottom";
@@ -570,7 +590,10 @@ function Arrow(props: PropsWithChildren<{ class?: string }>) {
 			class={cx(styles.arrow, classProp)}
 			data-scope="popover"
 			data-part="arrow"
-			style={getArrowStyle(placement)}
+			style={{
+				...getArrowStyle(placement),
+				...(styleProp as any),
+			}}
 			{...restProps}
 		>
 			{children}
@@ -578,8 +601,8 @@ function Arrow(props: PropsWithChildren<{ class?: string }>) {
 	);
 }
 
-function ArrowTip(props: { class?: string }) {
-	const { class: classProp, ...restProps } = props;
+function ArrowTip(props: { class?: string; style?: any }) {
+	const { class: classProp, style: styleProp, ...restProps } = props;
 	const context = usePopoverContext();
 	const styles = context?.styles || popover();
 	const placement = context?.placement ?? "bottom";
@@ -588,14 +611,17 @@ function ArrowTip(props: { class?: string }) {
 			class={cx(styles.arrowTip, classProp)}
 			data-scope="popover"
 			data-part="arrow-tip"
-			style={{ transform: `rotate(${getArrowRotation(placement)}deg)` }}
+			style={{
+				transform: `rotate(${getArrowRotation(placement)}deg)`,
+				...(styleProp as any),
+			}}
 			{...restProps}
 		/>
 	);
 }
 
 function Indicator(props: PopoverIndicatorProps) {
-	const { children, class: classProp, asChild, ...restProps } = props;
+	const { children, class: classProp, asChild, style: styleProp, ...restProps } = props;
 	const context = usePopoverContext();
 	const styles = context?.styles || popover();
 	const open = context?.open;
@@ -612,11 +638,12 @@ function Indicator(props: PopoverIndicatorProps) {
 		return cloneElement(child, {
 			...indicatorProps,
 			class: cx(styles.indicator, classProp, child.props?.class),
+			style: { ...(styleProp as any), ...(child.props?.style as any) },
 		});
 	}
 
 	return (
-		<div class={cx(styles.indicator, classProp)} {...indicatorProps}>
+		<div class={cx(styles.indicator, classProp)} style={styleProp as any} {...indicatorProps}>
 			{children}
 		</div>
 	);
