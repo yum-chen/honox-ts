@@ -1,4 +1,3 @@
-import { link } from "./link";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { avatar } from "./avatar";
@@ -21,6 +20,7 @@ import { group } from "./group";
 import { heading } from "./heading";
 import { hoverCard } from "./hover-card";
 import { input } from "./input";
+import { link } from "./link";
 import { menu } from "./menu";
 import { pagination } from "./pagination";
 import { popover } from "./popover";
