@@ -5,7 +5,11 @@ import {
 	isValidDateString,
 	parseDate,
 } from "../app/components/ui/date-picker";
-import { getMonthWeeks } from "../app/components/ui/date-picker-primitive";
+import {
+	getMonthNames,
+	getMonthWeeks,
+	getWeekDays,
+} from "../app/components/ui/date-picker-primitive";
 
 describe("DatePicker Unit Tests", () => {
 	test("should parse date string correctly", () => {
@@ -261,6 +265,25 @@ describe("DatePicker Unit Tests", () => {
 		expect(html).toContain('value="2026-07-10"');
 	});
 
+	test("should render the default structure when static and no children given", () => {
+		const html = (
+			<DatePicker
+				interactive={false}
+				label="Due"
+				value={[parseDate("2026-07-15")]}
+			/>
+		).toString();
+
+		// Full anatomy renders without explicit children (mirrors the island)
+		expect(html).toContain("Due</label>");
+		expect(html).toContain('data-part="input"');
+		expect(html).toContain('data-part="trigger"');
+		expect(html).toContain('data-part="table-cell-trigger"');
+		// Wrapper-only props must not leak into the DOM
+		expect(html).not.toContain("interactive=");
+		expect(html).not.toContain('label="Due"');
+	});
+
 	test("should render the selected value as the input's value attribute in SSR", () => {
 		const html = (
 			<DatePicker interactive={false} value={[parseDate("2026-07-15")]}>
@@ -332,9 +355,6 @@ describe("DatePicker Unit Tests", () => {
 	});
 
 	test("should localise weekday and month names", () => {
-		const { getWeekDays, getMonthNames } = require(
-			"../app/components/ui/date-picker-primitive",
-		);
 		const en = getWeekDays("en-US");
 		expect(en[0].long).toBe("Sunday");
 		expect(en[1].short).toBe("Mon");
