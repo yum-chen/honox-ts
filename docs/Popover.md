@@ -53,3 +53,11 @@ resize observers the way Floating UI does — repositioning only re-runs on
 window `resize` while the popover is open, and (since the positioner is
 anchored via `position: absolute` to the trigger's own wrapper) scrolling the
 page moves it along with the trigger for free.
+
+Nesting one Popover's trigger inside another Popover's content is supported
+(click delegation is scoped per popover instance), but nesting a Popover
+inside a Tooltip's trigger, or vice versa, is not — the two components don't
+coordinate `data-part` ownership across component types.
+
+The `_closed` exit animation (`scale-fade-out`) plays before the popover is
+actually removed from layout — closing doesn't hide it instantly.

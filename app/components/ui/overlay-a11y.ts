@@ -2,7 +2,8 @@ import { useEffect, useRef } from "hono/jsx";
 
 /**
  * Shared accessibility + behavior layer for overlay components
- * (Dialog, Drawer, and any future modal-like surface).
+ * (Dialog, Drawer, Popover, Tooltip, and any future modal-like or
+ * anchored-floating surface).
  *
  * Keeps a SINGLE source of truth for:
  *  - the stack of currently-open overlay roots (so nested overlays — including a
@@ -11,6 +12,9 @@ import { useEffect, useRef } from "hono/jsx";
  *  - click delegation (trigger / backdrop / close-trigger / action-trigger)
  *  - accessible-name tree scan (used by `Content` to wire `aria-labelledby` /
  *    `aria-describedby` only when the corresponding Title / Description is present)
+ *  - deferring `display: none` until an element's CSS exit animation actually
+ *    finishes, so `_closed` animation styles (defined in the recipes) get a
+ *    chance to play instead of being cut off by an instant unmount/hide
  *
  * Primitives must render `data-part="content"`, `data-part="trigger"`,
  * `data-part="backdrop"`, `data-part="positioner"`, `data-part="close-trigger"`,
@@ -90,6 +94,53 @@ export function hasPart(node: unknown, cmp: unknown): boolean {
 	if (el.type === cmp) return true;
 	if (el.props?.children != null) return hasPart(el.props.children, cmp);
 	return false;
+}
+
+/**
+ * Waits for `el`'s running CSS animation to finish before calling `onDone`,
+ * so an exit (`_closed`) animation gets a chance to play instead of being
+ * cut off by an instant `display: none`. Falls back to the element's
+ * computed `animation-duration` (plus a small buffer) in case `animationend`
+ * never fires — e.g. no matching animation, or a duration of 0.
+ *
+ * Returns a canceler: call it if the hide is superseded (e.g. the overlay is
+ * reopened before the exit animation finished) to suppress the pending `onDone`.
+ */
+export function whenAnimationEnds(
+	el: HTMLElement,
+	onDone: () => void,
+): () => void {
+	let settled = false;
+
+	const cleanup = () => {
+		el.removeEventListener("animationend", onAnimationEnd);
+		clearTimeout(timer);
+	};
+	const finish = () => {
+		if (settled) return;
+		settled = true;
+		cleanup();
+		onDone();
+	};
+	const onAnimationEnd = (e: AnimationEvent) => {
+		if (e.target === el) finish();
+	};
+	el.addEventListener("animationend", onAnimationEnd);
+
+	const durationMs = getComputedStyle(el)
+		.animationDuration.split(",")
+		.reduce((max, part) => {
+			const match = /^([\d.]+)(ms|s)$/.exec(part.trim());
+			if (!match) return max;
+			const value = Number.parseFloat(match[1]) * (match[2] === "s" ? 1000 : 1);
+			return Math.max(max, value);
+		}, 0);
+	const timer = window.setTimeout(finish, durationMs + 30);
+
+	return () => {
+		settled = true;
+		cleanup();
+	};
 }
 
 export interface OverlayOptions {
