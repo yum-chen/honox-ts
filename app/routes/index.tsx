@@ -346,7 +346,7 @@ export default createRoute((c) => {
 					{/* ColorPicker as Trigger / Popover */}
 					<Stack direction="column" gap="2" align="center">
 						<Text size="sm" class={css({ color: "fg.muted" })}>
-							Interactive ColorPicker (Swatch Trigger + Popover)
+							ColorPicker (Swatch Trigger + Popover)
 						</Text>
 						<ColorPicker
 							interactive
