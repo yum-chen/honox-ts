@@ -126,6 +126,7 @@ export const search = defineSlotRecipe({
 	defaultVariants: {
 		size: "md",
 		variant: "outline",
+		colorPalette: "blue",
 	},
 	variants: {
 		size: {
@@ -137,6 +138,23 @@ export const search = defineSlotRecipe({
 			outline: { input: { ...input.variants.variant.outline } },
 			surface: { input: { ...input.variants.variant.surface } },
 			subtle: { input: { ...input.variants.variant.subtle } },
+		},
+		colorPalette: {
+			gray: { colorPalette: "gray" },
+			blue: { colorPalette: "blue" },
+			cyan: { colorPalette: "cyan" },
+			green: { colorPalette: "green" },
+			orange: { colorPalette: "orange" },
+			purple: { colorPalette: "purple" },
+			red: { colorPalette: "red" },
+			amber: { colorPalette: "amber" },
+			teal: { colorPalette: "teal" },
+			pink: { colorPalette: "pink" },
+			indigo: { colorPalette: "indigo" },
+			yellow: { colorPalette: "yellow" },
+			success: { colorPalette: "green" },
+			error: { colorPalette: "red" },
+			warning: { colorPalette: "orange" },
 		},
 	},
 });

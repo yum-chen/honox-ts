@@ -31,6 +31,7 @@ export default defineConfig({
 		// larger change — not just trimming this list.
 		recipes: {
 			datePicker: ["*"],
+			search: ["*"],
 			select: ["*"],
 			pagination: ["*"],
 			absoluteCenter: ["*"],
