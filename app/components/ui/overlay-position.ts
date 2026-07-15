@@ -46,6 +46,8 @@ export interface OverlayPlacementConfig {
 	arrowOffset?: string;
 	/** Minimum gap from the viewport edge, in pixels. Default: 8. */
 	viewportGap?: number;
+	/** Whether the arrow should point exactly at the center of the trigger. */
+	pointAtCenter?: boolean;
 }
 
 /** Base (non-flipped) positioner offset + cross-axis alignment for a placement. */
@@ -302,7 +304,17 @@ export function positionOverlay(
 
 		const arrow = positioner.querySelector<HTMLElement>('[data-part="arrow"]');
 		if (arrow) {
-			Object.assign(arrow.style, getArrowStyle(placement, config));
+			let arrowStyleConfig = config;
+			if (config.pointAtCenter && triggerRect) {
+				const arrowSize = 12; // Standard arrow-size is 12px
+				const dim = (placement === "top" || placement === "bottom") ? triggerRect.width : triggerRect.height;
+				const calculatedOffset = `${dim / 2 - arrowSize / 2}px`;
+				arrowStyleConfig = {
+					...config,
+					arrowOffset: calculatedOffset,
+				};
+			}
+			Object.assign(arrow.style, getArrowStyle(placement, arrowStyleConfig));
 			const tip = arrow.querySelector<HTMLElement>('[data-part="arrow-tip"]');
 			if (tip) {
 				tip.style.transform = `rotate(${getArrowRotation(placement)}deg)`;

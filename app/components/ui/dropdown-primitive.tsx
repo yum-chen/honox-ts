@@ -49,11 +49,6 @@ const PLACEMENT_MAP: Record<
 	"right-end": { side: "right", align: "end" },
 };
 
-/**
- * The 12-way placement names menus conventionally use (an alignment suffix
- * on top of the 4 base sides), plus their dash-case equivalents. Resolved
- * down to the shared `{ side, align }` shape `overlay-position.ts` expects.
- */
 /** Resolves a 12-way (or dash-case) placement name to `{ side, align }`. Defaults to `bottomLeft`. */
 function resolveDropdownPlacement(placement?: string) {
 	return (placement && PLACEMENT_MAP[placement]) || PLACEMENT_MAP.bottomLeft;
@@ -66,6 +61,10 @@ interface DropdownContextValue {
 	styles: DropdownStyles;
 	onClose?: () => void;
 	parentDropdownId?: string;
+	rendered?: boolean;
+	destroyOnHidden?: boolean;
+	classNames?: Record<string, string>;
+	stylesObj?: Record<string, any>;
 }
 
 const DropdownContext = createContext<DropdownContextValue | null>(null);
@@ -80,6 +79,10 @@ export const useDropdownContext = () => {
 				open: false,
 				styles: dropdown({}),
 				parentDropdownId: undefined,
+				rendered: false,
+				destroyOnHidden: false,
+				classNames: {},
+				stylesObj: {},
 			} as DropdownContextValue;
 		}
 		throw new Error("useDropdownContext must be used within a Dropdown.Root");
@@ -96,9 +99,13 @@ export interface DropdownRootProps
 	disabled?: boolean;
 	onClose?: () => void;
 	/** Called when the menu opens or closes (interactive islands only). */
-	onOpenChange?: (open: boolean) => void;
+	onOpenChange?: (open: boolean, info?: { source: "trigger" | "menu" }) => void;
 	/** Called with an item's `value` when it is activated (interactive islands only). */
 	onSelect?: (value: string) => void;
+	rendered?: boolean;
+	destroyOnHidden?: boolean;
+	classNames?: Record<string, string>;
+	stylesObj?: Record<string, any>;
 }
 
 interface DropdownRadioGroupContextValue {
@@ -114,7 +121,17 @@ export const useDropdownRadioGroupContext = () =>
 
 export function DropdownRoot(props: DropdownRootProps) {
 	const [variantProps, localProps] = dropdown.splitVariantProps(props);
-	const { id: idProp, open = false, disabled, children, onClose } = localProps;
+	const {
+		id: idProp,
+		open = false,
+		disabled,
+		children,
+		onClose,
+		rendered = open,
+		destroyOnHidden = false,
+		classNames,
+		stylesObj,
+	} = localProps;
 	const autoId = useId();
 	const id = idProp || autoId;
 	const styles = dropdown(variantProps);
@@ -130,6 +147,10 @@ export function DropdownRoot(props: DropdownRootProps) {
 				styles,
 				onClose,
 				parentDropdownId: parentContext?.id,
+				rendered,
+				destroyOnHidden,
+				classNames,
+				stylesObj,
 			}}
 		>
 			{children}
@@ -166,14 +187,21 @@ export function DropdownTrigger(props: DropdownTriggerProps) {
 		const child = children as any;
 		return cloneElement(child, {
 			...triggerProps,
-			class: cx(context.styles.trigger, classProp, child.props?.class),
+			class: cx(
+				context.styles.trigger,
+				classProp,
+				context.classNames?.trigger,
+				child.props?.class,
+			),
+			style: { ...context.stylesObj?.trigger, ...child.props?.style },
 		});
 	}
 
 	return (
 		<button
 			type="button"
-			class={cx(context.styles.trigger, classProp)}
+			class={cx(context.styles.trigger, classProp, context.classNames?.trigger)}
+			style={{ ...context.stylesObj?.trigger }}
 			{...triggerProps}
 		>
 			{children}
@@ -200,12 +228,26 @@ export function DropdownContextTrigger(props: DropdownTriggerProps) {
 		const child = children as any;
 		return cloneElement(child, {
 			...triggerProps,
-			class: cx(context.styles.contextTrigger, classProp, child.props?.class),
+			class: cx(
+				context.styles.contextTrigger,
+				classProp,
+				context.classNames?.trigger,
+				child.props?.class,
+			),
+			style: { ...context.stylesObj?.trigger, ...child.props?.style },
 		});
 	}
 
 	return (
-		<div class={cx(context.styles.contextTrigger, classProp)} {...triggerProps}>
+		<div
+			class={cx(
+				context.styles.contextTrigger,
+				classProp,
+				context.classNames?.trigger,
+			)}
+			style={{ ...context.stylesObj?.trigger }}
+			{...triggerProps}
+		>
 			{children}
 		</div>
 	);
@@ -226,6 +268,11 @@ export function DropdownPositioner(props: DropdownPositionerProps) {
 		...restProps
 	} = props;
 	const context = useDropdownContext();
+
+	if (context.destroyOnHidden && !context.rendered) {
+		return null;
+	}
+
 	const { side, align } = resolveDropdownPlacement(placementProp);
 
 	return (
@@ -233,6 +280,8 @@ export function DropdownPositioner(props: DropdownPositionerProps) {
 			class={cx(
 				context.styles.positioner,
 				classProp,
+				context.classNames?.positioner,
+				context.classNames?.root,
 				!context.open && css({ display: "none" }),
 			)}
 			data-state={context.open ? "open" : "closed"}
@@ -242,6 +291,8 @@ export function DropdownPositioner(props: DropdownPositionerProps) {
 			style={{
 				position: "absolute",
 				...getPlacementStyle(side, { align, arrowOffset: ARROW_OFFSET }),
+				...context.stylesObj?.positioner,
+				...context.stylesObj?.root,
 			}}
 			{...restProps}
 		>
@@ -264,11 +315,12 @@ export function DropdownContent(props: DropdownContentProps) {
 			id={`dropdown-content-${context.id}`}
 			role="menu"
 			aria-labelledby={`dropdown-trigger-${context.id}`}
-			class={cx(context.styles.content, classProp)}
+			class={cx(context.styles.content, classProp, context.classNames?.content)}
 			data-state={context.open ? "open" : "closed"}
 			tabIndex={-1}
 			data-scope="dropdown"
 			data-part="content"
+			style={{ ...context.stylesObj?.content }}
 			{...restProps}
 		>
 			{children}
@@ -313,12 +365,22 @@ export function DropdownItem(props: DropdownItemProps) {
 		const child = children as any;
 		return cloneElement(child, {
 			...itemProps,
-			class: cx(context.styles.item, classProp, child.props?.class),
+			class: cx(
+				context.styles.item,
+				classProp,
+				context.classNames?.item,
+				child.props?.class,
+			),
+			style: { ...context.stylesObj?.item, ...child.props?.style },
 		});
 	}
 
 	return (
-		<div class={cx(context.styles.item, classProp)} {...itemProps}>
+		<div
+			class={cx(context.styles.item, classProp, context.classNames?.item)}
+			style={{ ...context.stylesObj?.item }}
+			{...itemProps}
+		>
 			{children}
 		</div>
 	);
@@ -351,14 +413,22 @@ export function DropdownTriggerItem(props: DropdownItemProps) {
 				context.styles.item,
 				context.styles.triggerItem,
 				classProp,
+				context.classNames?.item,
 				child.props?.class,
 			),
+			style: { ...context.stylesObj?.item, ...child.props?.style },
 		});
 	}
 
 	return (
 		<div
-			class={cx(context.styles.item, context.styles.triggerItem, classProp)}
+			class={cx(
+				context.styles.item,
+				context.styles.triggerItem,
+				classProp,
+				context.classNames?.item,
+			)}
+			style={{ ...context.stylesObj?.item }}
 			{...itemProps}
 		>
 			{children}
@@ -506,7 +576,8 @@ export function DropdownCheckboxItem(props: DropdownCheckboxItemProps) {
 			data-part="item"
 			data-value={value}
 			data-disabled={disabled ? "" : undefined}
-			class={cx(context.styles.item, classProp)}
+			class={cx(context.styles.item, classProp, context.classNames?.item)}
+			style={{ ...context.stylesObj?.item }}
 			tabIndex={-1}
 			{...restProps}
 		>
@@ -557,7 +628,8 @@ export function DropdownRadioItem(props: DropdownRadioItemProps) {
 			data-part="item"
 			data-value={value}
 			data-disabled={disabled ? "" : undefined}
-			class={cx(context.styles.item, classProp)}
+			class={cx(context.styles.item, classProp, context.classNames?.item)}
+			style={{ ...context.stylesObj?.item }}
 			tabIndex={-1}
 			{...restProps}
 		>
@@ -608,10 +680,13 @@ export function DropdownArrow(props: DropdownArrowProps) {
 	const { side, align } = resolveDropdownPlacement(placementProp);
 	return (
 		<div
-			class={cx(context.styles.arrow, classProp)}
+			class={cx(context.styles.arrow, classProp, context.classNames?.arrow)}
 			data-scope="dropdown"
 			data-part="arrow"
-			style={getArrowStyle(side, { align, arrowOffset: ARROW_OFFSET })}
+			style={{
+				...getArrowStyle(side, { align, arrowOffset: ARROW_OFFSET }),
+				...context.stylesObj?.arrow,
+			}}
 			{...restProps}
 		>
 			{children}
@@ -628,10 +703,17 @@ export function DropdownArrowTip(props: {
 	const { side } = resolveDropdownPlacement(placementProp);
 	return (
 		<div
-			class={cx(context.styles.arrowTip, classProp)}
+			class={cx(
+				context.styles.arrowTip,
+				classProp,
+				context.classNames?.arrowTip,
+			)}
 			data-scope="dropdown"
 			data-part="arrow-tip"
-			style={{ transform: `rotate(${getArrowRotation(side)}deg)` }}
+			style={{
+				transform: `rotate(${getArrowRotation(side)}deg)`,
+				...context.stylesObj?.arrowTip,
+			}}
 			{...restProps}
 		/>
 	);
@@ -643,13 +725,14 @@ export interface InteractiveDropdownRootProps extends DropdownRootProps {
 	defaultOpen?: boolean;
 	placement?: string;
 	trigger?:
-		| ("click" | "hover" | "contextDropdown")[]
+		| ("click" | "hover" | "contextDropdown" | "contextMenu")[]
 		| "click"
 		| "hover"
-		| "contextDropdown";
+		| "contextDropdown"
+		| "contextMenu";
 	mouseEnterDelay?: number;
 	mouseLeaveDelay?: number;
-	arrow?: boolean;
+	arrow?: boolean | { pointAtCenter?: boolean };
 	/** Close when Escape is pressed. Default `true`. */
 	closeOnEscape?: boolean;
 	/**
@@ -667,7 +750,11 @@ function normalizeTriggerModes(
 	mode: InteractiveDropdownRootProps["trigger"],
 ): ("click" | "hover" | "contextDropdown")[] {
 	if (!mode) return ["click"];
-	return Array.isArray(mode) ? mode : [mode];
+	const array = Array.isArray(mode) ? mode : [mode];
+	return array.map((m) => {
+		if (m === "contextMenu") return "contextDropdown";
+		return m;
+	}) as ("click" | "hover" | "contextDropdown")[];
 }
 
 export function InteractiveDropdownRoot(props: InteractiveDropdownRootProps) {
@@ -686,12 +773,18 @@ export function InteractiveDropdownRoot(props: InteractiveDropdownRootProps) {
 		mouseLeaveDelay = 100,
 		closeOnEscape = true,
 		submenu = false,
+		arrow,
+		destroyOnHidden,
+		classNames,
+		styles,
 		...rest
 	} = props;
 
-	const [isOpen, setIsOpen] = useState(openProp ?? defaultOpen ?? false);
 	const isControlled = openProp !== undefined;
+	const [isOpen, setIsOpen] = useState(openProp ?? defaultOpen ?? false);
 	const open = isControlled ? openProp : isOpen;
+
+	const [isRendered, setIsRendered] = useState(open);
 
 	const fallbackId = useId();
 	const rootIdRef = useRef<string | null>(null);
@@ -806,7 +899,15 @@ export function InteractiveDropdownRoot(props: InteractiveDropdownRootProps) {
 			positioner.style.removeProperty("top");
 			positioner.style.removeProperty("left");
 			const { align } = resolveDropdownPlacement(placement);
-			positionOverlay(root, { align, arrowOffset: ARROW_OFFSET });
+			const isPointAtCenter =
+				typeof arrow === "object" && arrow !== null && "pointAtCenter" in arrow
+					? !!arrow.pointAtCenter
+					: false;
+			positionOverlay(root, {
+				align,
+				arrowOffset: ARROW_OFFSET,
+				pointAtCenter: isPointAtCenter,
+			});
 			return;
 		}
 
@@ -874,6 +975,7 @@ export function InteractiveDropdownRoot(props: InteractiveDropdownRootProps) {
 			const animatedEl = contentRef.current ?? positioner;
 			cancelPendingHideRef.current = whenAnimationEnds(animatedEl, () => {
 				positioner.style.setProperty("display", "none", "important");
+				setIsRendered(false);
 			});
 		}
 	};
@@ -882,15 +984,16 @@ export function InteractiveDropdownRoot(props: InteractiveDropdownRootProps) {
 		e?: MouseEvent,
 		focusItem: "first" | "last" = "first",
 	) => {
+		setIsRendered(true);
 		applyOpenState(true, e, focusItem);
 		if (!isControlled) setIsOpen(true);
-		onOpenChangeRef.current?.(true);
+		onOpenChangeRef.current?.(true, { source: "trigger" });
 	};
 
-	const handleClose = () => {
+	const handleClose = (source: "trigger" | "menu" = "trigger") => {
 		applyOpenState(false);
 		if (!isControlled) setIsOpen(false);
-		onOpenChangeRef.current?.(false);
+		onOpenChangeRef.current?.(false, { source });
 		onCloseRef.current?.();
 	};
 
@@ -902,10 +1005,34 @@ export function InteractiveDropdownRoot(props: InteractiveDropdownRootProps) {
 	useEffect(() => {
 		if (typeof document === "undefined") return;
 		if (!isFirstRenderRef.current) {
+			if (open) {
+				setIsRendered(true);
+			}
 			applyOpenState(open);
 		}
 		isFirstRenderRef.current = false;
 	}, [open]);
+
+	// Positioner-sync effect that runs whenever `isRendered` becomes true and `open` is true
+	useEffect(() => {
+		if (open && isRendered) {
+			const root = document.getElementById(rootId);
+			if (root) {
+				rootRef.current = root;
+				triggerRef.current = root.querySelector<HTMLElement>(
+					'[data-part="trigger"], [data-part="context-trigger"], [data-part="trigger-item"]',
+				);
+				contentRef.current = root.querySelector<HTMLElement>(
+					'[data-part="content"]',
+				);
+				positionerRef.current = root.querySelector<HTMLElement>(
+					'[data-part="positioner"]',
+				);
+			}
+			updatePosition();
+			applyCheckedOverrides();
+		}
+	}, [open, isRendered]);
 
 	useEffect(() => {
 		if (typeof document === "undefined") return;
@@ -961,7 +1088,7 @@ export function InteractiveDropdownRoot(props: InteractiveDropdownRootProps) {
 			if (closeTimer || !isOpenRef.current) return;
 			closeTimer = setTimeout(() => {
 				closeTimer = null;
-				handleClose();
+				handleClose("trigger");
 			}, delay);
 		};
 
@@ -984,7 +1111,7 @@ export function InteractiveDropdownRoot(props: InteractiveDropdownRootProps) {
 					return;
 				}
 				clearTimers();
-				if (isOpenRef.current) handleClose();
+				if (isOpenRef.current) handleClose("trigger");
 				else handleOpen(e);
 			} else if (dataPart === "item") {
 				if (target.hasAttribute("data-disabled")) return;
@@ -1002,7 +1129,7 @@ export function InteractiveDropdownRoot(props: InteractiveDropdownRootProps) {
 
 				// A regular item closes every menu level it bubbles through.
 				if (ownsTarget(target)) onSelectRef.current?.(value);
-				handleClose();
+				handleClose("menu");
 				if (triggerRef.current?.getAttribute("data-part") === "trigger") {
 					triggerRef.current.focus();
 				}
@@ -1063,12 +1190,12 @@ export function InteractiveDropdownRoot(props: InteractiveDropdownRootProps) {
 
 			if (e.key === "Escape") {
 				if (!closeOnEscapeRef.current) return;
-				handleClose();
+				handleClose("trigger");
 				triggerRef.current?.focus();
 				e.preventDefault();
 				e.stopPropagation();
 			} else if (e.key === "Tab") {
-				handleClose();
+				handleClose("trigger");
 			} else if (e.key === "ArrowDown") {
 				items[(currentIndex + 1) % items.length]?.focus();
 				e.preventDefault();
@@ -1083,7 +1210,7 @@ export function InteractiveDropdownRoot(props: InteractiveDropdownRootProps) {
 				}
 			} else if (e.key === "ArrowLeft") {
 				if (triggerRef.current?.getAttribute("data-part") === "trigger-item") {
-					handleClose();
+					handleClose("trigger");
 					triggerRef.current?.focus();
 					e.preventDefault();
 					e.stopPropagation();
@@ -1105,7 +1232,7 @@ export function InteractiveDropdownRoot(props: InteractiveDropdownRootProps) {
 
 		const handleClickOutside = (e: MouseEvent) => {
 			if (isOpenRef.current && root && !root.contains(e.target as Node)) {
-				handleClose();
+				handleClose("trigger");
 			}
 		};
 
@@ -1130,7 +1257,7 @@ export function InteractiveDropdownRoot(props: InteractiveDropdownRootProps) {
 				isOpenRef.current &&
 				!contentRef.current?.contains(e.target as Node)
 			) {
-				handleClose();
+				handleClose("trigger");
 			}
 		};
 
@@ -1206,6 +1333,10 @@ export function InteractiveDropdownRoot(props: InteractiveDropdownRootProps) {
 				{...rest}
 				disabled={disabled}
 				open={open}
+				rendered={isRendered}
+				destroyOnHidden={destroyOnHidden}
+				classNames={classNames}
+				stylesObj={styles}
 				id={rootId}
 				onClose={onClose}
 			>

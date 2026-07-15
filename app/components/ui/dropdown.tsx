@@ -2,6 +2,7 @@ import { cx } from "design-system/css";
 import { type DropdownVariantProps, dropdown } from "design-system/recipes";
 import type { JSX } from "hono/jsx";
 import InteractiveDropdownRoot from "../../islands/dropdown";
+import { Button, ButtonGroup } from "./button";
 // Import primitive components from dropdown-primitive
 import {
 	DropdownCheckboxItem as CheckboxItem,
@@ -111,7 +112,7 @@ interface DropdownProps extends DropdownVariantProps {
 	contentClass?: string;
 	positionerClass?: string;
 	children?: any;
-	arrow?: boolean;
+	arrow?: boolean | { pointAtCenter?: boolean };
 	/**
 	 * Placement of the menu relative to the trigger. Accepts the 12-way names
 	 * (`"bottomLeft"`, `"topRight"`, ...) or their dash-case equivalents
@@ -119,18 +120,44 @@ interface DropdownProps extends DropdownVariantProps {
 	 */
 	placement?: string;
 	triggerMode?:
-		| ("click" | "hover" | "contextDropdown")[]
+		| ("click" | "hover" | "contextDropdown" | "contextMenu")[]
 		| "click"
 		| "hover"
-		| "contextDropdown";
+		| "contextDropdown"
+		| "contextMenu";
 	mouseEnterDelay?: number;
 	mouseLeaveDelay?: number;
 	/** Close when Escape is pressed. Default `true`. */
 	closeOnEscape?: boolean;
 	/** Called when the menu opens or closes. */
-	onOpenChange?: (open: boolean) => void;
+	onOpenChange?: (
+		open: boolean,
+		info?: { source: "trigger" | "menu" },
+	) => void;
 	/** Called with an item's `value` when it is activated. */
 	onSelect?: (value: string) => void;
+	destroyOnHidden?: boolean;
+	destroyPopupOnHide?: boolean;
+	popupRender?: (menu: JSX.Element) => JSX.Element;
+	dropdownRender?: (menu: JSX.Element) => JSX.Element;
+	classNames?: {
+		root?: string;
+		item?: string;
+		content?: string;
+		positioner?: string;
+		arrow?: string;
+		arrowTip?: string;
+		trigger?: string;
+	};
+	styles?: {
+		root?: any;
+		item?: any;
+		content?: any;
+		positioner?: any;
+		arrow?: any;
+		arrowTip?: any;
+		trigger?: any;
+	};
 }
 
 // ============= Rendering Functions =============
@@ -297,7 +324,7 @@ function DropdownSubmenu({
 
 function DropdownRoot(props: DropdownProps) {
 	const {
-		trigger,
+		trigger: triggerProp,
 		items,
 		defaultOpen = false,
 		open,
@@ -309,84 +336,261 @@ function DropdownRoot(props: DropdownProps) {
 		children,
 		arrow,
 		placement = "bottomLeft",
-		triggerMode = ["click"],
+		triggerMode,
 		mouseEnterDelay,
 		mouseLeaveDelay,
 		closeOnEscape,
 		onOpenChange,
 		onSelect,
+		destroyOnHidden,
+		destroyPopupOnHide,
+		popupRender,
+		dropdownRender,
+		classNames,
+		styles: stylesProp,
 		...variantProps
 	} = props;
 
 	const styles = dropdown(variantProps);
-	const triggerModes = Array.isArray(triggerMode) ? triggerMode : [triggerMode];
-	// A trigger wired for `contextDropdown` alone (no click/hover) opens on
-	// right-click, so it renders as a plain wrapper rather than a `<button>`.
+	// Handle 'trigger' as trigger modes
+	const trigger =
+		props.trigger && !("type" in props.trigger && props.trigger.type)
+			? undefined
+			: props.trigger;
+	const triggerPropForMode =
+		props.trigger && !("type" in props.trigger && props.trigger.type)
+			? props.trigger
+			: undefined;
+
+	const triggerModeVal = triggerPropForMode ?? triggerMode ?? ["click"];
+	const triggerModes = Array.isArray(triggerModeVal)
+		? triggerModeVal
+		: [triggerModeVal];
+
 	const isContextMenuOnly =
 		triggerModes.includes("contextDropdown") &&
 		!triggerModes.includes("click") &&
 		!triggerModes.includes("hover");
 	const TriggerComponent = isContextMenuOnly ? ContextTrigger : Trigger;
 
+	const isArrowVisible = !!arrow;
+
 	if (shouldHydrate(interactive, true)) {
+		const menuContent = items ? (
+			<Content class={cx(styles.content, contentClass)}>
+				{items.map((item, index) =>
+					renderDropdownItem(item, index, variantProps.size, true),
+				)}
+			</Content>
+		) : null;
+
+		const customPopup = menuContent
+			? popupRender
+				? popupRender(menuContent)
+				: dropdownRender
+				? dropdownRender(menuContent)
+				: menuContent
+			: null;
+
 		return (
 			<InteractiveDropdownRoot
 				open={open}
 				defaultOpen={defaultOpen}
 				disabled={disabled}
 				placement={placement}
-				trigger={triggerMode}
+				trigger={triggerModeVal as any}
 				mouseEnterDelay={mouseEnterDelay}
 				mouseLeaveDelay={mouseLeaveDelay}
 				closeOnEscape={closeOnEscape}
 				onOpenChange={onOpenChange}
 				onSelect={onSelect}
+				arrow={arrow}
+				destroyOnHidden={destroyOnHidden ?? destroyPopupOnHide}
+				classNames={classNames}
+				styles={stylesProp}
 			>
 				{trigger && <TriggerComponent asChild>{trigger}</TriggerComponent>}
 				{children}
-				{items && (
+				{customPopup && (
 					<Positioner
 						placement={placement}
 						class={cx(styles.positioner, positionerClass)}
 					>
-						{arrow && (
+						{isArrowVisible && (
 							<DropdownArrow placement={placement}>
 								<DropdownArrowTip placement={placement} />
 							</DropdownArrow>
 						)}
-						<Content class={cx(styles.content, contentClass)}>
-							{items.map((item, index) =>
-								renderDropdownItem(item, index, variantProps.size, true),
-							)}
-						</Content>
+						{customPopup}
 					</Positioner>
 				)}
 			</InteractiveDropdownRoot>
 		);
 	}
 
+	const menuContent = items ? (
+		<Content class={cx(styles.content, contentClass)}>
+			{items.map((item, index) =>
+				renderDropdownItem(item, index, variantProps.size, false),
+			)}
+		</Content>
+	) : null;
+
+	const customPopup = menuContent
+		? popupRender
+			? popupRender(menuContent)
+			: dropdownRender
+			? dropdownRender(menuContent)
+			: menuContent
+		: null;
+
 	return (
-		<RootPrimitive open={open ?? defaultOpen} disabled={disabled}>
+		<RootPrimitive
+			open={open ?? defaultOpen}
+			disabled={disabled}
+			destroyOnHidden={destroyOnHidden ?? destroyPopupOnHide}
+			classNames={classNames}
+			stylesObj={stylesProp}
+		>
 			{trigger && <TriggerComponent asChild>{trigger}</TriggerComponent>}
 			{children}
-			{items && (
+			{customPopup && (
 				<Positioner
 					placement={placement}
 					class={cx(styles.positioner, positionerClass)}
 				>
-					{arrow && (
+					{isArrowVisible && (
 						<DropdownArrow placement={placement}>
 							<DropdownArrowTip placement={placement} />
 						</DropdownArrow>
 					)}
-					<Content class={cx(styles.content, contentClass)}>
-						{items.map((item, index) =>
-							renderDropdownItem(item, index, variantProps.size, false),
-						)}
-					</Content>
+					{customPopup}
 				</Positioner>
 			)}
 		</RootPrimitive>
+	);
+}
+
+// ============= DropdownButton Component =============
+
+const EllipsisIcon = () => (
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="16"
+		height="16"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		strokeWidth="2"
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		aria-hidden="true"
+	>
+		<title>More Actions</title>
+		<circle cx="12" cy="12" r="1" />
+		<circle cx="19" cy="12" r="1" />
+		<circle cx="5" cy="12" r="1" />
+	</svg>
+);
+
+export interface DropdownButtonProps extends DropdownProps {
+	type?:
+		| "default"
+		| "primary"
+		| "dashed"
+		| "link"
+		| "text"
+		| "solid"
+		| "outline"
+		| "subtle"
+		| "plain"
+		| "surface";
+	danger?: boolean;
+	disabled?: boolean;
+	loading?: boolean;
+	onClick?: (e: MouseEvent) => void;
+	icon?: JSX.Element;
+	buttonsRender?: (buttons: JSX.Element[]) => JSX.Element[];
+}
+
+export function DropdownButton(props: DropdownButtonProps) {
+	const {
+		type = "outline",
+		danger,
+		disabled,
+		loading,
+		onClick,
+		icon = <EllipsisIcon />,
+		children,
+		buttonsRender,
+		items,
+		open,
+		defaultOpen,
+		onOpenChange,
+		onSelect,
+		placement,
+		trigger: triggerProp,
+		triggerMode,
+		arrow,
+		classNames,
+		styles,
+		destroyOnHidden,
+		...rest
+	} = props;
+
+	const colorPalette = danger ? "red" : "gray";
+	let variant = type;
+	if (type === "primary") variant = "solid";
+	if (type === "default") variant = "outline";
+	if (type === "text" || type === "link") variant = "plain";
+
+	const leftButton = (
+		<Button
+			key="left"
+			variant={variant as any}
+			colorPalette={colorPalette}
+			disabled={disabled}
+			loading={loading}
+			onClick={onClick}
+		>
+			{children}
+		</Button>
+	);
+
+	const rightButton = (
+		<Button
+			key="right"
+			variant={variant as any}
+			colorPalette={colorPalette}
+			disabled={disabled}
+		>
+			{icon}
+		</Button>
+	);
+
+	const [btn1, btn2] = buttonsRender
+		? buttonsRender([leftButton, rightButton])
+		: [leftButton, rightButton];
+
+	return (
+		<ButtonGroup attached>
+			{btn1}
+			<Dropdown
+				interactive={true}
+				items={items}
+				open={open}
+				defaultOpen={defaultOpen}
+				onOpenChange={onOpenChange}
+				onSelect={onSelect}
+				placement={placement}
+				triggerMode={triggerProp ?? triggerMode ?? "click"}
+				arrow={arrow}
+				classNames={classNames}
+				styles={styles}
+				destroyOnHidden={destroyOnHidden}
+				trigger={btn2}
+			/>
+		</ButtonGroup>
 	);
 }
 
@@ -408,6 +612,7 @@ export const Dropdown = Object.assign(DropdownRoot, {
 	RadioItemGroup: RadioItemGroup,
 	Arrow: DropdownArrow,
 	ArrowTip: DropdownArrowTip,
+	Button: DropdownButton,
 });
 
 export {
