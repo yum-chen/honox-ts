@@ -34,6 +34,8 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 		onOpenChange,
 		id: idProp,
 		children,
+		label,
+		placeholder,
 		...rest
 	} = props;
 
@@ -63,6 +65,10 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 
 	const minDate = parseSingleDate(props.min);
 	const maxDate = parseSingleDate(props.max);
+
+	// When true, the grid cell matching `currentFocusedValue` should receive
+	// DOM focus after the next render (used for keyboard navigation + open).
+	const focusGrid = useRef(false);
 
 	// Keep refs for event handlers to avoid closure stale state
 	const stateRef = useRef({
@@ -230,7 +236,8 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 	};
 
 	// Commit a manually typed date. Invalid or out-of-range text reverts to
-	// the last committed value for that input.
+	// the last committed value for that input. The input is uncontrolled, so
+	// this only runs on blur / Enter — users can type freely in between.
 	const handleInputCommit = (input: HTMLInputElement) => {
 		const index = Number(input.getAttribute("data-index") || "0");
 		const raw = input.value.trim();
@@ -278,10 +285,49 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 		setFocusedValue(parsed);
 	};
 
+	// Sync the uncontrolled input DOM value with external state changes
+	// (calendar selection, clear, preset) — but never while the user is typing.
+	useEffect(() => {
+		const root = document.getElementById(rootId);
+		if (!root) return;
+		root
+			.querySelectorAll<HTMLInputElement>('[data-part="input"]')
+			.forEach((input) => {
+				if (document.activeElement !== input) {
+					const idx = Number(input.getAttribute("data-index") || "0");
+					input.value = currentValue[idx]?.toString() ?? "";
+				}
+			});
+	}, [rootId, currentValue]);
+
+	// Move DOM focus to the active grid cell when keyboard navigation or a
+	// keyboard-open requests it.
+	useEffect(() => {
+		if (!focusGrid.current) return;
+		focusGrid.current = false;
+		if (!open) return;
+		const root = document.getElementById(rootId);
+		if (!root) return;
+		let selector = "";
+		if (currentView === "day") {
+			selector = `[data-part="table-cell-trigger"][data-view="day"][data-value="${currentFocusedValue.toString()}"]`;
+		} else if (currentView === "month") {
+			selector = `[data-part="table-cell-trigger"][data-view="month"][data-value="${currentFocusedValue.month}"]`;
+		} else {
+			selector = `[data-part="table-cell-trigger"][data-view="year"][data-value="${currentFocusedValue.year}"]`;
+		}
+		root.querySelector<HTMLElement>(selector)?.focus();
+	}, [currentFocusedValue, currentView, open]);
+
 	// DOM interaction effects
 	useEffect(() => {
 		const root = document.getElementById(rootId);
 		if (!root) return;
+
+		const moveFocused = (next: CalendarDate) => {
+			setFocusedValue(next);
+			focusGrid.current = true;
+		};
 
 		const handleClick = (e: MouseEvent) => {
 			const target = e.target as HTMLElement;
@@ -365,17 +411,166 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 		};
 
 		const handleKeyDown = (e: KeyboardEvent) => {
+			const target = e.target as HTMLElement;
+			const part = target.getAttribute("data-part");
+
+			// Enter commits a typed date from the input
+			if (part === "input" && e.key === "Enter") {
+				e.preventDefault();
+				handleInputCommit(target as HTMLInputElement);
+				return;
+			}
+
+			// Keyboard open from the trigger → move focus into the grid
+			if (part === "trigger" && (e.key === "Enter" || e.key === " ")) {
+				e.preventDefault();
+				const willOpen = !stateRef.current.open;
+				handleOpenChange(willOpen);
+				if (willOpen) focusGrid.current = true;
+				return;
+			}
+
+			if (!stateRef.current.open) return;
+
+			const cell = target.closest(
+				'[data-part="table-cell-trigger"]',
+			) as HTMLElement | null;
+			if (!cell) return;
+			const view = cell.getAttribute("data-view");
+			const fv = stateRef.current.focusedValue;
+
+			const stepDays = (days: number) => {
+				const d = fv.toDate();
+				d.setDate(d.getDate() + days);
+				moveFocused(fromJSDate(d));
+			};
+			const stepMonths = (months: number) => {
+				let m = fv.month + months;
+				let y = fv.year;
+				while (m < 1) {
+					m += 12;
+					y--;
+				}
+				while (m > 12) {
+					m -= 12;
+					y++;
+				}
+				moveFocused(new CalendarDate(y, m, fv.day));
+			};
+			const stepYears = (years: number) => {
+				moveFocused(new CalendarDate(fv.year + years, fv.month, fv.day));
+			};
+
+			switch (e.key) {
+				case "ArrowRight":
+					e.preventDefault();
+					if (view === "day") stepDays(1);
+					else if (view === "month") stepMonths(1);
+					else stepYears(1);
+					break;
+				case "ArrowLeft":
+					e.preventDefault();
+					if (view === "day") stepDays(-1);
+					else if (view === "month") stepMonths(-1);
+					else stepYears(-1);
+					break;
+				case "ArrowDown":
+					e.preventDefault();
+					if (view === "day") stepDays(7);
+					else if (view === "month") stepMonths(3);
+					else stepYears(3);
+					break;
+				case "ArrowUp":
+					e.preventDefault();
+					if (view === "day") stepDays(-7);
+					else if (view === "month") stepMonths(-3);
+					else stepYears(-3);
+					break;
+				case "Home":
+					if (view === "day") {
+						e.preventDefault();
+						const offset = (fv.toDate().getDay() - 0 + 7) % 7;
+						stepDays(-offset);
+					}
+					break;
+				case "End":
+					if (view === "day") {
+						e.preventDefault();
+						const offset = (fv.toDate().getDay() - 0 + 7) % 7;
+						stepDays(6 - offset);
+					}
+					break;
+				case "PageUp":
+					e.preventDefault();
+					if (view === "day") {
+						if (e.shiftKey) stepYears(-1);
+						else stepMonths(-1);
+					} else if (view === "month") stepYears(-1);
+					else stepYears(-10);
+					break;
+				case "PageDown":
+					e.preventDefault();
+					if (view === "day") {
+						if (e.shiftKey) stepYears(1);
+						else stepMonths(1);
+					} else if (view === "month") stepYears(1);
+					else stepYears(10);
+					break;
+				case "Enter":
+				case " ":
+					e.preventDefault();
+					if (cell.hasAttribute("data-disabled")) return;
+					if (view === "day") {
+						const raw = cell.getAttribute("data-value") || "";
+						if (isValidDateString(raw)) handleCellClick(parseDate(raw));
+					} else {
+						const n = Number(cell.getAttribute("data-value"));
+						if (!Number.isNaN(n)) handleCellClick(n);
+					}
+					break;
+				default:
+					break;
+			}
+		};
+
+		const handleMouseOver = (e: MouseEvent) => {
+			const cell = (e.target as HTMLElement).closest(
+				'[data-part="table-cell-trigger"][data-view="day"]',
+			) as HTMLElement | null;
+			if (!cell || cell.hasAttribute("data-disabled")) return;
+			const st = stateRef.current;
+			if (st.selectionMode !== "range" || st.value.length !== 1) return;
+			const start = st.value[0];
+			const hovered = parseDate(cell.getAttribute("data-value") || "");
+			const lo = Math.min(start.toDate().getTime(), hovered.toDate().getTime());
+			const hi = Math.max(start.toDate().getTime(), hovered.toDate().getTime());
+			root
+				.querySelectorAll<HTMLElement>(
+					'[data-part="table-cell-trigger"][data-view="day"]',
+				)
+				.forEach((el) => {
+					const t = parseDate(el.getAttribute("data-value") || "")
+						.toDate()
+						.getTime();
+					if (t > lo && t < hi) el.setAttribute("data-range-preview", "");
+					else el.removeAttribute("data-range-preview");
+				});
+		};
+
+		const handleMouseOut = () => {
+			root
+				.querySelectorAll<HTMLElement>(
+					'[data-part="table-cell-trigger"][data-view="day"][data-range-preview]',
+				)
+				.forEach((el) => {
+					el.removeAttribute("data-range-preview");
+				});
+		};
+
+		const handleDocumentKeyDown = (e: KeyboardEvent) => {
 			if (e.key === "Escape" && stateRef.current.open) {
 				e.stopPropagation();
 				closeAndRestoreFocus();
-				return;
-			}
-			if (e.key === "Enter") {
-				const target = e.target as HTMLElement;
-				if (target.getAttribute("data-part") === "input") {
-					e.preventDefault();
-					handleInputCommit(target as HTMLInputElement);
-				}
 			}
 		};
 
@@ -388,13 +583,19 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 		root.addEventListener("click", handleClick);
 		root.addEventListener("change", handleChange);
 		root.addEventListener("keydown", handleKeyDown);
+		root.addEventListener("mouseover", handleMouseOver);
+		root.addEventListener("mouseout", handleMouseOut);
 		document.addEventListener("click", handleDocumentClick);
+		document.addEventListener("keydown", handleDocumentKeyDown);
 
 		return () => {
 			root.removeEventListener("click", handleClick);
 			root.removeEventListener("change", handleChange);
 			root.removeEventListener("keydown", handleKeyDown);
+			root.removeEventListener("mouseover", handleMouseOver);
+			root.removeEventListener("mouseout", handleMouseOut);
 			document.removeEventListener("click", handleDocumentClick);
+			document.removeEventListener("keydown", handleDocumentKeyDown);
 		};
 	}, [rootId]);
 
@@ -409,7 +610,11 @@ export default function DatePickerIsland(props: DatePickerRootProps) {
 			selectionMode={selectionMode}
 		>
 			{children || (
-				<DatePickerStructure selectionMode={selectionMode} {...rest} />
+				<DatePickerStructure
+					selectionMode={selectionMode}
+					label={label}
+					placeholder={placeholder}
+				/>
 			)}
 		</DatePickerRoot>
 	);

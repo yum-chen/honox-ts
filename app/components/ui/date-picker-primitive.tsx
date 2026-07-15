@@ -41,6 +41,21 @@ export function isValidDateString(str: string): boolean {
 	);
 }
 
+export function getWeekNumber(date: CalendarDate): number {
+	const d = date.toDate();
+	const target = new Date(d.getTime());
+	const dayNr = (target.getDay() + 6) % 7; // Monday = 0
+	target.setDate(target.getDate() - dayNr + 3); // nearest Thursday
+	const firstThursday = target.getTime();
+	target.setMonth(0, 1);
+	if (target.getDay() !== 4) {
+		target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
+	}
+	return (
+		1 + Math.ceil((firstThursday - target.getTime()) / (7 * 24 * 3600 * 1000))
+	);
+}
+
 export function parseDate(str: string): CalendarDate {
 	if (!str || typeof str !== "string") {
 		return fromJSDate(new Date());
@@ -505,7 +520,7 @@ export function DatePickerInput(props: {
 			type="text"
 			id={context ? `${context.rootId}-input-${index}` : undefined}
 			placeholder={placeholder}
-			value={val}
+			defaultValue={val}
 			disabled={context?.disabled}
 			readOnly={context?.readOnly}
 			autocomplete="off"
@@ -810,6 +825,8 @@ export function DatePickerTable(
 	const context = useDatePickerContext();
 	return (
 		<table
+			role="grid"
+			aria-label="Calendar"
 			data-scope="date-picker"
 			data-part="table"
 			data-view={context?.view}
@@ -828,6 +845,7 @@ export function DatePickerTableHead(
 	const context = useDatePickerContext();
 	return (
 		<thead
+			role="row"
 			data-scope="date-picker"
 			data-part="table-head"
 			data-view={context?.view}
@@ -847,6 +865,7 @@ export function DatePickerTableHeader(
 	return (
 		<th
 			scope="col"
+			role="columnheader"
 			data-scope="date-picker"
 			data-part="table-header"
 			data-view={context?.view}
@@ -865,6 +884,7 @@ export function DatePickerTableRow(
 	const context = useDatePickerContext();
 	return (
 		<tr
+			role="row"
 			data-scope="date-picker"
 			data-part="table-row"
 			data-view={context?.view}
@@ -906,6 +926,7 @@ export function DatePickerTableCell(
 	return (
 		<TableCellContext.Provider value={{ value }}>
 			<td
+				role="gridcell"
 				data-scope="date-picker"
 				data-part="table-cell"
 				class={cx(context?.styles.tableCell, classProp)}
@@ -914,6 +935,26 @@ export function DatePickerTableCell(
 				{children}
 			</td>
 		</TableCellContext.Provider>
+	);
+}
+
+export function DatePickerWeekNumber(props: {
+	value: number;
+	class?: string;
+	[key: string]: any;
+}) {
+	const { value, class: classProp, ...rest } = props;
+	const context = useDatePickerContext();
+	return (
+		<td
+			role="rowheader"
+			data-scope="date-picker"
+			data-part="week-number"
+			class={cx(context?.styles.weekNumber, classProp)}
+			{...rest}
+		>
+			{value}
+		</td>
 	);
 }
 
@@ -986,6 +1027,17 @@ export function DatePickerTableCellTrigger(
 		}
 	}
 
+	let isActive = false;
+	if (value instanceof CalendarDate) {
+		isActive = value.toString() === context.focusedValue.toString();
+	} else if (typeof value === "number") {
+		if (context.view === "month") {
+			isActive = value === context.focusedValue.month;
+		} else if (context.view === "year") {
+			isActive = value === context.focusedValue.year;
+		}
+	}
+
 	let cellLabel: string | undefined;
 	if (value instanceof CalendarDate) {
 		try {
@@ -1003,6 +1055,7 @@ export function DatePickerTableCellTrigger(
 	return (
 		<button
 			type="button"
+			tabIndex={isActive ? 0 : -1}
 			disabled={isDisabled}
 			aria-label={cellLabel}
 			aria-selected={isSelected ? "true" : undefined}
@@ -1184,7 +1237,11 @@ export function DatePickerStructure(props: DatePickerFlattenedProps) {
 					<DatePickerInput placeholder={placeholder} />
 				)}
 				<DatePickerTrigger />
-				<DatePickerClearTrigger />
+				<DatePickerContext>
+					{(datePicker) =>
+						datePicker.value.length > 0 ? <DatePickerClearTrigger /> : null
+					}
+				</DatePickerContext>
 			</DatePickerControl>
 			<DatePickerPositioner>
 				<DatePickerContent>
@@ -1202,6 +1259,11 @@ export function DatePickerStructure(props: DatePickerFlattenedProps) {
 									<DatePickerTable>
 										<DatePickerTableHead>
 											<DatePickerTableRow>
+												{datePicker.showWeekNumbers && (
+													<DatePickerTableHeader>
+														<span style={{ visibility: "hidden" }}>Wk</span>
+													</DatePickerTableHeader>
+												)}
 												{datePicker.weekDays.map((weekDay, id) => (
 													<DatePickerTableHeader key={id}>
 														{weekDay.short}
@@ -1212,6 +1274,11 @@ export function DatePickerStructure(props: DatePickerFlattenedProps) {
 										<DatePickerTableBody>
 											{datePicker.weeks.map((week, id) => (
 												<DatePickerTableRow key={id}>
+													{datePicker.showWeekNumbers && (
+														<DatePickerWeekNumber
+															value={getWeekNumber(week[0])}
+														/>
+													)}
 													{week.map((day, id) => (
 														<DatePickerTableCell key={id} value={day}>
 															<DatePickerTableCellTrigger>
