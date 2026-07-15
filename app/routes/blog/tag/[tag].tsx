@@ -6,129 +6,25 @@ import {
 	Button,
 	Card,
 	Heading,
+	Search,
 	Stack,
 	Text,
 } from "../../../components/ui";
-import { parseFrontmatter } from "../../../utils/markdown";
-
-// Use Vite's import.meta.glob to import all markdown files at build time
-const posts = import.meta.glob("/content/posts/*.md", {
-	query: "?raw",
-	import: "default",
-});
-
-interface BlogPost {
-	slug: string;
-	title: string;
-	date: string;
-	description: string;
-	tags: string[];
-	draft: boolean;
-	author?: string;
-	readTime?: string;
-	cover?: string;
-}
+import { loadPosts } from "../../../lib/posts";
 
 export default createRoute(
 	// Use ssgParams middleware to tell SSG which params to generate
 	ssgParams(async () => {
-		const posts = import.meta.glob("/content/posts/*.md", {
-			query: "?raw",
-			import: "default",
-		});
-
-		const allTags = new Set<string>();
-
-		for (const [_path, loader] of Object.entries(posts)) {
-			try {
-				const markdown = await (loader as () => Promise<string>)();
-				const { data } = parseFrontmatter(markdown);
-
-				if (data.draft === true && process.env.NODE_ENV === "production") {
-					continue;
-				}
-
-				const postTags = Array.isArray(data.tags) ? data.tags : [];
-				postTags.forEach((tag: string) => {
-					allTags.add(tag);
-				});
-			} catch (_error) {
-				// Ignore errors
-			}
-		}
-
-		return Array.from(allTags).map((tag) => ({ tag }));
+		const { tags } = await loadPosts();
+		return tags.map((tag) => ({ tag }));
 	}),
 
 	// Actual route handler
 	async (c) => {
-		const tagFilter = c.req.param("tag");
+		const tagFilter = c.req.param("tag") ?? "";
 
-		// Load and parse all blog posts
-		const blogPosts: BlogPost[] = [];
-
-		for (const [path, loader] of Object.entries(posts)) {
-			try {
-				const markdown = await (loader as () => Promise<string>)();
-				const { data } = parseFrontmatter(markdown);
-
-				// Skip drafts in production
-				if (data.draft === true && process.env.NODE_ENV === "production") {
-					continue;
-				}
-
-				const slug = path.replace("/content/posts/", "").replace(".md", "");
-
-				// Filter by tag
-				const postTags = Array.isArray(data.tags) ? data.tags : [];
-				if (!postTags.includes(tagFilter)) {
-					continue;
-				}
-
-				blogPosts.push({
-					slug,
-					title: data.title || "Untitled",
-					date: data.date || "",
-					description: data.description || "",
-					tags: postTags,
-					draft: data.draft === true,
-					author: data.author || "Artefact Team",
-					readTime: data.readTime || "5 min read",
-					cover: data.cover || null,
-				});
-			} catch (error) {
-				console.error(`Error loading ${path}:`, error);
-			}
-		}
-
-		// Sort posts by date (newest first)
-		blogPosts.sort((a, b) => {
-			const dateA = new Date(a.date).getTime();
-			const dateB = new Date(b.date).getTime();
-			return dateB - dateA;
-		});
-
-		// Get unique tags for filter UI
-		const allTags = new Set<string>();
-		for (const [_path, loader] of Object.entries(posts)) {
-			try {
-				const markdown = await (loader as () => Promise<string>)();
-				const { data } = parseFrontmatter(markdown);
-
-				if (data.draft === true && process.env.NODE_ENV === "production") {
-					continue;
-				}
-
-				const postTags = Array.isArray(data.tags) ? data.tags : [];
-				postTags.forEach((tag: string) => {
-					allTags.add(tag);
-				});
-			} catch (_error) {
-				// Ignore errors
-			}
-		}
-
-		const tags = Array.from(allTags).sort();
+		const { posts, tags } = await loadPosts();
+		const blogPosts = posts.filter((post) => post.tags.includes(tagFilter));
 
 		return c.render(
 			<div
@@ -285,6 +181,16 @@ export default createRoute(
 						{blogPosts.length !== 1 ? "s" : ""} tagged with "{tagFilter}"
 					</Text>
 				</header>
+
+				{/* Search (island) — global autocomplete over /search-index.json */}
+				<section class={css({ mb: "8", maxWidth: "xl", mx: "auto" })}>
+					<Search
+						placeholder="Search all articles..."
+						itemLabel="articles"
+						showCount={false}
+						syncUrl={false}
+					/>
+				</section>
 
 				{/* Tag Filter UI */}
 				{tags.length > 0 && (
