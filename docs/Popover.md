@@ -31,40 +31,6 @@ An interactive element that displays additional content in a layer over its anch
 # Usage
 
 ```tsx
-import * as Popover from "../components/ui/popover";
-import { Button } from "../components/ui/button";
-
-export default function MyPage() {
-  return (
-    <Popover.Root placement="top">
-      <Popover.Trigger asChild>
-        <Button>Open Popover</Button>
-      </Popover.Trigger>
-      <Popover.Positioner>
-        <Popover.Content>
-          <Popover.Arrow>
-            <Popover.ArrowTip />
-          </Popover.Arrow>
-          <Popover.Header>
-            <Popover.Title>Title</Popover.Title>
-            <Popover.Description>Description</Popover.Description>
-          </Popover.Header>
-          <Popover.Body>Popover Body</Popover.Body>
-          <Popover.Footer>
-            <Popover.CloseTrigger asChild>
-              <Button variant="outline">Close</Button>
-            </Popover.CloseTrigger>
-          </Popover.Footer>
-        </Popover.Content>
-      </Popover.Positioner>
-    </Popover.Root>
-  );
-}
-```
-
-Or with the flattened API:
-
-```tsx
 import { Popover } from "../components/ui/popover";
 import { Button } from "../components/ui/button";
 
