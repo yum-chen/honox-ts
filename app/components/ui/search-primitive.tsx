@@ -1,51 +1,41 @@
 import { useEffect, useId, useMemo, useRef, useState } from "hono/jsx";
 import { css, cx } from "styled-system/css";
+import { type SearchVariantProps, search } from "styled-system/recipes";
 import {
 	filterEntries,
+	rankSearchEntries,
 	type SearchIndexDocument,
 	type SearchIndexEntry,
 	tokenize,
 } from "../../utils/search";
 
-const inputWrapClass = css({ position: "relative" });
+type SearchSlot =
+	| "root"
+	| "inputWrap"
+	| "input"
+	| "icon"
+	| "clearTrigger"
+	| "listbox"
+	| "item"
+	| "itemTitle"
+	| "itemDescription"
+	| "itemTags"
+	| "countText"
+	| "status";
 
-const iconClass = css({
-	position: "absolute",
-	left: "3",
-	top: "50%",
-	transform: "translateY(-50%)",
-	color: "fg.muted",
-	pointerEvents: "none",
-	zIndex: "1",
-});
+type SearchClassNames = Partial<Record<SearchSlot, string>>;
+type SearchSlotStyles = Partial<
+	Record<SearchSlot, Record<string, string | number>>
+>;
 
-const inputClass = css({
-	width: "full",
-	pl: "10",
-	pr: "4",
-	py: "3",
-	borderWidth: "2px",
-	borderRadius: "lg",
-	bg: "bg",
-	color: "fg",
-	borderColor: "border",
-	fontSize: "md",
-	transition: "all 0.2s",
-	_focus: {
-		outline: "none",
-		borderColor: "blue.9",
-		shadow: "0 0 0 3px var(--colors-blue-6)",
-	},
-	_placeholder: { color: "fg.muted" },
-});
-
-const countRowClass = css({
-	mt: "2",
-	display: "flex",
-	alignItems: "center",
-	gap: "3",
-	fontSize: "sm",
-	color: "fg.muted",
+// Match text highlight — themed through `colorPalette` (inherits the accent
+// set on the root), so it follows the component's palette instead of a
+// hardcoded color.
+const highlightClass = css({
+	bg: "colorPalette.solid.bg",
+	color: "colorPalette.solid.fg",
+	borderRadius: "xs",
+	px: "0.5",
 });
 
 function SearchIcon() {
@@ -65,39 +55,57 @@ function SearchIcon() {
 	);
 }
 
-// Split `text` into plain and highlighted segments for the given tokens
+function ClearIcon() {
+	return (
+		<svg
+			width="16"
+			height="16"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+		>
+			<title>Clear</title>
+			<path d="M18 6 6 18M6 6l12 12" />
+		</svg>
+	);
+}
+
+function escapeRegExp(value: string): string {
+	return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Split `text` into plain and highlighted segments for the given tokens,
+// using a single combined case-insensitive regex so every occurrence is
+// highlighted (and substring-of-another-token edge cases resolve correctly).
 function highlightSegments(
 	text: string,
 	tokens: string[],
 ): Array<{ match: boolean; text: string }> {
-	if (tokens.length === 0) {
+	const pattern = tokens.map(escapeRegExp).filter(Boolean).join("|");
+	if (!pattern) {
 		return [{ match: false, text }];
 	}
-	const lower = text.toLowerCase();
+	const regex = new RegExp(`(${pattern})`, "gi");
 	const segments: Array<{ match: boolean; text: string }> = [];
-	let pos = 0;
-	while (pos < text.length) {
-		let found = -1;
-		let foundLength = 0;
-		for (const token of tokens) {
-			const index = lower.indexOf(token, pos);
-			if (index !== -1 && (found === -1 || index < found)) {
-				found = index;
-				foundLength = token.length;
-			}
+	let last = 0;
+	let match = regex.exec(text);
+	while (match !== null) {
+		const index = match.index;
+		const token = match[0];
+		if (index > last) {
+			segments.push({ match: false, text: text.slice(last, index) });
 		}
-		if (found === -1) {
-			segments.push({ match: false, text: text.slice(pos) });
-			break;
+		segments.push({ match: true, text: token });
+		last = index + token.length;
+		// Guard against zero-length matches causing an infinite loop
+		if (index === regex.lastIndex) {
+			regex.lastIndex++;
 		}
-		if (found > pos) {
-			segments.push({ match: false, text: text.slice(pos, found) });
-		}
-		segments.push({
-			match: true,
-			text: text.slice(found, found + foundLength),
-		});
-		pos = found + foundLength;
+		match = regex.exec(text);
+	}
+	if (last < text.length) {
+		segments.push({ match: false, text: text.slice(last) });
 	}
 	return segments;
 }
@@ -105,30 +113,26 @@ function highlightSegments(
 function Highlighted({ text, tokens }: { text: string; tokens: string[] }) {
 	return (
 		<>
-			{highlightSegments(text, tokens).map((segment) =>
+			{highlightSegments(text, tokens).map((segment, key) =>
 				segment.match ? (
-					<mark
-						class={css({
-							bg: "amber.5",
-							color: "inherit",
-							borderRadius: "xs",
-						})}
-					>
+					<mark key={key} class={highlightClass}>
 						{segment.text}
 					</mark>
 				) : (
-					segment.text
+					<span key={key}>{segment.text}</span>
 				),
 			)}
 		</>
 	);
 }
 
-export interface SearchBaseProps {
+export interface SearchBaseProps extends SearchVariantProps {
 	/** URL of the SSG-generated JSON search index */
 	src?: string;
 	placeholder?: string;
 	initialQuery?: string;
+	/** Accessible label for the input (defaults to `Search ${itemLabel}`) */
+	label?: string;
 	/** Delay before a keystroke is applied as the active query (ms) */
 	debounceMs?: number;
 	/** Maximum entries shown in the autocomplete dropdown */
@@ -150,14 +154,36 @@ export interface SearchBaseProps {
 	action?: string;
 	/** Mirror the active query into the address bar as ?q= (default true) */
 	syncUrl?: boolean;
+	/** Per-slot class overrides (design-system styling hooks) */
+	classNames?: SearchClassNames;
+	/** Per-slot inline style overrides */
+	styles?: SearchSlotStyles;
 }
 
 /** Static (non-hydrated) variant: a plain GET form the server can answer. */
 export function SearchBase(props: SearchBaseProps) {
-	const { placeholder = "Search...", initialQuery = "", action } = props;
+	const {
+		placeholder = "Search...",
+		initialQuery = "",
+		action,
+		label,
+		classNames,
+		styles,
+		...variantProps
+	} = props;
+	const classes = search(variantProps);
+	const labelText = label ?? "Search";
 	const input = (
-		<div class={inputWrapClass}>
-			<div class={iconClass}>
+		<div
+			class={cx(classes.inputWrap, classNames?.inputWrap)}
+			style={styles?.inputWrap}
+			data-part="input-wrap"
+		>
+			<div
+				class={cx(classes.icon, classNames?.icon)}
+				style={styles?.icon}
+				data-part="icon"
+			>
 				<SearchIcon />
 			</div>
 			<input
@@ -165,16 +191,31 @@ export function SearchBase(props: SearchBaseProps) {
 				name="q"
 				placeholder={placeholder}
 				value={initialQuery}
-				class={inputClass}
+				aria-label={labelText}
+				class={cx(classes.input, classNames?.input)}
+				style={styles?.input}
+				data-part="input"
 			/>
 		</div>
 	);
 	return action ? (
-		<form action={action} method="get" class={css({ width: "full" })}>
+		<form
+			action={action}
+			method="get"
+			class={cx(classes.root, classNames?.root)}
+			style={styles?.root}
+			data-part="root"
+		>
 			{input}
 		</form>
 	) : (
-		<div class={css({ width: "full" })}>{input}</div>
+		<div
+			class={cx(classes.root, classNames?.root)}
+			style={styles?.root}
+			data-part="root"
+		>
+			{input}
+		</div>
 	);
 }
 
@@ -198,7 +239,15 @@ export function InteractiveSearch(props: SearchBaseProps) {
 		showCount = true,
 		action,
 		syncUrl = true,
+		label,
+		classNames,
+		styles,
+		...variantProps
 	} = props;
+
+	const classes = search(variantProps);
+	const labelText = label ?? `Search ${itemLabel}`;
+	const listboxId = `search-listbox-${useId()}`;
 
 	const [rawQuery, setRawQuery] = useState(initialQuery);
 	const [query, setQuery] = useState(initialQuery);
@@ -207,7 +256,7 @@ export function InteractiveSearch(props: SearchBaseProps) {
 	const [open, setOpen] = useState(false);
 	const [highlighted, setHighlighted] = useState(-1);
 	const fetchStarted = useRef(false);
-	const listboxId = `search-listbox-${useId()}`;
+	const filteredNodes = useRef<HTMLElement[] | null>(null);
 
 	const ensureLoaded = () => {
 		if (fetchStarted.current) return;
@@ -235,6 +284,7 @@ export function InteractiveSearch(props: SearchBaseProps) {
 		if (urlQuery || initialQuery) {
 			ensureLoaded();
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	// Debounce keystrokes into the active query
@@ -248,15 +298,31 @@ export function InteractiveSearch(props: SearchBaseProps) {
 		() => (entries ? filterEntries(entries, query) : null),
 		[entries, query],
 	);
-	const suggestions = query && matches ? matches.slice(0, maxSuggestions) : [];
+	const ranked = useMemo(
+		() => (matches ? rankSearchEntries(matches, query) : []),
+		[matches, query],
+	);
+	const suggestions = query && matches ? ranked.slice(0, maxSuggestions) : [];
+
+	// Keep the highlighted option scrolled into view inside the listbox.
+	useEffect(() => {
+		if (highlighted >= 0 && open) {
+			document
+				.getElementById(`${listboxId}-option-${highlighted}`)
+				?.scrollIntoView({ block: "nearest" });
+		}
+	}, [highlighted, open, listboxId]);
 
 	// Filter server-rendered elements in place + keep the URL shareable
 	useEffect(() => {
 		if (matches && filterAttribute) {
+			if (filteredNodes.current === null) {
+				filteredNodes.current = Array.from(
+					document.querySelectorAll<HTMLElement>(`[${filterAttribute}]`),
+				);
+			}
 			const matchedKeys = new Set(matches.map((match) => match.key));
-			for (const element of document.querySelectorAll<HTMLElement>(
-				`[${filterAttribute}]`,
-			)) {
+			for (const element of filteredNodes.current) {
 				const key = element.getAttribute(filterAttribute) ?? "";
 				element.hidden = !matchedKeys.has(key);
 			}
@@ -303,6 +369,7 @@ export function InteractiveSearch(props: SearchBaseProps) {
 				setOpen(false);
 			} else {
 				setRawQuery("");
+				setQuery("");
 			}
 		}
 	};
@@ -313,23 +380,42 @@ export function InteractiveSearch(props: SearchBaseProps) {
 			? `${listboxId}-option-${highlighted}`
 			: undefined;
 
+	const statusText = loadFailed
+		? "Search index unavailable."
+		: !matches
+			? "Loading…"
+			: suggestions.length === 0
+				? `No matches for "${query}"`
+				: "";
+
 	const body = (
 		<>
-			<div class={inputWrapClass}>
-				<div class={iconClass}>
+			<div
+				class={cx(classes.inputWrap, classNames?.inputWrap)}
+				style={styles?.inputWrap}
+				data-part="input-wrap"
+			>
+				<div
+					class={cx(classes.icon, classNames?.icon)}
+					style={styles?.icon}
+					data-part="icon"
+				>
 					<SearchIcon />
 				</div>
 				<input
 					type="search"
 					name="q"
 					role="combobox"
+					aria-label={labelText}
 					aria-expanded={showDropdown}
 					aria-controls={listboxId}
 					aria-autocomplete="list"
 					aria-activedescendant={activeId}
 					placeholder={placeholder}
 					value={rawQuery}
-					class={inputClass}
+					class={cx(classes.input, classNames?.input)}
+					style={styles?.input}
+					data-part="input"
 					onInput={(event: Event) => {
 						setRawQuery((event.target as HTMLInputElement).value);
 						setHighlighted(-1);
@@ -343,36 +429,31 @@ export function InteractiveSearch(props: SearchBaseProps) {
 					onBlur={() => setOpen(false)}
 					onKeyDown={handleKeyDown}
 				/>
-				{showDropdown && (
+				{rawQuery && (
+					<button
+						type="button"
+						aria-label="Clear search"
+						data-part="clear-trigger"
+						class={cx(classes.clearTrigger, classNames?.clearTrigger)}
+						style={styles?.clearTrigger}
+						onClick={() => {
+							setRawQuery("");
+							setQuery("");
+						}}
+						onMouseDown={(event: Event) => event.preventDefault()}
+					>
+						<ClearIcon />
+					</button>
+				)}
+				{suggestions.length > 0 && showDropdown && (
 					<div
 						id={listboxId}
 						role="listbox"
-						class={css({
-							position: "absolute",
-							top: "calc(100% + 6px)",
-							left: "0",
-							right: "0",
-							bg: "bg",
-							borderWidth: "1px",
-							borderColor: "border",
-							borderRadius: "lg",
-							shadow: "lg",
-							zIndex: "50",
-							maxHeight: "80",
-							overflowY: "auto",
-							p: "1",
-						})}
+						aria-label={labelText}
+						class={cx(classes.listbox, classNames?.listbox)}
+						style={styles?.listbox}
+						data-part="listbox"
 					>
-						{!matches && (
-							<div class={css({ px: "4", py: "3", color: "fg.muted" })}>
-								Loading…
-							</div>
-						)}
-						{matches && suggestions.length === 0 && (
-							<div class={css({ px: "4", py: "3", color: "fg.muted" })}>
-								No matches for "{query}"
-							</div>
-						)}
 						{suggestions.map((entry, index) => (
 							<div
 								key={entry.key}
@@ -380,15 +461,10 @@ export function InteractiveSearch(props: SearchBaseProps) {
 								role="option"
 								tabIndex={-1}
 								aria-selected={index === highlighted}
-								class={cx(
-									css({
-										px: "3",
-										py: "2.5",
-										borderRadius: "md",
-										cursor: "pointer",
-									}),
-									index === highlighted && css({ bg: "blue.3" }),
-								)}
+								data-highlighted={index === highlighted || undefined}
+								data-part="item"
+								class={cx(classes.item, classNames?.item)}
+								style={styles?.item}
 								onMouseDown={(event: Event) => {
 									event.preventDefault();
 									navigateTo(entry);
@@ -396,28 +472,30 @@ export function InteractiveSearch(props: SearchBaseProps) {
 								onMouseOver={() => setHighlighted(index)}
 								onFocus={() => setHighlighted(index)}
 							>
-								<div class={css({ fontWeight: "medium", color: "fg" })}>
+								<div
+									class={cx(classes.itemTitle, classNames?.itemTitle)}
+									style={styles?.itemTitle}
+									data-part="item-title"
+								>
 									<Highlighted text={entry.title} tokens={tokens} />
 								</div>
 								{entry.description && (
 									<div
-										class={css({
-											fontSize: "sm",
-											color: "fg.muted",
-											lineClamp: "2",
-											mt: "0.5",
-										})}
+										class={cx(
+											classes.itemDescription,
+											classNames?.itemDescription,
+										)}
+										style={styles?.itemDescription}
+										data-part="item-description"
 									>
 										<Highlighted text={entry.description} tokens={tokens} />
 									</div>
 								)}
 								{entry.tags && entry.tags.length > 0 && (
 									<div
-										class={css({
-											fontSize: "xs",
-											color: "blue.10",
-											mt: "1",
-										})}
+										class={cx(classes.itemTags, classNames?.itemTags)}
+										style={styles?.itemTags}
+										data-part="item-tags"
 									>
 										{entry.tags.join(" · ")}
 									</div>
@@ -427,8 +505,23 @@ export function InteractiveSearch(props: SearchBaseProps) {
 					</div>
 				)}
 			</div>
+			{showDropdown && statusText && (
+				<div
+					role="status"
+					aria-live="polite"
+					class={cx(classes.status, classNames?.status)}
+					style={styles?.status}
+					data-part="status"
+				>
+					{statusText}
+				</div>
+			)}
 			{showCount && (
-				<div class={countRowClass}>
+				<div
+					class={cx(classes.countText, classNames?.countText)}
+					style={styles?.countText}
+					data-part="count-text"
+				>
 					<span>
 						{matches
 							? `Showing ${matches.length} of ${entries?.length ?? 0} ${itemLabel}`
@@ -437,27 +530,6 @@ export function InteractiveSearch(props: SearchBaseProps) {
 								: ""}
 						{matches && query ? ` for "${query}"` : ""}
 					</span>
-					{rawQuery && (
-						<button
-							type="button"
-							onClick={() => {
-								setRawQuery("");
-								setQuery("");
-							}}
-							class={css({
-								color: "blue.10",
-								fontWeight: "medium",
-								cursor: "pointer",
-								bg: "transparent",
-								border: "none",
-								p: "0",
-								fontSize: "sm",
-								_hover: { textDecoration: "underline" },
-							})}
-						>
-							Clear
-						</button>
-					)}
 				</div>
 			)}
 		</>
@@ -468,11 +540,19 @@ export function InteractiveSearch(props: SearchBaseProps) {
 			action={action}
 			method="get"
 			onSubmit={(event: Event) => event.preventDefault()}
-			class={css({ width: "full" })}
+			class={cx(classes.root, classNames?.root)}
+			style={styles?.root}
+			data-part="root"
 		>
 			{body}
 		</form>
 	) : (
-		<div class={css({ width: "full" })}>{body}</div>
+		<div
+			class={cx(classes.root, classNames?.root)}
+			style={styles?.root}
+			data-part="root"
+		>
+			{body}
+		</div>
 	);
 }

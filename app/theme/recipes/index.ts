@@ -27,6 +27,7 @@ import { pagination } from "./pagination";
 import { popover } from "./popover";
 import { progress } from "./progress";
 import { radioGroup } from "./radio-group";
+import { search } from "./search";
 import { segmentGroup } from "./segment-group";
 import { select } from "./select";
 import { skeleton } from "./skeleton";
@@ -91,4 +92,5 @@ export const slotRecipes = {
 	toast,
 	tooltip,
 	select,
+	search,
 };
