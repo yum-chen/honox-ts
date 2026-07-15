@@ -2,7 +2,7 @@
 
 Full-stack [HonoX](https://github.com/honojs/honox) starter with type-safe CSS-in-JS ([PandaCSS](https://panda-css.com/)), and a Git-backed CMS ([Sveltia CMS](https://sveltiacms.app/)).
 
-Live demo: [https://honox.chen.so](https://honox.chen.so)
+Live demo: [https://honox.chen.so](https://honox.chen.so), [https://honox-ts.vercel.app](https://honox-ts.vercel.app)
 
 ---
 
