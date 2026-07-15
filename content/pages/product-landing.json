@@ -58,6 +58,14 @@
           "type": "text",
           "size": "sm",
           "content": "No credit card required · Free 14-day trial"
+        },
+        {
+          "type": "link",
+          "text": "Watch the 2-minute overview →",
+          "href": "https://www.youtube.com/@pulse",
+          "target": "_blank",
+          "variant": "underline",
+          "colorPalette": "blue"
         }
       ]
     },
@@ -275,6 +283,60 @@
       ]
     },
     {
+      "type": "stack",
+      "direction": "vertical",
+      "gap": "4",
+      "align": "center",
+      "children": [
+        {
+          "type": "heading",
+          "text": "Helpful links",
+          "size": "2xl",
+          "as": "h2",
+          "style": "text-align:center"
+        },
+        {
+          "type": "stack",
+          "direction": "horizontal",
+          "gap": "6",
+          "align": "center",
+          "justify": "center",
+          "wrap": "wrap",
+          "children": [
+            {
+              "type": "link",
+              "text": "Read the docs",
+              "href": "/docs",
+              "variant": "underline",
+              "colorPalette": "blue"
+            },
+            {
+              "type": "link",
+              "text": "Changelog",
+              "href": "/changelog",
+              "variant": "plain",
+              "colorPalette": "slate"
+            },
+            {
+              "type": "link",
+              "text": "API reference",
+              "href": "/api",
+              "variant": "underline",
+              "colorPalette": "purple"
+            },
+            {
+              "type": "link",
+              "text": "Follow on X",
+              "href": "https://x.com/pulse",
+              "target": "_blank",
+              "variant": "underline",
+              "colorPalette": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "type": "heading",
       "text": "Frequently asked questions",
       "size": "3xl",
@@ -406,6 +468,13 @@
               "size": "lg"
             }
           ]
+        },
+        {
+          "type": "link",
+          "text": "Read customer stories",
+          "href": "/customers",
+          "variant": "plain",
+          "colorPalette": "blue"
         }
       ]
     }
