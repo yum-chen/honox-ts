@@ -49,3 +49,34 @@ export function filterEntries<T extends { haystack: string }>(
 		tokens.every((token) => entry.haystack.includes(token)),
 	);
 }
+
+// Rank `SearchIndexEntry` matches by relevance so the best hits surface first
+// in the autocomplete dropdown: title > tags > description, with a bonus for
+// prefix matches. Non-matches are dropped.
+export function rankSearchEntries(
+	entries: SearchIndexEntry[],
+	query: string,
+): SearchIndexEntry[] {
+	const tokens = tokenize(query);
+	if (tokens.length === 0) {
+		return entries;
+	}
+	return entries
+		.map((entry) => ({ entry, score: scoreEntry(entry, tokens) }))
+		.filter((candidate) => candidate.score > 0)
+		.sort((a, b) => b.score - a.score)
+		.map((candidate) => candidate.entry);
+}
+
+function scoreEntry(entry: SearchIndexEntry, tokens: string[]): number {
+	const title = entry.title.toLowerCase();
+	const description = (entry.description ?? "").toLowerCase();
+	const tags = (entry.tags ?? []).join(" ").toLowerCase();
+	let score = 0;
+	for (const token of tokens) {
+		if (title.includes(token)) score += title.startsWith(token) ? 5 : 3;
+		if (tags.includes(token)) score += 2;
+		if (description.includes(token)) score += 1;
+	}
+	return score;
+}
