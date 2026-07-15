@@ -1,6 +1,6 @@
+import { cx } from "design-system/css";
+import { type StackProperties, stack } from "design-system/patterns";
 import type { PropsWithChildren } from "hono/jsx";
-import { cx } from "styled-system/css";
-import { type StackProperties, stack } from "styled-system/patterns";
 
 /**
  * Breakpoints accepted for responsive prop values. Mirrors Panda's default

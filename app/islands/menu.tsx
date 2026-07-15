@@ -374,8 +374,8 @@ export default function InteractiveMenuRoot(props: InteractiveMenuRootProps) {
 		// any client-side checkbox/radio toggles.
 		applyCheckedOverrides();
 
-		let openTimer: any = null;
-		let closeTimer: any = null;
+		const openTimer: any = null;
+		const closeTimer: any = null;
 
 		const clearTimers = () => {
 			if (openTimer) clearTimeout(openTimer);

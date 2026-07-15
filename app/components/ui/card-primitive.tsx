@@ -1,8 +1,8 @@
+import { cx } from "design-system/css";
+import type { CardVariantProps } from "design-system/recipes";
+import { card } from "design-system/recipes";
 import type { JSX, PropsWithChildren } from "hono/jsx";
 import { createContext, useContext } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { CardVariantProps } from "styled-system/recipes";
-import { card } from "styled-system/recipes";
 
 type CardStyles = ReturnType<typeof card>;
 

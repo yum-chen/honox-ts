@@ -5,11 +5,11 @@ import {
 	useContext,
 	useId,
 } from "hono/jsx";
-import { cx } from "styled-system/css";
+import { cx } from "design-system/css";
 import {
 	type SegmentGroupVariantProps,
 	segmentGroup,
-} from "styled-system/recipes";
+} from "design-system/recipes";
 
 type SegmentGroupStyles = ReturnType<typeof segmentGroup>;
 
@@ -272,16 +272,16 @@ export const SegmentGroupStructure = (props: SegmentGroupStructureProps) => {
 		<>
 			<Indicator />
 			{items.map((item) => {
-				const normalizedItem =
+				const normalisedItem =
 					typeof item === "string" ? { value: item, label: item } : item;
 				return (
 					<Item
-						key={normalizedItem.value}
-						value={normalizedItem.value}
-						disabled={normalizedItem.disabled}
-						invalid={normalizedItem.invalid}
+						key={normalisedItem.value}
+						value={normalisedItem.value}
+						disabled={normalisedItem.disabled}
+						invalid={normalisedItem.invalid}
 					>
-						<ItemText>{normalizedItem.label}</ItemText>
+						<ItemText>{normalisedItem.label}</ItemText>
 						<ItemHiddenInput />
 					</Item>
 				);

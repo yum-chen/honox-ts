@@ -1,4 +1,4 @@
-import { css } from "styled-system/css";
+import { css } from "design-system/css";
 import { type ComponentBlock, propsOf } from "./block-types";
 import {
 	Alert,

@@ -1,7 +1,7 @@
+import { cx } from "design-system/css";
+import type { AbsoluteCenterVariantProps } from "design-system/recipes";
+import { absoluteCenter } from "design-system/recipes";
 import type { PropsWithChildren } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { AbsoluteCenterVariantProps } from "styled-system/recipes";
-import { absoluteCenter } from "styled-system/recipes";
 
 export interface AbsoluteCenterProps
 	extends AbsoluteCenterVariantProps,

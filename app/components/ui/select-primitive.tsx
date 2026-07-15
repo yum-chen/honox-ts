@@ -1,3 +1,6 @@
+import { cx } from "design-system/css";
+import type { SelectVariantProps } from "design-system/recipes";
+import { select } from "design-system/recipes";
 import type { Child } from "hono/jsx";
 import {
 	createContext,
@@ -8,9 +11,6 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { SelectVariantProps } from "styled-system/recipes";
-import { select } from "styled-system/recipes";
 
 type SelectStyles = ReturnType<typeof select>;
 

@@ -59,7 +59,7 @@ const config = defineConfig(({ mode }) =>
 const mainConfig = (_mode: string) => ({
 	resolve: {
 		alias: {
-			"styled-system": path.resolve(__dirname, "styled-system"),
+			"design-system": path.resolve(__dirname, "design-system"),
 		},
 	},
 	build: {
@@ -75,7 +75,7 @@ const mainConfig = (_mode: string) => ({
 				adapter,
 				exclude: [
 					...devServerDefaultOptions.exclude,
-					new RegExp(`^/${pandaConfig.outdir || "styled-system"}/.*`),
+					new RegExp(`^/${pandaConfig.outdir || "design-system"}/.*`),
 				],
 			},
 		}),
@@ -87,7 +87,7 @@ const mainConfig = (_mode: string) => ({
 const clientConfig = {
 	resolve: {
 		alias: {
-			"styled-system": path.resolve(__dirname, "styled-system"),
+			"design-system": path.resolve(__dirname, "design-system"),
 		},
 	},
 	oxc: {

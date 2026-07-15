@@ -1,7 +1,7 @@
+import { cx } from "design-system/css";
+import type { BadgeVariantProps } from "design-system/recipes";
+import { badge } from "design-system/recipes";
 import type { PropsWithChildren } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { BadgeVariantProps } from "styled-system/recipes";
-import { badge } from "styled-system/recipes";
 
 export interface BadgeProps
 	extends BadgeVariantProps,

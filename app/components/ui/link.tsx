@@ -1,8 +1,8 @@
+import { cx } from "design-system/css";
+import type { LinkVariantProps } from "design-system/recipes";
+import { link } from "design-system/recipes";
 import type { Child, ElementType } from "hono/jsx";
 import { cloneElement } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { LinkVariantProps } from "styled-system/recipes";
-import { link } from "styled-system/recipes";
 
 export interface LinkProps extends LinkVariantProps {
 	/** Render as a different element/component (e.g. "span", or a router Link). */

@@ -1,3 +1,5 @@
+import { cx } from "design-system/css";
+import { type TabsVariantProps, tabs } from "design-system/recipes";
 import type { JSX } from "hono/jsx";
 import {
 	cloneElement,
@@ -6,8 +8,6 @@ import {
 	useContext,
 	useId,
 } from "hono/jsx";
-import { cx } from "styled-system/css";
-import { type TabsVariantProps, tabs } from "styled-system/recipes";
 
 type TabsStyles = ReturnType<typeof tabs>;
 

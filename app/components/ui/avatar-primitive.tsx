@@ -1,8 +1,8 @@
+import { cx } from "design-system/css";
+import type { AvatarVariantProps } from "design-system/recipes";
+import { avatar } from "design-system/recipes";
 import type { JSX, PropsWithChildren } from "hono/jsx";
 import { createContext, useContext } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { AvatarVariantProps } from "styled-system/recipes";
-import { avatar } from "styled-system/recipes";
 
 type AvatarStyles = ReturnType<typeof avatar>;
 type AvatarStatus = "idle" | "loading" | "loaded" | "error";

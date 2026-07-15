@@ -1,8 +1,8 @@
+import { cx } from "design-system/css";
+import type { TagsInputVariantProps } from "design-system/recipes";
+import { tagsInput } from "design-system/recipes";
 import type { PropsWithChildren } from "hono/jsx";
 import { createContext, useContext, useId } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { TagsInputVariantProps } from "styled-system/recipes";
-import { tagsInput } from "styled-system/recipes";
 
 type TagsInputStyles = ReturnType<typeof tagsInput>;
 

@@ -1,6 +1,6 @@
+import type { BreadcrumbVariantProps } from "design-system/recipes";
 import type { Child } from "hono/jsx";
 import { Fragment } from "hono/jsx";
-import type { BreadcrumbVariantProps } from "styled-system/recipes";
 import { Item, Link, List, Root, Separator } from "./breadcrumb-primitive";
 
 export interface BreadcrumbItem {

@@ -1,3 +1,6 @@
+import { cx } from "design-system/css";
+import type { ComboboxVariantProps } from "design-system/recipes";
+import { combobox } from "design-system/recipes";
 import type { Child } from "hono/jsx";
 import {
 	createContext,
@@ -8,9 +11,6 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { cx } from "styled-system/css";
-import type { ComboboxVariantProps } from "styled-system/recipes";
-import { combobox } from "styled-system/recipes";
 
 type ComboboxStyles = ReturnType<typeof combobox>;
 

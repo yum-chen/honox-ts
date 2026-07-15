@@ -1,3 +1,5 @@
+import { cx } from "design-system/css";
+import { tooltip } from "design-system/recipes";
 import {
 	type Child,
 	cloneElement,
@@ -9,8 +11,6 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { cx } from "styled-system/css";
-import { tooltip } from "styled-system/recipes";
 
 type TooltipStyles = ReturnType<typeof tooltip>;
 
