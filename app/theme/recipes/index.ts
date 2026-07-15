@@ -1,4 +1,3 @@
-import { colorPicker } from "./color-picker";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { avatar } from "./avatar";
@@ -9,6 +8,7 @@ import { card } from "./card";
 import { checkbox } from "./checkbox";
 import { code } from "./code";
 import { collapsible } from "./collapsible";
+import { colorPicker } from "./color-picker";
 import { combobox } from "./combobox";
 import { datePicker } from "./date-picker";
 import { dialog } from "./dialog";
@@ -56,11 +56,9 @@ export const recipes = {
 	skeleton,
 	code,
 	input,
-	datePicker,
 	gridCol,
 	gridRow,
 	link,
-	colorPicker,
 };
 
 export const slotRecipes = {
@@ -93,4 +91,7 @@ export const slotRecipes = {
 	toast,
 	tooltip,
 	select,
+	search,
+	colorPicker,
+	datePicker,
 };

@@ -298,6 +298,8 @@ export function Root(props: RootProps) {
 				id={id}
 				data-scope="colorPicker"
 				data-part="root"
+				data-disabled={disabled ? "" : undefined}
+				data-readonly={readOnly ? "" : undefined}
 				class={cx(styles.root, classProp)}
 				style={style as Record<string, string>}
 				{...rest}
@@ -315,88 +317,145 @@ export function RootProvider(props: RootProps) {
 // ─────────────────────────────────────────────────────────────────────────────
 // Structural parts
 // ─────────────────────────────────────────────────────────────────────────────
-export function Label(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp } = props;
+export function Label(
+	props: PropsWithChildren<{
+		class?: string;
+		style?: Record<string, string | number>;
+	}>,
+) {
+	const { children, class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	return (
-		<span data-part="label" class={cx(ctx?.styles.label, classProp)}>
+		<span
+			data-part="label"
+			data-disabled={ctx?.disabled ? "" : undefined}
+			data-readonly={ctx?.readOnly ? "" : undefined}
+			class={cx(ctx?.styles.label, classProp)}
+			style={style as Record<string, string>}
+			{...rest}
+		>
 			{children}
 		</span>
 	);
 }
 
-export function Control(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp } = props;
+export function Control(
+	props: PropsWithChildren<{
+		class?: string;
+		style?: Record<string, string | number>;
+	}>,
+) {
+	const { children, class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
-	return (
-		<div data-part="control" class={cx(ctx?.styles.control, classProp)}>
-			{children}
-		</div>
-	);
-}
-
-export function Area(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp } = props;
-	const ctx = useColorPickerContext();
-	const interactive = !ctx?.disabled && !ctx?.readOnly;
 	return (
 		<div
-			data-part="area"
-			class={cx(ctx?.styles.area, classProp)}
-			tabIndex={interactive ? 0 : undefined}
-			role="slider"
-			aria-label="Saturation and brightness"
-			aria-valuetext={`Saturation ${Math.round(ctx?.value.s ?? 0)}%, Brightness ${Math.round(
-				ctx?.value.v ?? 0,
-			)}%`}
+			data-part="control"
+			data-disabled={ctx?.disabled ? "" : undefined}
+			data-readonly={ctx?.readOnly ? "" : undefined}
+			class={cx(ctx?.styles.control, classProp)}
+			style={style as Record<string, string>}
+			{...rest}
 		>
 			{children}
 		</div>
 	);
 }
 
-export function AreaBackground(props: { class?: string }) {
-	const { class: classProp } = props;
+export function Area(
+	props: PropsWithChildren<{
+		class?: string;
+		style?: Record<string, string | number>;
+	}>,
+) {
+	const { children, class: classProp, style, ...rest } = props;
+	const ctx = useColorPickerContext();
+	const interactive = !ctx?.disabled && !ctx?.readOnly;
+	return (
+		<div
+			data-part="area"
+			data-disabled={ctx?.disabled ? "" : undefined}
+			data-readonly={ctx?.readOnly ? "" : undefined}
+			class={cx(ctx?.styles.area, classProp)}
+			style={style as Record<string, string>}
+			tabIndex={interactive ? 0 : undefined}
+			role="slider"
+			aria-label="Saturation and brightness"
+			aria-valuemin={0}
+			aria-valuemax={100}
+			aria-valuenow={Math.round(ctx?.value.v ?? 100)}
+			aria-valuetext={`Saturation ${Math.round(ctx?.value.s ?? 0)}%, Brightness ${Math.round(
+				ctx?.value.v ?? 0,
+			)}%`}
+			{...rest}
+		>
+			{children}
+		</div>
+	);
+}
+
+export function AreaBackground(props: {
+	class?: string;
+	style?: Record<string, string | number>;
+}) {
+	const { class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	const hueColor = `hsl(${Math.round(ctx?.value.h ?? 0)}, 100%, 50%)`;
 	return (
 		<div
 			data-part="areaBackground"
+			data-disabled={ctx?.disabled ? "" : undefined}
+			data-readonly={ctx?.readOnly ? "" : undefined}
 			class={cx(ctx?.styles.areaBackground, classProp)}
-			style={{ backgroundColor: hueColor }}
+			style={{ backgroundColor: hueColor, ...style } as Record<string, string>}
+			{...rest}
 		/>
 	);
 }
 
-export function AreaThumb(props: { class?: string }) {
-	const { class: classProp } = props;
+export function AreaThumb(props: {
+	class?: string;
+	style?: Record<string, string | number>;
+}) {
+	const { class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	const left = `${ctx?.value.s ?? 0}%`;
 	const top = `${100 - (ctx?.value.v ?? 0)}%`;
 	return (
 		<div
 			data-part="areaThumb"
+			data-disabled={ctx?.disabled ? "" : undefined}
+			data-readonly={ctx?.readOnly ? "" : undefined}
 			class={cx(ctx?.styles.areaThumb, classProp)}
-			style={{
-				left,
-				top,
-				background: hsvaToCss(ctx?.value ?? { h: 0, s: 0, v: 100, a: 1 }),
-			}}
+			style={
+				{
+					left,
+					top,
+					background: hsvaToCss(ctx?.value ?? { h: 0, s: 0, v: 100, a: 1 }),
+					...style,
+				} as Record<string, string>
+			}
+			{...rest}
 		/>
 	);
 }
 
 export function ChannelSlider(
-	props: PropsWithChildren<{ channel: "hue" | "alpha"; class?: string }>,
+	props: PropsWithChildren<{
+		channel: "hue" | "alpha";
+		class?: string;
+		style?: Record<string, string | number>;
+	}>,
 ) {
-	const { children, channel, class: classProp } = props;
+	const { children, channel, class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	const interactive = !ctx?.disabled && !ctx?.readOnly;
 	return (
 		<div
 			data-part="channel-slider"
 			data-channel={channel}
+			data-disabled={ctx?.disabled ? "" : undefined}
 			class={cx(ctx?.styles.channelSlider, classProp)}
+			style={style as Record<string, string>}
 			tabIndex={interactive ? 0 : undefined}
 			role="slider"
 			aria-label={channel === "hue" ? "Hue" : "Alpha"}
@@ -407,6 +466,7 @@ export function ChannelSlider(
 			}
 			aria-valuemin={0}
 			aria-valuemax={channel === "hue" ? 360 : 100}
+			{...rest}
 		>
 			{children}
 		</div>
@@ -414,9 +474,13 @@ export function ChannelSlider(
 }
 
 export function ChannelSliderLabel(
-	props: PropsWithChildren<{ channel?: "hue" | "alpha"; class?: string }>,
+	props: PropsWithChildren<{
+		channel?: "hue" | "alpha";
+		class?: string;
+		style?: Record<string, string | number>;
+	}>,
 ) {
-	const { children, channel, class: classProp } = props;
+	const { children, channel, class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	const text =
 		children ??
@@ -424,7 +488,10 @@ export function ChannelSliderLabel(
 	return (
 		<span
 			data-part="channel-slider-label"
+			data-channel={channel}
 			class={cx(ctx?.styles.channelSliderLabel, classProp)}
+			style={style as Record<string, string>}
+			{...rest}
 		>
 			{text}
 		</span>
@@ -434,8 +501,9 @@ export function ChannelSliderLabel(
 export function ChannelSliderTrack(props: {
 	channel: "hue" | "alpha";
 	class?: string;
+	style?: Record<string, string | number>;
 }) {
-	const { channel, class: classProp } = props;
+	const { channel, class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	const value = ctx?.value ?? { h: 0, s: 0, v: 100, a: 1 };
 	let background = hueGradient;
@@ -447,8 +515,10 @@ export function ChannelSliderTrack(props: {
 		<div
 			data-part="channel-slider-track"
 			data-channel={channel}
+			data-disabled={ctx?.disabled ? "" : undefined}
 			class={cx(ctx?.styles.channelSliderTrack, classProp)}
-			style={{ background }}
+			style={{ background, ...style } as Record<string, string>}
+			{...rest}
 		/>
 	);
 }
@@ -456,8 +526,9 @@ export function ChannelSliderTrack(props: {
 export function ChannelSliderThumb(props: {
 	channel: "hue" | "alpha";
 	class?: string;
+	style?: Record<string, string | number>;
 }) {
-	const { channel, class: classProp } = props;
+	const { channel, class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	const value = ctx?.value ?? { h: 0, s: 0, v: 100, a: 1 };
 	const percent =
@@ -466,13 +537,18 @@ export function ChannelSliderThumb(props: {
 		<div
 			data-part="channel-slider-thumb"
 			data-channel={channel}
+			data-disabled={ctx?.disabled ? "" : undefined}
 			class={cx(ctx?.styles.channelSliderThumb, classProp)}
-			style={{
-				left: `${percent}%`,
-				...(channel === "alpha"
-					? { background: hsvaToCss(value) }
-					: { background: `hsl(${Math.round(value.h)}, 100%, 50%)` }),
-			}}
+			style={
+				{
+					left: `${percent}%`,
+					...(channel === "alpha"
+						? { background: hsvaToCss(value) }
+						: { background: `hsl(${Math.round(value.h)}, 100%, 50%)` }),
+					...style,
+				} as Record<string, string>
+			}
+			{...rest}
 		/>
 	);
 }
@@ -480,8 +556,9 @@ export function ChannelSliderThumb(props: {
 export function ChannelSliderValueText(props: {
 	channel: "hue" | "alpha";
 	class?: string;
+	style?: Record<string, string | number>;
 }) {
-	const { channel, class: classProp } = props;
+	const { channel, class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	const value = ctx?.value ?? { h: 0, s: 0, v: 100, a: 1 };
 	const text =
@@ -491,32 +568,53 @@ export function ChannelSliderValueText(props: {
 	return (
 		<span
 			data-part="channel-slider-value-text"
+			data-channel={channel}
 			class={cx(ctx?.styles.channelSliderValueText, classProp)}
+			style={style as Record<string, string>}
+			{...rest}
 		>
 			{text}
 		</span>
 	);
 }
 
-export function TransparencyGrid(props: { class?: string }) {
-	const { class: classProp } = props;
+export function TransparencyGrid(props: {
+	class?: string;
+	style?: Record<string, string | number>;
+}) {
+	const { class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	return (
 		<div
 			data-part="transparency-grid"
 			class={cx(ctx?.styles.transparencyGrid, classProp)}
-			style={{ position: "absolute", inset: "0", borderRadius: "l2" }}
+			style={
+				{
+					position: "absolute",
+					inset: "0",
+					borderRadius: "l2",
+					...style,
+				} as Record<string, string>
+			}
+			{...rest}
 		/>
 	);
 }
 
-export function SwatchGroup(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp } = props;
+export function SwatchGroup(
+	props: PropsWithChildren<{
+		class?: string;
+		style?: Record<string, string | number>;
+	}>,
+) {
+	const { children, class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	return (
 		<div
 			data-part="swatch-group"
 			class={cx(ctx?.styles.swatchGroup, classProp)}
+			style={style as Record<string, string>}
+			{...rest}
 		>
 			{children}
 		</div>
@@ -527,8 +625,9 @@ export function Swatch(props: {
 	value: string;
 	active?: boolean;
 	class?: string;
+	style?: Record<string, string | number>;
 }) {
-	const { value, active, class: classProp } = props;
+	const { value, active, class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	const interactive = !ctx?.disabled && !ctx?.readOnly;
 	const hex = hsvaToHex(parseColor(value), true);
@@ -537,64 +636,90 @@ export function Swatch(props: {
 			type="button"
 			data-part="swatch"
 			data-value={value}
+			data-state={active ? "checked" : "unchecked"}
 			class={cx(ctx?.styles.swatch, classProp)}
-			style={{ background: hex }}
+			style={{ background: hex, ...style } as Record<string, string>}
 			disabled={!interactive}
 			aria-label={`Select colour ${hex}`}
 			aria-pressed={active ? "true" : undefined}
+			{...rest}
 		>
 			{active && <SwatchIndicator />}
 		</button>
 	);
 }
 
-export function SwatchIndicator(props: { class?: string }) {
-	const { class: classProp } = props;
+export function SwatchIndicator(props: {
+	class?: string;
+	style?: Record<string, string | number>;
+}) {
+	const { class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	return (
 		<div
 			data-part="swatch-indicator"
 			class={cx(ctx?.styles.swatchIndicator, classProp)}
+			style={style as Record<string, string>}
+			{...rest}
 		/>
 	);
 }
 
 export function SwatchTrigger(
-	props: PropsWithChildren<{ class?: string; id?: string }>,
+	props: PropsWithChildren<{
+		class?: string;
+		id?: string;
+		style?: Record<string, string | number>;
+	}>,
 ) {
-	const { children, class: classProp, id } = props;
+	const { children, class: classProp, id, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	return (
 		<button
 			type="button"
 			data-part="swatch-trigger"
 			id={id}
+			data-disabled={ctx?.disabled ? "" : undefined}
 			class={cx(ctx?.styles.swatchTrigger, classProp)}
-			style={{
-				background: hsvaToCss(ctx?.value ?? { h: 0, s: 0, v: 100, a: 1 }),
-			}}
+			style={
+				{
+					background: hsvaToCss(ctx?.value ?? { h: 0, s: 0, v: 100, a: 1 }),
+					...style,
+				} as Record<string, string>
+			}
+			{...rest}
 		>
 			{children}
 		</button>
 	);
 }
 
-export function ValueSwatch(props: { class?: string }) {
-	const { class: classProp } = props;
+export function ValueSwatch(props: {
+	class?: string;
+	style?: Record<string, string | number>;
+}) {
+	const { class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	return (
 		<div
 			data-part="value-swatch"
 			class={cx(ctx?.styles.valueSwatch, classProp)}
-			style={{
-				background: hsvaToCss(ctx?.value ?? { h: 0, s: 0, v: 100, a: 1 }),
-			}}
+			style={
+				{
+					background: hsvaToCss(ctx?.value ?? { h: 0, s: 0, v: 100, a: 1 }),
+					...style,
+				} as Record<string, string>
+			}
+			{...rest}
 		/>
 	);
 }
 
-export function ValueText(props: { class?: string }) {
-	const { class: classProp } = props;
+export function ValueText(props: {
+	class?: string;
+	style?: Record<string, string | number>;
+}) {
+	const { class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	const value = ctx?.value ?? { h: 0, s: 0, v: 100, a: 1 };
 	const text =
@@ -604,22 +729,34 @@ export function ValueText(props: { class?: string }) {
 				? hsvaToHslaString(value)
 				: hsvaToRgbaString(value);
 	return (
-		<span data-part="value-text" class={cx(ctx?.styles.valueText, classProp)}>
+		<span
+			data-part="value-text"
+			data-disabled={ctx?.disabled ? "" : undefined}
+			class={cx(ctx?.styles.valueText, classProp)}
+			style={style as Record<string, string>}
+			{...rest}
+		>
 			{text}
 		</span>
 	);
 }
 
 export function View(
-	props: PropsWithChildren<{ format?: ColorFormat; class?: string }>,
+	props: PropsWithChildren<{
+		format?: ColorFormat;
+		class?: string;
+		style?: Record<string, string | number>;
+	}>,
 ) {
-	const { children, format, class: classProp } = props;
+	const { children, format, class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	return (
 		<div
 			data-part="view"
 			data-format={format ?? ctx?.format ?? "hex"}
 			class={cx(ctx?.styles.view, classProp)}
+			style={style as Record<string, string>}
+			{...rest}
 		>
 			{children}
 		</div>
@@ -631,16 +768,20 @@ export function ChannelInput(props: {
 	value: string;
 	class?: string;
 	readOnly?: boolean;
+	style?: Record<string, string | number>;
 	"aria-label"?: string;
 }) {
-	const { channel, value, class: classProp, readOnly, ...rest } = props;
+	const { channel, value, class: classProp, readOnly, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	return (
 		<input
 			type="text"
 			data-part="channel-input"
 			data-channel={channel}
+			data-disabled={ctx?.disabled ? "" : undefined}
+			data-readonly={ctx?.readOnly ? "" : undefined}
 			class={cx(ctx?.styles.channelInput, classProp)}
+			style={style as Record<string, string>}
 			value={value}
 			readOnly={readOnly}
 			aria-label={rest["aria-label"] ?? channel}
@@ -649,13 +790,18 @@ export function ChannelInput(props: {
 	);
 }
 
-export function FormatSelect(props: { class?: string }) {
-	const { class: classProp } = props;
+export function FormatSelect(props: {
+	class?: string;
+	style?: Record<string, string | number>;
+}) {
+	const { class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	return (
 		<select
 			data-part="format-select"
 			class={cx(ctx?.styles.formatSelect, classProp)}
+			style={style as Record<string, string>}
+			{...rest}
 		>
 			<option value="hex" selected={ctx?.format === "hex"}>
 				HEX
@@ -670,14 +816,21 @@ export function FormatSelect(props: { class?: string }) {
 	);
 }
 
-export function FormatTrigger(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp } = props;
+export function FormatTrigger(
+	props: PropsWithChildren<{
+		class?: string;
+		style?: Record<string, string | number>;
+	}>,
+) {
+	const { children, class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	return (
 		<button
 			type="button"
 			data-part="format-trigger"
 			class={cx(ctx?.styles.formatTrigger, classProp)}
+			style={style as Record<string, string>}
+			{...rest}
 		>
 			{children ?? ctx?.format?.toUpperCase()}
 		</button>
@@ -685,17 +838,24 @@ export function FormatTrigger(props: PropsWithChildren<{ class?: string }>) {
 }
 
 export function EyeDropperTrigger(
-	props: PropsWithChildren<{ class?: string }>,
+	props: PropsWithChildren<{
+		class?: string;
+		style?: Record<string, string | number>;
+	}>,
 ) {
-	const { children, class: classProp } = props;
+	const { children, class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	return (
 		<button
 			type="button"
 			data-part="eye-dropper-trigger"
+			data-disabled={ctx?.disabled ? "" : undefined}
+			data-readonly={ctx?.readOnly ? "" : undefined}
 			class={cx(ctx?.styles.eyeDropperTrigger, classProp)}
+			style={style as Record<string, string>}
 			disabled={!("EyeDropper" in (globalThis as any))}
 			aria-label="Pick colour from screen"
+			{...rest}
 		>
 			{children ?? "🎯"}
 		</button>
@@ -706,31 +866,63 @@ export function HiddenInput(props: { name?: string; value: string }) {
 	return <input type="hidden" name={props.name} value={props.value} />;
 }
 
-export function Positioner(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp } = props;
+export function Positioner(
+	props: PropsWithChildren<{
+		class?: string;
+		style?: Record<string, string | number>;
+	}>,
+) {
+	const { children, class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	return (
-		<div data-part="positioner" class={cx(ctx?.styles.positioner, classProp)}>
+		<div
+			data-part="positioner"
+			class={cx(ctx?.styles.positioner, classProp)}
+			style={style as Record<string, string>}
+			{...rest}
+		>
 			{children}
 		</div>
 	);
 }
 
-export function Content(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp } = props;
+export function Content(
+	props: PropsWithChildren<{
+		class?: string;
+		style?: Record<string, string | number>;
+	}>,
+) {
+	const { children, class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	return (
-		<div data-part="content" class={cx(ctx?.styles.content, classProp)}>
+		<div
+			data-part="content"
+			class={cx(ctx?.styles.content, classProp)}
+			style={style as Record<string, string>}
+			{...rest}
+		>
 			{children}
 		</div>
 	);
 }
 
-export function Trigger(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp } = props;
+export function Trigger(
+	props: PropsWithChildren<{
+		class?: string;
+		style?: Record<string, string | number>;
+	}>,
+) {
+	const { children, class: classProp, style, ...rest } = props;
 	const ctx = useColorPickerContext();
 	return (
-		<div data-part="trigger" class={cx(ctx?.styles.trigger, classProp)}>
+		<div
+			data-part="trigger"
+			data-disabled={ctx?.disabled ? "" : undefined}
+			data-readonly={ctx?.readOnly ? "" : undefined}
+			class={cx(ctx?.styles.trigger, classProp)}
+			style={style as Record<string, string>}
+			{...rest}
+		>
 			{children}
 		</div>
 	);
@@ -906,7 +1098,13 @@ export interface InteractiveColorPickerProps extends ColorPickerVariantProps {
 	value?: string | HSVA;
 	defaultValue?: string | HSVA;
 	format?: ColorFormat;
+	defaultFormat?: ColorFormat;
 	onValueChange?: (details: ColorPickerChangeDetails) => void;
+	onFormatChange?: (details: { format: ColorFormat }) => void;
+	open?: boolean;
+	defaultOpen?: boolean;
+	onOpenChange?: (details: { open: boolean }) => void;
+	closeOnSelect?: boolean;
 	presets?: string[];
 	name?: string;
 	disabled?: boolean;
@@ -944,8 +1142,14 @@ export function InteractiveColorPicker(props: InteractiveColorPickerProps) {
 	const {
 		value,
 		defaultValue,
-		format = "hex",
+		format,
+		defaultFormat,
 		onValueChange,
+		onFormatChange,
+		open: openProp,
+		defaultOpen,
+		onOpenChange,
+		closeOnSelect = false,
 		presets = DEFAULT_PRESETS,
 		name,
 		disabled,
@@ -963,12 +1167,39 @@ export function InteractiveColorPicker(props: InteractiveColorPickerProps) {
 
 	const autoId = useId();
 	const id = idProp || `color-picker-${autoId}`;
-	const [open, setOpen] = useState(false);
-	const isControlled = value !== undefined;
-	const [color, setColor] = useState<HSVA>(() =>
-		parseColor(isControlled ? value : (defaultValue ?? "#7c3aed")),
+
+	// Controlled open state logic
+	const isControlledOpen = openProp !== undefined;
+	const [internalOpen, setInternalOpen] = useState(defaultOpen ?? false);
+	const open = isControlledOpen ? openProp : internalOpen;
+
+	const setOpenState = (nextOpen: boolean) => {
+		if (!isControlledOpen) {
+			setInternalOpen(nextOpen);
+		}
+		onOpenChange?.({ open: nextOpen });
+	};
+
+	// Controlled value state logic
+	const isControlledValue = value !== undefined;
+	const [internalColor, setInternalColor] = useState<HSVA>(() =>
+		parseColor(isControlledValue ? value : (defaultValue ?? "#7c3aed")),
 	);
-	const [activeFormat, setActiveFormat] = useState<ColorFormat>(format);
+	const color = isControlledValue ? parseColor(value) : internalColor;
+
+	// Controlled format state logic
+	const isControlledFormat = format !== undefined;
+	const [internalFormat, setInternalFormat] = useState<ColorFormat>(
+		defaultFormat ?? format ?? "hex",
+	);
+	const activeFormat = isControlledFormat ? format : internalFormat;
+
+	const setFormatState = (nextFormat: ColorFormat) => {
+		if (!isControlledFormat) {
+			setInternalFormat(nextFormat);
+		}
+		onFormatChange?.({ format: nextFormat });
+	};
 
 	const colorRef = useRef(color);
 	colorRef.current = color;
@@ -984,12 +1215,16 @@ export function InteractiveColorPicker(props: InteractiveColorPickerProps) {
 	onValueChangeRef.current = onValueChange;
 	const openRef = useRef(open);
 	openRef.current = open;
+	const closeOnSelectRef = useRef(closeOnSelect);
+	closeOnSelectRef.current = closeOnSelect;
 
 	const interactive = !disabledRef.current && !readOnlyRef.current;
 
 	const emit = (next: HSVA) => {
+		if (!isControlledValue) {
+			setInternalColor(next);
+		}
 		colorRef.current = next;
-		setColor(next);
 		onValueChangeRef.current?.({
 			value: hsvaToHex(next, next.a < 1),
 			hsva: next,
@@ -1053,7 +1288,7 @@ export function InteractiveColorPicker(props: InteractiveColorPickerProps) {
 				el.setPointerCapture?.(pid);
 				onMove(e.clientX, e.clientY);
 				const move = (ev: PointerEvent) => onMove(ev.clientX, ev.clientY);
-				const up = (ev: PointerEvent) => {
+				const up = (_ev: PointerEvent) => {
 					el.releasePointerCapture?.(pid);
 					el.removeEventListener("pointermove", move);
 					el.removeEventListener("pointerup", up);
@@ -1136,6 +1371,9 @@ export function InteractiveColorPicker(props: InteractiveColorPickerProps) {
 			const data = target.getAttribute("data-value");
 			if (!data) return;
 			emit(parseColor(data));
+			if (closeOnSelectRef.current && triggerRef.current) {
+				setOpenState(false);
+			}
 		};
 		root.addEventListener("click", onSwatchClick);
 
@@ -1186,8 +1424,7 @@ export function InteractiveColorPicker(props: InteractiveColorPickerProps) {
 			if (target.getAttribute("data-part") !== "format-select") return;
 			const next = target.value as ColorFormat;
 			if (next === "hex" || next === "rgba" || next === "hsla") {
-				formatRef.current = next;
-				setActiveFormat(next);
+				setFormatState(next);
 			}
 		};
 		root.addEventListener("change", onFormatChange);
@@ -1214,7 +1451,7 @@ export function InteractiveColorPicker(props: InteractiveColorPickerProps) {
 			);
 			if (!target) return;
 			e.preventDefault();
-			setOpen((o) => !o);
+			setOpenState(!openRef.current);
 		};
 		root.addEventListener("click", onTriggerClick);
 
@@ -1223,11 +1460,11 @@ export function InteractiveColorPicker(props: InteractiveColorPickerProps) {
 			const t = e.target as HTMLElement;
 			if (t.closest('[data-part="swatch-trigger"]')) return;
 			if (t.closest('[data-part="positioner"]')) return;
-			setOpen(false);
+			setOpenState(false);
 		};
 		const onEscape = (e: KeyboardEvent) => {
 			if (triggerRef.current && e.key === "Escape" && openRef.current) {
-				setOpen(false);
+				setOpenState(false);
 			}
 		};
 		if (triggerRef.current) {
