@@ -81,10 +81,21 @@ export const popover = defineSlotRecipe({
 		arrow: {
 			"--arrow-size": "sizes.3",
 			"--arrow-background": "var(--popover-bg)",
+			position: "absolute",
+			width: "var(--arrow-size)",
+			height: "var(--arrow-size)",
+			zIndex: "1",
 		},
 		arrowTip: {
+			position: "absolute",
+			inset: "0",
+			width: "var(--arrow-size)",
+			height: "var(--arrow-size)",
+			background: "var(--arrow-background)",
+			transform: "rotate(45deg)",
 			borderTopWidth: "0.5px",
 			borderInlineStartWidth: "0.5px",
+			borderColor: "border",
 		},
 	},
 });
