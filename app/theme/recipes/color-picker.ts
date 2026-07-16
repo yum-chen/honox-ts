@@ -3,10 +3,6 @@ import { defineSlotRecipe } from "@pandacss/dev";
 /**
  * Park UI → hono/jsx ColorPicker slot recipe.
  *
- * Mirrors the Ark UI / Park UI color-picker anatomy. Slots are listed
- * explicitly (no `@ark-ui/react/anatomy` dependency) so the recipe stays
- * framework-agnostic like every other recipe in this project.
- *
  * data-scope="colorPicker" on every part; data-part values match the keys below.
  */
 const slots = [

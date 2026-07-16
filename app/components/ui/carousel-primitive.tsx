@@ -38,7 +38,7 @@ function clampValue(value: number, min: number, max: number) {
 }
 
 /**
- * the item index each page "starts" at, computed structurally 
+ * the item index each page "starts" at, computed structurally
  * (no layout measurement) so it's identical on the server and
  * before hydration.
  */
