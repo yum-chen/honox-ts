@@ -47,7 +47,7 @@ export default function TabsIsland(props: TabsIslandProps) {
 
 		let activeTrigger: HTMLElement | null = null;
 		for (const trigger of root.querySelectorAll<HTMLElement>(
-			'[data-part="trigger"]',
+			'[data-scope="tabs"][data-part="trigger"]',
 		)) {
 			const isSelected = trigger.getAttribute("data-value") === newValue;
 			if (isSelected) activeTrigger = trigger;
@@ -58,7 +58,7 @@ export default function TabsIsland(props: TabsIslandProps) {
 		}
 
 		for (const content of root.querySelectorAll<HTMLElement>(
-			'[data-part="content"]',
+			'[data-scope="tabs"][data-part="content"]',
 		)) {
 			const isSelected = content.getAttribute("data-value") === newValue;
 			content.hidden = !isSelected;
@@ -84,7 +84,7 @@ export default function TabsIsland(props: TabsIslandProps) {
 
 		const handleClick = (e: MouseEvent) => {
 			const trigger = (e.target as HTMLElement).closest<HTMLElement>(
-				'[data-part="trigger"]',
+				'[data-scope="tabs"][data-part="trigger"]',
 			);
 			if (trigger && !trigger.hasAttribute("data-disabled")) {
 				const newValue = trigger.getAttribute("data-value");
@@ -98,13 +98,13 @@ export default function TabsIsland(props: TabsIslandProps) {
 
 		const handleKeyDown = (e: KeyboardEvent) => {
 			const trigger = (e.target as HTMLElement).closest<HTMLElement>(
-				'[data-part="trigger"]',
+				'[data-scope="tabs"][data-part="trigger"]',
 			);
 			if (!trigger) return;
 
 			const triggers = Array.from(
 				root.querySelectorAll<HTMLElement>(
-					'[data-part="trigger"]:not([data-disabled])',
+					'[data-scope="tabs"][data-part="trigger"]:not([data-disabled])',
 				),
 			);
 			const index = triggers.indexOf(trigger);
