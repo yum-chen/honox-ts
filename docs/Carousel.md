@@ -5,12 +5,7 @@
 A slideshow that pages through a set of slides using real, native CSS
 scroll-snap — not transform math. Supports paging by group (`slidesPerPage`),
 looping, autoplay, mouse-drag scrolling, keyboard navigation, and vertical
-orientation. Ported from
-[Ark UI's Carousel](https://ark-ui.com/docs/components/carousel) (and its
-[park-ui](https://park-ui.com/docs/components/carousel) recipe) to hono/jsx,
-following this project's SSR-primitive + island architecture: every part
-renders real markup on the server, and a client island wires up scrolling,
-drag, autoplay, and keyboard behavior on top of it.
+orientation.
 
 # Props
 
@@ -148,6 +143,20 @@ export default function Page() {
   regenerating `Item`/`Indicator` children — HonoX rehydrates an island's
   children from a serialized HTML snapshot, not by re-invoking the
   component that produced them.
+- **Never rely on a JSX `onClick` for a trigger/indicator button.** For the
+  same reason: `PrevTrigger`/`NextTrigger`/`Indicator`/`AutoplayTrigger` are
+  composed as children, so hono/jsx/dom never reconciles its own synthetic
+  event props onto those already-mounted nodes — an `onClick` on them
+  silently never fires. All click handling is delegated from the root in a
+  single `useEffect` (`target.closest('[data-part="..."]')`), mirroring
+  `dropdown-primitive.tsx`/`combobox-primitive.tsx`. That effect (and the
+  `pauseOnHover` one) mounts exactly once and reads `scrollNext`/`scrollPrev`/
+  `isPlaying`/etc. through refs rather than closing over them directly —
+  putting reactive state in its dependency array reattaches the listener on
+  every change, and `pauseOnHover`'s own `setIsPlaying` (fired by
+  `pointerenter`, which lands *just before* the paired click in a real
+  click gesture) would otherwise tear the click listener down in the gap
+  between the mouse arriving and the button being pressed.
 - **Simplifications vs. upstream Ark UI:** in-view tracking uses the same
   index-range math as the SSR render (not a real `IntersectionObserver`),
   and `ItemGroup`'s `tabindex` is always `0` (not toggled based on whether a

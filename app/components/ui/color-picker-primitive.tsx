@@ -1,11 +1,6 @@
 /**
  * ColorPicker — hono/jsx primitive (server-renderable + island logic).
  *
- * Ported from Ark UI / Park UI ColorPicker to hono/jsx with ZERO React
- * dependency. Every part carries `data-scope="colorPicker"` and a `data-part`
- * matching the Ark UI anatomy, so styling and behaviour stay faithful to the
- * reference components.
- *
  * Two ways to use it:
  *   1. Static (SSG / no-JS): render <Root value=...>{<ColorPickerContent/>}</Root>
  *   2. Interactive (island): render <InteractiveColorPicker .../> which owns

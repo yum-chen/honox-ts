@@ -1,10 +1,14 @@
 import InteractiveTabsIsland from "../../islands/tabs";
 import { shouldHydrate } from "./island-utils";
 import {
+	Content,
+	Indicator,
 	type RootProps as InteractiveRootProps,
+	List,
 	Root,
 	TabsStructure,
 	type TabsStructureProps,
+	Trigger,
 } from "./tabs-primitive";
 
 type TabsItemFromPrimitive = import("./tabs-primitive").TabsItem;
@@ -36,5 +40,11 @@ const TabsRoot = (props: TabsProps) => {
 
 export const Tabs = TabsRoot;
 export type { TabsItemFromPrimitive as TabsItem, TabsProps };
+export {
+	Content as TabsContent,
+	Indicator as TabsIndicator,
+	List as TabsList,
+	Trigger as TabsTrigger,
+};
 
 export default Tabs;

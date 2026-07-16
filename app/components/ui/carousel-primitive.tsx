@@ -38,9 +38,9 @@ function clampValue(value: number, min: number, max: number) {
 }
 
 /**
- * Ported from `@zag-js/carousel`'s `getPageSnapPoints`: the item index each
- * page "starts" at, computed structurally (no layout measurement) so it's
- * identical on the server and before hydration.
+ * the item index each page "starts" at, computed structurally 
+ * (no layout measurement) so it's identical on the server and
+ * before hydration.
  */
 export function getPageSnapPoints(
 	slideCount: number,
@@ -954,64 +954,14 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 		});
 	};
 
-	// Autoplay ticking. Always wraps around at the end (mirrors Ark UI: the
-	// machine's `setNextPage` treats the "autoplay" state as implicitly
-	// looping regardless of the `loop` prop) and pauses when the tab is hidden.
-	useEffect(() => {
-		if (typeof document === "undefined") return;
-		if (!isPlaying) return;
-		const delay =
-			typeof autoplay === "object" && autoplay ? autoplay.delay : 4000;
-		autoplayTimerRef.current = setInterval(() => {
-			scrollNext(false, { forceLoop: true });
-			onAutoplayStatusChangeRef.current?.({
-				type: "autoplay",
-				isPlaying: true,
-				page: activePage,
-			});
-		}, delay);
-		const onVisibilityChange = () => {
-			if (document.visibilityState !== "visible") pause();
-		};
-		document.addEventListener("visibilitychange", onVisibilityChange);
-		return () => {
-			clearAutoplayTimer();
-			document.removeEventListener("visibilitychange", onVisibilityChange);
-		};
-		// eslint-disable-next-line
-	}, [isPlaying, activePage]);
-
-	// Debounced scroll-end sync: whatever moved the scroll position (trigger
-	// click, indicator click, wheel, touch swipe, keyboard, or a drag release)
-	// settles here into a single, consistent page update.
-	useEffect(() => {
-		if (typeof document === "undefined") return;
-		const itemGroup = getItemGroup();
-		if (!itemGroup) return;
-		const onScroll = () => {
-			if (dragRef.current.active) return;
-			if (scrollEndTimerRef.current != null)
-				clearTimeout(scrollEndTimerRef.current);
-			scrollEndTimerRef.current = setTimeout(() => {
-				const closest = closestPageIndex(itemGroup, pageSnapPoints, horizontal);
-				if (closest !== activePage) setPageState(closest);
-			}, 150);
-		};
-		itemGroup.addEventListener("scroll", onScroll, { passive: true });
-		return () => {
-			itemGroup.removeEventListener("scroll", onScroll);
-			if (scrollEndTimerRef.current != null)
-				clearTimeout(scrollEndTimerRef.current);
-		};
-		// eslint-disable-next-line
-	}, [activePage, horizontal]);
-
-	// Latest-value refs for the click-delegation effect below. It must mount
-	// exactly once (empty deps) — `pauseOnHover` calling `setIsPlaying` on
-	// `pointerenter` (which fires mid-gesture, just before the paired click)
-	// would otherwise tear this effect down and reattach it via its own
-	// `isPlaying` dependency, landing the actual click in the gap between
-	// `removeEventListener` and the new `addEventListener`.
+	// Latest-value refs read by the mount-once effects below. Every listener
+	// that's attached to the root/itemGroup/document mounts exactly once
+	// (empty, or orientation-only, dependency arrays) and reads current
+	// state through these instead of closing over render-scoped values —
+	// otherwise a state update mid-gesture (e.g. `pauseOnHover`'s
+	// `setIsPlaying`, fired by `pointerenter` just before a paired click)
+	// tears the listener down and reattaches it via its dependency array,
+	// landing the gesture's own event in the gap between the two.
 	const scrollPrevRef = useRef(scrollPrev);
 	scrollPrevRef.current = scrollPrev;
 	const scrollNextRef = useRef(scrollNext);
@@ -1024,6 +974,69 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 	pauseRef.current = pause;
 	const isPlayingRef = useRef(isPlaying);
 	isPlayingRef.current = isPlaying;
+	const activePageRef = useRef(activePage);
+	activePageRef.current = activePage;
+	const pageSnapPointsRef = useRef(pageSnapPoints);
+	pageSnapPointsRef.current = pageSnapPoints;
+	const setPageStateRef = useRef(setPageState);
+	setPageStateRef.current = setPageState;
+
+	// Autoplay ticking. Always wraps around at the end (mirrors Ark UI: the
+	// machine's `setNextPage` treats the "autoplay" state as implicitly
+	// looping regardless of the `loop` prop) and pauses when the tab is hidden.
+	useEffect(() => {
+		if (typeof document === "undefined") return;
+		if (!isPlaying) return;
+		const delay =
+			typeof autoplay === "object" && autoplay ? autoplay.delay : 4000;
+		autoplayTimerRef.current = setInterval(() => {
+			scrollNextRef.current(false, { forceLoop: true });
+			onAutoplayStatusChangeRef.current?.({
+				type: "autoplay",
+				isPlaying: true,
+				page: activePageRef.current,
+			});
+		}, delay);
+		const onVisibilityChange = () => {
+			if (document.visibilityState !== "visible") pause();
+		};
+		document.addEventListener("visibilitychange", onVisibilityChange);
+		return () => {
+			clearAutoplayTimer();
+			document.removeEventListener("visibilitychange", onVisibilityChange);
+		};
+		// eslint-disable-next-line
+	}, [isPlaying]);
+
+	// Debounced scroll-end sync: whatever moved the scroll position (trigger
+	// click, indicator click, wheel, touch swipe, keyboard, or a drag release)
+	// settles here into a single, consistent page update. Mounts once per
+	// orientation rather than on every `activePage` change — see the refs
+	// comment above.
+	useEffect(() => {
+		if (typeof document === "undefined") return;
+		const itemGroup = getItemGroup();
+		if (!itemGroup) return;
+		const onScroll = () => {
+			if (dragRef.current.active) return;
+			if (scrollEndTimerRef.current != null)
+				clearTimeout(scrollEndTimerRef.current);
+			scrollEndTimerRef.current = setTimeout(() => {
+				const closest = closestPageIndex(
+					itemGroup,
+					pageSnapPointsRef.current,
+					horizontal,
+				);
+				if (closest !== activePageRef.current) setPageStateRef.current(closest);
+			}, 150);
+		};
+		itemGroup.addEventListener("scroll", onScroll, { passive: true });
+		return () => {
+			itemGroup.removeEventListener("scroll", onScroll);
+			if (scrollEndTimerRef.current != null)
+				clearTimeout(scrollEndTimerRef.current);
+		};
+	}, [horizontal]);
 
 	// Trigger/indicator clicks, delegated from the root rather than bound via
 	// JSX `onClick` on the individual buttons. `PrevTrigger`/`NextTrigger`/
@@ -1079,7 +1092,8 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 	}, []);
 
 	// Keyboard paging (ArrowLeft/Right or ArrowUp/Down, Home/End) on the
-	// scrollable item group and the indicator group.
+	// scrollable item group and the indicator group. Mounts once per
+	// orientation — see the refs comment above.
 	useEffect(() => {
 		if (typeof document === "undefined") return;
 		const root = rootRef.current;
@@ -1096,24 +1110,24 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 			const backward = horizontal ? "ArrowLeft" : "ArrowUp";
 			if (e.key === forward) {
 				e.preventDefault();
-				scrollNext();
+				scrollNextRef.current();
 			} else if (e.key === backward) {
 				e.preventDefault();
-				scrollPrev();
+				scrollPrevRef.current();
 			} else if (e.key === "Home") {
 				e.preventDefault();
-				scrollTo(0);
+				scrollToRef.current(0);
 			} else if (e.key === "End") {
 				e.preventDefault();
-				scrollTo(pageSnapPoints.length - 1);
+				scrollToRef.current(pageSnapPointsRef.current.length - 1);
 			}
 		};
 		root.addEventListener("keydown", onKeyDown);
 		return () => root.removeEventListener("keydown", onKeyDown);
-		// eslint-disable-next-line
-	}, [activePage, horizontal, loop]);
+	}, [horizontal]);
 
-	// Pointer-drag scrolling (opt-in via `allowMouseDrag`).
+	// Pointer-drag scrolling (opt-in via `allowMouseDrag`). Mounts once per
+	// `allowMouseDrag`/orientation — see the refs comment above.
 	useEffect(() => {
 		if (typeof document === "undefined" || !allowMouseDrag) return;
 		const itemGroup = getItemGroup();
@@ -1133,7 +1147,7 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 			onDragStatusChangeRef.current?.({
 				type: "dragging.start",
 				isDragging: true,
-				page: activePage,
+				page: activePageRef.current,
 			});
 		};
 		const onPointerMove = (e: PointerEvent) => {
@@ -1150,7 +1164,7 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 			onDragStatusChangeRef.current?.({
 				type: "dragging",
 				isDragging: true,
-				page: activePage,
+				page: activePageRef.current,
 			});
 		};
 		const endDrag = () => {
@@ -1159,8 +1173,12 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 			itemGroup.style.scrollSnapType = originalSnapType;
 			setIsDragging(false);
 			itemGroup.removeAttribute("data-dragging");
-			const closest = closestPageIndex(itemGroup, pageSnapPoints, horizontal);
-			scrollTo(closest);
+			const closest = closestPageIndex(
+				itemGroup,
+				pageSnapPointsRef.current,
+				horizontal,
+			);
+			scrollToRef.current(closest);
 			onDragStatusChangeRef.current?.({
 				type: "dragging.end",
 				isDragging: false,
@@ -1178,21 +1196,23 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 			itemGroup.removeEventListener("pointerup", endDrag);
 			itemGroup.removeEventListener("pointercancel", endDrag);
 		};
-		// eslint-disable-next-line
-	}, [allowMouseDrag, activePage, horizontal]);
+	}, [allowMouseDrag, horizontal]);
 
 	// Pause autoplay while hovered (opt-in via `pauseOnHover`), resuming only
-	// if autoplay was actually running when the pointer entered.
+	// if autoplay was actually running when the pointer entered. Mounts once
+	// (like the click-delegation effect above) and reads `isPlaying` via a
+	// ref — otherwise its own `setIsPlaying` call would tear this effect
+	// down mid-gesture, same class of race as the click listener.
 	useEffect(() => {
 		if (typeof document === "undefined" || !pauseOnHover) return;
 		const root = rootRef.current;
 		if (!root) return;
 		const onEnter = () => {
-			wasPlayingBeforeHoverRef.current = isPlaying;
-			if (isPlaying) pause();
+			wasPlayingBeforeHoverRef.current = isPlayingRef.current;
+			if (isPlayingRef.current) pauseRef.current();
 		};
 		const onLeave = () => {
-			if (wasPlayingBeforeHoverRef.current) play();
+			if (wasPlayingBeforeHoverRef.current) playRef.current();
 		};
 		root.addEventListener("pointerenter", onEnter);
 		root.addEventListener("pointerleave", onLeave);
@@ -1200,8 +1220,7 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 			root.removeEventListener("pointerenter", onEnter);
 			root.removeEventListener("pointerleave", onLeave);
 		};
-		// eslint-disable-next-line
-	}, [pauseOnHover, isPlaying]);
+	}, [pauseOnHover]);
 
 	// A controlled `page` prop moving is reflected into the DOM the same way
 	// an internal scroll/trigger action would be.

@@ -21,12 +21,6 @@ export default function TabsIsland(props: TabsIslandProps) {
 	const [value, setValue] = useState(valueProp ?? defaultValue);
 	const rootRef = useRef<HTMLDivElement>(null);
 
-	useEffect(() => {
-		if (valueProp !== undefined) {
-			setValue(valueProp);
-		}
-	}, [valueProp]);
-
 	const updateIndicator = (activeTrigger: HTMLElement) => {
 		const root = rootRef.current;
 		if (!root) return;
@@ -40,19 +34,53 @@ export default function TabsIsland(props: TabsIslandProps) {
 		root.style.setProperty("--top", `${rect.top - rootRect.top}px`);
 	};
 
+	// `children` here is a pre-built static subtree (composed via
+	// TabsList/TabsTrigger/TabsContent rather than the `items` prop): the
+	// same vnode references flow through on every render, so hono/jsx never
+	// re-invokes those component functions on state change and context-driven
+	// `isSelected` recomputation never happens. Sync selection to the DOM
+	// imperatively and synchronously wherever `value` changes, instead of via
+	// a `[value]`-keyed effect — don't depend on a re-render to reflect it.
+	const syncSelection = (newValue: string | undefined) => {
+		const root = rootRef.current;
+		if (!root) return;
+
+		let activeTrigger: HTMLElement | null = null;
+		for (const trigger of root.querySelectorAll<HTMLElement>(
+			'[data-part="trigger"]',
+		)) {
+			const isSelected = trigger.getAttribute("data-value") === newValue;
+			if (isSelected) activeTrigger = trigger;
+			trigger.setAttribute("aria-selected", isSelected ? "true" : "false");
+			trigger.tabIndex = isSelected ? 0 : -1;
+			if (isSelected) trigger.setAttribute("data-selected", "");
+			else trigger.removeAttribute("data-selected");
+		}
+
+		for (const content of root.querySelectorAll<HTMLElement>(
+			'[data-part="content"]',
+		)) {
+			const isSelected = content.getAttribute("data-value") === newValue;
+			content.hidden = !isSelected;
+			if (isSelected) content.setAttribute("data-selected", "");
+			else content.removeAttribute("data-selected");
+		}
+
+		if (activeTrigger) updateIndicator(activeTrigger);
+	};
+
+	useEffect(() => {
+		if (valueProp !== undefined) {
+			setValue(valueProp);
+			syncSelection(valueProp);
+		}
+	}, [valueProp]);
+
 	useEffect(() => {
 		const root = rootRef.current;
 		if (!root) return;
 
-		const activeTrigger = root.querySelector<HTMLElement>(
-			`[data-part="trigger"][data-value="${value}"]`,
-		);
-
-		if (activeTrigger) {
-			requestAnimationFrame(() => {
-				updateIndicator(activeTrigger);
-			});
-		}
+		requestAnimationFrame(() => syncSelection(value));
 
 		const handleClick = (e: MouseEvent) => {
 			const trigger = (e.target as HTMLElement).closest<HTMLElement>(
@@ -62,6 +90,7 @@ export default function TabsIsland(props: TabsIslandProps) {
 				const newValue = trigger.getAttribute("data-value");
 				if (newValue) {
 					setValue(newValue);
+					syncSelection(newValue);
 					onValueChange?.(newValue);
 				}
 			}
@@ -98,6 +127,7 @@ export default function TabsIsland(props: TabsIslandProps) {
 					const newValue = nextTrigger.getAttribute("data-value");
 					if (newValue) {
 						setValue(newValue);
+						syncSelection(newValue);
 						onValueChange?.(newValue);
 					}
 				}
@@ -112,7 +142,9 @@ export default function TabsIsland(props: TabsIslandProps) {
 			root.removeEventListener("click", handleClick);
 			root.removeEventListener("keydown", handleKeyDown);
 		};
-	}, [value, onValueChange, props.activationMode]);
+		// Attached once at mount: handlers read fresh DOM state per event
+		// rather than closed-over `value`, so they never go stale.
+	}, []);
 
 	return (
 		<InteractiveRoot

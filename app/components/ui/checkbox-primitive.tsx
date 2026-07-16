@@ -78,7 +78,9 @@ export function Checkbox(props: CheckboxProps) {
 			{...restProps}
 		>
 			<input
-				ref={inputRef}
+				ref={(el: HTMLInputElement | null) => {
+					inputRef.current = el;
+				}}
 				type="checkbox"
 				style={{
 					border: "0",

@@ -78,6 +78,12 @@ export default defineConfig({
 		},
 		patterns: {
 			stack: ["*"],
+			grid: [
+				{
+					properties: { columns: [1, 2, 3] },
+					responsive: true,
+				},
+			],
 		},
 	},
 

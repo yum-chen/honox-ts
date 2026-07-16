@@ -1,10 +1,5 @@
 /**
- * ColorPicker — hono/jsx styled wrapper (Park UI → hono/jsx port).
- *
- * No React, no @ark-ui/react. Mirrors the Park UI ColorPicker API:
- *   <ColorPicker value="#ff0000" />            // inline picker
- *   <ColorPicker trigger value="#ff0000" />     // swatch trigger + popover
- *   <ColorPicker.Root>...</ColorPicker.Root>   // composed sub-parts
+ * ColorPicker — hono/jsx styled wrapper.
  *
  * Renders the static primitive when there is no interactive signal, otherwise
  * hydrates the island (InteractiveColorPicker) for pointer/keyboard control.
