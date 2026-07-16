@@ -20,6 +20,8 @@ export {
 	IconButton,
 } from "./button";
 export { Card, type CardProps } from "./card";
+export { Carousel, type CarouselProps } from "./carousel";
+export * as CarouselPrimitive from "./carousel-primitive";
 export { Checkbox, type CheckboxProps } from "./checkbox";
 export { Clipboard, type ClipboardProps } from "./clipboard";
 export * as ClipboardPrimitive from "./clipboard-primitive";
