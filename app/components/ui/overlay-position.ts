@@ -46,6 +46,10 @@ export interface OverlayPlacementConfig {
 	arrowOffset?: string;
 	/** Minimum gap from the viewport edge, in pixels. Default: 8. */
 	viewportGap?: number;
+	/** Whether to adjust alignment/placement automatically when overflowing. Default: true. */
+	autoAdjustOverflow?: boolean;
+	/** Whether the arrow points at the center of the trigger. Default: false. */
+	arrowPointAtCenter?: boolean;
 }
 
 /** Base (non-flipped) positioner offset + cross-axis alignment for a placement. */
@@ -115,8 +119,8 @@ export function getArrowStyle(
 	const size = "var(--arrow-size)";
 	const neg = `calc(${size} * -0.5)`;
 	const { align } = config;
-	const center = align === "center";
-	const isEnd = align === "end";
+	const center = align === "center" || config.arrowPointAtCenter;
+	const isEnd = align === "end" && !config.arrowPointAtCenter;
 	const inset = center ? CENTER_ARROW_OFFSET : (config.arrowOffset ?? "16px");
 	const crossTransform = (axis: "X" | "Y") =>
 		center ? `translate${axis}(-50%)` : "none";
@@ -217,6 +221,7 @@ export function positionOverlay(
 ) {
 	if (typeof window === "undefined") return;
 	const gap = config.viewportGap ?? 8;
+	const autoAdjust = config.autoAdjustOverflow ?? true;
 	const trigger = ownedBy<HTMLElement>(root, '[data-part="trigger"]')[0];
 	const triggerRect = trigger?.getBoundingClientRect();
 
@@ -235,7 +240,7 @@ export function positionOverlay(
 		);
 		const contentRect = (content ?? positioner).getBoundingClientRect();
 
-		if (triggerRect) {
+		if (autoAdjust && triggerRect) {
 			const spaceBelow = window.innerHeight - triggerRect.bottom;
 			const spaceAbove = triggerRect.top;
 			const spaceRight = window.innerWidth - triggerRect.right;

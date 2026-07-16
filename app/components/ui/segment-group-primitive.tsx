@@ -1,3 +1,8 @@
+import { cx } from "design-system/css";
+import {
+	type SegmentGroupVariantProps,
+	segmentGroup,
+} from "design-system/recipes";
 import type { JSX } from "hono/jsx";
 import {
 	createContext,
@@ -5,11 +10,6 @@ import {
 	useContext,
 	useId,
 } from "hono/jsx";
-import { cx } from "design-system/css";
-import {
-	type SegmentGroupVariantProps,
-	segmentGroup,
-} from "design-system/recipes";
 
 type SegmentGroupStyles = ReturnType<typeof segmentGroup>;
 

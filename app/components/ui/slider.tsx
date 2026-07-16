@@ -1,5 +1,5 @@
-import type { JSX } from "hono/jsx";
 import { css, cx } from "design-system/css";
+import type { JSX } from "hono/jsx";
 import SliderIsland from "../../islands/slider";
 import { shouldHydrate } from "./island-utils";
 import {

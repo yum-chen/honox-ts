@@ -11,6 +11,10 @@
  *   2. Interactive (island): render <InteractiveColorPicker .../> which owns
  *      colour state, attaches pointer/keyboard handlers, and re-renders.
  */
+
+import { cx } from "design-system/css";
+import type { ColorPickerVariantProps } from "design-system/recipes";
+import { colorPicker } from "design-system/recipes";
 import type { JSX } from "hono/jsx";
 import {
 	createContext,
@@ -21,9 +25,6 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { cx } from "design-system/css";
-import type { ColorPickerVariantProps } from "design-system/recipes";
-import { colorPicker } from "design-system/recipes";
 
 export type ColorFormat = "hex" | "rgba" | "hsla";
 

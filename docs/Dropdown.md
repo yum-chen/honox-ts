@@ -3,7 +3,7 @@
 # Introduction
 
 A list of actions or options that appears when triggered. Supports custom
-placements with automatic viewport-overflow flipping, an optional arrow,
+placements with automatic viewport-overflow flipping, pointing arrow (including pointing at the center of the trigger),
 checkbox/radio/group items, cascading submenus, and click / hover / context
 menu trigger modes.
 
@@ -13,24 +13,30 @@ menu trigger modes.
 
 | Prop | Type | Description | Default |
 | :--- | :--- | :--- | :--- |
-| `trigger` | `JSX.Element` | Element that opens the menu when activated. | - |
+| `trigger` | `JSX.Element \| ("click" \| "hover" \| "contextMenu")[] \| string` | Either the element that opens the menu when activated, or the trigger mode list/string. | - |
 | `items` | `DropdownItem[]` | The menu items to render. | - |
 | `open` | `boolean` | Whether the menu is open (controlled). | - |
 | `defaultOpen` | `boolean` | Whether the menu is open by default (uncontrolled). | `false` |
 | `disabled` | `boolean` | Disables every trigger mode and renders the trigger inert. | `false` |
 | `interactive` | `boolean` | Forces hydration as an island. Defaults to `true`. | `true` |
-| `arrow` | `boolean` | Show a pointer arrow pointing from the menu to the trigger. | `false` |
+| `arrow` | `boolean \| { pointAtCenter?: boolean }` | Show a pointer arrow pointing from the menu to the trigger. If `{ pointAtCenter: true }` is specified, the arrow is centered. | `false` |
 | `placement` | `string` | Menu placement: `"top"` \| `"topLeft"` \| `"topRight"` \| `"bottom"` \| `"bottomLeft"` \| `"bottomRight"` \| `"left"` \| `"leftTop"` \| `"leftBottom"` \| `"right"` \| `"rightTop"` \| `"rightBottom"`. Dash-case aliases (`"bottom-start"`, `"top-end"`, ...) are also accepted. | `"bottomLeft"` |
-| `triggerMode` | `("click" \| "hover" \| "contextDropdown")[] \| string` | Trigger interaction modes to open/close the menu. `"contextDropdown"` alone (no `"click"`/`"hover"`) renders the trigger as a plain right-click target instead of a button. | `["click"]` |
+| `triggerMode` | `("click" \| "hover" \| "contextDropdown" \| "contextMenu")[] \| string` | Trigger interaction modes to open/close the menu. `"contextDropdown"` or `"contextMenu"` alone (no `"click"`/`"hover"`) renders the trigger as a plain right-click target instead of a button. | `["click"]` |
 | `mouseEnterDelay` | `number` | Delay in ms before opening when `triggerMode` includes `"hover"`. | `150` |
 | `mouseLeaveDelay` | `number` | Delay in ms before closing when `triggerMode` includes `"hover"`. | `100` |
 | `closeOnEscape` | `boolean` | Close when Escape is pressed. | `true` |
-| `onOpenChange` | `(open: boolean) => void` | Called when the menu opens or closes. | - |
+| `onOpenChange` | `(open: boolean, info?: { source: 'trigger' \| 'menu' }) => void` | Called when the menu opens or closes. | - |
 | `onSelect` | `(value: string) => void` | Called with an item's `value` when it is activated. | - |
 | `size` | `"xs" \| "sm" \| "md" \| "lg" \| "xl"` | The size of the menu. | `"md"` |
 | `class` | `string` | Custom CSS classes for the root element. | - |
 | `contentClass` | `string` | Custom CSS classes for the content element. | - |
 | `positionerClass` | `string` | Custom CSS classes for the positioner element. | - |
+| `classNames` | `Record<string, string>` | Custom CSS classes for semantic parts: `root`, `item`, `itemTitle`, `itemIcon`, `itemContent`, `trigger`, `content`, `positioner`, `arrow`, `arrowTip`, etc. | - |
+| `styles` | `Record<string, any>` | Custom inline styles for semantic parts. | - |
+| `destroyOnHidden` | `boolean` | Whether to completely unmount / destroy dropdown menu when hidden. | `false` |
+| `destroyPopupOnHide` | `boolean` | Deprecated alias for `destroyOnHidden`. | `false` |
+| `menu` | `object` | Alternative way to specify dropdown menu options (including `items` and `onClick`). | - |
+| `autoAdjustOverflow` | `boolean` | Whether to adjust dropdown placement automatically when dropdown overflows viewport boundaries. | `true` |
 
 ### DropdownItem
 
@@ -76,6 +82,49 @@ export default function MyPage() {
 }
 ```
 
+## Using the `menu` prop with Click Handlers
+
+```tsx
+<Dropdown
+  trigger={<Button>Options</Button>}
+  menu={{
+    items: [
+      { type: "item", label: "Add", value: "add" },
+      { type: "item", label: "Delete", value: "delete" },
+    ],
+    onClick: ({ key }) => alert(`Clicked ${key}`),
+  }}
+/>
+```
+
+## Point Arrow at the Center of Trigger
+
+```tsx
+<Dropdown
+  trigger={<Button>Center Arrow</Button>}
+  arrow={{ pointAtCenter: true }}
+  items={[{ type: "item", label: "Centered", value: "center" }]}
+/>
+```
+
+## Custom semantic classNames & styles
+
+```tsx
+<Dropdown
+  trigger={<Button>Custom Styled</Button>}
+  classNames={{
+    root: "custom-root",
+    item: "custom-item",
+    itemTitle: "custom-item-title",
+  }}
+  styles={{
+    root: { border: "1px solid red" },
+    item: { color: "blue" },
+  }}
+  items={[{ type: "item", label: "Styled Item", value: "styled" }]}
+/>
+```
+
 ## Groups and cascading submenus
 
 ```tsx
@@ -109,7 +158,7 @@ export default function MyPage() {
 <Dropdown
   trigger={<Button>Hover Me</Button>}
   placement="bottomRight"
-  triggerMode="hover"
+  trigger={["hover"]}
   arrow={true}
   mouseEnterDelay={100}
   mouseLeaveDelay={150}
@@ -124,13 +173,13 @@ export default function MyPage() {
 
 ## Context menu
 
-A trigger wired for `"contextDropdown"` alone opens on right-click, anchored
+A trigger wired for `"contextMenu"` alone opens on right-click, anchored
 at the pointer, instead of behaving like a button:
 
 ```tsx
 <Dropdown
   trigger={<div>Right-click this area</div>}
-  triggerMode="contextDropdown"
+  trigger={["contextMenu"]}
   items={[
     { type: "item", label: "Copy", value: "copy" },
     { type: "item", label: "Paste", value: "paste" },
@@ -145,7 +194,10 @@ const [open, setOpen] = useState(false);
 
 <Dropdown
   open={open}
-  onOpenChange={setOpen}
+  onOpenChange={(nextOpen, info) => {
+    console.log(`Source of state change: ${info?.source}`);
+    setOpen(nextOpen);
+  }}
   trigger={<Button>Open Dropdown</Button>}
   items={[{ type: "item", label: "Edit", value: "edit" }]}
 />;

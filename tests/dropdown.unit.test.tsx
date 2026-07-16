@@ -1,4 +1,4 @@
-import { expect, test, describe } from "bun:test";
+import { expect, test, describe, mock } from "bun:test";
 import { Dropdown } from "../app/components/ui/dropdown";
 
 describe("Dropdown Unit Tests", () => {
@@ -145,5 +145,86 @@ describe("Dropdown Unit Tests", () => {
 		).toString();
 
 		expect(html).toContain('data-state="open"');
+	});
+
+	// Refined API unit tests:
+
+	test("should support arrow with pointAtCenter", () => {
+		const html = (
+			<Dropdown.Root
+				interactive={false}
+				arrow={{ pointAtCenter: true }}
+				items={[{ type: "item", label: "Item 1", value: "item-1" }]}
+			/>
+		).toString();
+
+		expect(html).toContain('data-part="arrow"');
+		expect(html).toContain('data-part="arrow-tip"');
+	});
+
+	test("should support customizing with classNames and styles", () => {
+		const html = (
+			<Dropdown.Root
+				interactive={false}
+				classNames={{
+					root: "custom-root-class",
+					item: "custom-item-class",
+					itemTitle: "custom-title-class",
+				}}
+				styles={{
+					root: { background: "red" },
+					item: { color: "blue" },
+				}}
+				items={[{ type: "item", label: "Item 1", value: "item-1" }]}
+			/>
+		).toString();
+
+		expect(html).toContain("custom-root-class");
+		expect(html).toContain("custom-item-class");
+		expect(html).toContain("background:red");
+		expect(html).toContain("color:blue");
+	});
+
+	test("should respect destroyOnHidden / destroyPopupOnHide when open is false", () => {
+		const html = (
+			<Dropdown.Root
+				interactive={false}
+				open={false}
+				destroyOnHidden={true}
+				items={[{ type: "item", label: "Item 1", value: "item-1" }]}
+			/>
+		).toString();
+
+		expect(html).not.toContain('role="menu"');
+		expect(html).not.toContain('data-value="item-1"');
+	});
+
+	test("should respect destroyOnHidden / destroyPopupOnHide when open is true", () => {
+		const html = (
+			<Dropdown.Root
+				interactive={false}
+				open={true}
+				destroyOnHidden={true}
+				items={[{ type: "item", label: "Item 1", value: "item-1" }]}
+			/>
+		).toString();
+
+		expect(html).toContain('role="menu"');
+		expect(html).toContain('data-value="item-1"');
+	});
+
+	test("should support menu prop as alternative to items and handle custom trigger formats", () => {
+		const html = (
+			<Dropdown.Root
+				interactive={false}
+				trigger={["hover", "contextMenu"]}
+				menu={{
+					items: [{ type: "item", label: "Menu Item", value: "menu-item" }],
+				}}
+			/>
+		).toString();
+
+		expect(html).toContain("Menu Item");
+		expect(html).toContain('data-value="menu-item"');
 	});
 });

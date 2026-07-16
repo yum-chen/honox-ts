@@ -99,7 +99,7 @@ type DropdownItem =
 	| DropdownGroupItem;
 
 interface DropdownProps extends DropdownVariantProps {
-	trigger?: JSX.Element;
+	trigger?: any;
 	items?: DropdownItem[];
 	defaultOpen?: boolean;
 	/** Whether the dropdown menu is currently open (controlled). */
@@ -111,7 +111,7 @@ interface DropdownProps extends DropdownVariantProps {
 	contentClass?: string;
 	positionerClass?: string;
 	children?: any;
-	arrow?: boolean;
+	arrow?: boolean | { pointAtCenter?: boolean };
 	/**
 	 * Placement of the menu relative to the trigger. Accepts the 12-way names
 	 * (`"bottomLeft"`, `"topRight"`, ...) or their dash-case equivalents
@@ -119,18 +119,32 @@ interface DropdownProps extends DropdownVariantProps {
 	 */
 	placement?: string;
 	triggerMode?:
-		| ("click" | "hover" | "contextDropdown")[]
+		| ("click" | "hover" | "contextDropdown" | "contextMenu")[]
 		| "click"
 		| "hover"
-		| "contextDropdown";
+		| "contextDropdown"
+		| "contextMenu";
 	mouseEnterDelay?: number;
 	mouseLeaveDelay?: number;
 	/** Close when Escape is pressed. Default `true`. */
 	closeOnEscape?: boolean;
 	/** Called when the menu opens or closes. */
-	onOpenChange?: (open: boolean) => void;
+	onOpenChange?: (open: boolean, info?: { source: "trigger" | "menu" }) => void;
 	/** Called with an item's `value` when it is activated. */
 	onSelect?: (value: string) => void;
+	classNames?: Record<string, string>;
+	styles?: Record<string, any>;
+	destroyOnHidden?: boolean;
+	destroyPopupOnHide?: boolean;
+	menu?: {
+		items?: DropdownItem[];
+		onClick?: (info: { key: string; keyPath: string[] }) => void;
+		selectable?: boolean;
+		multiple?: boolean;
+		selectedKeys?: string[];
+		defaultSelectedKeys?: string[];
+	};
+	autoAdjustOverflow?: boolean;
 }
 
 // ============= Rendering Functions =============
@@ -140,6 +154,8 @@ function renderDropdownItem(
 	index: number,
 	size?: DropdownVariantProps["size"],
 	interactive = true,
+	classNames?: Record<string, string>,
+	elementStyles?: Record<string, any>,
 ): JSX.Element {
 	switch (item.type) {
 		case "separator":
@@ -187,7 +203,14 @@ function renderDropdownItem(
 						<ItemGroupLabel>{radioGroup.label}</ItemGroupLabel>
 					)}
 					{radioGroup.items.map((radioItem, idx) =>
-						renderDropdownItem(radioItem, idx, size, interactive),
+						renderDropdownItem(
+							radioItem,
+							idx,
+							size,
+							interactive,
+							classNames,
+							elementStyles,
+						),
 					)}
 				</RadioItemGroup>
 			);
@@ -201,7 +224,14 @@ function renderDropdownItem(
 						<ItemGroupLabel>{groupItem.label}</ItemGroupLabel>
 					)}
 					{groupItem.items.map((child, idx) =>
-						renderDropdownItem(child, idx, size, interactive),
+						renderDropdownItem(
+							child,
+							idx,
+							size,
+							interactive,
+							classNames,
+							elementStyles,
+						),
 					)}
 				</ItemGroup>
 			);
@@ -215,6 +245,8 @@ function renderDropdownItem(
 					item={submenuItem}
 					size={size}
 					interactive={interactive}
+					classNames={classNames}
+					elementStyles={elementStyles}
 				/>
 			);
 		}
@@ -249,10 +281,14 @@ function DropdownSubmenu({
 	item,
 	size,
 	interactive,
+	classNames,
+	elementStyles,
 }: {
 	item: DropdownSubmenuItem;
 	size?: DropdownVariantProps["size"];
 	interactive: boolean;
+	classNames?: Record<string, string>;
+	elementStyles?: Record<string, any>;
 }) {
 	const styles = dropdown({ size });
 	const triggerItem = (
@@ -265,7 +301,14 @@ function DropdownSubmenu({
 		<Positioner placement="rightTop" class={styles.positioner}>
 			<Content class={styles.content}>
 				{item.items.map((child, idx) =>
-					renderDropdownItem(child, idx, size, interactive),
+					renderDropdownItem(
+						child,
+						idx,
+						size,
+						interactive,
+						classNames,
+						elementStyles,
+					),
 				)}
 			</Content>
 		</Positioner>
@@ -278,6 +321,8 @@ function DropdownSubmenu({
 				trigger={["hover", "click"]}
 				placement="rightTop"
 				disabled={item.disabled}
+				classNames={classNames}
+				elementStyles={elementStyles}
 			>
 				{triggerItem}
 				{positioner}
@@ -286,7 +331,12 @@ function DropdownSubmenu({
 	}
 
 	return (
-		<RootPrimitive open={false} disabled={item.disabled}>
+		<RootPrimitive
+			open={false}
+			disabled={item.disabled}
+			classNames={classNames}
+			elementStyles={elementStyles}
+		>
 			{triggerItem}
 			{positioner}
 		</RootPrimitive>
@@ -298,7 +348,7 @@ function DropdownSubmenu({
 function DropdownRoot(props: DropdownProps) {
 	const {
 		trigger,
-		items,
+		items: itemsProp,
 		defaultOpen = false,
 		open,
 		disabled,
@@ -309,21 +359,46 @@ function DropdownRoot(props: DropdownProps) {
 		children,
 		arrow,
 		placement = "bottomLeft",
-		triggerMode = ["click"],
+		triggerMode: triggerModeProp = ["click"],
 		mouseEnterDelay,
 		mouseLeaveDelay,
 		closeOnEscape,
 		onOpenChange,
 		onSelect,
+		classNames,
+		styles: stylesProp,
+		destroyOnHidden,
+		destroyPopupOnHide,
+		menu,
+		autoAdjustOverflow = true,
 		...variantProps
 	} = props;
 
 	const styles = dropdown(variantProps);
+
+	const items = menu?.items ?? itemsProp;
+
+	const isArrowVisible = !!arrow;
+	const arrowPointAtCenter =
+		typeof arrow === "object" ? !!arrow.pointAtCenter : false;
+
+	const shouldDestroyOnHidden = destroyOnHidden ?? destroyPopupOnHide ?? false;
+
+	let elementTrigger: any;
+	let triggerMode = triggerModeProp;
+
+	if (trigger) {
+		if (Array.isArray(trigger) || typeof trigger === "string") {
+			triggerMode = trigger as any;
+		} else {
+			elementTrigger = trigger;
+		}
+	}
+
 	const triggerModes = Array.isArray(triggerMode) ? triggerMode : [triggerMode];
-	// A trigger wired for `contextDropdown` alone (no click/hover) opens on
-	// right-click, so it renders as a plain wrapper rather than a `<button>`.
 	const isContextMenuOnly =
-		triggerModes.includes("contextDropdown") &&
+		(triggerModes.includes("contextDropdown") ||
+			triggerModes.includes("contextMenu")) &&
 		!triggerModes.includes("click") &&
 		!triggerModes.includes("hover");
 	const TriggerComponent = isContextMenuOnly ? ContextTrigger : Trigger;
@@ -335,28 +410,52 @@ function DropdownRoot(props: DropdownProps) {
 				defaultOpen={defaultOpen}
 				disabled={disabled}
 				placement={placement}
-				trigger={triggerMode}
+				trigger={triggerMode as any}
 				mouseEnterDelay={mouseEnterDelay}
 				mouseLeaveDelay={mouseLeaveDelay}
 				closeOnEscape={closeOnEscape}
 				onOpenChange={onOpenChange}
 				onSelect={onSelect}
+				classNames={classNames}
+				elementStyles={stylesProp}
+				destroyOnHidden={shouldDestroyOnHidden}
+				autoAdjustOverflow={autoAdjustOverflow}
+				arrowPointAtCenter={arrowPointAtCenter}
+				menu={menu}
 			>
-				{trigger && <TriggerComponent asChild>{trigger}</TriggerComponent>}
+				{elementTrigger && (
+					<TriggerComponent asChild>{elementTrigger}</TriggerComponent>
+				)}
 				{children}
 				{items && (
 					<Positioner
 						placement={placement}
-						class={cx(styles.positioner, positionerClass)}
+						class={cx(
+							styles.positioner,
+							positionerClass,
+							classNames?.positioner,
+						)}
 					>
-						{arrow && (
-							<DropdownArrow placement={placement}>
+						{isArrowVisible && (
+							<DropdownArrow
+								placement={placement}
+								arrowPointAtCenter={arrowPointAtCenter}
+							>
 								<DropdownArrowTip placement={placement} />
 							</DropdownArrow>
 						)}
-						<Content class={cx(styles.content, contentClass)}>
+						<Content
+							class={cx(styles.content, contentClass, classNames?.content)}
+						>
 							{items.map((item, index) =>
-								renderDropdownItem(item, index, variantProps.size, true),
+								renderDropdownItem(
+									item,
+									index,
+									variantProps.size,
+									true,
+									classNames,
+									stylesProp,
+								),
 							)}
 						</Content>
 					</Positioner>
@@ -366,27 +465,62 @@ function DropdownRoot(props: DropdownProps) {
 	}
 
 	return (
-		<RootPrimitive open={open ?? defaultOpen} disabled={disabled}>
-			{trigger && <TriggerComponent asChild>{trigger}</TriggerComponent>}
-			{children}
-			{items && (
-				<Positioner
-					placement={placement}
-					class={cx(styles.positioner, positionerClass)}
-				>
-					{arrow && (
-						<DropdownArrow placement={placement}>
-							<DropdownArrowTip placement={placement} />
-						</DropdownArrow>
-					)}
-					<Content class={cx(styles.content, contentClass)}>
-						{items.map((item, index) =>
-							renderDropdownItem(item, index, variantProps.size, false),
+		<div
+			data-scope="dropdown"
+			data-part="root"
+			class={cx(classNames?.root, classProp)}
+			style={{
+				position: "relative",
+				display: "inline-block",
+				...stylesProp?.root,
+			}}
+		>
+			<RootPrimitive
+				open={open ?? defaultOpen}
+				disabled={disabled}
+				classNames={classNames}
+				elementStyles={stylesProp}
+				destroyOnHidden={shouldDestroyOnHidden}
+			>
+				{elementTrigger && (
+					<TriggerComponent asChild>{elementTrigger}</TriggerComponent>
+				)}
+				{children}
+				{items && (
+					<Positioner
+						placement={placement}
+						class={cx(
+							styles.positioner,
+							positionerClass,
+							classNames?.positioner,
 						)}
-					</Content>
-				</Positioner>
-			)}
-		</RootPrimitive>
+					>
+						{isArrowVisible && (
+							<DropdownArrow
+								placement={placement}
+								arrowPointAtCenter={arrowPointAtCenter}
+							>
+								<DropdownArrowTip placement={placement} />
+							</DropdownArrow>
+						)}
+						<Content
+							class={cx(styles.content, contentClass, classNames?.content)}
+						>
+							{items.map((item, index) =>
+								renderDropdownItem(
+									item,
+									index,
+									variantProps.size,
+									false,
+									classNames,
+									stylesProp,
+								),
+							)}
+						</Content>
+					</Positioner>
+				)}
+			</RootPrimitive>
+		</div>
 	);
 }
 
