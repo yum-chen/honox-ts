@@ -152,4 +152,125 @@ describe("Tabs Unit Tests", () => {
 
 		expect(html).not.toMatch(/\sref="/);
 	});
+
+	test("should support activeKey and onChange (controlled mode)", () => {
+		const html = (
+			<Tabs activeKey="solid" items={items} onChange={() => {}} />
+		).toString();
+
+		expect(html).toContain('data-value="solid"');
+		expect(html).toContain('aria-selected="true"');
+	});
+
+	test("should support defaultActiveKey (uncontrolled mode)", () => {
+		const html = (
+			<Tabs defaultActiveKey="solid" items={items} />
+		).toString();
+
+		expect(html).toContain('data-value="solid"');
+		expect(html).toContain('aria-selected="true"');
+	});
+
+	test("should support type='card' mapping", () => {
+		const html = (<Tabs type="card" items={items} />).toString();
+
+		expect(html).toContain("tabs__trigger--variant_card");
+	});
+
+	test("should support type='editable-card' mapping", () => {
+		const html = (<Tabs type="editable-card" items={items} />).toString();
+
+		expect(html).toContain("tabs__trigger--variant_card");
+		expect(html).toContain('data-part="add"');
+	});
+
+	test("should support tabPlacement='bottom' reversing flex direction", () => {
+		const html = (<Tabs tabPlacement="bottom" items={items} />).toString();
+
+		expect(html).toContain("flex-direction:column-reverse");
+	});
+
+	test("should support tabPlacement='right' reversing flex direction", () => {
+		const html = (<Tabs tabPlacement="right" items={items} />).toString();
+
+		expect(html).toContain("flex-direction:row-reverse");
+		expect(html).toContain('data-orientation="vertical"');
+	});
+
+	test("should support destroyOnHidden and completely destroy inactive panels", () => {
+		const html = (
+			<Tabs defaultValue="react" destroyOnHidden items={items} />
+		).toString();
+
+		expect(html).toContain("React Content");
+		expect(html).not.toContain("Solid Content");
+	});
+
+	test("should support custom classNames and styles for semantic structures", () => {
+		const html = (
+			<Tabs
+				items={items}
+				classNames={{
+					root: "custom-root-class",
+					list: "custom-list-class",
+					trigger: "custom-trigger-class",
+				}}
+				styles={{
+					root: { border: "2px solid red" },
+					list: { margin: "10px" },
+				}}
+			/>
+		).toString();
+
+		expect(html).toContain("custom-root-class");
+		expect(html).toContain("custom-list-class");
+		expect(html).toContain("custom-trigger-class");
+		expect(html).toContain("border:2px solid red");
+		expect(html).toContain("margin:10px");
+	});
+
+	test("should support custom closeIcon on per-item level", () => {
+		const html = (
+			<Tabs
+				closable
+				items={[
+					{
+						value: "react",
+						label: "React",
+						content: "React Content",
+						closeIcon: <span data-testid="custom-close-icon">x</span>,
+					},
+				]}
+			/>
+		).toString();
+
+		expect(html).toContain('data-testid="custom-close-icon"');
+	});
+
+	test("should support custom removeIcon and addIcon", () => {
+		const html = (
+			<Tabs
+				type="editable-card"
+				items={items}
+				removeIcon={<span data-testid="custom-remove-icon">x</span>}
+				addIcon={<span data-testid="custom-add-icon">+</span>}
+			/>
+		).toString();
+
+		expect(html).toContain('data-testid="custom-remove-icon"');
+		expect(html).toContain('data-testid="custom-add-icon"');
+	});
+
+	test("should support tabBarGutter and tabBarStyle", () => {
+		const html = (
+			<Tabs
+				items={items}
+				tabBarGutter={24}
+				tabBarStyle={{ background: "blue" }}
+			/>
+		).toString();
+
+		expect(html).toContain("gap:24px");
+		expect(html).toContain("background:blue");
+	});
 });

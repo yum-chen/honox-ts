@@ -2,51 +2,50 @@
 
 # Introduction
 
-A set of layered sections of content shown one at a time, with a selectable tab list. Tabs
-ships four visual variants (`line`, `subtle`, `enclosed`, `card`), horizontal or vertical
-orientation, and optional closable/editable tabs for managing an open-ended set of views
-(browser-tab-style "add" and "close" controls).
+A highly customizable, production-ready set of layered sections of content shown one at a time, with a selectable tab list. Tabs ships four visual variants (`line`, `subtle`, `enclosed`, `card`), vertical or horizontal orientation supporting all placements (`top`, `bottom`, `left`/`start`, `right`/`end`), dynamic spacing, controlled/uncontrolled state syncing, semantic style mapping, and optional closable/editable tabs for managing an open-ended set of views.
 
 # Props
 
 ## Tabs
 
-| Prop | Type | Description |
-| :--- | :--- | :--- |
-| `items` | `TabsItem[]` | The tabs to render (used when no `children` are provided). |
-| `variant` | `"line" \| "subtle" \| "enclosed" \| "card"` | Visual style. Default: `"line"`. `"card"` draws each tab as its own bordered box and hides the sliding indicator. |
-| `size` | `"xs" \| "sm" \| "md" \| "lg"` | Preset tab size. Default: `"md"`. |
-| `colorPalette` | `"gray" \| "blue" \| "green" \| "red" \| "orange" \| "cyan" \| "amber" \| "purple"` | Accent color for the selected tab / indicator. Default: `"gray"`. |
-| `orientation` | `"horizontal" \| "vertical"` | Tab list direction. Default: `"horizontal"`. |
-| `centered` | `boolean` | Center the tab list instead of left-aligning it. |
-| `fitted` | `boolean` | Stretch tabs to share the available width equally. |
-| `activationMode` | `"automatic" \| "manual"` | Whether arrow-key navigation selects immediately (`"automatic"`) or only moves focus until `Enter`/`Space` (`"manual"`). Default: `"automatic"`. |
-| `indicator` | `boolean` | Whether to show the active indicator. Default: `true`. Ignored (always hidden) for `variant="card"`. |
-| `value` | `string` | The selected tab's value (controlled). |
-| `defaultValue` | `string` | The initially selected tab's value (uncontrolled). |
-| `onValueChange` | `(value: string) => void` | Called when the selected tab changes. |
-| `closable` | `boolean` | Give every tab a close button. A `TabsItem.closable` override wins over this default. |
-| `editable` | `boolean` | Shorthand for `closable` plus a trailing "add tab" trigger. |
-| `onTabClose` | `(value: string) => void` | Called after a tab is closed. |
-| `onTabAdd` | `() => TabsItem \| void` | Called when the "add tab" trigger is clicked. Return a `TabsItem` to control what gets appended and selected; return nothing to accept an auto-generated blank tab. |
-| `addAriaLabel` | `string` | Accessible label for the "add tab" trigger. Default: `"Add tab"`. |
-| `extra` | `JSX.Element \| { start?: JSX.Element; end?: JSX.Element }` | Content rendered alongside the tab list — a single node (rendered after the list) or a `{ start, end }` split. |
-| `interactive` | `boolean` | Force or forbid client-side hydration; omit to auto-detect (see **Hydration** below). |
-| `class` | `string` | Custom CSS classes for the root element. |
-
-Additional tab-state props not listed above (e.g. `id`) are forwarded to the underlying tabs
-primitive.
+| Prop | Type | Description | Default |
+| :--- | :--- | :--- | :--- |
+| `items` | `TabsItem[]` | The tabs configured via shorthand array. | `[]` |
+| `variant` | `"line" \| "subtle" \| "enclosed" \| "card"` | Visual style. | `"line"` |
+| `size` | `"xs" \| "sm" \| "md" \| "lg" \| "small" \| "medium" \| "large"` | Size presets of the tab elements. | `"md"` |
+| `colorPalette` | `"gray" \| "blue" \| "green" \| "red" \| "orange" \| "cyan" \| "amber" \| "purple"` | Accent color theme for selection / indicators. | `"gray"` |
+| `type` | `"line" \| "card" \| "editable-card"` | Basic style mapping. `"editable-card"` automatically configures the card style and editable triggers. | `"line"` |
+| `tabPlacement` / `tabPosition` | `"top" \| "bottom" \| "left" \| "right" \| "start" \| "end"` | Visual layout placement of the tab headers relative to the content pane. | `"top"` |
+| `activeKey` / `value` | `string` | The currently active tab key (Controlled). | - |
+| `defaultActiveKey` / `defaultValue` | `string` | The initially active tab key (Uncontrolled). | - |
+| `onChange` / `onValueChange` | `(key: string) => void` | Callback executed when the active tab is changed. | - |
+| `onEdit` | `(key: any, action: "add" \| "remove") => void` | Callback executed when a tab is added or removed (only works under editable configurations). | - |
+| `tabBarGutter` | `number \| string` | Custom CSS grid/flex spacing between individual tab headers. | - |
+| `tabBarStyle` | `any` | Custom inline style for the tab headers bar / container. | - |
+| `destroyOnHidden` / `destroyInactiveTabPane` | `boolean` | Whether to completely unmount/destroy inactive content pane trees instead of just hiding them. | `false` |
+| `indicator` | `boolean` | Whether to render the sliding active tab indicator line. | `true` |
+| `animated` | `boolean \| { inkBar?: boolean; tabPane?: boolean }` | Fine-grain control over transition animations. | `true` |
+| `classNames` | `Record<string, string>` | Custom CSS classes mapped to semantic sub-parts (`root`, `list`/`header`/`tabBar`, `trigger`/`item`, `close`/`remove`, `indicator`, `content`/`body`, `add`). | - |
+| `styles` | `Record<string, any>` | Custom inline styles mapped to semantic sub-parts. | - |
+| `addIcon` | `JSX.Element` | Custom SVG or icon element for the new tab trigger. | - |
+| `removeIcon` | `JSX.Element` | Custom SVG or icon element for close/delete buttons. | - |
+| `extra` / `tabBarExtraContent` | `JSX.Element \| { start?, end?, left?, right? }` | Custom content or action nodes rendered alongside the tab list headers. | - |
+| `interactive` | `boolean` | Force or prevent client-side island hydration; omitted to auto-detect. | - |
 
 ### TabsItem
 
 | Property | Type | Description |
 | :--- | :--- | :--- |
-| `value` | `string` | Unique identifier for the tab. |
-| `label` | `string \| JSX.Element` | The tab label. |
-| `content` | `string \| JSX.Element` | The panel content shown when active. |
-| `disabled` | `boolean` | Whether the tab is disabled. |
-| `icon` | `JSX.Element` | Icon rendered before the label. |
-| `closable` | `boolean` | Overrides the top-level `closable`/`editable` default for this one tab. |
+| `value` / `key` | `string` | Unique key identifier for the tab pane. |
+| `label` | `string \| JSX.Element` | The visible text or elements inside the tab header. |
+| `content` / `children` | `string \| JSX.Element` | The content rendered inside the panel pane when active. |
+| `disabled` | `boolean` | Whether the individual tab is disabled. |
+| `icon` | `JSX.Element` | Optional icon rendered before the label. |
+| `closable` | `boolean` | Whether to show a close button. |
+| `closeIcon` | `JSX.Element \| boolean \| null` | Per-tab custom close icon override; setting to `null` or `false` hides it. |
+| `destroyOnHidden` | `boolean` | Per-tab destroy behavior when inactive. |
+
+---
 
 # Usage
 

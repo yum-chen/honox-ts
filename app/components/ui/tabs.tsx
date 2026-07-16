@@ -14,8 +14,9 @@ import {
 
 type TabsItemFromPrimitive = import("./tabs-primitive").TabsItem;
 
-interface TabsProps extends InteractiveRootProps, TabsStructureProps {
+export interface TabsProps extends InteractiveRootProps, TabsStructureProps {
 	interactive?: boolean;
+	onEdit?: (key: any, action: "add" | "remove") => void;
 }
 
 const TabsRoot = (props: TabsProps) => {
@@ -30,15 +31,23 @@ const TabsRoot = (props: TabsProps) => {
 		onTabAdd,
 		addAriaLabel,
 		extra,
+		tabBarExtraContent,
+		onEdit,
 		...rootProps
 	} = props;
+
+	const resolvedEditable = editable ?? (props.type === "editable-card" ? true : undefined);
 
 	const hasSignal =
 		rootProps.value !== undefined ||
 		rootProps.defaultValue !== undefined ||
 		rootProps.onValueChange !== undefined ||
+		rootProps.activeKey !== undefined ||
+		rootProps.defaultActiveKey !== undefined ||
+		rootProps.onChange !== undefined ||
+		onEdit !== undefined ||
 		closable !== undefined ||
-		editable !== undefined ||
+		resolvedEditable !== undefined ||
 		onTabClose !== undefined ||
 		onTabAdd !== undefined;
 
@@ -49,11 +58,13 @@ const TabsRoot = (props: TabsProps) => {
 				items={items}
 				indicator={indicator}
 				closable={closable}
-				editable={editable}
+				editable={resolvedEditable}
 				onTabClose={onTabClose}
 				onTabAdd={onTabAdd}
 				addAriaLabel={addAriaLabel}
 				extra={extra}
+				tabBarExtraContent={tabBarExtraContent}
+				onEdit={onEdit}
 			>
 				{children}
 			</InteractiveTabsIsland>
@@ -67,20 +78,35 @@ const TabsRoot = (props: TabsProps) => {
 					items={items ?? []}
 					indicator={indicator}
 					closable={closable}
-					editable={editable}
+					editable={resolvedEditable}
 					onTabClose={onTabClose}
 					onTabAdd={onTabAdd}
 					addAriaLabel={addAriaLabel}
 					extra={extra}
+					tabBarExtraContent={tabBarExtraContent}
 				/>
 			)}
 		</Root>
 	);
 };
 
-export const Tabs = TabsRoot;
-export type { TabsItemFromPrimitive as TabsItem, TabsProps };
+type CompoundedComponent = typeof TabsRoot & {
+	List: typeof List;
+	Trigger: typeof Trigger;
+	Content: typeof Content;
+	Indicator: typeof Indicator;
+	AddTrigger: typeof AddTrigger;
+};
+
+const Tabs = TabsRoot as CompoundedComponent;
+Tabs.List = List;
+Tabs.Trigger = Trigger;
+Tabs.Content = Content;
+Tabs.Indicator = Indicator;
+Tabs.AddTrigger = AddTrigger;
+
 export {
+	Tabs,
 	AddTrigger as TabsAddTrigger,
 	Content as TabsContent,
 	Indicator as TabsIndicator,
@@ -88,4 +114,5 @@ export {
 	Trigger as TabsTrigger,
 };
 
+export type { TabsItemFromPrimitive as TabsItem };
 export default Tabs;

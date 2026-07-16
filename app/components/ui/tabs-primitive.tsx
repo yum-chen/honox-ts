@@ -55,6 +55,14 @@ interface TabsContextValue {
 	onValueChange?: (value: string) => void;
 	id: string;
 	orientation: "horizontal" | "vertical";
+	destroyOnHidden?: boolean;
+	classNames?: Record<string, string>;
+	customStyles?: Record<string, any>;
+	animated?: boolean | { inkBar?: boolean; tabPane?: boolean };
+	tabBarGutter?: number | string;
+	tabBarStyle?: any;
+	removeIcon?: any;
+	addIcon?: any;
 }
 
 const TabsContext = createContext<TabsContextValue | null>(null);
@@ -83,6 +91,49 @@ export interface RootProps extends TabsVariantProps, PropsWithChildren {
 	orientation?: "horizontal" | "vertical";
 	activationMode?: "automatic" | "manual";
 	rootRef?: any;
+
+	// New fields to refine styling, functionality, and enterprise APIs
+	activeKey?: string;
+	defaultActiveKey?: string;
+	onChange?: (value: string) => void;
+	type?: "line" | "card" | "editable-card";
+	tabPlacement?: "top" | "end" | "bottom" | "start";
+	tabPosition?: "top" | "right" | "bottom" | "left";
+	destroyOnHidden?: boolean;
+	destroyInactiveTabPane?: boolean;
+	tabBarGutter?: number | string;
+	tabBarStyle?: any;
+	classNames?: Record<string, string>;
+	styles?: Record<string, any>;
+	addIcon?: any;
+	removeIcon?: any;
+	animated?: boolean | { inkBar?: boolean; tabPane?: boolean };
+	class?: string;
+}
+
+function getSemanticProps(
+	part: string,
+	classNames?: Record<string, string>,
+	customStyles?: Record<string, any>,
+) {
+	let className = classNames?.[part];
+	let style = customStyles?.[part];
+
+	if (part === "list") {
+		className = className || classNames?.header || classNames?.tabBar;
+		style = style || customStyles?.header || customStyles?.tabBar;
+	} else if (part === "trigger") {
+		className = className || classNames?.item;
+		style = style || customStyles?.item;
+	} else if (part === "close") {
+		className = className || classNames?.remove;
+		style = style || customStyles?.remove;
+	} else if (part === "content") {
+		className = className || classNames?.body;
+		style = style || customStyles?.body;
+	}
+
+	return { className, style };
 }
 
 export function Root(props: RootProps) {
@@ -93,22 +144,90 @@ export function Root(props: RootProps) {
 		defaultValue,
 		onValueChange,
 		id: idProp,
-		orientation = "horizontal",
+		orientation,
 		rootRef,
+
+		activeKey,
+		defaultActiveKey,
+		onChange,
+		type,
+		tabPlacement,
+		tabPosition,
+		destroyOnHidden,
+		destroyInactiveTabPane,
+		tabBarGutter,
+		tabBarStyle,
+		classNames,
+		styles,
+		addIcon,
+		removeIcon,
+		animated,
 		...rest
 	} = localProps;
 
-	const styles = tabs(variantProps);
+	// Normalize Size
+	let resolvedSize = variantProps.size;
+	if (resolvedSize === "large") resolvedSize = "lg";
+	else if (resolvedSize === "medium") resolvedSize = "md";
+	else if (resolvedSize === "small") resolvedSize = "sm";
+	variantProps.size = resolvedSize;
+
+	// Map Type to Variant
+	let resolvedVariant = variantProps.variant;
+	if (type === "line") resolvedVariant = "line";
+	else if (type === "card" || type === "editable-card")
+		resolvedVariant = "card";
+	variantProps.variant = resolvedVariant;
+
+	// Resolve placement & position to orientation
+	const placement = tabPlacement || tabPosition || "top";
+	let resolvedOrientation: "horizontal" | "vertical" =
+		orientation || "horizontal";
+	if (
+		placement === "left" ||
+		placement === "right" ||
+		placement === "start" ||
+		placement === "end"
+	) {
+		resolvedOrientation = "vertical";
+	}
+
+	const stylesObj = tabs(variantProps);
 	const fallbackId = useId();
 	const id = idProp || fallbackId;
 
+	const resolvedVal = activeKey !== undefined ? activeKey : value;
+	const resolvedDefaultVal =
+		defaultActiveKey !== undefined ? defaultActiveKey : defaultValue;
+
 	const contextValue: TabsContextValue = {
-		styles,
-		value: value ?? defaultValue,
-		onValueChange,
+		styles: stylesObj,
+		value: resolvedVal ?? resolvedDefaultVal,
+		onValueChange: (val) => {
+			onValueChange?.(val);
+			onChange?.(val);
+		},
 		id,
-		orientation,
+		orientation: resolvedOrientation,
+		destroyOnHidden: destroyOnHidden ?? destroyInactiveTabPane,
+		classNames,
+		customStyles: styles,
+		animated,
+		tabBarGutter,
+		tabBarStyle,
+		removeIcon,
+		addIcon,
 	};
+
+	const semanticRoot = getSemanticProps("root", classNames, styles);
+	const rootStyle: any = { ...semanticRoot.style };
+
+	// Leverage CSS flex properties to visually reverse layout according to placement/position
+	if (placement === "bottom") {
+		rootStyle.flexDirection = "column-reverse";
+	} else if (placement === "right" || placement === "end") {
+		rootStyle.flexDirection = "row-reverse";
+	}
 
 	return (
 		<TabsContext.Provider value={contextValue}>
@@ -117,8 +236,10 @@ export function Root(props: RootProps) {
 				ref={(el: HTMLDivElement | null) => {
 					if (rootRef) rootRef.current = el;
 				}}
-				class={cx(styles.root, localProps.class)}
-				data-orientation={orientation}
+				class={cx(stylesObj.root, semanticRoot.className, localProps.class)}
+				style={rootStyle}
+				data-orientation={resolvedOrientation}
+				data-placement={placement}
 				data-scope="tabs"
 				data-part="root"
 				{...rest}
@@ -131,14 +252,33 @@ export function Root(props: RootProps) {
 
 export interface ListProps extends PropsWithChildren {
 	class?: string;
+	style?: any;
 }
 
 export function List(props: ListProps) {
 	const context = useTabsContext();
+	const { className: customClass, style: customStyle } = getSemanticProps(
+		"list",
+		context.classNames,
+		context.customStyles,
+	);
+
+	const listStyle: any = { ...customStyle, ...props.style };
+	if (context.tabBarGutter !== undefined) {
+		listStyle.gap =
+			typeof context.tabBarGutter === "number"
+				? `${context.tabBarGutter}px`
+				: context.tabBarGutter;
+	}
+	if (context.tabBarStyle) {
+		Object.assign(listStyle, context.tabBarStyle);
+	}
+
 	return (
 		<div
 			role="tablist"
-			class={cx(context.styles.list, props.class)}
+			class={cx(context.styles.list, customClass, props.class)}
+			style={listStyle}
 			data-orientation={context.orientation}
 			data-scope="tabs"
 			data-part="list"
@@ -152,6 +292,7 @@ export interface TriggerProps extends PropsWithChildren {
 	value: string;
 	disabled?: boolean;
 	class?: string;
+	style?: any;
 	asChild?: boolean;
 	/** Icon rendered before the label. */
 	icon?: JSX.Element;
@@ -159,6 +300,7 @@ export interface TriggerProps extends PropsWithChildren {
 	closable?: boolean;
 	onClose?: () => void;
 	closeAriaLabel?: string;
+	closeIcon?: any;
 }
 
 export function Trigger(props: TriggerProps) {
@@ -167,11 +309,13 @@ export function Trigger(props: TriggerProps) {
 		disabled,
 		children,
 		class: classProp,
+		style,
 		asChild,
 		icon,
 		closable,
 		onClose,
 		closeAriaLabel = "Close tab",
+		closeIcon,
 	} = props;
 	const context = useTabsContext();
 	const isSelected = context.value === value;
@@ -190,12 +334,34 @@ export function Trigger(props: TriggerProps) {
 		tabIndex: isSelected ? 0 : -1,
 	};
 
+	const { className: customClass, style: customStyle } = getSemanticProps(
+		"trigger",
+		context.classNames,
+		context.customStyles,
+	);
+	const { className: closeClass, style: closeStyle } = getSemanticProps(
+		"close",
+		context.classNames,
+		context.customStyles,
+	);
+
+	const mergedTriggerStyle = {
+		...customStyle,
+		...style,
+	};
+
 	if (asChild && typeof children === "object" && children !== null) {
 		const child = children as any;
 		return cloneElement(child, {
 			...triggerProps,
 			type: "button",
-			class: cx(context.styles.trigger, classProp, child.props?.class),
+			class: cx(
+				context.styles.trigger,
+				customClass,
+				classProp,
+				child.props?.class,
+			),
+			style: { ...mergedTriggerStyle, ...child.props?.style },
 		});
 	}
 
@@ -207,22 +373,36 @@ export function Trigger(props: TriggerProps) {
 	);
 
 	if (closable) {
+		const closeIconElement =
+			closeIcon !== undefined && closeIcon !== null
+				? closeIcon === false
+					? null
+					: closeIcon
+				: context.removeIcon || <CloseIcon />;
+
 		return (
-			<div {...triggerProps} class={cx(context.styles.trigger, classProp)}>
+			<div
+				{...triggerProps}
+				class={cx(context.styles.trigger, customClass, classProp)}
+				style={mergedTriggerStyle}
+			>
 				{label}
-				<button
-					type="button"
-					data-scope="tabs"
-					data-part="close"
-					aria-label={closeAriaLabel}
-					class={context.styles.close}
-					onClick={(e) => {
-						e.stopPropagation();
-						onClose?.();
-					}}
-				>
-					<CloseIcon />
-				</button>
+				{closeIconElement && (
+					<button
+						type="button"
+						data-scope="tabs"
+						data-part="close"
+						aria-label={closeAriaLabel}
+						class={cx(context.styles.close, closeClass)}
+						style={closeStyle}
+						onClick={(e) => {
+							e.stopPropagation();
+							onClose?.();
+						}}
+					>
+						{closeIconElement}
+					</button>
+				)}
 			</div>
 		);
 	}
@@ -231,7 +411,8 @@ export function Trigger(props: TriggerProps) {
 		<button
 			type="button"
 			{...triggerProps}
-			class={cx(context.styles.trigger, classProp)}
+			class={cx(context.styles.trigger, customClass, classProp)}
+			style={mergedTriggerStyle}
 		>
 			{label}
 		</button>
@@ -241,12 +422,31 @@ export function Trigger(props: TriggerProps) {
 export interface ContentProps extends PropsWithChildren {
 	value: string;
 	class?: string;
+	style?: any;
+	destroyOnHidden?: boolean;
 }
 
 export function Content(props: ContentProps) {
-	const { value, children, class: classProp } = props;
+	const {
+		value,
+		children,
+		class: classProp,
+		style,
+		destroyOnHidden: itemDestroy,
+	} = props;
 	const context = useTabsContext();
 	const isSelected = context.value === value;
+	const shouldDestroy = itemDestroy ?? context.destroyOnHidden;
+
+	if (shouldDestroy && !isSelected) {
+		return null;
+	}
+
+	const { className: customClass, style: customStyle } = getSemanticProps(
+		"content",
+		context.classNames,
+		context.customStyles,
+	);
 
 	return (
 		<div
@@ -257,7 +457,8 @@ export function Content(props: ContentProps) {
 			data-value={value}
 			data-orientation={context.orientation}
 			data-selected={isSelected ? "" : undefined}
-			class={cx(context.styles.content, classProp)}
+			class={cx(context.styles.content, customClass, classProp)}
+			style={{ ...customStyle, ...style }}
 			hidden={!isSelected}
 		>
 			{children}
@@ -273,31 +474,54 @@ export interface IndicatorProps {
 export function Indicator(props: IndicatorProps) {
 	const { class: classProp, style, ...rest } = props;
 	const context = useTabsContext();
+	const { className: customClass, style: customStyle } = getSemanticProps(
+		"indicator",
+		context.classNames,
+		context.customStyles,
+	);
+
+	const isAnimated =
+		context.animated !== false &&
+		(typeof context.animated !== "object" || context.animated.inkBar !== false);
+
+	const indicatorStyle = {
+		...customStyle,
+		...style,
+	};
+	if (!isAnimated) {
+		indicatorStyle.transition = "none";
+	}
+
 	return (
 		<div
 			data-scope="tabs"
 			data-part="indicator"
 			data-orientation={context.orientation}
-			class={cx(context.styles.indicator, classProp)}
-			style={style}
+			class={cx(context.styles.indicator, customClass, classProp)}
+			style={indicatorStyle}
 			{...rest}
 		/>
 	);
 }
 
 export interface TabsItem {
-	value: string;
-	label: string | JSX.Element;
-	content: string | JSX.Element;
+	value?: string;
+	key?: string;
+	label?: string | JSX.Element;
+	children?: string | JSX.Element;
+	content?: string | JSX.Element;
 	disabled?: boolean;
 	/** Icon rendered before the label. */
 	icon?: JSX.Element;
 	/** Overrides the structure-level `closable`/`editable` default for this tab. */
 	closable?: boolean;
+	closeIcon?: any;
+	destroyOnHidden?: boolean;
 }
 
 export interface AddTriggerProps {
 	class?: string;
+	style?: any;
 	onAdd?: () => void;
 	disabled?: boolean;
 	ariaLabel?: string;
@@ -305,8 +529,22 @@ export interface AddTriggerProps {
 
 /** The trailing "+" trigger rendered by editable tab lists to append a new tab. */
 export function AddTrigger(props: AddTriggerProps) {
-	const { class: classProp, onAdd, disabled, ariaLabel = "Add tab" } = props;
+	const {
+		class: classProp,
+		style,
+		onAdd,
+		disabled,
+		ariaLabel = "Add tab",
+	} = props;
 	const context = useTabsContext();
+	const { className: customClass, style: customStyle } = getSemanticProps(
+		"add",
+		context.classNames,
+		context.customStyles,
+	);
+
+	const addIconElement = context.addIcon || <PlusIcon />;
+
 	return (
 		<button
 			type="button"
@@ -315,10 +553,11 @@ export function AddTrigger(props: AddTriggerProps) {
 			aria-label={ariaLabel}
 			disabled={disabled}
 			data-disabled={disabled ? "" : undefined}
-			class={cx(context.styles.add, classProp)}
+			class={cx(context.styles.add, customClass, classProp)}
+			style={{ ...customStyle, ...style }}
 			onClick={() => onAdd?.()}
 		>
-			<PlusIcon />
+			{addIconElement}
 		</button>
 	);
 }
@@ -334,7 +573,22 @@ export interface TabsStructureProps {
 	onTabAdd?: () => void;
 	addAriaLabel?: string;
 	/** Content rendered alongside the tab list — a single node, or split start/end. */
-	extra?: JSX.Element | { start?: JSX.Element; end?: JSX.Element };
+	extra?:
+		| JSX.Element
+		| {
+				start?: JSX.Element;
+				end?: JSX.Element;
+				left?: JSX.Element;
+				right?: JSX.Element;
+		  };
+	tabBarExtraContent?:
+		| JSX.Element
+		| {
+				start?: JSX.Element;
+				end?: JSX.Element;
+				left?: JSX.Element;
+				right?: JSX.Element;
+		  };
 }
 
 export const TabsStructure = (props: TabsStructureProps) => {
@@ -347,26 +601,51 @@ export const TabsStructure = (props: TabsStructureProps) => {
 		onTabAdd,
 		addAriaLabel,
 		extra,
+		tabBarExtraContent,
 	} = props;
 	const showClose = closable || editable;
+
+	const normalizedItems = (items || []).map((item) => {
+		const val = item.value ?? item.key;
+		const content = item.content ?? item.children;
+		return {
+			...item,
+			value: val as string,
+			content,
+		};
+	});
+
+	const resolvedExtra = extra || tabBarExtraContent;
 	const isSplitExtra =
-		extra != null &&
-		typeof extra === "object" &&
-		("start" in extra || "end" in extra);
+		resolvedExtra != null &&
+		typeof resolvedExtra === "object" &&
+		("start" in resolvedExtra ||
+			"end" in resolvedExtra ||
+			"left" in resolvedExtra ||
+			"right" in resolvedExtra);
 	const extraStart = isSplitExtra
-		? (extra as { start?: JSX.Element }).start
+		? (resolvedExtra as any).start || (resolvedExtra as any).left
 		: undefined;
-	const extraEnd = isSplitExtra ? (extra as { end?: JSX.Element }).end : extra;
+	const extraEnd = isSplitExtra
+		? (resolvedExtra as any).end || (resolvedExtra as any).right
+		: resolvedExtra != null &&
+				!("start" in resolvedExtra) &&
+				!("end" in resolvedExtra) &&
+				!("left" in resolvedExtra) &&
+				!("right" in resolvedExtra)
+			? resolvedExtra
+			: undefined;
 
 	const list = (
 		<List>
-			{items.map((item) => (
+			{normalizedItems.map((item) => (
 				<Trigger
 					key={item.value}
 					value={item.value}
 					disabled={item.disabled}
 					icon={item.icon}
 					closable={item.closable ?? showClose}
+					closeIcon={item.closeIcon}
 					onClose={() => onTabClose?.(item.value)}
 				>
 					{item.label}
@@ -379,7 +658,7 @@ export const TabsStructure = (props: TabsStructureProps) => {
 
 	return (
 		<>
-			{extra ? (
+			{resolvedExtra ? (
 				<div
 					class={css({
 						display: "flex",
@@ -396,8 +675,12 @@ export const TabsStructure = (props: TabsStructureProps) => {
 			) : (
 				list
 			)}
-			{items.map((item) => (
-				<Content key={item.value} value={item.value}>
+			{normalizedItems.map((item) => (
+				<Content
+					key={item.value}
+					value={item.value}
+					destroyOnHidden={item.destroyOnHidden}
+				>
 					{item.content}
 				</Content>
 			))}

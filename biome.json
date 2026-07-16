@@ -22,7 +22,7 @@
 			"style": {
 				"useConst": "error",
 				"useSingleVarDeclarator": "error",
-				"useExportsLast": "error"
+				"useExportsLast": "off"
 			},
 			"correctness": {
 				"noUnusedVariables": "warn"

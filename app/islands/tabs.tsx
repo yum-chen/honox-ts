@@ -11,6 +11,7 @@ export interface TabsIslandProps extends RootProps, TabsStructureProps {
 	/** Notified after a tab is added; return a `TabsItem` to override the
 	 * auto-generated default, or leave void to accept it. */
 	onTabAdd?: () => TabsItem | void;
+	onEdit?: (key: any, action: "add" | "remove") => void;
 }
 
 export default function TabsIsland(props: TabsIslandProps) {
@@ -27,10 +28,39 @@ export default function TabsIsland(props: TabsIslandProps) {
 		onTabAdd,
 		addAriaLabel,
 		extra,
+
+		activeKey,
+		defaultActiveKey,
+		onChange,
+		onEdit,
+		classNames,
+		styles,
 		...rest
 	} = props;
-	const [value, setValue] = useState(valueProp ?? defaultValue);
-	const [tabItems, setTabItems] = useState<TabsItem[]>(items ?? []);
+
+	// Normalize items
+	const normalizedItems = (items || []).map((item) => {
+		const val = item.value ?? item.key;
+		const content = item.content ?? item.children;
+		return {
+			...item,
+			value: val as string,
+			content,
+		};
+	});
+
+	// Resolve controlled/uncontrolled initial value
+	const initialVal =
+		activeKey !== undefined
+			? activeKey
+			: valueProp !== undefined
+				? valueProp
+				: defaultActiveKey !== undefined
+					? defaultActiveKey
+					: defaultValue;
+
+	const [value, setValue] = useState(initialVal);
+	const [tabItems, setTabItems] = useState<TabsItem[]>(normalizedItems);
 	const rootRef = useRef<HTMLDivElement>(null);
 
 	const updateIndicator = (activeTrigger: HTMLElement) => {
@@ -93,10 +123,13 @@ export default function TabsIsland(props: TabsIslandProps) {
 				const neighbor = next[Math.min(closedIndex, next.length - 1)];
 				setValue(neighbor.value);
 				requestAnimationFrame(() => syncSelection(neighbor.value));
+				onChange?.(neighbor.value);
+				onValueChange?.(neighbor.value);
 			}
 			return next;
 		});
 		onTabClose?.(closedValue);
+		onEdit?.(closedValue, "remove");
 	};
 
 	const handleTabAdd = () => {
@@ -110,14 +143,25 @@ export default function TabsIsland(props: TabsIslandProps) {
 		setTabItems((prev) => [...prev, newItem]);
 		setValue(newItem.value);
 		requestAnimationFrame(() => syncSelection(newItem.value));
+		onChange?.(newItem.value);
+		onValueChange?.(newItem.value);
+		onEdit?.("add" as any, "add");
 	};
 
 	useEffect(() => {
-		if (valueProp !== undefined) {
-			setValue(valueProp);
-			syncSelection(valueProp);
+		const currentVal = activeKey !== undefined ? activeKey : valueProp;
+		if (currentVal !== undefined) {
+			setValue(currentVal);
+			syncSelection(currentVal);
 		}
-	}, [valueProp]);
+	}, [activeKey, valueProp]);
+
+	// Sync local items state with prop updates
+	useEffect(() => {
+		if (items) {
+			setTabItems(normalizedItems);
+		}
+	}, [items]);
 
 	useEffect(() => {
 		const root = rootRef.current;
@@ -135,6 +179,7 @@ export default function TabsIsland(props: TabsIslandProps) {
 					setValue(newValue);
 					syncSelection(newValue);
 					onValueChange?.(newValue);
+					onChange?.(newValue);
 				}
 			}
 		};
@@ -172,6 +217,7 @@ export default function TabsIsland(props: TabsIslandProps) {
 						setValue(newValue);
 						syncSelection(newValue);
 						onValueChange?.(newValue);
+						onChange?.(newValue);
 					}
 				}
 				e.preventDefault();
@@ -193,9 +239,15 @@ export default function TabsIsland(props: TabsIslandProps) {
 		<InteractiveRoot
 			{...rest}
 			value={value}
-			onValueChange={setValue}
+			onValueChange={(val) => {
+				setValue(val);
+				onChange?.(val);
+				onValueChange?.(val);
+			}}
 			rootRef={rootRef}
 			data-hydrated="true"
+			classNames={classNames}
+			styles={styles}
 		>
 			{children || (
 				<TabsStructure
@@ -212,4 +264,3 @@ export default function TabsIsland(props: TabsIslandProps) {
 		</InteractiveRoot>
 	);
 }
-// island
