@@ -49,7 +49,8 @@ export function getPageSnapPoints(
 ): number[] {
 	if (slideCount == null || slidesPerPage <= 0) return [];
 	const points: number[] = [];
-	const perMove = slidesPerMove === "auto" ? Math.floor(slidesPerPage) : slidesPerMove;
+	const perMove =
+		slidesPerMove === "auto" ? Math.floor(slidesPerPage) : slidesPerMove;
 	if (perMove <= 0) return [];
 	for (let i = 0; i < slideCount; i += perMove) {
 		if (i + slidesPerPage > slideCount) break;
@@ -369,14 +370,21 @@ export interface ItemProps extends PropsWithChildren {
 }
 
 export function Item(props: ItemProps) {
-	const { children, index, snapAlign = "start", class: classProp, ...rest } = props;
+	const {
+		children,
+		index,
+		snapAlign = "start",
+		class: classProp,
+		...rest
+	} = props;
 	const context = useCarouselContext();
 	const styles = context?.styles ?? carousel();
 	const orientation = context?.orientation ?? "horizontal";
 	const horizontal = orientation === "horizontal";
 	const slidesPerPage = context?.slidesPerPage ?? 1;
 	const slidesPerMove = context?.slidesPerMove ?? "auto";
-	const perMove = slidesPerMove === "auto" ? Math.floor(slidesPerPage) : slidesPerMove;
+	const perMove =
+		slidesPerMove === "auto" ? Math.floor(slidesPerPage) : slidesPerMove;
 	const shouldSnap = perMove > 0 && (index + perMove) % perMove === 0;
 
 	const page = context?.page ?? 0;
@@ -387,7 +395,9 @@ export function Item(props: ItemProps) {
 	// refined at runtime by the interactive island's IntersectionObserver.
 	const isInView = index >= start && index < end;
 	const slideCount = context?.slideCount ?? 0;
-	const label = context?.translations.item(index, slideCount) ?? `${index + 1} of ${slideCount}`;
+	const label =
+		context?.translations.item(index, slideCount) ??
+		`${index + 1} of ${slideCount}`;
 
 	return (
 		<div
@@ -481,15 +491,22 @@ export function PrevTrigger(props: TriggerProps) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useCarouselContext();
 	const styles = context?.styles ?? carousel();
-	const disabled = Boolean(context?.disabled) || !(context?.canScrollPrev ?? true);
+	const disabled =
+		Boolean(context?.disabled) || !(context?.canScrollPrev ?? true);
 	return (
 		<button
 			id={context?.ids.prevTrigger}
 			type="button"
 			disabled={disabled}
-			aria-label={context?.translations.prevTrigger ?? defaultTranslations.prevTrigger}
+			aria-label={
+				context?.translations.prevTrigger ?? defaultTranslations.prevTrigger
+			}
 			aria-controls={context?.ids.itemGroup}
-			class={cx(styles.prevTrigger, classProp, context?.classNames?.prevTrigger)}
+			class={cx(
+				styles.prevTrigger,
+				classProp,
+				context?.classNames?.prevTrigger,
+			)}
 			data-scope="carousel"
 			data-part="prev-trigger"
 			data-orientation={context?.orientation ?? "horizontal"}
@@ -505,15 +522,22 @@ export function NextTrigger(props: TriggerProps) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useCarouselContext();
 	const styles = context?.styles ?? carousel();
-	const disabled = Boolean(context?.disabled) || !(context?.canScrollNext ?? true);
+	const disabled =
+		Boolean(context?.disabled) || !(context?.canScrollNext ?? true);
 	return (
 		<button
 			id={context?.ids.nextTrigger}
 			type="button"
 			disabled={disabled}
-			aria-label={context?.translations.nextTrigger ?? defaultTranslations.nextTrigger}
+			aria-label={
+				context?.translations.nextTrigger ?? defaultTranslations.nextTrigger
+			}
 			aria-controls={context?.ids.itemGroup}
-			class={cx(styles.nextTrigger, classProp, context?.classNames?.nextTrigger)}
+			class={cx(
+				styles.nextTrigger,
+				classProp,
+				context?.classNames?.nextTrigger,
+			)}
 			data-scope="carousel"
 			data-part="next-trigger"
 			data-orientation={context?.orientation ?? "horizontal"}
@@ -538,13 +562,18 @@ export function IndicatorGroup(props: IndicatorGroupProps) {
 	return (
 		<div
 			id={context?.ids.indicatorGroup}
-			class={cx(styles.indicatorGroup, classProp, context?.classNames?.indicatorGroup)}
+			class={cx(
+				styles.indicatorGroup,
+				classProp,
+				context?.classNames?.indicatorGroup,
+			)}
 			data-scope="carousel"
 			data-part="indicator-group"
 			data-orientation={context?.orientation ?? "horizontal"}
 			{...rest}
 		>
-			{children ?? pageSnapPoints.map((_, index) => <Indicator index={index} />)}
+			{children ??
+				pageSnapPoints.map((_, index) => <Indicator index={index} />)}
 		</div>
 	);
 }
@@ -573,7 +602,10 @@ export function Indicator(props: IndicatorProps) {
 			data-index={index}
 			data-readonly={readOnly ? "" : undefined}
 			data-current={isCurrent ? "" : undefined}
-			aria-label={context?.translations.indicator(index) ?? defaultTranslations.indicator(index)}
+			aria-label={
+				context?.translations.indicator(index) ??
+				defaultTranslations.indicator(index)
+			}
 			onClick={() => {
 				if (readOnly) return;
 				context?.scrollTo(index);
@@ -616,14 +648,19 @@ export function AutoplayTrigger(props: TriggerProps) {
 	const isPlaying = context?.isPlaying ?? false;
 	const label = isPlaying
 		? (context?.translations.autoplayStop ?? defaultTranslations.autoplayStop)
-		: (context?.translations.autoplayStart ?? defaultTranslations.autoplayStart);
+		: (context?.translations.autoplayStart ??
+			defaultTranslations.autoplayStart);
 	return (
 		<button
 			id={context?.ids.autoplayTrigger}
 			type="button"
 			disabled={context?.disabled}
 			aria-label={label}
-			class={cx(styles.autoplayTrigger, classProp, context?.classNames?.autoplayTrigger)}
+			class={cx(
+				styles.autoplayTrigger,
+				classProp,
+				context?.classNames?.autoplayTrigger,
+			)}
 			data-scope="carousel"
 			data-part="autoplay-trigger"
 			data-orientation={context?.orientation ?? "horizontal"}
@@ -694,7 +731,9 @@ function closestPageIndex(
 	let best = 0;
 	let bestDistance = Number.POSITIVE_INFINITY;
 	pageSnapPoints.forEach((itemIndex, pageIndex) => {
-		const el = itemGroup.querySelector<HTMLElement>(`[data-index="${itemIndex}"]`);
+		const el = itemGroup.querySelector<HTMLElement>(
+			`[data-index="${itemIndex}"]`,
+		);
 		if (!el) return;
 		const itemPos = horizontal
 			? el.offsetLeft - itemGroup.offsetLeft
@@ -714,7 +753,9 @@ function scrollToItemIndex(
 	horizontal: boolean,
 	instant: boolean,
 ) {
-	const el = itemGroup.querySelector<HTMLElement>(`[data-index="${itemIndex}"]`);
+	const el = itemGroup.querySelector<HTMLElement>(
+		`[data-index="${itemIndex}"]`,
+	);
 	if (!el) return;
 	const target = horizontal
 		? el.offsetLeft - itemGroup.offsetLeft
@@ -727,7 +768,9 @@ function scrollToItemIndex(
 
 function isFocusableTarget(target: EventTarget | null) {
 	if (!(target instanceof HTMLElement)) return false;
-	return Boolean(target.closest("button, a[href], input, textarea, select, [tabindex]"));
+	return Boolean(
+		target.closest("button, a[href], input, textarea, select, [tabindex]"),
+	);
 }
 
 export interface InteractiveCarouselRootProps extends RootProps {}
@@ -775,7 +818,8 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 
 	const fallbackId = useId();
 	const rootIdRef = useRef<string | null>(null);
-	if (!rootIdRef.current) rootIdRef.current = idProp || `carousel-${fallbackId}`;
+	if (!rootIdRef.current)
+		rootIdRef.current = idProp || `carousel-${fallbackId}`;
 	const id = rootIdRef.current;
 
 	const rootRef = useRef<HTMLElement | null>(null);
@@ -784,7 +828,8 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 	// island directly, so there's no ref to attach at JSX-construction time —
 	// it's resolved from the mounted root instead.
 	const getItemGroup = () =>
-		rootRef.current?.querySelector<HTMLElement>('[data-part="item-group"]') ?? null;
+		rootRef.current?.querySelector<HTMLElement>('[data-part="item-group"]') ??
+		null;
 	const autoplayTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 	const scrollEndTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const dragRef = useRef<{ active: boolean; lastX: number; lastY: number }>({
@@ -813,9 +858,13 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 			});
 		const canScrollPrev = loop || nextPage > 0;
 		const canScrollNext = loop || nextPage < pageSnapPoints.length - 1;
-		const prevTrigger = root.querySelector<HTMLButtonElement>('[data-part="prev-trigger"]');
+		const prevTrigger = root.querySelector<HTMLButtonElement>(
+			'[data-part="prev-trigger"]',
+		);
 		if (prevTrigger) prevTrigger.disabled = disabled || !canScrollPrev;
-		const nextTrigger = root.querySelector<HTMLButtonElement>('[data-part="next-trigger"]');
+		const nextTrigger = root.querySelector<HTMLButtonElement>(
+			'[data-part="next-trigger"]',
+		);
 		if (nextTrigger) nextTrigger.disabled = disabled || !canScrollNext;
 
 		const start = pageSnapPoints[nextPage] ?? 0;
@@ -832,7 +881,9 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 			}
 		});
 
-		const progressText = root.querySelector<HTMLElement>('[data-part="progress-text"]');
+		const progressText = root.querySelector<HTMLElement>(
+			'[data-part="progress-text"]',
+		);
 		if (progressText) {
 			progressText.textContent = (
 				rest.translations?.progressText ?? defaultTranslations.progressText
@@ -844,14 +895,22 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 		const clamped = clampValue(nextPage, 0, pageSnapPoints.length - 1);
 		if (!isControlled) setPage(clamped);
 		applyPageState(clamped);
-		onPageChangeRef.current?.({ page: clamped, pageSnapPoint: pageSnapPoints[clamped] ?? 0 });
+		onPageChangeRef.current?.({
+			page: clamped,
+			pageSnapPoint: pageSnapPoints[clamped] ?? 0,
+		});
 	};
 
 	const scrollTo = (index: number, instant = false) => {
 		const itemGroup = getItemGroup();
 		if (!itemGroup) return;
 		const clamped = clampValue(index, 0, pageSnapPoints.length - 1);
-		scrollToItemIndex(itemGroup, pageSnapPoints[clamped] ?? 0, horizontal, instant);
+		scrollToItemIndex(
+			itemGroup,
+			pageSnapPoints[clamped] ?? 0,
+			horizontal,
+			instant,
+		);
 		setPageState(clamped);
 	};
 
@@ -864,7 +923,11 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 	};
 
 	const scrollNext = (instant = false, opts?: { forceLoop?: boolean }) => {
-		const next = nextPageIndex(pageSnapPoints.length, activePage, Boolean(opts?.forceLoop) || loop);
+		const next = nextPageIndex(
+			pageSnapPoints.length,
+			activePage,
+			Boolean(opts?.forceLoop) || loop,
+		);
 		scrollTo(next, instant);
 	};
 
@@ -906,10 +969,15 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 	useEffect(() => {
 		if (typeof document === "undefined") return;
 		if (!isPlaying) return;
-		const delay = typeof autoplay === "object" && autoplay ? autoplay.delay : 4000;
+		const delay =
+			typeof autoplay === "object" && autoplay ? autoplay.delay : 4000;
 		autoplayTimerRef.current = setInterval(() => {
 			scrollNext(false, { forceLoop: true });
-			onAutoplayStatusChangeRef.current?.({ type: "autoplay", isPlaying: true, page: activePage });
+			onAutoplayStatusChangeRef.current?.({
+				type: "autoplay",
+				isPlaying: true,
+				page: activePage,
+			});
 		}, delay);
 		const onVisibilityChange = () => {
 			if (document.visibilityState !== "visible") pause();
@@ -931,7 +999,8 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 		if (!itemGroup) return;
 		const onScroll = () => {
 			if (dragRef.current.active) return;
-			if (scrollEndTimerRef.current != null) clearTimeout(scrollEndTimerRef.current);
+			if (scrollEndTimerRef.current != null)
+				clearTimeout(scrollEndTimerRef.current);
 			scrollEndTimerRef.current = setTimeout(() => {
 				const closest = closestPageIndex(itemGroup, pageSnapPoints, horizontal);
 				if (closest !== activePage) setPageState(closest);
@@ -940,7 +1009,8 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 		itemGroup.addEventListener("scroll", onScroll, { passive: true });
 		return () => {
 			itemGroup.removeEventListener("scroll", onScroll);
-			if (scrollEndTimerRef.current != null) clearTimeout(scrollEndTimerRef.current);
+			if (scrollEndTimerRef.current != null)
+				clearTimeout(scrollEndTimerRef.current);
 		};
 		// eslint-disable-next-line
 	}, [activePage, horizontal]);
@@ -953,7 +1023,12 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 		if (!root) return;
 		const onKeyDown = (e: KeyboardEvent) => {
 			const target = e.target as HTMLElement;
-			if (!target.closest('[data-part="item-group"], [data-part="indicator-group"]')) return;
+			if (
+				!target.closest(
+					'[data-part="item-group"], [data-part="indicator-group"]',
+				)
+			)
+				return;
 			const forward = horizontal ? "ArrowRight" : "ArrowDown";
 			const backward = horizontal ? "ArrowLeft" : "ArrowUp";
 			if (e.key === forward) {
@@ -1009,7 +1084,11 @@ export function InteractiveCarouselRoot(props: InteractiveCarouselRootProps) {
 			});
 			dragRef.current.lastX = e.clientX;
 			dragRef.current.lastY = e.clientY;
-			onDragStatusChangeRef.current?.({ type: "dragging", isDragging: true, page: activePage });
+			onDragStatusChangeRef.current?.({
+				type: "dragging",
+				isDragging: true,
+				page: activePage,
+			});
 		};
 		const endDrag = () => {
 			if (!dragRef.current.active) return;

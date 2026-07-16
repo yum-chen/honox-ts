@@ -17,7 +17,8 @@ import {
 } from "./carousel-primitive";
 import { shouldHydrate } from "./island-utils";
 
-export interface CarouselProps extends Omit<RootProps, "children" | "slideCount"> {
+export interface CarouselProps
+	extends Omit<RootProps, "children" | "slideCount"> {
 	/** Forces hydration as an island. Defaults to `true`. */
 	interactive?: boolean;
 	/** The slide contents. `slideCount` is derived from its length. */
