@@ -632,6 +632,7 @@ export default createRoute((c) => {
 									<Card
 										title="Popover & Tooltip"
 										description="Contextual info boxes"
+										class={css({ overflow: "visible" })}
 									>
 										<Stack gap="4" align="flex-start" class={css({ mt: "2" })}>
 											<Popover
