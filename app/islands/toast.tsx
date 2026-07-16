@@ -1,7 +1,6 @@
 import { stack } from "design-system/patterns";
 import { useEffect, useState } from "hono/jsx";
 import { CloseButton } from "../components/ui/button";
-import { Spinner } from "../components/ui/spinner";
 import {
 	ActionTrigger,
 	CloseTrigger,
@@ -10,6 +9,33 @@ import {
 	Root,
 	Title,
 } from "../components/ui/toast-primitive";
+
+const getPlacementStyles = (placement: string): Record<string, string> => {
+	switch (placement) {
+		case "top-start":
+			return { top: "1rem", left: "1rem", flexDirection: "column-reverse" };
+		case "top":
+			return {
+				top: "1rem",
+				left: "50%",
+				transform: "translateX(-50%)",
+				flexDirection: "column-reverse",
+			};
+		case "top-end":
+			return { top: "1rem", right: "1rem", flexDirection: "column-reverse" };
+		case "bottom-start":
+			return { bottom: "1rem", left: "1rem", flexDirection: "column" };
+		case "bottom":
+			return {
+				bottom: "1rem",
+				left: "50%",
+				transform: "translateX(-50%)",
+				flexDirection: "column",
+			};
+		default:
+			return { bottom: "1rem", right: "1rem", flexDirection: "column" };
+	}
+};
 
 interface ToastOptions {
 	id: string;
@@ -24,148 +50,271 @@ interface ToastOptions {
 	};
 }
 
-const dispatchToast = (options: Omit<ToastOptions, "id">) => {
-	const id = Math.random().toString(36).substring(2, 9);
-	window.dispatchEvent(
-		new CustomEvent("park-ui:toast:create", {
-			detail: { ...options, id },
-		}),
+interface PromiseOptions<T = unknown> {
+	loading: Omit<Partial<ToastOptions>, "id" | "type"> & { title?: string };
+	success:
+		| string
+		| ((
+				data: T,
+		  ) => Omit<Partial<ToastOptions>, "id" | "type"> & { title?: string });
+	error:
+		| string
+		| ((
+				err: Error,
+		  ) => Omit<Partial<ToastOptions>, "id" | "type"> & { title?: string });
+}
+
+interface ToasterProps {
+	toaster: ReturnType<typeof createToaster>;
+	children?: (toast: ToastOptions) => unknown;
+}
+
+function createToaster(
+	config: {
+		placement?:
+			| "top-start"
+			| "top"
+			| "top-end"
+			| "bottom-start"
+			| "bottom"
+			| "bottom-end";
+		overlap?: boolean;
+		max?: number;
+		duration?: number;
+		gap?: number;
+		removeDelay?: number;
+	} = {},
+) {
+	const placement = config.placement || "bottom-end";
+	const overlap = config.overlap ?? false;
+	const max = config.max ?? 24;
+	const defaultDuration = config.duration ?? 5000;
+	const gap = config.gap ?? 16;
+	const removeDelay = config.removeDelay ?? 200;
+
+	let toasts: ToastOptions[] = [];
+	const listeners = new Set<(toasts: ToastOptions[]) => void>();
+
+	const notify = () => {
+		for (const listener of listeners) {
+			listener([...toasts]);
+		}
+	};
+
+	const dismiss = (id?: string) => {
+		if (id) {
+			toasts = toasts.filter((t) => t.id !== id);
+		} else {
+			toasts = [];
+		}
+		notify();
+
+		if (typeof window !== "undefined") {
+			window.dispatchEvent(
+				new CustomEvent("park-ui:toast:dismissed", { detail: { id } }),
+			);
+		}
+	};
+
+	const create = (options: Partial<ToastOptions> & { title?: string }) => {
+		const id = options.id || Math.random().toString(36).substring(2, 9);
+		const duration =
+			options.duration !== undefined ? options.duration : defaultDuration;
+
+		const toast: ToastOptions = {
+			...options,
+			id,
+			type: options.type || "info",
+			duration,
+		};
+
+		if (toasts.length >= max) {
+			toasts.shift();
+		}
+
+		toasts.push(toast);
+		notify();
+
+		if (duration !== 0 && duration !== Infinity) {
+			setTimeout(() => {
+				dismiss(id);
+			}, duration);
+		}
+
+		return id;
+	};
+
+	const update = (id: string, options: Partial<ToastOptions>) => {
+		toasts = toasts.map((t) => {
+			if (t.id === id) {
+				return { ...t, ...options };
+			}
+			return t;
+		});
+		notify();
+	};
+
+	const success = (
+		titleOrOptions: string | (Partial<ToastOptions> & { title?: string }),
+		options?: Partial<ToastOptions>,
+	) => {
+		if (typeof titleOrOptions === "string") {
+			return create({ ...options, title: titleOrOptions, type: "success" });
+		}
+		return create({ ...titleOrOptions, type: "success" });
+	};
+
+	const error = (
+		titleOrOptions: string | (Partial<ToastOptions> & { title?: string }),
+		options?: Partial<ToastOptions>,
+	) => {
+		if (typeof titleOrOptions === "string") {
+			return create({ ...options, title: titleOrOptions, type: "error" });
+		}
+		return create({ ...titleOrOptions, type: "error" });
+	};
+
+	const warning = (
+		titleOrOptions: string | (Partial<ToastOptions> & { title?: string }),
+		options?: Partial<ToastOptions>,
+	) => {
+		if (typeof titleOrOptions === "string") {
+			return create({ ...options, title: titleOrOptions, type: "warning" });
+		}
+		return create({ ...titleOrOptions, type: "warning" });
+	};
+
+	const info = (
+		titleOrOptions: string | (Partial<ToastOptions> & { title?: string }),
+		options?: Partial<ToastOptions>,
+	) => {
+		if (typeof titleOrOptions === "string") {
+			return create({ ...options, title: titleOrOptions, type: "info" });
+		}
+		return create({ ...titleOrOptions, type: "info" });
+	};
+
+	const loading = (
+		titleOrOptions: string | (Partial<ToastOptions> & { title?: string }),
+		options?: Partial<ToastOptions>,
+	) => {
+		if (typeof titleOrOptions === "string") {
+			return create({
+				...options,
+				title: titleOrOptions,
+				type: "loading",
+				duration: 0,
+			});
+		}
+		return create({ ...titleOrOptions, type: "loading", duration: 0 });
+	};
+
+	const promise = <T,>(
+		prom: Promise<T>,
+		options: PromiseOptions<T>,
+	): Promise<T> => {
+		const id = create({ ...options.loading, type: "loading", duration: 0 });
+
+		prom
+			.then((data) => {
+				const successOptions =
+					typeof options.success === "function"
+						? options.success(data)
+						: { title: options.success };
+				update(id, {
+					...successOptions,
+					type: "success",
+					duration: defaultDuration,
+				});
+				if (defaultDuration !== 0 && defaultDuration !== Infinity) {
+					setTimeout(() => {
+						dismiss(id);
+					}, defaultDuration);
+				}
+			})
+			.catch((err) => {
+				const errorOptions =
+					typeof options.error === "function"
+						? options.error(err)
+						: { title: options.error };
+				update(id, {
+					...errorOptions,
+					type: "error",
+					duration: defaultDuration,
+				});
+				if (defaultDuration !== 0 && defaultDuration !== Infinity) {
+					setTimeout(() => {
+						dismiss(id);
+					}, defaultDuration);
+				}
+			});
+
+		return prom;
+	};
+
+	const subscribe = (callback: (toasts: ToastOptions[]) => void) => {
+		listeners.add(callback);
+		callback([...toasts]);
+		return () => {
+			listeners.delete(callback);
+		};
+	};
+
+	return {
+		placement,
+		overlap,
+		max,
+		gap,
+		removeDelay,
+		create,
+		success,
+		error,
+		warning,
+		info,
+		loading,
+		promise,
+		dismiss,
+		update,
+		subscribe,
+		getToasts: () => [...toasts],
+		getCount: () => toasts.length,
+	};
+}
+
+const toaster = createToaster({
+	placement: "bottom-end",
+	overlap: true,
+	max: 5,
+});
+
+if (typeof window !== "undefined") {
+	window.addEventListener("park-ui:toast:create", (e: unknown) => {
+		const customEvent = e as CustomEvent;
+		if (customEvent.detail) {
+			const { id, ...options } = customEvent.detail;
+			toaster.create({ ...options, id });
+		}
+	});
+	window.addEventListener("park-ui:toast:dismiss", (e: unknown) => {
+		const customEvent = e as CustomEvent;
+		if (customEvent.detail) {
+			const { id } = customEvent.detail;
+			toaster.dismiss(id);
+		}
+	});
+}
+
+export default function Toaster(props: ToasterProps) {
+	const activeToaster = props.toaster || toaster;
+	const [toasts, setToasts] = useState<ToastOptions[]>(() =>
+		activeToaster.getToasts(),
 	);
-	return id;
-};
-
-const toaster = {
-	create: (options: Omit<ToastOptions, "id">) => dispatchToast(options),
-	success: (
-		title: string,
-		options?: Partial<Omit<ToastOptions, "id" | "title" | "type">>,
-	) => dispatchToast({ ...options, title, type: "success" }),
-	error: (
-		title: string,
-		options?: Partial<Omit<ToastOptions, "id" | "title" | "type">>,
-	) => dispatchToast({ ...options, title, type: "error" }),
-	warning: (
-		title: string,
-		options?: Partial<Omit<ToastOptions, "id" | "title" | "type">>,
-	) => dispatchToast({ ...options, title, type: "warning" }),
-	info: (
-		title: string,
-		options?: Partial<Omit<ToastOptions, "id" | "title" | "type">>,
-	) => dispatchToast({ ...options, title, type: "info" }),
-	dismiss: (id?: string) => {
-		window.dispatchEvent(
-			new CustomEvent("park-ui:toast:dismiss", { detail: { id } }),
-		);
-	},
-};
-
-const Icons = {
-	success: () => (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		>
-			<title>Success</title>
-			<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-			<polyline points="22 4 12 14.01 9 11.01" />
-		</svg>
-	),
-	error: () => (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		>
-			<title>Error</title>
-			<circle cx="12" cy="12" r="10" />
-			<line x1="15" y1="9" x2="9" y2="15" />
-			<line x1="9" y1="9" x2="15" y2="15" />
-		</svg>
-	),
-	warning: () => (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		>
-			<title>Warning</title>
-			<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-			<line x1="12" y1="9" x2="12" y2="13" />
-			<line x1="12" y1="17" x2="12.01" y2="17" />
-		</svg>
-	),
-	info: () => (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		>
-			<title>Info</title>
-			<circle cx="12" cy="12" r="10" />
-			<line x1="12" y1="16" x2="12" y2="12" />
-			<line x1="12" y1="8" x2="12.01" y2="8" />
-		</svg>
-	),
-};
-
-function Toaster() {
-	const [toasts, setToasts] = useState<ToastOptions[]>([]);
 
 	useEffect(() => {
-		const handleCreate = (e: any) => {
-			const newToast = e.detail;
-			setToasts((prev) => [...prev, newToast]);
-
-			if (newToast.duration !== 0) {
-				const duration = newToast.duration || 5000;
-				setTimeout(() => {
-					setToasts((prev) => prev.filter((t) => t.id !== newToast.id));
-				}, duration);
-			}
-		};
-
-		const handleDismiss = (e: any) => {
-			const { id } = e.detail;
-			if (id) {
-				setToasts((prev) => prev.filter((t) => t.id !== id));
-			} else {
-				setToasts([]);
-			}
-		};
-
-		window.addEventListener("park-ui:toast:create", handleCreate);
-		window.addEventListener("park-ui:toast:dismiss", handleDismiss);
-
-		return () => {
-			window.removeEventListener("park-ui:toast:create", handleCreate);
-			window.removeEventListener("park-ui:toast:dismiss", handleDismiss);
-		};
-	}, []);
+		return activeToaster.subscribe((newToasts) => {
+			setToasts(newToasts);
+		});
+	}, [activeToaster]);
 
 	return (
 		<section
@@ -173,36 +322,28 @@ function Toaster() {
 			aria-live="polite"
 			style={{
 				position: "fixed",
-				bottom: "1rem",
-				right: "1rem",
 				display: "flex",
-				flexDirection: "column",
 				gap: "0.5rem",
 				zIndex: 9999,
 				pointerEvents: "none",
 				maxWidth: "calc(100vw - 2rem)",
+				...getPlacementStyles(activeToaster.placement),
 			}}
 		>
 			{toasts.map((toast) => {
-				const Icon =
-					toast.type && toast.type !== "loading"
-						? Icons[toast.type as keyof typeof Icons]
-						: null;
+				if (props.children) {
+					return props.children(toast);
+				}
+
 				return (
 					<Root
 						key={toast.id}
 						type={toast.type}
+						toast={toast}
+						dismiss={activeToaster.dismiss}
 						style={{ pointerEvents: "auto" }}
 					>
-						{toast.type === "loading" ? (
-							<Indicator>
-								<Spinner size="sm" />
-							</Indicator>
-						) : Icon ? (
-							<Indicator>
-								<Icon />
-							</Indicator>
-						) : null}
+						<Indicator />
 						<div class={stack({ gap: "3", alignItems: "start", flex: 1 })}>
 							<div class={stack({ gap: "1" })}>
 								{toast.title && <Title>{toast.title}</Title>}
@@ -211,18 +352,11 @@ function Toaster() {
 								)}
 							</div>
 							{toast.action && (
-								<ActionTrigger
-									onClick={() => {
-										toast.action?.onClick();
-										toaster.dismiss(toast.id);
-									}}
-								>
-									{toast.action.label}
-								</ActionTrigger>
+								<ActionTrigger>{toast.action.label}</ActionTrigger>
 							)}
 						</div>
 						{toast.closable && (
-							<CloseTrigger onClick={() => toaster.dismiss(toast.id)} asChild>
+							<CloseTrigger>
 								<CloseButton size="sm" />
 							</CloseTrigger>
 						)}
@@ -233,5 +367,5 @@ function Toaster() {
 	);
 }
 
-export type { ToastOptions };
-export { Toaster, toaster };
+export type { PromiseOptions, ToasterProps, ToastOptions };
+export { createToaster, toaster };
