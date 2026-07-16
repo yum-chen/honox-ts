@@ -14,14 +14,15 @@ export {
 export {
 	Button,
 	ButtonGroup,
-	CloseButton,
-	IconButton,
 	type ButtonGroupProps,
 	type ButtonProps,
+	CloseButton,
+	IconButton,
 } from "./button";
 export { Card, type CardProps } from "./card";
 export { Checkbox, type CheckboxProps } from "./checkbox";
-export * as Clipboard from "./clipboard";
+export { Clipboard, type ClipboardProps } from "./clipboard";
+export * as ClipboardPrimitive from "./clipboard-primitive";
 export { Code, type CodeProps } from "./code";
 export { Collapsible, type CollapsibleProps } from "./collapsible";
 export { ColorPicker, type ColorPickerProps } from "./color-picker";
@@ -54,7 +55,7 @@ export {
 } from "./skeleton";
 export { Slider, type SliderProps } from "./slider";
 export { Spinner, type SpinnerProps } from "./spinner";
-export { Splitter, type PanelConfig, type SplitterProps } from "./splitter";
+export { type PanelConfig, Splitter, type SplitterProps } from "./splitter";
 export { Stack, type StackProps } from "./stack";
 export { Switch, type SwitchProps } from "./switch";
 export {

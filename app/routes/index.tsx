@@ -12,6 +12,7 @@ import {
 	ButtonGroup,
 	Card,
 	Checkbox,
+	Clipboard,
 	CloseButton,
 	Code,
 	Collapsible,
@@ -2701,6 +2702,108 @@ export default createRoute((c) => {
 							Interactive Pagination with Paginated Table
 						</Text>
 						<PaginatedTable />
+					</Stack>
+				</Stack>
+			</Stack>
+			{/* Clipboard Examples */}
+			<Stack
+				direction="column"
+				gap="4"
+				align="center"
+				class={css({ mt: "8", maxWidth: "xl", mx: "auto", pb: "20" })}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Clipboard Component Examples
+				</Heading>
+				<Stack direction="column" gap="8" class={css({ width: "full" })}>
+					<Stack
+						direction="column"
+						gap="2"
+						class={css({ textAlign: "left", width: "full" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic Clipboard — click the button to copy the npm command
+						</Text>
+						<Clipboard
+							label="npm install command"
+							value="npm install @park-ui/cli"
+						/>
+					</Stack>
+
+					<Stack
+						direction="column"
+						gap="2"
+						class={css({ textAlign: "left", width: "full" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Sizes
+						</Text>
+						<Stack direction="column" gap="3" class={css({ width: "full" })}>
+							<Clipboard size="sm" value="bun install" />
+							<Clipboard size="md" value="bun install" />
+							<Clipboard size="lg" value="bun install" />
+						</Stack>
+					</Stack>
+
+					<Stack
+						direction="column"
+						gap="2"
+						class={css({ textAlign: "left", width: "full" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Color palette — themed via the shared clipboard recipe
+						</Text>
+						<Stack direction="column" gap="3" class={css({ width: "full" })}>
+							<Clipboard colorPalette="blue" value="git clone <repo>" />
+							<Clipboard colorPalette="purple" value="git clone <repo>" />
+						</Stack>
+					</Stack>
+
+					<Stack
+						direction="column"
+						gap="2"
+						class={css({ textAlign: "left", width: "full" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							CopyText trigger — full compound composition via `Clipboard.Root`
+						</Text>
+						<Clipboard.Root value="https://honox.dev">
+							<Clipboard.Label>Site URL</Clipboard.Label>
+							<Clipboard.Control>
+								<Clipboard.Input />
+								<Clipboard.Trigger>
+									<Clipboard.CopyText />
+								</Clipboard.Trigger>
+							</Clipboard.Control>
+						</Clipboard.Root>
+					</Stack>
+
+					<Stack
+						direction="column"
+						gap="2"
+						class={css({ textAlign: "left", width: "full" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Disabled
+						</Text>
+						<Clipboard label="Disabled" value="unreachable" disabled />
+					</Stack>
+
+					<Stack
+						direction="column"
+						gap="2"
+						class={css({ textAlign: "left", width: "full" })}
+					>
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							`onStatusChange` — check the console after copying
+						</Text>
+						<Clipboard
+							label="Logged to console"
+							value="console.log('copied!')"
+							onStatusChange={(details) =>
+								console.log("Clipboard status changed:", details.copied)
+							}
+						/>
 					</Stack>
 				</Stack>
 			</Stack>

@@ -1,42 +1,114 @@
-"use client";
-import { Clipboard } from "@ark-ui/react/clipboard";
-import { CheckIcon, CopyIcon } from "lucide-react";
-import { type ComponentProps, forwardRef } from "react";
-import { createStyleContext } from "styled-system/jsx";
-import { clipboard } from "styled-system/recipes";
+import type { JSX } from "hono/jsx";
+import ClipboardIsland from "../../islands/clipboard";
+import {
+	Context,
+	Control,
+	CopyText,
+	Indicator,
+	Input,
+	Label,
+	Root as RootPrimitive,
+	type RootProps,
+	RootProvider,
+	Trigger,
+} from "./clipboard-primitive";
+import { shouldHydrate } from "./island-utils";
 
-const { withProvider, withContext } = createStyleContext(clipboard);
+export interface ClipboardProps extends RootProps {
+	interactive?: boolean; // keep — forces island hydration (default true)
+	label?: JSX.Element | string;
+	children?: JSX.Element; // custom Trigger content; defaults to copy/check icons
+}
 
-export type RootProps = ComponentProps<typeof Root>;
-export const Root = withProvider(Clipboard.Root, "root");
-export const RootProvider = withProvider(Clipboard.RootProvider, "root");
-export const Control = withContext(Clipboard.Control, "control");
-export const Input = withContext(Clipboard.Input, "input");
-export const Label = withContext(Clipboard.Label, "label");
-export const Trigger = withContext(Clipboard.Trigger, "trigger");
-
-export { ClipboardContext as Context } from "@ark-ui/react/clipboard";
-
-type IndicatorProps = ComponentProps<typeof StyledIndicator>;
-
-const StyledIndicator = withContext(Clipboard.Indicator, "indicator");
-
-export const Indicator = forwardRef<HTMLDivElement, IndicatorProps>(
-	function Indicator(props, ref) {
-		return (
-			<StyledIndicator ref={ref} copied={<CheckIcon />} {...props}>
-				<CopyIcon />
-			</StyledIndicator>
-		);
-	},
+const DefaultCopyIcon = () => (
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="16"
+		height="16"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+	>
+		<title>Copy</title>
+		<rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+		<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+	</svg>
 );
 
-export const CopyText = forwardRef<HTMLDivElement, IndicatorProps>(
-	function CopyText(props, ref) {
-		return (
-			<StyledIndicator ref={ref} copied="Copied" {...props}>
-				Copy
-			</StyledIndicator>
-		);
-	},
+const DefaultCheckIcon = () => (
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="16"
+		height="16"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+	>
+		<title>Copied</title>
+		<path d="M20 6 9 17l-5-5" />
+	</svg>
 );
+
+function Root(props: ClipboardProps) {
+	const { interactive, ...rest } = props;
+
+	if (shouldHydrate(interactive, true)) {
+		return <ClipboardIsland {...rest} />;
+	}
+
+	return <RootPrimitive {...rest} />;
+}
+
+function Clipboard(props: ClipboardProps) {
+	const { interactive, label, children, ...rest } = props;
+
+	return (
+		<Root {...rest} interactive={interactive}>
+			{label && <Label>{label}</Label>}
+			<Control>
+				<Input />
+				<Trigger>
+					{children ?? (
+						<Indicator copied={<DefaultCheckIcon />}>
+							<DefaultCopyIcon />
+						</Indicator>
+					)}
+				</Trigger>
+			</Control>
+		</Root>
+	);
+}
+
+const ClipboardComponent = Object.assign(Clipboard, {
+	Root,
+	RootProvider,
+	Label,
+	Control,
+	Input,
+	Trigger,
+	Indicator,
+	CopyText,
+	Context,
+});
+
+export {
+	ClipboardComponent as Clipboard,
+	type ClipboardProps,
+	Context,
+	Control,
+	CopyText,
+	Indicator,
+	Input,
+	Label,
+	Root,
+	RootProvider,
+	Trigger,
+};
+
+export default ClipboardComponent;
