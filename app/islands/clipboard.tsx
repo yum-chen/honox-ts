@@ -55,11 +55,15 @@ function applyCopiedState(root: HTMLElement, copied: boolean, label: string) {
 		if (copied) el.setAttribute("data-copied", "");
 		else el.removeAttribute("data-copied");
 	}
-	for (const el of root.querySelectorAll<HTMLElement>("[data-copied-variant]")) {
+	for (const el of root.querySelectorAll<HTMLElement>(
+		"[data-copied-variant]",
+	)) {
 		const isCopiedVariant = el.getAttribute("data-copied-variant") === "true";
 		el.hidden = isCopiedVariant !== copied;
 	}
-	root.querySelector('[data-part="trigger"]')?.setAttribute("aria-label", label);
+	root
+		.querySelector('[data-part="trigger"]')
+		?.setAttribute("aria-label", label);
 }
 
 export default function ClipboardIsland(props: ClipboardIslandProps) {
@@ -119,7 +123,9 @@ export default function ClipboardIsland(props: ClipboardIslandProps) {
 	// composition on top of the primitives.
 	const copy = () => {
 		if (disabled || !value) return;
-		writeToClipboard(value).then(markCopied).catch(() => {});
+		writeToClipboard(value)
+			.then(markCopied)
+			.catch(() => {});
 	};
 
 	useEffect(() => {
@@ -134,7 +140,8 @@ export default function ClipboardIsland(props: ClipboardIslandProps) {
 		// counts as "copied" feedback, mirroring Ark UI's clipboard machine —
 		// the browser already performed the copy, so this only updates the UI.
 		const handleCopyEvent = (e: Event) => {
-			if ((e.target as HTMLElement).closest('[data-part="input"]')) markCopied();
+			if ((e.target as HTMLElement).closest('[data-part="input"]'))
+				markCopied();
 		};
 
 		const handleFocusIn = (e: FocusEvent) => {
