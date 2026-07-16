@@ -4,6 +4,8 @@
 
 A highly customizable, production-ready set of layered sections of content shown one at a time, with a selectable tab list. Tabs ships four visual variants (`line`, `subtle`, `enclosed`, `card`), vertical or horizontal orientation supporting all placements (`top`, `bottom`, `left`/`start`, `right`/`end`), dynamic spacing, controlled/uncontrolled state syncing, semantic style mapping, and optional closable/editable tabs for managing an open-ended set of views.
 
+The first enabled tab is selected automatically when no `value`/`defaultValue` (or `activeKey`/`defaultActiveKey`) is given, static server renders draw the active-tab indicator in pure CSS so tabs look correct before (or without) JavaScript, and the tab list is wired per the WAI-ARIA tabs pattern — `aria-orientation`, `aria-labelledby` trigger/panel links, orientation-aware arrow-key navigation, and `Home`/`End` support.
+
 # Props
 
 ## Tabs
@@ -17,14 +19,17 @@ A highly customizable, production-ready set of layered sections of content shown
 | `type` | `"line" \| "card" \| "editable-card"` | Basic style mapping. `"editable-card"` automatically configures the card style and editable triggers. | `"line"` |
 | `tabPlacement` / `tabPosition` | `"top" \| "bottom" \| "left" \| "right" \| "start" \| "end"` | Visual layout placement of the tab headers relative to the content pane. | `"top"` |
 | `activeKey` / `value` | `string` | The currently active tab key (Controlled). | - |
-| `defaultActiveKey` / `defaultValue` | `string` | The initially active tab key (Uncontrolled). | - |
+| `defaultActiveKey` / `defaultValue` | `string` | The initially active tab key (Uncontrolled). | First enabled tab |
 | `onChange` / `onValueChange` | `(key: string) => void` | Callback executed when the active tab is changed. | - |
+| `onTabClick` | `(key: string, event: MouseEvent) => void` | Callback executed on every click of an enabled tab — including the already-active one, unlike `onChange`. | - |
+| `onTabScroll` | `({ direction }) => void` | Notified when an overflowing tab bar is scrolled; `direction` is `"left" \| "right" \| "top" \| "bottom"`. | - |
 | `onEdit` | `(key: any, action: "add" \| "remove") => void` | Callback executed when a tab is added or removed (only works under editable configurations). | - |
+| `hideAdd` | `boolean` | Hide the trailing "add tab" trigger of editable tabs. | `false` |
 | `tabBarGutter` | `number \| string` | Custom CSS grid/flex spacing between individual tab headers. | - |
 | `tabBarStyle` | `any` | Custom inline style for the tab headers bar / container. | - |
 | `destroyOnHidden` / `destroyInactiveTabPane` | `boolean` | Whether to completely unmount/destroy inactive content pane trees instead of just hiding them. | `false` |
-| `indicator` | `boolean` | Whether to render the sliding active tab indicator line. | `true` |
-| `animated` | `boolean \| { inkBar?: boolean; tabPane?: boolean }` | Fine-grain control over transition animations. | `true` |
+| `indicator` | `boolean \| { align?: "start" \| "center" \| "end"; size?: number \| (origin: number) => number }` | Whether to render the sliding active-tab indicator, or an object to shrink it (`size`, in px or as a function of the trigger's length) and align the remainder (`align`). | `true` |
+| `animated` | `boolean \| { inkBar?: boolean; tabPane?: boolean }` | Transition control. The default animates the indicator (ink bar) only; `true` also fades panes in on selection, and the object form opts in per concern. | `{ inkBar: true, tabPane: false }` |
 | `classNames` | `Record<string, string>` | Custom CSS classes mapped to semantic sub-parts (`root`, `list`/`header`/`tabBar`, `trigger`/`item`, `close`/`remove`, `indicator`, `content`/`body`, `add`). | - |
 | `styles` | `Record<string, any>` | Custom inline styles mapped to semantic sub-parts. | - |
 | `addIcon` | `JSX.Element` | Custom SVG or icon element for the new tab trigger. | - |
@@ -116,6 +121,32 @@ export default function MyPage() {
 }
 ```
 
+## Customising the Indicator
+
+`indicator` accepts an object to shrink the sliding ink bar and align it inside
+the active trigger — handy for the "short underline" look:
+
+```tsx
+import { Tabs } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Tabs
+      colorPalette="blue"
+      indicator={{ size: (origin) => origin - 24, align: "center" }}
+      items={[
+        { value: "home", label: "Home", content: "Home pane" },
+        { value: "settings", label: "Settings", content: "Settings pane" },
+      ]}
+    />
+  );
+}
+```
+
+`animated` controls the transitions: the indicator slides by default, and
+`animated` / `animated={{ tabPane: true }}` additionally fades panes in when
+they become active.
+
 ## Extra Content and Centering
 
 ```tsx
@@ -139,10 +170,21 @@ export default function MyPage() {
 Tabs is classified as **Tier-2 (smart auto-detect)** — see `docs/ARCHITECTURE.md` for the
 full model.
 
-- It hydrates as a client island when any of `value`, `defaultValue`, `onValueChange`,
+- It hydrates as a client island when any of `value`/`activeKey`, `defaultValue`/
+  `defaultActiveKey`, `onValueChange`/`onChange`, `onTabClick`, `onTabScroll`, `onEdit`,
   `closable`, `editable`, `onTabClose`, or `onTabAdd` is supplied — selecting a tab, closing
   one, or adding one all need JS. With none of these present, Tabs renders static markup and
-  ships no client JS.
+  ships no client JS. The auto-derived "first enabled tab" default does **not** count as a
+  signal, so a plain `<Tabs items={...} />` stays static.
+- **Static rendering stays presentable:** the sliding indicator is positioned by JS, so
+  non-hydrated tabs instead draw the selected state in pure CSS (an ink bar for `line`, a
+  filled pill for `subtle`/`enclosed`; `card` already styles the selected trigger). The
+  fallback is scoped to roots without `data-hydrated`, so it never doubles up with the real
+  indicator.
+- **Keyboard support (hydrated):** orientation-aware arrow keys move and (in automatic
+  activation mode) select tabs, `Home`/`End` jump to the extremes, and `Enter`/`Space`
+  activate the focused tab — including closable tabs, which render as `div[role="tab"]`
+  wrappers so their close button stays a real `<button>`.
 - Pass `interactive={true}` / `interactive={false}` to force or forbid hydration outright;
   this is implemented via the shared `shouldHydrate(interactive, hasSignal)` predicate in
   `app/components/ui/island-utils.ts`.

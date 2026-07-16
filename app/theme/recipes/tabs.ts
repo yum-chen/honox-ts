@@ -42,6 +42,11 @@ export const tabs = defineSlotRecipe({
 			fontWeight: "semibold",
 			outline: "0",
 			position: "relative",
+			userSelect: "none",
+			whiteSpace: "nowrap",
+			transitionProperty: "color, background-color, box-shadow",
+			transitionDuration: "normal",
+			transitionTimingFunction: "default",
 			_icon: {
 				flexShrink: 0,
 			},
@@ -57,10 +62,14 @@ export const tabs = defineSlotRecipe({
 			alignItems: "center",
 			borderRadius: "l1",
 			color: "fg.muted",
+			cursor: "pointer",
 			display: "inline-flex",
 			flexShrink: 0,
 			justifyContent: "center",
 			outline: "0",
+			transitionProperty: "color, background-color",
+			transitionDuration: "normal",
+			transitionTimingFunction: "default",
 			_hover: {
 				bg: "bg.emphasized",
 				color: "fg.default",
@@ -91,6 +100,14 @@ export const tabs = defineSlotRecipe({
 		},
 		content: {
 			focusVisibleRing: "inside",
+
+			// Opt-in pane transition (`animated: true` / `animated.tabPane`):
+			// replays whenever a pane gains `data-selected`.
+			"&[data-pane-animated][data-selected]": {
+				animationName: "fade-in",
+				animationDuration: "normal",
+				animationTimingFunction: "default",
+			},
 
 			_horizontal: {
 				width: "100%",
@@ -177,16 +194,38 @@ export const tabs = defineSlotRecipe({
 				},
 				trigger: {
 					color: "fg.muted",
+					_hover: {
+						color: "fg.default",
+					},
 					_selected: {
 						color: "colorPalette.plain.fg",
+						// Static SSR fallback: without hydration the indicator is
+						// never measured/positioned, so draw the ink bar on the
+						// trigger itself.
+						"[data-scope=tabs][data-part=root]:not([data-hydrated]) &": {
+							boxShadowColor: "colorPalette.solid.bg",
+							_horizontal: {
+								boxShadow: "inset 0 -2px 0 0 var(--shadow-color)",
+							},
+							_vertical: {
+								boxShadow: "inset 2px 0 0 0 var(--shadow-color)",
+							},
+						},
 					},
 				},
 			},
 			subtle: {
 				trigger: {
 					color: "fg.muted",
+					_hover: {
+						color: "fg.default",
+					},
 					_selected: {
 						color: "colorPalette.subtle.fg",
+						"[data-scope=tabs][data-part=root]:not([data-hydrated]) &": {
+							bg: "colorPalette.subtle.bg",
+							borderRadius: "l2",
+						},
 					},
 				},
 				indicator: {
@@ -208,8 +247,22 @@ export const tabs = defineSlotRecipe({
 				},
 				trigger: {
 					color: "fg.muted",
+					_hover: {
+						color: "fg.default",
+					},
 					_selected: {
 						color: "colorPalette.surface.fg",
+						"[data-scope=tabs][data-part=root]:not([data-hydrated]) &": {
+							borderRadius: "l2",
+							boxShadow: {
+								_light: "xs",
+								_dark: "none",
+							},
+							bg: {
+								_light: "white",
+								_dark: "gray.2",
+							},
+						},
 					},
 				},
 				indicator: {
@@ -245,6 +298,9 @@ export const tabs = defineSlotRecipe({
 					borderWidth: "1px",
 					borderColor: "border",
 					color: "fg.muted",
+					_hover: {
+						color: "fg.default",
+					},
 					_horizontal: {
 						borderTopRadius: "l2",
 						mb: "-1px",

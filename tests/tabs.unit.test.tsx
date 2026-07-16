@@ -261,6 +261,82 @@ describe("Tabs Unit Tests", () => {
 		expect(html).toContain('data-testid="custom-add-icon"');
 	});
 
+	test("should default to the first tab when no value is provided", () => {
+		const html = (<Tabs items={items} />).toString();
+
+		expect(html).toContain('aria-selected="true"');
+		expect(html).toMatch(/data-value="react"[^>]*/);
+		// The derived default must not force hydration.
+		expect(html).not.toContain('data-hydrated="true"');
+	});
+
+	test("should skip disabled tabs when deriving the default active tab", () => {
+		const html = (
+			<Tabs
+				items={[
+					{ value: "react", label: "React", content: "R", disabled: true },
+					{ value: "solid", label: "Solid", content: "S" },
+				]}
+			/>
+		).toString();
+
+		const selected = html.match(
+			/aria-selected="true"[^>]*data-value="(\w+)"/,
+		);
+		expect(selected?.[1]).toBe("solid");
+	});
+
+	test("should support hideAdd to suppress the add trigger", () => {
+		const html = (
+			<Tabs type="editable-card" hideAdd items={items} />
+		).toString();
+
+		expect(html).not.toContain('data-part="add"');
+		expect(html).toContain('data-part="close"');
+	});
+
+	test("should wire tablist orientation and trigger/panel relationships", () => {
+		const html = (<Tabs items={items} />).toString();
+
+		expect(html).toContain('aria-orientation="horizontal"');
+		expect(html).toMatch(/id="tabs-trigger-[^"]+-react"/);
+		expect(html).toMatch(/aria-labelledby="tabs-trigger-[^"]+-react"/);
+	});
+
+	test("should mark panes as animated when animated is enabled", () => {
+		const animatedHtml = (<Tabs items={items} animated />).toString();
+		const paneOnlyHtml = (
+			<Tabs items={items} animated={{ tabPane: true }} />
+		).toString();
+		const defaultHtml = (<Tabs items={items} />).toString();
+
+		expect(animatedHtml).toContain("data-pane-animated");
+		expect(paneOnlyHtml).toContain("data-pane-animated");
+		expect(defaultHtml).not.toContain("data-pane-animated");
+	});
+
+	test("should render the indicator for object-form indicator config", () => {
+		const html = (
+			<Tabs items={items} indicator={{ align: "center", size: 24 }} />
+		).toString();
+
+		expect(html).toContain('data-part="indicator"');
+	});
+
+	test("should hydrate when onTabClick or onTabScroll is provided", () => {
+		const clickHtml = (
+			<Tabs items={items} onTabClick={() => {}} />
+		).toString();
+		const scrollHtml = (
+			<Tabs items={items} onTabScroll={() => {}} />
+		).toString();
+
+		expect(clickHtml).toContain('data-hydrated="true"');
+		expect(scrollHtml).toContain('data-hydrated="true"');
+		expect(clickHtml).not.toContain("onTabClick");
+		expect(scrollHtml).not.toContain("onTabScroll");
+	});
+
 	test("should support tabBarGutter and tabBarStyle", () => {
 		const html = (
 			<Tabs

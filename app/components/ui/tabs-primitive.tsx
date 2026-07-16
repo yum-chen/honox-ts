@@ -65,6 +65,14 @@ interface TabsContextValue {
 	addIcon?: any;
 }
 
+/** Fine-grain control over the sliding indicator's thickness and alignment. */
+export interface IndicatorConfig {
+	/** Alignment of a shrunken indicator within the active trigger. */
+	align?: "start" | "center" | "end";
+	/** Fixed length in px, or a function of the trigger's own length. */
+	size?: number | ((origin: number) => number);
+}
+
 const TabsContext = createContext<TabsContextValue | null>(null);
 
 export const useTabsContext = () => {
@@ -96,6 +104,12 @@ export interface RootProps extends TabsVariantProps, PropsWithChildren {
 	activeKey?: string;
 	defaultActiveKey?: string;
 	onChange?: (value: string) => void;
+	/** Notified on every click of an enabled tab, even the already-active one. */
+	onTabClick?: (key: string, event: MouseEvent) => void;
+	/** Notified when the tab list scrolls (overflowing tab bars only). */
+	onTabScroll?: (info: {
+		direction: "left" | "right" | "top" | "bottom";
+	}) => void;
 	type?: "line" | "card" | "editable-card";
 	tabPlacement?: "top" | "end" | "bottom" | "start";
 	tabPosition?: "top" | "right" | "bottom" | "left";
@@ -150,6 +164,8 @@ export function Root(props: RootProps) {
 		activeKey,
 		defaultActiveKey,
 		onChange,
+		onTabClick,
+		onTabScroll,
 		type,
 		tabPlacement,
 		tabPosition,
@@ -277,6 +293,7 @@ export function List(props: ListProps) {
 	return (
 		<div
 			role="tablist"
+			aria-orientation={context.orientation}
 			class={cx(context.styles.list, customClass, props.class)}
 			style={listStyle}
 			data-orientation={context.orientation}
@@ -321,9 +338,11 @@ export function Trigger(props: TriggerProps) {
 	const isSelected = context.value === value;
 
 	const triggerProps = {
+		id: `tabs-trigger-${context.id}-${value}`,
 		role: "tab",
 		disabled,
 		"aria-selected": isSelected ? "true" : "false",
+		"aria-disabled": disabled ? "true" : undefined,
 		"aria-controls": `tabs-content-${context.id}-${value}`,
 		"data-selected": isSelected ? "" : undefined,
 		"data-disabled": disabled ? "" : undefined,
@@ -448,14 +467,23 @@ export function Content(props: ContentProps) {
 		context.customStyles,
 	);
 
+	// AntD semantics: `animated: true` animates panes too, the object form
+	// opts in per concern, and the default (undefined) animates the ink bar only.
+	const paneAnimated =
+		context.animated === true ||
+		(typeof context.animated === "object" &&
+			context.animated?.tabPane === true);
+
 	return (
 		<div
 			id={`tabs-content-${context.id}-${value}`}
 			role="tabpanel"
+			aria-labelledby={`tabs-trigger-${context.id}-${value}`}
 			data-scope="tabs"
 			data-part="content"
 			data-value={value}
 			data-orientation={context.orientation}
+			data-pane-animated={paneAnimated ? "" : undefined}
 			data-selected={isSelected ? "" : undefined}
 			class={cx(context.styles.content, customClass, classProp)}
 			style={{ ...customStyle, ...style }}
@@ -564,11 +592,14 @@ export function AddTrigger(props: AddTriggerProps) {
 
 export interface TabsStructureProps {
 	items: TabsItem[];
-	indicator?: boolean;
+	/** Render the sliding indicator (default), or configure its size/alignment. */
+	indicator?: boolean | IndicatorConfig;
 	/** Every tab gets a close button (no "add" trigger). Per-item `closable` still wins. */
 	closable?: boolean;
 	/** Shorthand for `closable` plus a trailing "add tab" trigger. */
 	editable?: boolean;
+	/** Suppress the trailing "add tab" trigger of editable tabs. */
+	hideAdd?: boolean;
 	onTabClose?: (value: string) => void;
 	onTabAdd?: () => void;
 	addAriaLabel?: string;
@@ -594,9 +625,10 @@ export interface TabsStructureProps {
 export const TabsStructure = (props: TabsStructureProps) => {
 	const {
 		items,
-		indicator = true,
+		indicator,
 		closable,
 		editable,
+		hideAdd,
 		onTabClose,
 		onTabAdd,
 		addAriaLabel,
@@ -651,8 +683,10 @@ export const TabsStructure = (props: TabsStructureProps) => {
 					{item.label}
 				</Trigger>
 			))}
-			{editable && <AddTrigger onAdd={onTabAdd} ariaLabel={addAriaLabel} />}
-			{indicator && <Indicator />}
+			{editable && !hideAdd && (
+				<AddTrigger onAdd={onTabAdd} ariaLabel={addAriaLabel} />
+			)}
+			{indicator !== false && <Indicator />}
 		</List>
 	);
 
