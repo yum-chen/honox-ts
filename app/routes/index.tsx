@@ -11,6 +11,7 @@ import {
 	Button,
 	ButtonGroup,
 	Card,
+	Carousel,
 	Checkbox,
 	Clipboard,
 	CloseButton,
@@ -62,6 +63,29 @@ const items = [
 	{ label: "Vue", value: "vue" },
 	{ label: "Hono", value: "hono" },
 ];
+
+const carouselPalettes = ["blue", "purple", "orange", "cyan", "red", "green"];
+
+function carouselSlides(count: number, height = "56") {
+	return Array.from({ length: count }, (_, i) => (
+		<div
+			class={css({
+				display: "flex",
+				alignItems: "center",
+				justifyContent: "center",
+				width: "full",
+				height,
+				borderRadius: "l3",
+				textStyle: "xl",
+				fontWeight: "semibold",
+				color: "white",
+				bg: `${carouselPalettes[i % carouselPalettes.length]}.9`,
+			})}
+		>
+			Slide {i + 1}
+		</div>
+	));
+}
 
 export default createRoute((c) => {
 	const name = c.req.query("name") ?? "Hono";
@@ -906,6 +930,75 @@ export default createRoute((c) => {
 						]}
 					/>
 				</div>
+			</Stack>
+
+			{/* Carousel Examples */}
+			<Stack
+				direction="column"
+				gap="4"
+				align="center"
+				class={css({ mt: "8", maxWidth: "xl", mx: "auto" })}
+			>
+				<Heading as="h2" class={css({ fontSize: "xl", mb: "4" })}>
+					Carousel Component Examples
+				</Heading>
+
+				<Stack direction="column" gap="8" class={css({ width: "full" })}>
+					<Stack direction="column" gap="2">
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Basic Carousel
+						</Text>
+						<Carousel slides={carouselSlides(5)} />
+					</Stack>
+
+					<Stack direction="column" gap="2">
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Looping, Multiple Slides Per Page
+						</Text>
+						<Carousel
+							slides={carouselSlides(8, "40")}
+							slidesPerPage={3}
+							spacing="16px"
+							loop
+							colorPalette="purple"
+						/>
+					</Stack>
+
+					<Stack direction="column" gap="2">
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Autoplay with Play/Pause Trigger (pauses on hover)
+						</Text>
+						<Carousel
+							slides={carouselSlides(4)}
+							autoplay={{ delay: 2500 }}
+							pauseOnHover
+							loop
+							showAutoplayTrigger
+							colorPalette="orange"
+						/>
+					</Stack>
+
+					<Stack direction="column" gap="2">
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Overlaid (Inline) Controls
+						</Text>
+						<Carousel slides={carouselSlides(5, "64")} inline loop />
+					</Stack>
+
+					<Stack direction="column" gap="2">
+						<Text size="sm" class={css({ color: "fg.muted" })}>
+							Vertical Orientation
+						</Text>
+						<div class={css({ height: "72" })}>
+							<Carousel
+								slides={carouselSlides(4, "full")}
+								orientation="vertical"
+								colorPalette="green"
+								class={css({ height: "full" })}
+							/>
+						</div>
+					</Stack>
+				</Stack>
 			</Stack>
 
 			{/* Slider Examples */}

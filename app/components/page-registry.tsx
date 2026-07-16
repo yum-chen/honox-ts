@@ -7,6 +7,7 @@ import {
 	Badge,
 	Button,
 	Card,
+	Carousel,
 	Checkbox,
 	Collapsible,
 	ColorPicker,
@@ -79,6 +80,53 @@ function tryParseJSON(val: unknown): unknown {
 		}
 	}
 	return val;
+}
+
+interface CarouselSlideBlock {
+	image?: string;
+	caption?: string;
+	href?: string;
+}
+
+// CMS carousel slides are flat { image, caption, href } records, not
+// component blocks — they never go through `RenderBlock`/the registry.
+function renderCarouselSlide(slide: CarouselSlideBlock): JSX.Element {
+	const content = (
+		<div class={css({ position: "relative", width: "full", height: "full" })}>
+			{slide.image && (
+				<img
+					src={slide.image}
+					alt={slide.caption ?? ""}
+					class={css({ width: "full", height: "full", objectFit: "cover" })}
+				/>
+			)}
+			{slide.caption && (
+				<div
+					class={css({
+						position: "absolute",
+						insetX: "0",
+						bottom: "0",
+						p: "4",
+						bgGradient: "to-t",
+						gradientFrom: "black.a9",
+						gradientTo: "transparent",
+					})}
+				>
+					<Text class={css({ color: "white" })}>{slide.caption}</Text>
+				</div>
+			)}
+		</div>
+	);
+	return slide.href ? (
+		<a
+			href={slide.href}
+			class={css({ display: "block", width: "full", height: "full" })}
+		>
+			{content}
+		</a>
+	) : (
+		content
+	);
 }
 
 // One entry per supported block type. Each body ports the previous renderer
@@ -166,6 +214,31 @@ const registry: Record<string, BlockRenderer> = {
 			>
 				{renderChildren(children as ComponentBlock[])}
 			</Card>
+		);
+	},
+
+	carousel: (b) => {
+		const { slides, slidesPerPage, autoplayDelay, ...rest } = propsOf(b);
+
+		const slideElements = Array.isArray(slides)
+			? (slides as CarouselSlideBlock[]).map(renderCarouselSlide)
+			: [];
+		const delay =
+			autoplayDelay !== undefined && autoplayDelay !== ""
+				? Number(autoplayDelay)
+				: undefined;
+
+		return (
+			<Carousel
+				interactive
+				slides={slideElements}
+				slidesPerPage={
+					slidesPerPage !== undefined ? Number(slidesPerPage) : undefined
+				}
+				autoplay={delay ? { delay } : undefined}
+				itemClass={css({ height: { base: "56", md: "72" } })}
+				{...rest}
+			/>
 		);
 	},
 

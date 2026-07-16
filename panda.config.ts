@@ -40,6 +40,7 @@ export default defineConfig({
 			breadcrumb: ["*"],
 			button: ["*"],
 			card: ["*"],
+			carousel: ["*"],
 			checkbox: ["*"],
 			clipboard: ["*"],
 			code: ["*"],

@@ -6,6 +6,7 @@ import { badge } from "./badge";
 import { breadcrumb } from "./breadcrumb";
 import { button } from "./button";
 import { card } from "./card";
+import { carousel } from "./carousel";
 import { checkbox } from "./checkbox";
 import { clipboard } from "./clipboard";
 import { code } from "./code";
@@ -75,6 +76,7 @@ export const slotRecipes = {
 	splitter,
 	breadcrumb,
 	card,
+	carousel,
 	checkbox,
 	clipboard,
 	collapsible,

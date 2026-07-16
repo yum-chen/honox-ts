@@ -99,6 +99,49 @@ test("fileUpload block renders a hydrated FileUpload with coerced numeric props"
   expect(aliased).toContain("Docs");
 });
 
+test("carousel block renders slides with captions/links and coerces numeric props", () => {
+  const html = (
+    <PageRenderer
+      content={[
+        {
+          type: "carousel",
+          slides: [
+            { image: "/media/one.jpg", caption: "First slide", href: "/one" },
+            { image: "/media/two.jpg" },
+          ],
+          // CMS payloads may deliver numbers as strings; the renderer coerces.
+          slidesPerPage: "1",
+          autoplayDelay: "3000",
+          loop: true,
+          colorPalette: "purple",
+        },
+      ]}
+    />
+  ).toString();
+
+  expect(html).toContain('data-scope="carousel"');
+  expect(html).toContain('data-part="item"');
+  expect(html).toContain('src="/media/one.jpg"');
+  expect(html).toContain('src="/media/two.jpg"');
+  expect(html).toContain("First slide");
+  expect(html).toContain('href="/one"');
+  expect(html).toContain("carousel__root--colorPalette_purple");
+  // slidesPerPage=1 → --slides-per-page:1 in the root's inline style.
+  expect(html).toContain("--slides-per-page:1");
+
+  // A slide with no caption/href renders the bare image, no dangling anchor.
+  expect(html).not.toContain("<a><img");
+});
+
+test("carousel block with no slides renders an empty, non-throwing carousel", () => {
+  const html = (
+    <PageRenderer content={[{ type: "carousel" }]} />
+  ).toString();
+
+  expect(html).toContain('data-scope="carousel"');
+  expect(html).not.toContain('data-part="item"');
+});
+
 test("registry exposes a renderer for every canonical block type", () => {
   const types = [
     "stack",
@@ -109,6 +152,7 @@ test("registry exposes a renderer for every canonical block type", () => {
     "anchor",
     "text",
     "card",
+    "carousel",
     "checkbox",
     "collapsible",
     "combobox",
