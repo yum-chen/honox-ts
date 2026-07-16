@@ -29,6 +29,7 @@ import { input } from "./input";
 import { pagination } from "./pagination";
 import { popover } from "./popover";
 import { progress } from "./progress";
+import { radioCardGroup } from "./radio-card-group";
 import { radioGroup } from "./radio-group";
 import { search } from "./search";
 import { segmentGroup } from "./segment-group";
@@ -68,6 +69,7 @@ export const slotRecipes = {
 	fileUpload,
 	tagsInput,
 	pagination,
+	radioCardGroup,
 	radioGroup,
 	avatar,
 	toggleGroup,

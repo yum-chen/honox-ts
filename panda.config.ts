@@ -60,6 +60,7 @@ export default defineConfig({
 			dropdown: ["*"],
 			popover: ["*"],
 			progress: ["*"],
+			radioCardGroup: ["*"],
 			segmentGroup: ["*"],
 			skeleton: ["*"],
 			slider: ["*"],

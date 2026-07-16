@@ -40,17 +40,17 @@ const RadioGroupRoot = (props: RadioGroupProps) => {
 		<Component {...rest}>
 			{label && <Label>{label}</Label>}
 			{items?.map((item) => {
-				const normalizedItem =
+				const normalisedItem =
 					typeof item === "string" ? { value: item, label: item } : item;
 				return (
 					<Item
-						key={normalizedItem.value}
-						value={normalizedItem.value}
-						disabled={normalizedItem.disabled}
-						invalid={normalizedItem.invalid}
+						key={normalisedItem.value}
+						value={normalisedItem.value}
+						disabled={normalisedItem.disabled}
+						invalid={normalisedItem.invalid}
 					>
 						<ItemControl />
-						<ItemText>{normalizedItem.label}</ItemText>
+						<ItemText>{normalisedItem.label}</ItemText>
 						<ItemHiddenInput />
 					</Item>
 				);

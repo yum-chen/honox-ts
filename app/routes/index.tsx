@@ -36,6 +36,7 @@ import {
 	Pagination,
 	Popover,
 	Progress,
+	RadioCardGroup,
 	RadioGroup,
 	Search,
 	SegmentGroup,
@@ -503,6 +504,61 @@ export default createRoute((c) => {
 												]}
 											/>
 										</div>
+									</Card>
+
+									{/* RadioCardGroup */}
+									<Card
+										title="Radio Card Group"
+										description="Card-style exclusive choices"
+									>
+										<Stack gap="6" class={css({ mt: "2", width: "full" })}>
+											<RadioCardGroup
+												interactive
+												label="Outline"
+												defaultValue="pro"
+												items={[
+													{ label: "Hobby", value: "hobby" },
+													{ label: "Pro", value: "pro" },
+													{ label: "Enterprise", value: "enterprise" },
+												]}
+											/>
+											<RadioCardGroup
+												interactive
+												label="Subtle"
+												variant="subtle"
+												defaultValue="monthly"
+												items={[
+													{ label: "Monthly", value: "monthly" },
+													{ label: "Yearly", value: "yearly" },
+												]}
+											/>
+											<RadioCardGroup
+												interactive
+												label="Surface"
+												variant="surface"
+												defaultValue="standard"
+												items={[
+													{ label: "Standard", value: "standard" },
+													{ label: "Express", value: "express" },
+													{
+														label: "Overnight",
+														value: "overnight",
+														disabled: true,
+													},
+												]}
+											/>
+											<RadioCardGroup
+												interactive
+												label="Solid"
+												variant="solid"
+												defaultValue="dark"
+												items={[
+													{ label: "Light", value: "light" },
+													{ label: "Dark", value: "dark" },
+													{ label: "System", value: "system" },
+												]}
+											/>
+										</Stack>
 									</Card>
 
 									{/* SegmentGroup */}
