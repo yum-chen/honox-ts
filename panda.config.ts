@@ -41,6 +41,7 @@ export default defineConfig({
 			button: ["*"],
 			card: ["*"],
 			checkbox: ["*"],
+			clipboard: ["*"],
 			code: ["*"],
 			collapsible: ["*"],
 			colorPicker: ["*"],

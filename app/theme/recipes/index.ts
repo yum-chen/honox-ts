@@ -7,6 +7,7 @@ import { breadcrumb } from "./breadcrumb";
 import { button } from "./button";
 import { card } from "./card";
 import { checkbox } from "./checkbox";
+import { clipboard } from "./clipboard";
 import { code } from "./code";
 import { collapsible } from "./collapsible";
 import { colorPicker } from "./color-picker";
@@ -28,6 +29,7 @@ import { pagination } from "./pagination";
 import { popover } from "./popover";
 import { progress } from "./progress";
 import { radioGroup } from "./radio-group";
+import { search } from "./search";
 import { segmentGroup } from "./segment-group";
 import { select } from "./select";
 import { skeleton } from "./skeleton";
@@ -74,6 +76,7 @@ export const slotRecipes = {
 	breadcrumb,
 	card,
 	checkbox,
+	clipboard,
 	collapsible,
 	combobox,
 	dialog,
