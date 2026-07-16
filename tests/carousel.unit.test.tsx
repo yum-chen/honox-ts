@@ -104,4 +104,18 @@ describe("Carousel Unit Tests", () => {
 		expect(html).not.toContain('data-part="prev-trigger"');
 		expect(html).not.toContain('data-part="indicator"');
 	});
+
+	test("should automatically render indicators under IndicatorGroup when no children are provided", () => {
+		const html = (
+			<Carousel.Root interactive={false} slideCount={3}>
+				<Carousel.IndicatorGroup />
+			</Carousel.Root>
+		).toString();
+
+		expect(html).toContain('data-part="indicator-group"');
+		expect(html).toContain('data-part="indicator"');
+		expect(html).toContain('data-index="0"');
+		expect(html).toContain('data-index="1"');
+		expect(html).toContain('data-index="2"');
+	});
 });

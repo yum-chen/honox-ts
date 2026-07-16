@@ -558,6 +558,14 @@ export function IndicatorGroup(props: IndicatorGroupProps) {
 	const { children, class: classProp, ...rest } = props;
 	const context = useCarouselContext();
 	const styles = context?.styles ?? carousel();
+
+	const hasChildren = children && (Array.isArray(children) ? children.length > 0 : true);
+	const renderedChildren = hasChildren
+		? children
+		: context?.pageSnapPoints?.map((_, index) => (
+				<Indicator key={index} index={index} />
+			));
+
 	return (
 		<div
 			id={context?.ids.indicatorGroup}
@@ -571,7 +579,7 @@ export function IndicatorGroup(props: IndicatorGroupProps) {
 			data-orientation={context?.orientation ?? "horizontal"}
 			{...rest}
 		>
-			{children}
+			{renderedChildren}
 		</div>
 	);
 }

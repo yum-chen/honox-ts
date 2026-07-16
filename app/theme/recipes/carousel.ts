@@ -2,6 +2,20 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const carousel = defineSlotRecipe({
 	className: "carousel",
+	jsx: [
+		"Carousel",
+		"Carousel.Root",
+		"Carousel.RootProvider",
+		"Carousel.ItemGroup",
+		"Carousel.Item",
+		"Carousel.Control",
+		"Carousel.PrevTrigger",
+		"Carousel.NextTrigger",
+		"Carousel.IndicatorGroup",
+		"Carousel.Indicator",
+		"Carousel.AutoplayTrigger",
+		"Carousel.ProgressText",
+	],
 	slots: [
 		"root",
 		"itemGroup",
