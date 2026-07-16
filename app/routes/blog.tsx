@@ -207,7 +207,11 @@ export default createRoute(async (c) => {
 											px: "3",
 											py: "2",
 										})}
-									/>
+									>
+										{featuredPosts.map((_, index) => (
+											<Carousel.Indicator index={index} />
+										))}
+									</Carousel.IndicatorGroup>
 								</>
 							)}
 						</div>

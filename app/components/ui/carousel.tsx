@@ -4,6 +4,7 @@ import {
 	AutoplayTrigger,
 	Context,
 	Control,
+	getPageSnapPoints,
 	Indicator,
 	IndicatorGroup,
 	Item,
@@ -62,11 +63,32 @@ function Carousel(props: CarouselProps) {
 		showAutoplayTrigger = false,
 		itemClass,
 		interactive,
+		slidesPerPage = 1,
+		slidesPerMove = "auto",
+		autoSize = false,
 		...rest
 	} = props;
 
+	// Computed from props rather than read from context: an island's
+	// `children` gets serialized into a `<template data-hono-template>`
+	// snapshot and re-rendered outside any `CarouselContext.Provider` for
+	// hydration, so anything that changes the *number* of indicator dots
+	// based on context would silently collapse to a single fallback dot in
+	// that snapshot. Deriving the count here keeps it identical either way.
+	const pageSnapPoints = autoSize
+		? Array.from({ length: slides.length }, (_, i) => i)
+		: getPageSnapPoints(slides.length, slidesPerMove, slidesPerPage);
+	const pageCount = pageSnapPoints.length || 1;
+
 	return (
-		<Root {...rest} interactive={interactive} slideCount={slides.length}>
+		<Root
+			{...rest}
+			interactive={interactive}
+			slideCount={slides.length}
+			slidesPerPage={slidesPerPage}
+			slidesPerMove={slidesPerMove}
+			autoSize={autoSize}
+		>
 			<ItemGroup>
 				{slides.map((slide, index) => (
 					<Item index={index} class={itemClass}>
@@ -77,7 +99,13 @@ function Carousel(props: CarouselProps) {
 			{(showControls || showIndicators || showAutoplayTrigger) && (
 				<Control>
 					{showControls && <PrevTrigger />}
-					{showIndicators && <IndicatorGroup />}
+					{showIndicators && (
+						<IndicatorGroup>
+							{Array.from({ length: pageCount }, (_, index) => (
+								<Indicator index={index} />
+							))}
+						</IndicatorGroup>
+					)}
 					{showAutoplayTrigger && <AutoplayTrigger />}
 					{showControls && <NextTrigger />}
 				</Control>
