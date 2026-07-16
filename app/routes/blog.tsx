@@ -6,6 +6,7 @@ import {
 	Badge,
 	Button,
 	Card,
+	Carousel,
 	Heading,
 	Popover,
 	Search,
@@ -29,6 +30,10 @@ export default createRoute(async (c) => {
 		filterEntries(searchEntries, searchQuery).map((entry) => entry.key),
 	);
 
+	// `blogPosts` is already newest-first; a post without a cover has nothing
+	// to show in a hero slide, so it's excluded rather than left blank.
+	const featuredPosts = blogPosts.filter((post) => post.cover).slice(0, 5);
+
 	return c.render(
 		<div
 			class={css({
@@ -39,6 +44,176 @@ export default createRoute(async (c) => {
 			})}
 		>
 			<title>Blog - Artefact</title>
+
+			{/* Featured Posts (latest posts with a cover image) */}
+			{featuredPosts.length > 0 && (
+				<section class={css({ mb: "10" })}>
+					<Carousel.Root
+						slideCount={featuredPosts.length}
+						autoplay={featuredPosts.length > 1 ? { delay: 6000 } : false}
+						pauseOnHover
+						loop
+						colorPalette="blue"
+					>
+						<div class={css({ position: "relative" })}>
+							<Carousel.ItemGroup
+								class={css({
+									borderRadius: "3xl",
+									overflow: "hidden",
+									shadow: "lg",
+								})}
+							>
+								{featuredPosts.map((post, index) => (
+									<Carousel.Item index={index}>
+										<a
+											href={`/blog/${post.slug}`}
+											class={css({
+												display: "block",
+												position: "relative",
+												width: "full",
+												height: { base: "80", md: "96" },
+												textDecoration: "none",
+											})}
+										>
+											<img
+												src={post.cover}
+												alt={post.title}
+												class={css({
+													position: "absolute",
+													inset: "0",
+													width: "full",
+													height: "full",
+													objectFit: "cover",
+												})}
+											/>
+											<div
+												class={css({
+													position: "absolute",
+													inset: "0",
+													bgGradient: "to-t",
+													gradientFrom: "black.a10",
+													gradientVia: "black.a5",
+													gradientTo: "transparent",
+												})}
+											/>
+											<div
+												class={css({
+													position: "absolute",
+													insetX: "0",
+													bottom: "0",
+													p: { base: "6", md: "10" },
+													maxWidth: "3xl",
+												})}
+											>
+												{index === 0 && (
+													<Badge
+														variant="solid"
+														colorPalette="blue"
+														size="sm"
+														class={css({ mb: "3" })}
+													>
+														Latest
+													</Badge>
+												)}
+												<Heading
+													as="h2"
+													size="xl"
+													class={css({
+														color: "white",
+														mb: "2",
+														lineHeight: "tight",
+													})}
+												>
+													{post.title}
+												</Heading>
+												<Text
+													class={css({
+														color: "white.a11",
+														mb: "4",
+														display: { base: "none", md: "block" },
+														maxWidth: "2xl",
+													})}
+												>
+													{post.description}
+												</Text>
+												<Stack gap="2.5" align="center">
+													{post.author && (
+														<Avatar
+															size="sm"
+															variant="solid"
+															colorPalette="blue"
+															name={post.author}
+														/>
+													)}
+													<Text
+														size="sm"
+														class={css({
+															color: "white.a12",
+															fontWeight: "medium",
+														})}
+													>
+														{post.author}
+													</Text>
+													<Text size="sm" class={css({ color: "white.a10" })}>
+														{post.author ? "· " : ""}
+														{new Date(post.date).toLocaleDateString("en-US", {
+															month: "short",
+															day: "numeric",
+															year: "numeric",
+														})}
+														{post.readTime ? ` · ${post.readTime}` : ""}
+													</Text>
+												</Stack>
+											</div>
+										</a>
+									</Carousel.Item>
+								))}
+							</Carousel.ItemGroup>
+
+							{featuredPosts.length > 1 && (
+								<>
+									<Carousel.PrevTrigger
+										class={css({
+											position: "absolute",
+											top: "50%",
+											left: "4",
+											transform: "translateY(-50%)",
+											bg: "black.a7",
+											borderColor: "transparent",
+											color: "white",
+											_hover: { bg: "black.a9" },
+										})}
+									/>
+									<Carousel.NextTrigger
+										class={css({
+											position: "absolute",
+											top: "50%",
+											right: "4",
+											transform: "translateY(-50%)",
+											bg: "black.a7",
+											borderColor: "transparent",
+											color: "white",
+											_hover: { bg: "black.a9" },
+										})}
+									/>
+									<Carousel.IndicatorGroup
+										class={css({
+											position: "absolute",
+											bottom: "4",
+											left: "50%",
+											transform: "translateX(-50%)",
+											bg: "black.a7",
+											borderRadius: "full",
+											px: "3",
+											py: "2",
+										})}
+									/>
+								</>
+							)}
+						</div>
+					</Carousel.Root>
+				</section>
+			)}
 
 			{/* Search + Tag Browse */}
 			<section class={css({ mb: "8" })}>
