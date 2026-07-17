@@ -4,6 +4,8 @@
 
 A transient notification used to provide feedback about an action. Toasts are created imperatively through the `toaster` API. Mount a single `<Toast.Toaster />` to render them.
 
+Our refined Toast system supports custom status color palettes, advanced auto-pause behaviors on hover/focus, smooth pointer-driven drag-to-dismiss gestures, custom positioning configurations, and fully robust promise handling.
+
 > A live, runnable version of every example below is in `app/routes/index.tsx` — the **Toast Component Examples** section. The docs examples are kept in sync with that file.
 
 # Usage
@@ -74,6 +76,32 @@ The home-page demo triggers toasts by dispatching the underlying `park-ui:toast:
 ```
 
 > Note: Toast content is created **imperatively** — `title` and `description` accept strings only, so a toast's body cannot be authored as JSX. The `Toaster` renders it internally from the private primitives.
+
+# Advanced Features
+
+## Auto-Pause on Hover and Focus
+Auto-dismiss timers automatically pause when the user hovers over a toast item (`pointerenter`) or focuses inside a toast (`focusin`). Once the pointer leaves (`pointerleave`) or focus is shifted out (`focusout`), the remaining duration timer is safely resumed, preventing premature dismissal of active notifications while the user is actively reading or interacting with them.
+
+## Drag / Swipe-to-Dismiss Gesture
+Toasts are fully touch and pointer-responsive. By using standard pointer event tracking, a user can grab and swipe/drag a toast in any direction to dismiss it.
+- Moving the pointer translates the toast on the screen and dynamically fades out its opacity.
+- If the drag distance exceeds the threshold (`80px`), the toast is animated away and dismissed.
+- If released before reaching the threshold, the toast is returned to its original position with full opacity, and the timer resumes.
+
+## Promise Handling
+You can bind a toast to a promise, managing the loading, success, and error cycles cleanly:
+
+```tsx
+import { Toast } from "../components/ui";
+
+const myPromise = fetch("/api/data");
+
+Toast.toaster.promise(myPromise, {
+  loading: { title: "Fetching data..." },
+  success: (response) => ({ title: "Success!", description: "Data loaded successfully." }),
+  error: (err) => ({ title: "Error", description: err.message }),
+});
+```
 
 # API
 
