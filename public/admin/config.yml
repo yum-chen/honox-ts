@@ -293,6 +293,7 @@ collections:
                               - { label: Error Text, name: errorText, widget: string, required: false }
                               - { label: Disabled, name: disabled, widget: boolean, default: false }
                               - { label: Invalid, name: invalid, widget: boolean, default: false }
+                              - { label: Required, name: required, widget: boolean, default: false }
                           - label: Group
                             name: group
                             widget: object
@@ -647,6 +648,7 @@ collections:
                       - { label: Error Text, name: errorText, widget: string, required: false }
                       - { label: Disabled, name: disabled, widget: boolean, default: false }
                       - { label: Invalid, name: invalid, widget: boolean, default: false }
+                      - { label: Required, name: required, widget: boolean, default: false }
                       - label: Children
                         name: children
                         widget: list
@@ -957,6 +959,7 @@ collections:
               - { label: Error Text, name: errorText, widget: string, required: false }
               - { label: Disabled, name: disabled, widget: boolean, default: false }
               - { label: Invalid, name: invalid, widget: boolean, default: false }
+              - { label: Required, name: required, widget: boolean, default: false }
               - label: Children
                 name: children
                 widget: list

@@ -2,21 +2,24 @@
 
 # Introduction
 
-Groups related form controls and provides a legend.
+Groups related form controls under a native `<fieldset>`, with an accessible
+legend, helper text, and error text. Unlike `Field`, it has no validator of
+its own — it's a static, server-rendered grouping primitive, so it never
+hydrates as a client island.
 
 # Props
 
-| Prop          | Type      | Description                                  |
-| :------------ | :-------- | :------------------------------------------- |
-| `children`    | `any`     | Content to be rendered inside the component. |
-| `class`       | `string`  | Custom CSS classes.                          |
-| `id`          | `string`  | Unique identifier.                           |
-| `disabled`    | `boolean` | Whether the fieldset is disabled.            |
-| `invalid`     | `boolean` | Whether the fieldset is in an invalid state. |
-| `interactive` | `boolean` | Whether to enable client-side hydration.     |
-| `legend`      | `Child`   | The legend text for the fieldset.            |
-| `helperText`  | `Child`   | Helper text shown below the legend.          |
-| `errorText`   | `Child`   | Error text shown when the fieldset is invalid. |
+| Prop         | Type      | Description                                                                                     |
+| :----------- | :-------- | :------------------------------------------------------------------------------------------------ |
+| `children`   | `any`     | Form controls to render inside the fieldset.                                                    |
+| `class`      | `string`  | Custom CSS classes.                                                                              |
+| `id`         | `string`  | Unique identifier. Auto-generated if omitted.                                                   |
+| `disabled`   | `boolean` | Disables the fieldset. Native `<fieldset disabled>` automatically disables every descendant control — no extra wiring needed. |
+| `invalid`    | `boolean` | Whether the fieldset is in an invalid state. Defaults to `true` whenever `errorText` is set, so you usually don't need to pass this explicitly. |
+| `required`   | `boolean` | Marks the group as required and appends a required indicator to the legend. |
+| `legend`     | `Child`   | The legend text for the fieldset. Always rendered as a direct child of `<fieldset>` — see [Composition](#composition). |
+| `helperText` | `Child`   | Helper text shown below the legend.                                                             |
+| `errorText`  | `Child`   | Error text shown when the fieldset is invalid.                                                  |
 
 # Usage
 
@@ -28,7 +31,7 @@ export default function MyPage() {
     <Fieldset
       legend="User Profile"
       helperText="Manage your info."
-      invalid
+      required
       errorText="Something went wrong."
     >
       <Field>...</Field>
@@ -37,31 +40,39 @@ export default function MyPage() {
 }
 ```
 
+Passing `errorText` is enough to put the fieldset into its invalid state —
+you don't need to also pass `invalid`. Pass `invalid={false}` explicitly if
+you want to suppress the error styling while still keeping the text around.
+
 ## Composition
 
-For more control, use the sub-components:
+`children` is always the group of actual form controls — `Fieldset` wraps it
+in a spacing container for you. `legend` / `helperText` / `errorText` accept
+any `Child`, not just strings, so rich content (an icon, a badge) belongs
+there rather than in `children`:
 
 ```tsx
-import {
-  Fieldset,
-  FieldsetControl,
-  FieldsetLegend,
-  FieldsetHelperText,
-  FieldsetContent,
-  Field,
-} from "../components/ui";
-
-export default function MyPage() {
-  return (
-    <Fieldset>
-      <FieldsetControl>
-        <FieldsetLegend>User Profile</FieldsetLegend>
-        <FieldsetHelperText>Manage your info.</FieldsetHelperText>
-      </FieldsetControl>
-      <FieldsetContent>
-        <Field>...</Field>
-      </FieldsetContent>
-    </Fieldset>
-  );
-}
+<Fieldset legend={<>Profile <Badge>New</Badge></>}>
+  <Field>...</Field>
+  <Textarea>...</Textarea>
+</Fieldset>
 ```
+
+Don't place `FieldsetLegend` (or `FieldsetHelperText` / `FieldsetErrorText`)
+inside `children` — `Fieldset` wraps `children` in a `<div>`, and browsers
+only use a `<legend>` to compute the fieldset's accessible name when it's a
+direct child of `<fieldset>`, not when it's nested inside a wrapper. The
+exported sub-components (`FieldsetLegend`, `FieldsetHelperText`,
+`FieldsetErrorText`, `FieldsetContent`, `FieldsetControl`,
+`FieldsetRequiredIndicator`) exist for reuse in fully hand-built markup, not
+as an alternate way to compose within `Fieldset` itself.
+
+# CMS bindings
+
+`legend`, `helperText`, `errorText`, `disabled`, `invalid`, and `required`
+are exposed as editable fields in `public/admin/config.yml`, plus a
+`children` list for nesting other blocks — the same convenience props
+documented above. `id`/`class` and the composition sub-components
+(`FieldsetContent`, `FieldsetControl`, `FieldsetRequiredIndicator`, etc.) are
+not exposed: they're a JSX-level API for developers hand-authoring pages, not
+something a JSON-driven CMS block can express.

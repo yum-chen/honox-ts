@@ -36,7 +36,16 @@ export { Dropdown, type DropdownItem, type DropdownProps } from "./dropdown";
 export * as DropdownPrimitive from "./dropdown-primitive";
 export { Editable, type EditableProps } from "./editable";
 export { Field, type FieldProps } from "./field";
-export { Fieldset, type FieldsetProps } from "./fieldset";
+export {
+	Fieldset,
+	FieldsetContent,
+	FieldsetControl,
+	FieldsetErrorText,
+	FieldsetHelperText,
+	FieldsetLegend,
+	FieldsetRequiredIndicator,
+	type FieldsetProps,
+} from "./fieldset";
 export { FileUpload, type FileUploadProps } from "./file-upload";
 export * as FileUploadPrimitive from "./file-upload-primitive";
 export { Grid, type GridProps } from "./grid";
