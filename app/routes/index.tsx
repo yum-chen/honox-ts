@@ -418,7 +418,7 @@ export default createRoute((c) => {
 						</Text>
 					</div>
 
-					<Tabs interactive colorPalette="blue" defaultValue="forms">
+					<Tabs interactive={false} colorPalette="blue" defaultValue="forms">
 						<TabsList>
 							<TabsTrigger value="forms">Form Controls</TabsTrigger>
 							<TabsTrigger value="pickers">Complex Pickers</TabsTrigger>
