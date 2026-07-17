@@ -241,6 +241,14 @@
           "disabled": true
         }
       ]
+    },
+    {
+      "type": "editable",
+      "label": "Project name",
+      "defaultValue": "Mountain Cabin Adventure",
+      "size": "md",
+      "activationMode": "focus",
+      "submitMode": "both"
     }
   ]
 }

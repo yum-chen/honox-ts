@@ -15,6 +15,7 @@ import {
 	Dialog,
 	Drawer,
 	Dropdown,
+	Editable,
 	Field,
 	Fieldset,
 	FileUpload,
@@ -614,6 +615,18 @@ const registry: Record<string, BlockRenderer> = {
 		return <RadioCardGroup interactive {...props} />;
 	},
 	segmentGroup: (b) => <SegmentGroup interactive {...propsOf(b)} />,
+
+	editable: (b) => {
+		// Same empty-string cleanup as radioCardGroup: untouched optional
+		// select fields (size/activationMode/submitMode) arrive as "" rather
+		// than being omitted, which would override the recipe/behavior
+		// defaults with a nonexistent value.
+		const props = propsOf(b);
+		for (const key of Object.keys(props)) {
+			if (props[key] === "") delete props[key];
+		}
+		return <Editable interactive {...props} />;
+	},
 
 	select: (b) => {
 		const { label, placeholder, items, multiple, ...rest } = propsOf(b);

@@ -427,6 +427,29 @@ collections:
                                 widget: select
                                 options: [blue, green, red, purple, orange, amber, cyan, slate]
                                 required: false
+                          - label: Editable
+                            name: editable
+                            widget: object
+                            fields: &editable_fields
+                              - { label: Label, name: label, widget: string, required: false }
+                              - { label: Default Value, name: defaultValue, widget: string, required: false }
+                              - { label: Placeholder, name: placeholder, widget: string, required: false }
+                              - label: Size
+                                name: size
+                                widget: select
+                                options: ["2xs", xs, sm, md, lg]
+                                default: md
+                              - label: Activation Mode
+                                name: activationMode
+                                widget: select
+                                options: [focus, click, dblclick, none]
+                                default: focus
+                              - label: Submit Mode
+                                name: submitMode
+                                widget: select
+                                options: [enter, blur, both, none]
+                                default: both
+                              - { label: Disabled, name: disabled, widget: boolean, default: false }
                           - label: Segment Group
                             name: segmentGroup
                             widget: object
@@ -761,6 +784,10 @@ collections:
                     name: radioCardGroup
                     widget: object
                     fields: *radiocardgroup_fields
+                  - label: Editable
+                    name: editable
+                    widget: object
+                    fields: *editable_fields
                   - label: Segment Group
                     name: segmentGroup
                     widget: object
@@ -1081,6 +1108,10 @@ collections:
             name: radioCardGroup
             widget: object
             fields: *radiocardgroup_fields
+          - label: Editable
+            name: editable
+            widget: object
+            fields: *editable_fields
           - label: Segment Group
             name: segmentGroup
             widget: object
