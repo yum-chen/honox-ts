@@ -1,0 +1,168 @@
+{
+  "title": "Contact Us — Artefact",
+  "content": [
+    {
+      "type": "stack",
+      "direction": "vertical",
+      "align": "center",
+      "gap": "4",
+      "children": [
+        {
+          "type": "badge",
+          "variant": "subtle",
+          "text": "Get in touch",
+          "colorPalette": "purple"
+        },
+        {
+          "type": "heading",
+          "text": "We'd love to hear from you",
+          "size": "6xl",
+          "as": "h1",
+          "style": "text-align:center;max-width:40rem"
+        },
+        {
+          "type": "text",
+          "size": "lg",
+          "content": "Questions about pricing, a bug to report, or just want to say hi — send us a message and we'll get back to you.",
+          "style": "text-align:center;max-width:34rem"
+        }
+      ]
+    },
+    {
+      "type": "grid",
+      "gap": "8",
+      "columns": "{\"base\": 1, \"md\": 2}",
+      "children": [
+        {
+          "type": "stack",
+          "direction": "vertical",
+          "gap": "6",
+          "children": [
+            {
+              "type": "heading",
+              "text": "Other ways to reach us",
+              "size": "xl",
+              "as": "h2"
+            },
+            {
+              "type": "card",
+              "title": "Email",
+              "description": "hello@artefact.dev",
+              "body": "Our default channel — we read every message and reply within one business day."
+            },
+            {
+              "type": "card",
+              "title": "Support",
+              "description": "support@artefact.dev",
+              "body": "Already a customer? Use this address so your account details are attached automatically."
+            },
+            {
+              "type": "card",
+              "title": "Office",
+              "description": "San Francisco, CA",
+              "body": "We're a remote-first team, but happy to meet in person if you're in the Bay Area — just ask."
+            }
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Send us a message",
+          "children": [
+            {
+              "type": "fieldset",
+              "id": "contact-form",
+              "helperText": "We typically respond within 1 business day.",
+              "children": [
+                {
+                  "type": "field",
+                  "id": "contact-name",
+                  "label": "Full Name",
+                  "name": "name",
+                  "placeholder": "Jane Cooper",
+                  "required": true
+                },
+                {
+                  "type": "field",
+                  "id": "contact-email",
+                  "label": "Email",
+                  "name": "email",
+                  "placeholder": "jane@company.com",
+                  "required": true
+                },
+                {
+                  "type": "field",
+                  "id": "contact-subject",
+                  "label": "Subject",
+                  "name": "subject",
+                  "placeholder": "How can we help?"
+                },
+                {
+                  "type": "textarea",
+                  "id": "contact-message",
+                  "label": "Message",
+                  "name": "message",
+                  "placeholder": "Tell us a bit more...",
+                  "rows": 5,
+                  "required": true
+                },
+                {
+                  "type": "button",
+                  "text": "Send Message",
+                  "variant": "solid",
+                  "colorPalette": "blue",
+                  "size": "lg"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "stack",
+      "direction": "vertical",
+      "align": "center",
+      "gap": "4",
+      "children": [
+        {
+          "type": "heading",
+          "text": "Looking for something else?",
+          "size": "2xl",
+          "as": "h2",
+          "style": "text-align:center"
+        },
+        {
+          "type": "stack",
+          "direction": "horizontal",
+          "align": "center",
+          "justify": "center",
+          "gap": "6",
+          "wrap": "wrap",
+          "children": [
+            {
+              "type": "link",
+              "text": "Read the docs",
+              "variant": "underline",
+              "colorPalette": "blue",
+              "href": "/docs"
+            },
+            {
+              "type": "link",
+              "text": "Support center",
+              "variant": "underline",
+              "colorPalette": "purple",
+              "href": "/support"
+            },
+            {
+              "type": "link",
+              "text": "System status",
+              "variant": "plain",
+              "colorPalette": "slate",
+              "href": "/status"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
