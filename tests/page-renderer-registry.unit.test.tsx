@@ -201,6 +201,7 @@ test("registry exposes a renderer for every canonical block type", () => {
     "dialog",
     "drawer",
     "field",
+    "textarea",
     "fieldset",
     "group",
     "hoverCard",

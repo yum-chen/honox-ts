@@ -37,6 +37,7 @@ import {
 	Stack,
 	Switch,
 	Text,
+	Textarea,
 } from "./ui";
 
 type BlockRenderer = (block: ComponentBlock) => JSX.Element;
@@ -458,6 +459,34 @@ const registry: Record<string, BlockRenderer> = {
 			>
 				{renderChildren(children as ComponentBlock[])}
 			</Field>
+		);
+	},
+
+	textarea: (b) => {
+		const {
+			label,
+			helperText,
+			errorText,
+			defaultValue,
+			disabled,
+			invalid,
+			required,
+			readOnly,
+			...rest
+		} = propsOf(b);
+		return (
+			<Textarea
+				interactive
+				label={label}
+				helperText={helperText}
+				errorText={errorText}
+				defaultValue={defaultValue}
+				disabled={disabled}
+				invalid={invalid}
+				required={required}
+				readOnly={readOnly}
+				{...rest}
+			/>
 		);
 	},
 

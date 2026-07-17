@@ -129,6 +129,12 @@ collections:
                                 widget: select
                                 options: [xs, sm, md, lg]
                                 default: md
+                              - label: Type
+                                name: type
+                                widget: select
+                                options: [button, submit, reset]
+                                default: button
+                                hint: "Use \"submit\" for a button inside a Fieldset that should submit its form."
                           - label: Badge
                             name: badge
                             widget: object
@@ -277,9 +283,26 @@ collections:
                             widget: object
                             fields: &field_fields
                               - { label: Label, name: label, widget: string, required: false }
+                              - { label: Name, name: name, widget: string, required: false, hint: "HTML name attribute, used when submitting a form." }
+                              - { label: Placeholder, name: placeholder, widget: string, required: false }
                               - { label: Helper Text, name: helperText, widget: string, required: false }
                               - { label: Error Text, name: errorText, widget: string, required: false }
                               - { label: Default Value, name: defaultValue, widget: string, required: false }
+                              - { label: Disabled, name: disabled, widget: boolean, default: false }
+                              - { label: Invalid, name: invalid, widget: boolean, default: false }
+                              - { label: Required, name: required, widget: boolean, default: false }
+                              - { label: Read Only, name: readOnly, widget: boolean, default: false }
+                          - label: Textarea
+                            name: textarea
+                            widget: object
+                            fields: &textarea_fields
+                              - { label: Label, name: label, widget: string, required: false }
+                              - { label: Name, name: name, widget: string, required: false, hint: "HTML name attribute, used when submitting a form." }
+                              - { label: Placeholder, name: placeholder, widget: string, required: false }
+                              - { label: Helper Text, name: helperText, widget: string, required: false }
+                              - { label: Error Text, name: errorText, widget: string, required: false }
+                              - { label: Default Value, name: defaultValue, widget: string, required: false }
+                              - { label: Rows, name: rows, widget: number, required: false, value_type: int }
                               - { label: Disabled, name: disabled, widget: boolean, default: false }
                               - { label: Invalid, name: invalid, widget: boolean, default: false }
                               - { label: Required, name: required, widget: boolean, default: false }
@@ -626,6 +649,8 @@ collections:
                     widget: object
                     fields:
                       - { label: Label, name: label, widget: string, required: false }
+                      - { label: Name, name: name, widget: string, required: false, hint: "HTML name attribute, used when submitting a form." }
+                      - { label: Placeholder, name: placeholder, widget: string, required: false }
                       - { label: Helper Text, name: helperText, widget: string, required: false }
                       - { label: Error Text, name: errorText, widget: string, required: false }
                       - { label: Default Value, name: defaultValue, widget: string, required: false }
@@ -638,6 +663,22 @@ collections:
                         widget: list
                         types: *leaf_components
                         required: false
+
+                  - label: Textarea
+                    name: textarea
+                    widget: object
+                    fields:
+                      - { label: Label, name: label, widget: string, required: false }
+                      - { label: Name, name: name, widget: string, required: false, hint: "HTML name attribute, used when submitting a form." }
+                      - { label: Placeholder, name: placeholder, widget: string, required: false }
+                      - { label: Helper Text, name: helperText, widget: string, required: false }
+                      - { label: Error Text, name: errorText, widget: string, required: false }
+                      - { label: Default Value, name: defaultValue, widget: string, required: false }
+                      - { label: Rows, name: rows, widget: number, required: false, value_type: int }
+                      - { label: Disabled, name: disabled, widget: boolean, default: false }
+                      - { label: Invalid, name: invalid, widget: boolean, default: false }
+                      - { label: Required, name: required, widget: boolean, default: false }
+                      - { label: Read Only, name: readOnly, widget: boolean, default: false }
 
                   - label: Fieldset
                     name: fieldset
@@ -934,6 +975,8 @@ collections:
             widget: object
             fields:
               - { label: Label, name: label, widget: string, required: false }
+              - { label: Name, name: name, widget: string, required: false, hint: "HTML name attribute, used when submitting a form." }
+              - { label: Placeholder, name: placeholder, widget: string, required: false }
               - { label: Helper Text, name: helperText, widget: string, required: false }
               - { label: Error Text, name: errorText, widget: string, required: false }
               - { label: Default Value, name: defaultValue, widget: string, required: false }
@@ -946,6 +989,22 @@ collections:
                 widget: list
                 types: *nestable_components
                 required: false
+
+          - label: Textarea
+            name: textarea
+            widget: object
+            fields:
+              - { label: Label, name: label, widget: string, required: false }
+              - { label: Name, name: name, widget: string, required: false, hint: "HTML name attribute, used when submitting a form." }
+              - { label: Placeholder, name: placeholder, widget: string, required: false }
+              - { label: Helper Text, name: helperText, widget: string, required: false }
+              - { label: Error Text, name: errorText, widget: string, required: false }
+              - { label: Default Value, name: defaultValue, widget: string, required: false }
+              - { label: Rows, name: rows, widget: number, required: false, value_type: int }
+              - { label: Disabled, name: disabled, widget: boolean, default: false }
+              - { label: Invalid, name: invalid, widget: boolean, default: false }
+              - { label: Required, name: required, widget: boolean, default: false }
+              - { label: Read Only, name: readOnly, widget: boolean, default: false }
 
           # ==========================================
           # 7. FIELDSET
