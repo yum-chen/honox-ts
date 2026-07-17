@@ -24,7 +24,7 @@ interface DrawerContextValue {
 
 const DrawerContext = createContext<DrawerContextValue | null>(null);
 
-const useDrawerContext = () => {
+export const useDrawerContext = () => {
 	const context = useContext(DrawerContext);
 	return context;
 };

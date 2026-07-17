@@ -1,5 +1,5 @@
 import { css } from "design-system/css";
-import { useState } from "hono/jsx";
+import { useEffect, useState } from "hono/jsx";
 import { Badge } from "../components/ui/badge";
 import {
 	NextTrigger,
@@ -7,7 +7,8 @@ import {
 	Root as PaginationRoot,
 	PrevTrigger,
 } from "../components/ui/pagination-primitive";
-import { TableBase } from "../components/ui/table-primitive";
+import { Skeleton } from "../components/ui/skeleton";
+import { TableBase, type TableColumn } from "../components/ui/table-primitive";
 
 interface User {
 	id: number;
@@ -221,28 +222,64 @@ const USERS: User[] = [
 	},
 ];
 
-export default function PaginatedTable() {
-	const [page, setPage] = useState(1);
-	const pageSize = 5;
+const DEFAULT_COLUMNS = [
+	{ header: "ID", key: "id", class: css({ width: "12" }) },
+	{ header: "Name", key: "name" },
+	{ header: "Email", key: "email" },
+	{ header: "Role", key: "role" },
+	{
+		header: "Status",
+		key: "status",
+		render: (row: any) => (
+			<Badge colorPalette={row.statusColor || "gray"}>{row.status}</Badge>
+		),
+	},
+];
 
-	const totalItems = USERS.length;
+export interface PaginatedTableProps<T = Record<string, any>> {
+	columns?: TableColumn<T>[];
+	data?: T[];
+	loading?: boolean;
+	pageSize?: number;
+	class?: string;
+}
+
+export default function PaginatedTable<T = Record<string, any>>(
+	props: PaginatedTableProps<T>,
+) {
+	const {
+		columns = DEFAULT_COLUMNS as unknown as TableColumn<T>[],
+		data = USERS as unknown as T[],
+		loading = false,
+		pageSize = 5,
+		class: classProp,
+	} = props;
+
+	const [page, setPage] = useState(1);
+
+	// Reset page when data changes
+	useEffect(() => {
+		setPage(1);
+	}, [data]);
+
+	const totalItems = data?.length || 0;
 	const startIndex = (page - 1) * pageSize;
 	const endIndex = page * pageSize;
-	const currentData = USERS.slice(startIndex, endIndex);
+	const currentData = (data || []).slice(startIndex, endIndex);
 
-	const columns = [
-		{ header: "ID", key: "id", class: css({ width: "12" }) },
-		{ header: "Name", key: "name" },
-		{ header: "Email", key: "email" },
-		{ header: "Role", key: "role" },
-		{
-			header: "Status",
-			key: "status",
-			render: (row: User) => (
-				<Badge colorPalette={row.statusColor}>{row.status}</Badge>
-			),
-		},
-	];
+	// Overwrite column renders and row values if table is in a loading state
+	const displayColumns = loading
+		? columns.map((col) => ({
+				...col,
+				render: () => <Skeleton height="5" width="85%" />,
+			}))
+		: columns;
+
+	const displayRows = loading
+		? (Array.from({ length: pageSize }).map((_, i) => ({
+				id: i,
+			})) as unknown as T[])
+		: currentData;
 
 	return (
 		<div
@@ -259,22 +296,26 @@ export default function PaginatedTable() {
 			<TableBase
 				variant="surface"
 				striped
-				columns={columns}
-				rows={currentData}
+				columns={displayColumns as unknown as TableColumn<any>[]}
+				rows={displayRows as unknown as Record<string, unknown>[]}
 			/>
 
-			<div class={css({ display: "flex", justifyContent: "center", mt: "4" })}>
-				<PaginationRoot
-					count={totalItems}
-					pageSize={pageSize}
-					page={page}
-					onPageChange={(details) => setPage(details.page)}
+			{!loading && totalItems > pageSize && (
+				<div
+					class={css({ display: "flex", justifyContent: "center", mt: "4" })}
 				>
-					<PrevTrigger />
-					<PaginationItems />
-					<NextTrigger />
-				</PaginationRoot>
-			</div>
+					<PaginationRoot
+						count={totalItems}
+						pageSize={pageSize}
+						page={page}
+						onPageChange={(details) => setPage(details.page)}
+					>
+						<PrevTrigger />
+						<PaginationItems />
+						<NextTrigger />
+					</PaginationRoot>
+				</div>
+			)}
 		</div>
 	);
 }

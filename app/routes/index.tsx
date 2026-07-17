@@ -61,6 +61,7 @@ import {
 	ToggleGroup,
 	Tooltip,
 } from "../components/ui";
+import PostsDrawer from "../islands/posts-drawer";
 
 const items = [
 	{ label: "React", value: "react" },
@@ -777,20 +778,7 @@ export default createRoute((c) => {
 												cancel={<Button variant="outline">Cancel</Button>}
 												confirm={<Button colorPalette="red">Delete</Button>}
 											/>
-											<Drawer
-												trigger={
-													<Button variant="outline">
-														Open Settings Drawer
-													</Button>
-												}
-												title="Project Settings"
-												description="Configure workspace properties"
-												body="Manage your database connections, member access levels, and billing preferences directly here."
-												cancel={<Button variant="outline">Dismiss</Button>}
-												confirm={
-													<Button colorPalette="blue">Save Changes</Button>
-												}
-											/>
+											<PostsDrawer />
 										</Stack>
 									</Card>
 
