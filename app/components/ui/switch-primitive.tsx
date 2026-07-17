@@ -87,7 +87,24 @@ export function Switch(props: SwitchProps) {
 				aria-describedby={
 					describedBy.length > 0 ? describedBy.join(" ") : undefined
 				}
+				onClick={(e) => {
+					// The HTML `readonly` attribute has no effect on checkboxes, so the
+					// click must be cancelled manually to actually block toggling.
+					if (readOnlyProp) e.preventDefault();
+				}}
+				onKeyDown={(e) => {
+					// Native checkboxes only toggle on Space; Ark UI's switch also
+					// toggles on Enter, so replicate that here.
+					if (readOnlyProp || e.key !== "Enter") return;
+					e.preventDefault();
+					if (e.target instanceof HTMLInputElement) {
+						const nextChecked = !e.target.checked;
+						e.target.checked = nextChecked;
+						onCheckedChange?.({ checked: nextChecked });
+					}
+				}}
 				onChange={(e) => {
+					if (readOnlyProp) return;
 					if (e.target instanceof HTMLInputElement) {
 						onCheckedChange?.({ checked: e.target.checked });
 					}

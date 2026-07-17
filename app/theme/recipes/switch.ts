@@ -32,12 +32,11 @@ export const switchRecipe = defineSlotRecipe({
 			placeContent: "center",
 			transition: "inset-inline-start 0.12s ease",
 			insetInlineStart: "calc(var(--switch-x) - 2px)",
-			_peerChecked: {
+			_checked: {
 				insetInlineStart: "2px",
 			},
 		},
 		control: {
-			border: "0.5px solid {colors.gray.subtle.bg}",
 			display: "inline-flex",
 			gap: "0.5rem",
 			flexShrink: 0,
@@ -47,9 +46,7 @@ export const switchRecipe = defineSlotRecipe({
 			position: "relative",
 			width: "var(--switch-width)",
 			height: "var(--switch-height)",
-			transitionProperty: "background",
-			transitionDuration: "fast",
-			transitionTimingFunction: "default",
+			transition: "backgrounds",
 			_disabled: {
 				layerStyle: "disabled",
 			},
@@ -60,18 +57,16 @@ export const switchRecipe = defineSlotRecipe({
 			},
 		},
 		thumb: {
-			border: "0.5px solid {colors.gray.sutble.bg}",
 			display: "flex",
 			alignItems: "center",
 			justifyContent: "center",
 			flexShrink: 0,
-			transitionProperty: "transform",
+			transitionProperty: "translate",
 			transitionDuration: "fast",
 			transitionTimingFunction: "default",
 			borderRadius: "inherit",
-			transform: "translateX(-0.75px) translateY(-0.75px)",
 			_checked: {
-				transform: "translateX(calc(var(--switch-x) + 5px))",
+				translate: "var(--switch-x) 0",
 			},
 		},
 	},
@@ -84,19 +79,19 @@ export const switchRecipe = defineSlotRecipe({
 			solid: {
 				control: {
 					borderRadius: "full",
-					bg: "{colors.gray.6}",
+					bg: "gray.subtle.bg",
 					_peerFocusVisible: {
 						outline: "2px solid",
 						outlineColor: "colorPalette.solid.bg",
 						outlineOffset: "2px",
 					},
-					_peerChecked: {
+					_checked: {
 						bg: "colorPalette.solid.bg",
 					},
 				},
 				thumb: {
 					bg: "white",
-					_peerChecked: {
+					_checked: {
 						bg: "colorPalette.solid.fg",
 					},
 					width: "var(--switch-height)",

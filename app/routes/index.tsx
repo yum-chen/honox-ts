@@ -236,25 +236,43 @@ export default createRoute((c) => {
 						</Heading>
 					</Stack>
 
-					<nav class={css({ display: "flex", gap: "6", alignItems: "center" })}>
+					<nav
+						class={css({
+							display: "flex",
+							gap: { base: "3", md: "6" },
+							alignItems: "center",
+						})}
+					>
 						<Anchor
 							href="/blog"
 							variant="plain"
-							class={css({ textStyle: "sm", fontWeight: "medium" })}
+							class={css({
+								display: { base: "none", md: "block" },
+								textStyle: "sm",
+								fontWeight: "medium",
+							})}
 						>
 							Blog
 						</Anchor>
 						<Anchor
 							href="/pages/product-landing"
 							variant="plain"
-							class={css({ textStyle: "sm", fontWeight: "medium" })}
+							class={css({
+								display: { base: "none", md: "block" },
+								textStyle: "sm",
+								fontWeight: "medium",
+							})}
 						>
 							Pulse Landing Page
 						</Anchor>
 						<Anchor
 							href="/admin"
 							variant="plain"
-							class={css({ textStyle: "sm", fontWeight: "medium" })}
+							class={css({
+								display: { base: "none", md: "block" },
+								textStyle: "sm",
+								fontWeight: "medium",
+							})}
 						>
 							Sveltia CMS
 						</Anchor>
