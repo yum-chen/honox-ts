@@ -42,8 +42,36 @@ export default function TabsIsland(props: TabsIslandProps) {
 		...rest
 	} = props;
 
+	// The server wrapper (`tabs.tsx`'s liftItemSlots) hoists every element-valued
+	// item field into a dedicated `__slot_<index>_<field>` prop so HonoX carries
+	// it through a live `<template>` slot instead of JSON-mangling the vnode.
+	// Split those back out of `rest`: reassemble them into their items by index,
+	// and keep them off `domRest` so they never leak onto the DOM root as stray
+	// attributes.
+	const slots: Record<string, unknown> = {};
+	const domRest: Record<string, unknown> = {};
+	for (const key in rest) {
+		if (key.startsWith("__slot_")) {
+			slots[key] = (rest as Record<string, unknown>)[key];
+		} else {
+			domRest[key] = (rest as Record<string, unknown>)[key];
+		}
+	}
+
+	const hydratedItems = (items || []).map((item, index) => {
+		let next = item;
+		for (const field of ["label", "content", "children", "icon", "closeIcon"]) {
+			const key = `__slot_${index}_${field}`;
+			if (key in slots) {
+				if (next === item) next = { ...item };
+				(next as Record<string, unknown>)[field] = slots[key];
+			}
+		}
+		return next;
+	});
+
 	// Normalize items
-	const normalizedItems = (items || []).map((item) => {
+	const normalizedItems = hydratedItems.map((item) => {
 		const val = item.value ?? item.key;
 		const content = item.content ?? item.children;
 		return {
@@ -65,13 +93,19 @@ export default function TabsIsland(props: TabsIslandProps) {
 					: (defaultValue ??
 						normalizedItems.find((item) => !item.disabled)?.value);
 
-	const [value, setValue] = useState(initialVal);
+	const [value, setValue] = useState<string | undefined>(initialVal);
 	const [tabItems, setTabItems] = useState<TabsItem[]>(normalizedItems);
 	const rootRef = useRef<HTMLDivElement>(null);
 
-	const updateIndicator = (activeTrigger: HTMLElement) => {
+	const updateIndicator = (activeTrigger: HTMLElement | null) => {
 		const root = rootRef.current;
 		if (!root) return;
+
+		if (!activeTrigger) {
+			root.style.setProperty("--width", "0px");
+			root.style.setProperty("--height", "0px");
+			return;
+		}
 
 		const rect = activeTrigger.getBoundingClientRect();
 		const rootRect = root.getBoundingClientRect();
@@ -122,27 +156,27 @@ export default function TabsIsland(props: TabsIslandProps) {
 		if (!root) return;
 
 		let activeTrigger: HTMLElement | null = null;
-		for (const trigger of root.querySelectorAll<HTMLElement>(
-			'[data-scope="tabs"][data-part="trigger"]',
-		)) {
-			const isSelected = trigger.getAttribute("data-value") === newValue;
-			if (isSelected) activeTrigger = trigger;
-			trigger.setAttribute("aria-selected", isSelected ? "true" : "false");
-			trigger.tabIndex = isSelected ? 0 : -1;
-			if (isSelected) trigger.setAttribute("data-selected", "");
-			else trigger.removeAttribute("data-selected");
-		}
+		root
+			.querySelectorAll<HTMLElement>('[data-scope="tabs"][data-part="trigger"]')
+			.forEach((trigger) => {
+				const isSelected = trigger.getAttribute("data-value") === newValue;
+				if (isSelected) activeTrigger = trigger;
+				trigger.setAttribute("aria-selected", isSelected ? "true" : "false");
+				trigger.tabIndex = isSelected ? 0 : -1;
+				if (isSelected) trigger.setAttribute("data-selected", "");
+				else trigger.removeAttribute("data-selected");
+			});
 
-		for (const content of root.querySelectorAll<HTMLElement>(
-			'[data-scope="tabs"][data-part="content"]',
-		)) {
-			const isSelected = content.getAttribute("data-value") === newValue;
-			content.hidden = !isSelected;
-			if (isSelected) content.setAttribute("data-selected", "");
-			else content.removeAttribute("data-selected");
-		}
+		root
+			.querySelectorAll<HTMLElement>('[data-scope="tabs"][data-part="content"]')
+			.forEach((content) => {
+				const isSelected = content.getAttribute("data-value") === newValue;
+				content.hidden = !isSelected;
+				if (isSelected) content.setAttribute("data-selected", "");
+				else content.removeAttribute("data-selected");
+			});
 
-		if (activeTrigger) updateIndicator(activeTrigger);
+		updateIndicator(activeTrigger);
 	};
 
 	// Closing/adding tabs mutates the list itself, not just which value is
@@ -153,8 +187,8 @@ export default function TabsIsland(props: TabsIslandProps) {
 		setTabItems((prev) => {
 			const closedIndex = prev.findIndex((item) => item.value === closedValue);
 			const next = prev.filter((item) => item.value !== closedValue);
-			if (value === closedValue && next.length > 0) {
-				const neighbor = next[Math.min(closedIndex, next.length - 1)];
+			const neighbor = next[Math.min(closedIndex, next.length - 1)];
+			if (value === closedValue && neighbor) {
 				setValue(neighbor.value);
 				requestAnimationFrame(() => syncSelection(neighbor.value));
 				onChange?.(neighbor.value);
@@ -203,11 +237,15 @@ export default function TabsIsland(props: TabsIslandProps) {
 
 		requestAnimationFrame(() => syncSelection(value));
 
-		const selectValue = (newValue: string) => {
+		const selectValue = (newValue: string | undefined) => {
 			setValue(newValue);
 			syncSelection(newValue);
-			onValueChange?.(newValue);
-			onChange?.(newValue);
+			if (newValue !== undefined) {
+				onValueChange?.(newValue);
+				onChange?.(newValue);
+			} else {
+				onValueChange?.(undefined as unknown as string);
+			}
 		};
 
 		const handleClick = (e: MouseEvent) => {
@@ -218,7 +256,13 @@ export default function TabsIsland(props: TabsIslandProps) {
 				const newValue = trigger.getAttribute("data-value");
 				if (newValue) {
 					onTabClick?.(newValue, e);
-					selectValue(newValue);
+					const alreadySelected =
+						trigger.getAttribute("data-selected") !== null;
+					if (alreadySelected && props.deselectable) {
+						selectValue(undefined);
+					} else {
+						selectValue(newValue);
+					}
 				}
 			}
 		};
@@ -252,20 +296,25 @@ export default function TabsIsland(props: TabsIslandProps) {
 			const vertical = root.getAttribute("data-orientation") === "vertical";
 			const nextKey = vertical ? "ArrowDown" : "ArrowRight";
 			const prevKey = vertical ? "ArrowUp" : "ArrowLeft";
+			const loopFocus = props.loopFocus ?? true;
 
 			let nextIndex = -1;
 			if (e.key === nextKey) {
-				nextIndex = (index + 1) % triggers.length;
+				nextIndex = loopFocus
+					? (index + 1) % triggers.length
+					: Math.min(index + 1, triggers.length - 1);
 			} else if (e.key === prevKey) {
-				nextIndex = (index - 1 + triggers.length) % triggers.length;
+				nextIndex = loopFocus
+					? (index - 1 + triggers.length) % triggers.length
+					: Math.max(index - 1, 0);
 			} else if (e.key === "Home") {
 				nextIndex = 0;
 			} else if (e.key === "End") {
 				nextIndex = triggers.length - 1;
 			}
 
-			if (nextIndex !== -1) {
-				const nextTrigger = triggers[nextIndex];
+			const nextTrigger = nextIndex !== -1 ? triggers[nextIndex] : undefined;
+			if (nextTrigger && nextIndex !== index) {
 				nextTrigger.focus();
 				if (props.activationMode !== "manual") {
 					const newValue = nextTrigger.getAttribute("data-value");
@@ -320,12 +369,14 @@ export default function TabsIsland(props: TabsIslandProps) {
 
 	return (
 		<InteractiveRoot
-			{...rest}
+			{...(domRest as RootProps)}
 			value={value}
 			onValueChange={(val) => {
 				setValue(val);
-				onChange?.(val);
-				onValueChange?.(val);
+				if (val !== undefined) {
+					onChange?.(val);
+					onValueChange?.(val);
+				}
 			}}
 			rootRef={rootRef}
 			data-hydrated="true"

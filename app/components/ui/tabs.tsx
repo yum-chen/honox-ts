@@ -1,3 +1,5 @@
+import type { JSX } from "hono/jsx";
+import { isValidElement } from "hono/jsx";
 import InteractiveTabsIsland from "../../islands/tabs";
 import { shouldHydrate } from "./island-utils";
 import {
@@ -13,6 +15,50 @@ import {
 } from "./tabs-primitive";
 
 type TabsItemFromPrimitive = import("./tabs-primitive").TabsItem;
+
+// HonoX only diverts *top-level* element props into live `<template>` slots;
+// anything nested one level deeper (a JSX field inside the `items` array) is
+// JSON-serialized instead, which silently drops component vnodes because
+// functions can't survive `JSON.stringify`. To carry those across the island
+// boundary intact we hoist each element-valued item field into its own
+// top-level `__slot_<index>_<field>` prop, which the island reassembles by key.
+// See the honox-island-jsx-props-serialization note.
+const ITEM_SLOT_FIELDS = [
+	"label",
+	"content",
+	"children",
+	"icon",
+	"closeIcon",
+] as const;
+
+// Mirrors HonoX's own `isElementPropValue` so our hoist decision matches its
+// serialize decision exactly (an array counts if any member is element-valued).
+const isElementValue = (value: unknown): boolean =>
+	Array.isArray(value)
+		? value.some(isElementValue)
+		: typeof value === "object" && value !== null && isValidElement(value);
+
+function liftItemSlots(items: TabsItemFromPrimitive[] | undefined): {
+	items: TabsItemFromPrimitive[] | undefined;
+	slots: Record<string, JSX.Element>;
+} {
+	const slots: Record<string, JSX.Element> = {};
+	if (!items) return { items, slots };
+	const serializable = items.map((item, index) => {
+		let next = item;
+		for (const field of ITEM_SLOT_FIELDS) {
+			const value = (item as Record<string, unknown>)[field];
+			if (isElementValue(value)) {
+				// Copy on first hoist so the caller's original item is untouched.
+				if (next === item) next = { ...item };
+				slots[`__slot_${index}_${field}`] = value as JSX.Element;
+				delete (next as Record<string, unknown>)[field];
+			}
+		}
+		return next;
+	});
+	return { items: serializable, slots };
+}
 
 export interface TabsProps extends InteractiveRootProps, TabsStructureProps {
 	interactive?: boolean;
@@ -49,6 +95,7 @@ const TabsRoot = (props: TabsProps) => {
 		rootProps.onChange !== undefined ||
 		rootProps.onTabClick !== undefined ||
 		rootProps.onTabScroll !== undefined ||
+		rootProps.deselectable !== undefined ||
 		onEdit !== undefined ||
 		closable !== undefined ||
 		resolvedEditable !== undefined ||
@@ -71,10 +118,11 @@ const TabsRoot = (props: TabsProps) => {
 	}
 
 	if (shouldHydrate(interactive, hasSignal)) {
+		const { items: serializableItems, slots } = liftItemSlots(items);
 		return (
 			<InteractiveTabsIsland
 				{...rootProps}
-				items={items}
+				items={serializableItems as TabsStructureProps["items"]}
 				indicator={indicator}
 				closable={closable}
 				editable={resolvedEditable}
@@ -85,6 +133,7 @@ const TabsRoot = (props: TabsProps) => {
 				extra={extra}
 				tabBarExtraContent={tabBarExtraContent}
 				onEdit={onEdit}
+				{...(slots as Record<string, never>)}
 			>
 				{children}
 			</InteractiveTabsIsland>

@@ -197,13 +197,65 @@ describe("Tabs Unit Tests", () => {
 		expect(html).toContain('data-orientation="vertical"');
 	});
 
-	test("should support destroyOnHidden and completely destroy inactive panels", () => {
+	test("should support unmountOnExit, completely destroying inactive panels", () => {
 		const html = (
-			<Tabs defaultValue="react" destroyOnHidden items={items} />
+			<Tabs defaultValue="react" unmountOnExit items={items} />
 		).toString();
 
 		expect(html).toContain("React Content");
 		expect(html).not.toContain("Solid Content");
+	});
+
+	test("should support per-item unmountOnExit override", () => {
+		const html = (
+			<Tabs
+				defaultValue="react"
+				items={[
+					{ value: "react", label: "React", content: "React Content" },
+					{
+						value: "solid",
+						label: "Solid",
+						content: "Solid Content",
+						unmountOnExit: true,
+					},
+				]}
+			/>
+		).toString();
+
+		expect(html).toContain("React Content");
+		expect(html).not.toContain("Solid Content");
+	});
+
+	test("should support lazyMount, skipping panels never yet activated", () => {
+		const html = (
+			<Tabs defaultValue="react" lazyMount items={items} />
+		).toString();
+
+		expect(html).toContain("React Content");
+		expect(html).not.toContain("Solid Content");
+	});
+
+	test("should not lazy-skip a panel that is the active tab", () => {
+		const html = (
+			<Tabs defaultValue="solid" lazyMount items={items} />
+		).toString();
+
+		expect(html).toContain("Solid Content");
+	});
+
+	test("should support deselectable and loopFocus without leaking as DOM attributes", () => {
+		const html = (
+			<Tabs items={items} deselectable loopFocus={false} />
+		).toString();
+
+		expect(html).not.toContain("deselectable=");
+		expect(html).not.toContain("loopFocus=");
+	});
+
+	test("should hydrate when deselectable is provided", () => {
+		const html = (<Tabs items={items} deselectable />).toString();
+
+		expect(html).toContain('data-hydrated="true"');
 	});
 
 	test("should support custom classNames and styles for semantic structures", () => {
@@ -348,5 +400,66 @@ describe("Tabs Unit Tests", () => {
 
 		expect(html).toContain("gap:24px");
 		expect(html).toContain("background:blue");
+	});
+
+	// The wrapper lifts element-valued item fields into `__slot_*` props so the
+	// island can carry them across the HonoX boundary via live <template> slots
+	// (the actual JSON-mangling failure it avoids is exercised end-to-end in the
+	// Playwright suite; these assert the lift -> reassemble round-trip and that
+	// the internal slot keys never leak onto the DOM).
+	test("should round-trip element-valued item content through the interactive island", () => {
+		const Widget = (props: { label: string }) => (
+			<div data-testid="widget">Widget {props.label}</div>
+		);
+		const html = (
+			<Tabs
+				interactive
+				items={[
+					{
+						value: "react",
+						label: "React",
+						content: (
+							<div>
+								Rich <Widget label="A" />
+							</div>
+						),
+					},
+					{
+						value: "solid",
+						label: "Solid",
+						content: (
+							<div>
+								Other <Widget label="B" />
+							</div>
+						),
+					},
+				]}
+			/>
+		).toString();
+
+		expect(html).toContain('data-hydrated="true"');
+		expect(html).toContain("Widget A");
+		expect(html).toContain("Widget B");
+		// The internal slot keys must never leak onto the DOM as attributes.
+		expect(html).not.toContain("__slot_");
+	});
+
+	test("should round-trip an element-valued item label without leaking slot keys", () => {
+		const html = (
+			<Tabs
+				interactive
+				items={[
+					{
+						value: "react",
+						label: <span data-testid="rich-label">React</span>,
+						content: "React Content",
+					},
+				]}
+			/>
+		).toString();
+
+		expect(html).toContain('data-testid="rich-label"');
+		expect(html).toContain("React Content");
+		expect(html).not.toContain("__slot_");
 	});
 });

@@ -7,6 +7,7 @@ import {
 	type PropsWithChildren,
 	useContext,
 	useId,
+	useRef,
 } from "hono/jsx";
 
 // `TabsContext` below is a module-scope singleton. Hot-reloading this file
@@ -62,10 +63,13 @@ const PlusIcon = () => (
 interface TabsContextValue {
 	styles: TabsStyles;
 	value?: string;
-	onValueChange?: (value: string) => void;
+	onValueChange?: (value: string | undefined) => void;
 	id: string;
 	orientation: "horizontal" | "vertical";
-	destroyOnHidden?: boolean;
+	lazyMount?: boolean;
+	unmountOnExit?: boolean;
+	deselectable?: boolean;
+	loopFocus?: boolean;
 	classNames?: Record<string, string>;
 	customStyles?: Record<string, any>;
 	animated?: boolean | { inkBar?: boolean; tabPane?: boolean };
@@ -73,6 +77,7 @@ interface TabsContextValue {
 	tabBarStyle?: any;
 	removeIcon?: any;
 	addIcon?: any;
+	mountedValues?: Set<string>;
 }
 
 /** Fine-grain control over the sliding indicator's thickness and alignment. */
@@ -104,13 +109,20 @@ export const useTabsContext = () => {
 export interface RootProps extends TabsVariantProps, PropsWithChildren {
 	defaultValue?: string;
 	value?: string;
-	onValueChange?: (value: string) => void;
+	onValueChange?: (value: string | undefined) => void;
 	id?: string;
 	orientation?: "horizontal" | "vertical";
 	activationMode?: "automatic" | "manual";
+	/** Whether re-activating the selected trigger clears the selection. Default `false`. */
+	deselectable?: boolean;
+	/** Whether arrow-key navigation wraps around. Default `true`. */
+	loopFocus?: boolean;
+	/** Never mount a panel until its tab is first activated. Default `false`. */
+	lazyMount?: boolean;
+	/** Unmount a panel as soon as it's no longer active. Default `false`. */
+	unmountOnExit?: boolean;
 	rootRef?: any;
 
-	// New fields to refine styling, functionality, and enterprise APIs
 	activeKey?: string;
 	defaultActiveKey?: string;
 	onChange?: (value: string) => void;
@@ -123,8 +135,6 @@ export interface RootProps extends TabsVariantProps, PropsWithChildren {
 	type?: "line" | "card" | "editable-card";
 	tabPlacement?: "top" | "end" | "bottom" | "start";
 	tabPosition?: "top" | "right" | "bottom" | "left";
-	destroyOnHidden?: boolean;
-	destroyInactiveTabPane?: boolean;
 	tabBarGutter?: number | string;
 	tabBarStyle?: any;
 	classNames?: Record<string, string>;
@@ -170,6 +180,10 @@ export function Root(props: RootProps) {
 		id: idProp,
 		orientation,
 		rootRef,
+		deselectable,
+		loopFocus,
+		lazyMount,
+		unmountOnExit,
 
 		activeKey,
 		defaultActiveKey,
@@ -179,8 +193,6 @@ export function Root(props: RootProps) {
 		type,
 		tabPlacement,
 		tabPosition,
-		destroyOnHidden,
-		destroyInactiveTabPane,
 		tabBarGutter,
 		tabBarStyle,
 		classNames,
@@ -225,17 +237,28 @@ export function Root(props: RootProps) {
 	const resolvedVal = activeKey !== undefined ? activeKey : value;
 	const resolvedDefaultVal =
 		defaultActiveKey !== undefined ? defaultActiveKey : defaultValue;
+	const currentValue = resolvedVal ?? resolvedDefaultVal;
+
+	// Backs `lazyMount`: tracks every value that has been active at least
+	// once so a panel that was already shown stays mounted even after the
+	// selection moves away, rather than remounting from scratch each time.
+	const mountedRef = useRef<Set<string>>();
+	if (!mountedRef.current) mountedRef.current = new Set();
+	if (currentValue) mountedRef.current.add(currentValue);
 
 	const contextValue: TabsContextValue = {
 		styles: stylesObj,
-		value: resolvedVal ?? resolvedDefaultVal,
+		value: currentValue,
 		onValueChange: (val) => {
 			onValueChange?.(val);
-			onChange?.(val);
+			if (val !== undefined) onChange?.(val);
 		},
 		id,
 		orientation: resolvedOrientation,
-		destroyOnHidden: destroyOnHidden ?? destroyInactiveTabPane,
+		lazyMount,
+		unmountOnExit,
+		deselectable,
+		loopFocus: loopFocus ?? true,
 		classNames,
 		customStyles: styles,
 		animated,
@@ -243,6 +266,7 @@ export function Root(props: RootProps) {
 		tabBarStyle,
 		removeIcon,
 		addIcon,
+		mountedValues: mountedRef.current,
 	};
 
 	const semanticRoot = getSemanticProps("root", classNames, styles);
@@ -452,7 +476,8 @@ export interface ContentProps extends PropsWithChildren {
 	value: string;
 	class?: string;
 	style?: any;
-	destroyOnHidden?: boolean;
+	/** Per-panel override of the root's `unmountOnExit`. */
+	unmountOnExit?: boolean;
 }
 
 export function Content(props: ContentProps) {
@@ -461,13 +486,23 @@ export function Content(props: ContentProps) {
 		children,
 		class: classProp,
 		style,
-		destroyOnHidden: itemDestroy,
+		unmountOnExit: itemUnmount,
 	} = props;
 	const context = useTabsContext();
 	const isSelected = context.value === value;
-	const shouldDestroy = itemDestroy ?? context.destroyOnHidden;
+	const shouldUnmount = itemUnmount ?? context.unmountOnExit;
 
-	if (shouldDestroy && !isSelected) {
+	if (shouldUnmount && !isSelected) {
+		return null;
+	}
+
+	// `lazyMount`: skip the very first mount for panels that have never been
+	// active yet. Once `context.mountedValues` records a value (Root adds the
+	// current value on every render), it stays mounted from then on even if
+	// selection moves elsewhere — this only matters for the initial render
+	// of a fresh island/SSR pass, since later selection changes are handled
+	// via the imperative DOM sync in `islands/tabs.tsx`, not re-render.
+	if (context.lazyMount && !isSelected && !context.mountedValues?.has(value)) {
 		return null;
 	}
 
@@ -554,7 +589,8 @@ export interface TabsItem {
 	/** Overrides the structure-level `closable`/`editable` default for this tab. */
 	closable?: boolean;
 	closeIcon?: any;
-	destroyOnHidden?: boolean;
+	/** Per-item override of the root's `unmountOnExit`. */
+	unmountOnExit?: boolean;
 }
 
 export interface AddTriggerProps {
@@ -723,7 +759,7 @@ export const TabsStructure = (props: TabsStructureProps) => {
 				<Content
 					key={item.value}
 					value={item.value}
-					destroyOnHidden={item.destroyOnHidden}
+					unmountOnExit={item.unmountOnExit}
 				>
 					{item.content}
 				</Content>
