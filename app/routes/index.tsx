@@ -593,6 +593,41 @@ export default createRoute((c) => {
 											/>
 										</div>
 									</Card>
+
+									{/* Field */}
+									<Card
+										title="Field"
+										description="Labeled input with live validation"
+									>
+										<div class={css({ mt: "2" })}>
+											<Field
+												interactive
+												label="Username"
+												defaultValue="ab"
+												validator={(value: string) =>
+													value.length >= 3 || "Must be at least 3 characters"
+												}
+											/>
+										</div>
+									</Card>
+
+									{/* Textarea */}
+									<Card
+										title="Textarea"
+										description="Multi-line input with live validation"
+									>
+										<div class={css({ mt: "2" })}>
+											<Textarea
+												interactive
+												label="Bio"
+												defaultValue="Too short"
+												validator={(value: string) =>
+													value.length >= 20 ||
+													"Tell us a bit more (20 characters min)"
+												}
+											/>
+										</div>
+									</Card>
 								</Grid>
 							</div>
 						</TabsContent>
