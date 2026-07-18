@@ -17,6 +17,18 @@ A component that allows users to enter multiple tags as a list.
   </div>
 </DemoPreview>
 
+### CMS Page Builder
+
+This component is available as a `tagsInput` block in the [Page Builder](/docs/PageBuilder) (`content/pages/*.json`):
+
+```json
+{
+  "type": "tagsInput",
+  "label": "Amenities",
+  "defaultValue": ["WiFi", "Fireplace", "Hot Tub"]
+}
+```
+
 ## Props
 
 | Prop | Type | Default | Description |
@@ -28,10 +40,11 @@ A component that allows users to enter multiple tags as a list.
 
 ```yaml
 - label: TagsInput
-  name: tags-input
+  name: tagsInput
   widget: object
   fields:
-    - { label: Default Value, name: defaultValue, widget: list, required: false }
+    - { label: Label, name: label, widget: string, required: false }
+    - { label: Default Tags, name: defaultValue, widget: list, required: false }
 ```
 
 ## Hydration

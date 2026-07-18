@@ -46,6 +46,20 @@ for wrapping inert content (plain text, an icon) that isn't itself focusable,
 but it adds a second, redundant tab stop when the child is already
 interactive.
 
+## CMS Page Builder
+
+This component is available as a `tooltip` block in the [Page Builder](/docs/PageBuilder) (`content/pages/*.json`). The CMS trigger is a plain `triggerText` string, auto-wrapped in an outline `Button` with `asChild` (the same pattern `Popover`/`HoverCard` use):
+
+```json
+{
+  "type": "tooltip",
+  "content": "Free cancellation up to 24 hours before check-in.",
+  "triggerText": "Cancellation Policy",
+  "placement": "top",
+  "showArrow": true
+}
+```
+
 
 # Props
 

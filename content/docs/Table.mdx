@@ -66,6 +66,23 @@ export default function MyPage() {
 }
 ```
 
+## CMS Page Builder
+
+This component is available as a `table` block in the [Page Builder](/docs/PageBuilder) (`content/pages/*.json`). Since row data can't have a fixed CMS shape, `rows` is a JSON-encoded string field, parsed at render time:
+
+```json
+{
+  "type": "table",
+  "columns": [
+    { "header": "Room", "key": "room" },
+    { "header": "Price", "key": "price", "align": "end" }
+  ],
+  "rows": "[{\"room\": \"Cabin Loft\", \"price\": \"$180/night\"}, {\"room\": \"Cabin Suite\", \"price\": \"$240/night\"}]",
+  "variant": "plain",
+  "striped": true
+}
+```
+
 # Props
 
 | Prop | Type | Description |

@@ -14,12 +14,16 @@ Page layouts are saved as JSON files in `content/pages/*.json` and are compiled 
 
 ## Supported Components
 
-The Page Builder supports a rich palette of over 25+ layout, typography, decorative, and interactive components.
+The Page Builder supports a rich palette of over 40 layout, typography, decorative, and interactive components.
 
 ### 1. Structure & Layout
 * **Stack**: Groups children vertically or horizontally with controllable alignment, justification, and gap spacing.
+* **Grid**: Responsive CSS Grid layout — fixed column/row counts or auto-fit by minimum child width.
 * **Group**: Aligns elements like buttons closely together (supports `attached` and `grow` properties).
 * **Fieldset**: Organizes related form components under a styled container with `legend`, `helperText`, and `errorText`.
+* **AbsoluteCenter**: Centers a single nested block within its parent along one or both axes.
+* **Splitter**: Resizable panels separated by drag handles. Always renders static in the Page Builder (panel content can't cross the island hydration boundary).
+* **Breadcrumb**: Navigation trail of linked items with a customizable separator.
 
 ### 2. Typography & Content
 * **Heading**: Styled headers of levels `h1` through `h6` and various responsive text sizes.
@@ -31,6 +35,9 @@ The Page Builder supports a rich palette of over 25+ layout, typography, decorat
 * **Card**: A rich container supporting nested blocks, headers, footers, and top/bottom/left/right image positions.
 * **Progress**: Renders linear or circular progress indicators.
 * **Skeleton**: Highly customisable placeholder skeletons (supports circle and multi-line text shapes).
+* **Loader** / **Spinner**: Loading indicators, with optional accompanying text.
+* **Table**: Static tabular data with configurable columns and a JSON-encoded row array.
+* **Icon**: Raw inline SVG markup with size/color controls.
 
 ### 4. Interactive & Overlays
 * **Button**: Primary clickable targets supporting custom palettes, sizes, and styling variants.
@@ -38,15 +45,24 @@ The Page Builder supports a rich palette of over 25+ layout, typography, decorat
 * **Combobox**: Dropdowns with clear actions and items lists.
 * **Collapsible**: Disclosure containers that show/hide nested component trees.
 * **Popover**: Floating descriptive content anchored to standard text triggers.
+* **Tooltip**: Contextual hint text anchored to a trigger button on hover/focus.
+* **HoverCard**: Richer hover-triggered content than a Tooltip, with an optional title/description.
 * **Dialog**: Fully focus-trapped modal boxes with custom Confirm/Cancel buttons and custom children list.
 * **Drawer**: Responsive side panels sliding in from the page edge with custom children list.
-* **Dropdown**: Action menus with custom checkable, selectable, and separator options.
+* **Dropdown** (block type `menu`): Action menus with custom checkable, selectable, and separator options.
 
 ### 5. Advanced & Data
-* **RadioGroup**: Custom radio lists with accessible single-select logic.
+* **Select**: Custom single/multi-select dropdown, form-submittable.
+* **DatePicker**: Single/multiple/range date selection with a popup calendar.
+* **TagsInput**: Free-form list of string tags.
+* **RadioGroup** / **RadioCardGroup**: Custom radio lists with accessible single-select logic.
 * **SegmentGroup**: Sliding segmented controls for tabbed selection.
 * **Slider**: Range slider components.
-* **Switch**: Toggle switches.
+* **Switch**: Toggle switches. (**Known gap:** the CMS "Label" field isn't wired to a visible label — see the [Switch docs](/docs/Switch).)
+* **Editable**: Inline click-to-edit text.
+* **ColorPicker**: Saturation/hue/alpha color picker with hex/RGBA/HSLA input.
+* **FileUpload**: Drag-and-drop or click-to-browse file selection.
+* **Carousel**: Auto-playing or manual image slideshow.
 * **PaginatedTable**: Interactive dynamic table components with paging support.
 * **Pagination**: Interactive page controllers.
 

@@ -46,6 +46,18 @@ export default function MyPage() {
 }
 ```
 
+## CMS Page Builder
+
+This component is available as a `loader` block in the [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) — the CMS `text` field maps directly to `Loader`'s own `text` prop:
+
+```json
+{
+  "type": "loader",
+  "text": "Checking availability...",
+  "spinnerPlacement": "start"
+}
+```
+
 # Props
 
 | Prop               | Type               | Description                                                             |
