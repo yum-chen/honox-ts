@@ -2,13 +2,13 @@ import { css } from "design-system/css";
 import { createRoute } from "honox/factory";
 import { DocsLayout } from "../../components/docs-layout";
 import { Anchor, Card, Heading, Text } from "../../components/ui";
-import { loadDocs } from "../../lib/docs";
+import { loadDocs, loadDocsConfig } from "../../lib/docs";
 
 export default createRoute(async (c) => {
-	const docs = await loadDocs();
+	const [docs, docsConfig] = await Promise.all([loadDocs(), loadDocsConfig()]);
 
 	return c.render(
-		<DocsLayout docs={docs}>
+		<DocsLayout docs={docs} config={docsConfig}>
 			<title>Docs - Artefact</title>
 
 			<Heading as="h1" size="2xl" class={css({ mb: "3" })}>

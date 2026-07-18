@@ -106,7 +106,7 @@ collections:
       - label: Category
         name: category
         widget: select
-        options: [Layout, Typography, Navigation, Feedback, "Data Display", Forms, Overlays]
+        options: &component_categories [Layout, Typography, Navigation, Feedback, "Data Display", Forms, Overlays]
         required: false
       - { label: Body, name: body, widget: markdown }
 
@@ -1463,3 +1463,35 @@ collections:
             name: carousel
             widget: object
             fields: *carousel_fields
+
+# Singletons - Single-instance config files, edited as one entry (not a list)
+# Docs: https://sveltiacms.app/en/docs/collections/singletons
+singletons:
+  - name: docsConfig
+    label: Docs Sidenav
+    file: content/config/docs.json
+    fields:
+      - label: Groups
+        name: groups
+        widget: list
+        hint: "Controls the docs sidenav: order = top-to-bottom group order. Each group collects every doc matching its Section and/or Category (both must match if both are set)."
+        fields:
+          - { label: Label, name: label, widget: string }
+          - label: Section
+            name: section
+            widget: select
+            options: [Guides, Components]
+            required: false
+            hint: "Claim every doc from a whole collection, e.g. all Guides."
+          - label: Category
+            name: category
+            widget: select
+            options: *component_categories
+            required: false
+            hint: "Claim docs by their Category field (Components collection only)."
+      - label: Fallback Group Label
+        name: fallbackLabel
+        widget: string
+        default: Other
+        required: false
+        hint: "Label for any doc that doesn't match a group above."

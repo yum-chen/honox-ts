@@ -1,6 +1,6 @@
 import { css, cx } from "design-system/css";
 import { button } from "design-system/recipes";
-import type { DocSummary } from "../lib/docs";
+import type { DocsConfig, DocSummary } from "../lib/docs";
 import {
 	Anchor,
 	Avatar,
@@ -14,21 +14,12 @@ import {
 
 interface DocsLayoutProps {
 	docs: DocSummary[];
+	/** Sidenav grouping/ordering — loaded from the DocsConfig singleton
+	 * (content/config/docs.json) by the route, not hardcoded per collection. */
+	config: DocsConfig;
 	activeSlug?: string;
 	children?: unknown;
 }
-
-// Sidenav order for component categories; anything uncategorized (or a
-// future category not listed here) falls into a trailing "Other" group.
-const CATEGORY_ORDER = [
-	"Layout",
-	"Typography",
-	"Navigation",
-	"Feedback",
-	"Data Display",
-	"Forms",
-	"Overlays",
-];
 
 const GITHUB_URL = "https://github.com/Chen-Software/honox-cms";
 
@@ -93,26 +84,39 @@ interface DocGroup {
 	items: DocSummary[];
 }
 
-function buildGroups(docs: DocSummary[]): DocGroup[] {
-	const guides = docs.filter((doc) => doc.section === "Guides");
-	const components = docs.filter((doc) => doc.section === "Components");
+// Fully data-driven: each configured group claims every doc matching its
+// `section` and/or `category` filter (both are AND'd when both are set), in
+// the order the CMS singleton lists them. Anything no group claims falls into
+// a trailing fallback group, so this stays usable for any doc collection
+// shape without editing this file.
+function buildGroups(docs: DocSummary[], config: DocsConfig): DocGroup[] {
+	const claimed = new Set<string>();
 
-	const categoryGroups = CATEGORY_ORDER.map((category) => ({
-		label: category,
-		items: components.filter((doc) => doc.category === category),
-	})).filter((group) => group.items.length > 0);
+	const groups = config.groups
+		.map((groupConfig) => {
+			const items = docs.filter((doc) => {
+				if (groupConfig.section && doc.section !== groupConfig.section) {
+					return false;
+				}
+				if (groupConfig.category && doc.category !== groupConfig.category) {
+					return false;
+				}
+				return true;
+			});
+			for (const doc of items) claimed.add(doc.slug);
+			return { label: groupConfig.label, items };
+		})
+		.filter((group) => group.items.length > 0);
 
-	const uncategorized = components.filter(
-		(doc) => !doc.category || !CATEGORY_ORDER.includes(doc.category),
-	);
+	const unclaimed = docs.filter((doc) => !claimed.has(doc.slug));
+	if (unclaimed.length > 0) {
+		groups.push({
+			label: config.fallbackLabel || "Other",
+			items: unclaimed,
+		});
+	}
 
-	return [
-		...(guides.length > 0 ? [{ label: "Guides", items: guides }] : []),
-		...categoryGroups,
-		...(uncategorized.length > 0
-			? [{ label: "Other", items: uncategorized }]
-			: []),
-	];
+	return groups;
 }
 
 interface SidenavProps {
@@ -325,8 +329,13 @@ function DocsHeader({ editUrl, groups, activeSlug }: DocsHeaderProps) {
 	);
 }
 
-export function DocsLayout({ docs, activeSlug, children }: DocsLayoutProps) {
-	const groups = buildGroups(docs);
+export function DocsLayout({
+	docs,
+	config,
+	activeSlug,
+	children,
+}: DocsLayoutProps) {
+	const groups = buildGroups(docs, config);
 
 	const activeDoc = activeSlug
 		? docs.find((doc) => doc.slug === activeSlug)

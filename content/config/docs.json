@@ -1,0 +1,13 @@
+{
+	"groups": [
+		{ "label": "Guides", "section": "Guides" },
+		{ "label": "Layout", "category": "Layout" },
+		{ "label": "Typography", "category": "Typography" },
+		{ "label": "Navigation", "category": "Navigation" },
+		{ "label": "Feedback", "category": "Feedback" },
+		{ "label": "Data Display", "category": "Data Display" },
+		{ "label": "Forms", "category": "Forms" },
+		{ "label": "Overlays", "category": "Overlays" }
+	],
+	"fallbackLabel": "Other"
+}

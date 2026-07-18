@@ -3,7 +3,7 @@ import { ssgParams } from "hono/ssg";
 import { createRoute } from "honox/factory";
 import { DocsLayout } from "../../components/docs-layout";
 import { Badge, Stack } from "../../components/ui";
-import { loadDocBySlug, loadDocs } from "../../lib/docs";
+import { loadDocBySlug, loadDocs, loadDocsConfig } from "../../lib/docs";
 import { markdownContentClass } from "../../utils/markdown-content-style";
 
 const TIER_COLOR: Record<number, string> = {
@@ -26,7 +26,11 @@ export default createRoute(
 
 	async (c) => {
 		const slug = c.req.param("doc");
-		const [doc, docs] = await Promise.all([loadDocBySlug(slug), loadDocs()]);
+		const [doc, docs, docsConfig] = await Promise.all([
+			loadDocBySlug(slug),
+			loadDocs(),
+			loadDocsConfig(),
+		]);
 
 		if (!doc) {
 			return c.notFound();
@@ -35,7 +39,7 @@ export default createRoute(
 		const DocContent = doc.Component;
 
 		return c.render(
-			<DocsLayout docs={docs} activeSlug={slug}>
+			<DocsLayout docs={docs} config={docsConfig} activeSlug={slug}>
 				<title>{doc.title} - Docs - Artefact</title>
 
 				{(doc.category || doc.hydration) && (

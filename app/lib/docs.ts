@@ -42,6 +42,27 @@ export interface DocDetail extends DocSummary {
 	Component?: FC;
 }
 
+/** One sidenav group: collects every doc matching `section` and/or `category`. */
+export interface DocsNavGroupConfig {
+	label: string;
+	section?: string;
+	category?: string;
+}
+
+/** Shape of the `DocsConfig` singleton (content/config/docs.json) — drives the
+ * docs sidenav's grouping/ordering so it isn't hardcoded to any one collection. */
+export interface DocsConfig {
+	groups: DocsNavGroupConfig[];
+	/** Label for docs that don't match any group above. Defaults to "Other". */
+	fallbackLabel?: string;
+}
+
+const EMPTY_DOCS_CONFIG: DocsConfig = { groups: [] };
+
+const docsConfigModule = import.meta.glob("/content/config/docs.json", {
+	import: "default",
+}) as Record<string, () => Promise<DocsConfig>>;
+
 function guideSlugFromPath(path: string): string {
 	return path.replace("/content/docs/", "").replace(/\.md$/, "");
 }
@@ -91,6 +112,13 @@ export async function loadDocs(): Promise<DocSummary[]> {
 
 	docs.sort((a, b) => a.slug.localeCompare(b.slug));
 	return docs;
+}
+
+/** Loads the DocsConfig singleton that drives the docs sidenav's grouping. */
+export async function loadDocsConfig(): Promise<DocsConfig> {
+	const loader = docsConfigModule["/content/config/docs.json"];
+	if (!loader) return EMPTY_DOCS_CONFIG;
+	return loader();
 }
 
 /**
