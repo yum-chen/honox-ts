@@ -1,22 +1,23 @@
 ---
-title: "Sveltia CMS Page Builder"
+title: CMS Page Builder
 ---
 
-# Sveltia CMS Page Builder
+# CMS Page Builder
 
 ## Introduction
 
-The HonoX + Sveltia CMS dynamic Page Builder allows non-technical editors to create complex, recursively nested pages entirely through the CMS user interface (`/admin/`).
+The [Sveltia CMS](https://sveltiacms.app/en/docs/intro) based dynamic Page Builder allows non-technical editors to create complex, recursively nested pages entirely through the CMS user interface (`/admin/`).
 
 Page layouts are saved as JSON files in `content/pages/*.json` and are compiled on demand or statically pre-generated (via Hono SSG) at `/pages/[slug]`.
 
----
+***
 
 ## Supported Components
 
 The Page Builder supports a rich palette of over 40 layout, typography, decorative, and interactive components.
 
 ### 1. Structure & Layout
+
 * **Stack**: Groups children vertically or horizontally with controllable alignment, justification, and gap spacing.
 * **Grid**: Responsive CSS Grid layout — fixed column/row counts or auto-fit by minimum child width.
 * **Group**: Aligns elements like buttons closely together (supports `attached` and `grow` properties).
@@ -26,10 +27,12 @@ The Page Builder supports a rich palette of over 40 layout, typography, decorati
 * **Breadcrumb**: Navigation trail of linked items with a customizable separator.
 
 ### 2. Typography & Content
+
 * **Heading**: Styled headers of levels `h1` through `h6` and various responsive text sizes.
 * **Text**: Paragraph-level text with adjustable sizes.
 
 ### 3. Display & Presentational
+
 * **Alert**: Renders warning/success/error/info alerts with standard statuses and icons.
 * **Badge**: Colored metadata labels with custom color palettes and styles.
 * **Card**: A rich container supporting nested blocks, headers, footers, and top/bottom/left/right image positions.
@@ -40,6 +43,7 @@ The Page Builder supports a rich palette of over 40 layout, typography, decorati
 * **Icon**: Raw inline SVG markup with size/color controls.
 
 ### 4. Interactive & Overlays
+
 * **Button**: Primary clickable targets supporting custom palettes, sizes, and styling variants.
 * **Checkbox**: Tick boxes for Boolean input with accessible aria bindings.
 * **Combobox**: Dropdowns with clear actions and items lists.
@@ -52,6 +56,7 @@ The Page Builder supports a rich palette of over 40 layout, typography, decorati
 * **Dropdown** (block type `menu`): Action menus with custom checkable, selectable, and separator options.
 
 ### 5. Advanced & Data
+
 * **Select**: Custom single/multi-select dropdown, form-submittable.
 * **DatePicker**: Single/multiple/range date selection with a popup calendar.
 * **TagsInput**: Free-form list of string tags.
@@ -66,7 +71,7 @@ The Page Builder supports a rich palette of over 40 layout, typography, decorati
 * **PaginatedTable**: Interactive dynamic table components with paging support.
 * **Pagination**: Interactive page controllers.
 
----
+***
 
 ## Architecture
 
@@ -86,7 +91,7 @@ The layout engine imports all public component modules from `app/components/ui/`
 * Input types are strongly cast into standard `unknown` record dictionaries to prevent type coercion and keep Biome lint checks fully clean.
 * Nested containers are handled recursively using nested calls to the `<PageRenderer content={...} />` component.
 
----
+***
 
 ## Example JSON Structure
 
