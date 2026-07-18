@@ -12,5 +12,9 @@
 	"fallbackLabel": "Other",
 	"links": [
 		{ "label": "GitHub", "href": "https://github.com/Chen-Software/honox-cms" }
+	],
+	"headerLinks": [
+		{ "label": "Blog", "href": "/blog" },
+		{ "label": "Home", "href": "/" }
 	]
 }

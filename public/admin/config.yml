@@ -1503,3 +1503,11 @@ singletons:
         fields:
           - { label: Label, name: label, widget: string }
           - { label: URL, name: href, widget: string }
+      - label: Header Links
+        name: headerLinks
+        widget: list
+        required: false
+        hint: "Plain links shown in the header nav, e.g. Blog and Home."
+        fields:
+          - { label: Label, name: label, widget: string }
+          - { label: URL, name: href, widget: string }

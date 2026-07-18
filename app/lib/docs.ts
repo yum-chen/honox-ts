@@ -63,6 +63,9 @@ export interface DocsConfig {
 	fallbackLabel?: string;
 	/** External links shown at the bottom of the sidenav, e.g. the GitHub repo. */
 	links?: DocsNavLinkConfig[];
+	/** Plain links shown in the header nav (e.g. Blog, Home), before the
+	 * per-doc Edit link and the GitHub icon. */
+	headerLinks?: DocsNavLinkConfig[];
 }
 
 const EMPTY_DOCS_CONFIG: DocsConfig = { groups: [] };

@@ -261,9 +261,16 @@ interface DocsHeaderProps {
 	groups: DocGroup[];
 	activeSlug?: string;
 	links?: DocsNavLinkConfig[];
+	headerLinks?: DocsNavLinkConfig[];
 }
 
-function DocsHeader({ editUrl, groups, activeSlug, links }: DocsHeaderProps) {
+function DocsHeader({
+	editUrl,
+	groups,
+	activeSlug,
+	links,
+	headerLinks,
+}: DocsHeaderProps) {
 	const githubLink = links?.find(isGithubLink);
 	return (
 		<header
@@ -351,20 +358,16 @@ function DocsHeader({ editUrl, groups, activeSlug, links }: DocsHeaderProps) {
 						flexShrink: "0",
 					})}
 				>
-					<Anchor
-						href="/blog"
-						variant="plain"
-						class={css({ textStyle: "sm", fontWeight: "medium" })}
-					>
-						Blog
-					</Anchor>
-					<Anchor
-						href="/"
-						variant="plain"
-						class={css({ textStyle: "sm", fontWeight: "medium" })}
-					>
-						Home
-					</Anchor>
+					{headerLinks?.map((link) => (
+						<Anchor
+							key={link.href}
+							href={link.href}
+							variant="plain"
+							class={css({ textStyle: "sm", fontWeight: "medium" })}
+						>
+							{link.label}
+						</Anchor>
+					))}
 					{editUrl && (
 						<Anchor
 							href={editUrl}
@@ -420,6 +423,7 @@ export function DocsLayout({
 				groups={groups}
 				activeSlug={activeSlug}
 				links={config.links}
+				headerLinks={config.headerLinks}
 			/>
 
 			<div
