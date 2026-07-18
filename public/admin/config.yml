@@ -18,6 +18,17 @@ public_folder: /media
 
 # Collections - Define your content types here
 collections:
+  - name: docs
+    label: Docs
+    label_singular: Doc
+    folder: content/docs
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: string, required: false }
+      - { label: Body, name: body, widget: markdown }
+
   - name: posts
     label: Posts
     label_singular: Post

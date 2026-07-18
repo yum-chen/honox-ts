@@ -122,6 +122,67 @@ export function stripMarkdown(markdown: string): string {
 export function markdownToHtml(markdown: string): string {
 	let html = markdown;
 
+	// Pre-process tables before doing any paragraph wrapping or replacements
+	const rawLines = html.split("\n");
+	const tableLines: string[] = [];
+	let inTable = false;
+	let tableHeaderDone = false;
+
+	for (let i = 0; i < rawLines.length; i++) {
+		const line = rawLines[i] ?? "";
+		const trimmed = line.trim();
+
+		if (trimmed.startsWith("|") && trimmed.endsWith("|")) {
+			if (!inTable) {
+				inTable = true;
+				tableHeaderDone = false;
+				tableLines.push("<table>");
+			}
+
+			if (trimmed.includes("---")) {
+				// Skip the separator line e.g. | :--- | :--- |
+				continue;
+			}
+
+			const safeLine = trimmed.replace(/\\\|/g, "__ESCAPED_PIPE__");
+			const cells = safeLine
+				.slice(1, -1)
+				.split("|")
+				.map((c) => c.trim().replace(/__ESCAPED_PIPE__/g, "|"));
+
+			if (!tableHeaderDone) {
+				tableLines.push("<thead>");
+				tableLines.push("<tr>");
+				for (const cell of cells) {
+					tableLines.push(`<th>${cell}</th>`);
+				}
+				tableLines.push("</tr>");
+				tableLines.push("</thead>");
+				tableLines.push("<tbody>");
+				tableHeaderDone = true;
+			} else {
+				tableLines.push("<tr>");
+				for (const cell of cells) {
+					tableLines.push(`<td>${cell}</td>`);
+				}
+				tableLines.push("</tr>");
+			}
+		} else {
+			if (inTable) {
+				tableLines.push("</tbody>");
+				tableLines.push("</table>");
+				inTable = false;
+			}
+			tableLines.push(line);
+		}
+	}
+	if (inTable) {
+		tableLines.push("</tbody>");
+		tableLines.push("</table>");
+	}
+
+	html = tableLines.join("\n");
+
 	// Headers
 	html = html.replace(/^### (.*$)/gim, "<h3>$1</h3>");
 	html = html.replace(/^## (.*$)/gim, "<h2>$1</h2>");

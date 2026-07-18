@@ -1,5 +1,5 @@
-import { expect, test, describe } from "bun:test";
-import { Toast, Toaster, createToaster } from "./toast";
+import { describe, expect, test } from "bun:test";
+import { createToaster, Toast, Toaster } from "./toast";
 
 describe("Toast component and createToaster store", () => {
 	test("createToaster should initialize with default configuration", () => {
@@ -52,7 +52,10 @@ describe("Toast component and createToaster store", () => {
 		expect(toasterInstance.getToasts()[0]?.title).toBe("Success title");
 
 		// test with options object
-		toasterInstance.error({ title: "Error title", description: "Something failed" });
+		toasterInstance.error({
+			title: "Error title",
+			description: "Something failed",
+		});
 		expect(toasterInstance.getToasts()[1]?.type).toBe("error");
 		expect(toasterInstance.getToasts()[1]?.title).toBe("Error title");
 
@@ -68,7 +71,10 @@ describe("Toast component and createToaster store", () => {
 
 	test("toaster.update should modify an existing toast", () => {
 		const toasterInstance = createToaster();
-		const id = toasterInstance.create({ title: "Old Title", description: "Old description" });
+		const id = toasterInstance.create({
+			title: "Old Title",
+			description: "Old description",
+		});
 
 		expect(toasterInstance.getToasts()[0]?.title).toBe("Old Title");
 
