@@ -365,6 +365,125 @@
           ]
         }
       ]
+    },
+    {
+      "type": "heading",
+      "size": "2xl",
+      "text": "6. Layout Component",
+      "as": "h2"
+    },
+    {
+      "type": "text",
+      "content": "A full page shell: header, sider, content and footer are each a list of arbitrary components. The sider + content row appears automatically when the Sider field is filled, and hides below the md breakpoint here."
+    },
+    {
+      "type": "layout",
+      "siderWidth": "sm",
+      "siderHideBelow": "md",
+      "header": [
+        {
+          "type": "stack",
+          "direction": "horizontal",
+          "align": "center",
+          "justify": "between",
+          "gap": "4",
+          "children": [
+            {
+              "type": "heading",
+              "size": "lg",
+              "text": "Cabin Booking Portal",
+              "as": "h3"
+            },
+            {
+              "type": "badge",
+              "variant": "subtle",
+              "colorPalette": "green",
+              "text": "3 cabins free"
+            }
+          ]
+        }
+      ],
+      "sider": [
+        {
+          "type": "stack",
+          "direction": "vertical",
+          "gap": "2",
+          "children": [
+            {
+              "type": "link",
+              "text": "Availability",
+              "href": "#"
+            },
+            {
+              "type": "link",
+              "text": "Rates",
+              "href": "#"
+            },
+            {
+              "type": "link",
+              "text": "House Rules",
+              "href": "#"
+            }
+          ]
+        }
+      ],
+      "content": [
+        {
+          "type": "heading",
+          "size": "xl",
+          "text": "Winter Season Bookings",
+          "as": "h4"
+        },
+        {
+          "type": "text",
+          "content": "Pick a cabin from the rail on the left. On a phone the rail hides (Sider Hide Below: md) and you would pair it with a disclosure menu instead."
+        },
+        {
+          "type": "button",
+          "text": "Check Availability",
+          "variant": "solid",
+          "colorPalette": "blue"
+        }
+      ],
+      "footer": [
+        {
+          "type": "text",
+          "size": "sm",
+          "content": "Cabin Booking Portal — a Layout block with all four parts filled."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "content": "Every part is optional: the same block with only header, content and footer stacks vertically — no sider, no row."
+    },
+    {
+      "type": "layout",
+      "header": [
+        {
+          "type": "alert",
+          "variant": "subtle",
+          "status": "info",
+          "title": "Header slot",
+          "description": "Any component works here — this one is an Alert."
+        }
+      ],
+      "content": [
+        {
+          "type": "card",
+          "title": "Content slot",
+          "description": "A Card inside the Layout's content field.",
+          "body": "With no Sider filled in, the Layout is a simple header → content → footer column."
+        }
+      ],
+      "footer": [
+        {
+          "type": "badge",
+          "variant": "outline",
+          "colorPalette": "purple",
+          "text": "Footer slot"
+        }
+      ]
     }
   ]
 }
