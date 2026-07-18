@@ -1,4 +1,5 @@
 import type { FC } from "hono/jsx";
+import { buildHaystack, type SearchIndexEntry } from "../utils/search";
 
 // Compiled glob — each module's default export is the doc's rendered
 // component, and `frontmatter` is the YAML frontmatter block (both produced
@@ -42,6 +43,23 @@ export async function loadDocs(): Promise<DocSummary[]> {
 
 	docs.sort((a, b) => a.slug.localeCompare(b.slug));
 	return docs;
+}
+
+/**
+ * Search index entries for every doc, keyed on title/category — the MDX
+ * body isn't included (it's a compiled component, not text; extracting a
+ * haystack from it would mean rendering every doc up front), so matching is
+ * scoped to the doc name and its nav group.
+ */
+export async function loadDocsSearchIndex(): Promise<SearchIndexEntry[]> {
+	const docs = await loadDocs();
+	return docs.map((doc) => ({
+		key: doc.slug,
+		href: `/docs/${doc.slug}`,
+		title: doc.title,
+		tags: [doc.category],
+		haystack: buildHaystack([doc.title, doc.slug, doc.category]),
+	}));
 }
 
 /**

@@ -1,6 +1,6 @@
 import { css } from "design-system/css";
 import type { DocSummary } from "../lib/docs";
-import { Text } from "./ui";
+import { Anchor, Avatar, Heading, Search, Stack, Text } from "./ui";
 
 interface DocsLayoutProps {
 	docs: DocSummary[];
@@ -10,6 +10,99 @@ interface DocsLayoutProps {
 
 const CATEGORY_ORDER: DocSummary["category"][] = ["Guides", "Components"];
 
+function DocsHeader() {
+	return (
+		<header
+			class={css({
+				borderBottomWidth: "1px",
+				borderColor: "border",
+				bg: "bg.default",
+				position: "sticky",
+				top: "0",
+				zIndex: "20",
+			})}
+		>
+			<div
+				class={css({
+					maxWidth: "7xl",
+					mx: "auto",
+					px: { base: "4", md: "6", lg: "8" },
+					py: "4",
+					display: "flex",
+					alignItems: "center",
+					gap: { base: "4", md: "8" },
+				})}
+			>
+				<Anchor
+					href="/"
+					variant="plain"
+					class={css({ textDecoration: "none", flexShrink: "0" })}
+				>
+					<Stack direction="horizontal" gap="3" align="center">
+						<Avatar
+							name="Artefact UI"
+							size="sm"
+							variant="solid"
+							colorPalette="blue"
+						/>
+						<Heading
+							as="h1"
+							class={css({
+								fontSize: "lg",
+								fontWeight: "bold",
+								tracking: "tight",
+								display: { base: "none", sm: "block" },
+							})}
+						>
+							Artefact UI
+						</Heading>
+					</Stack>
+				</Anchor>
+
+				<div
+					class={css({
+						flex: "1",
+						maxWidth: "md",
+						mx: { base: "0", md: "auto" },
+					})}
+				>
+					<Search
+						src="/api/docs/search.json"
+						placeholder="Search docs..."
+						itemLabel="docs"
+						showCount={false}
+						syncUrl={false}
+					/>
+				</div>
+
+				<nav
+					class={css({
+						display: { base: "none", md: "flex" },
+						gap: "6",
+						alignItems: "center",
+						flexShrink: "0",
+					})}
+				>
+					<Anchor
+						href="/blog"
+						variant="plain"
+						class={css({ textStyle: "sm", fontWeight: "medium" })}
+					>
+						Blog
+					</Anchor>
+					<Anchor
+						href="/"
+						variant="plain"
+						class={css({ textStyle: "sm", fontWeight: "medium" })}
+					>
+						Home
+					</Anchor>
+				</nav>
+			</div>
+		</header>
+	);
+}
+
 export function DocsLayout({ docs, activeSlug, children }: DocsLayoutProps) {
 	const groups = CATEGORY_ORDER.map((category) => ({
 		category,
@@ -18,6 +111,8 @@ export function DocsLayout({ docs, activeSlug, children }: DocsLayoutProps) {
 
 	return (
 		<div class={css({ bg: "bg.canvas", minH: "screen" })}>
+			<DocsHeader />
+
 			<div
 				class={css({
 					maxWidth: "7xl",
