@@ -46,3 +46,21 @@ test("markdownToHtml preserves multi-line fenced code blocks and escapes markup"
 	);
 	expect(html).not.toContain("<p>export default function");
 });
+
+test("markdownToHtml converts a multi-line blockquote into one <blockquote>", () => {
+	const markdown = [
+		"> Every component's hydration behaviour funnels through the `shouldHydrate`",
+		"> predicate — see [Hydration](/docs/Hydration) for details.",
+	].join("\n");
+
+	const html = markdownToHtml(markdown);
+
+	expect(html).toContain("<blockquote><p>");
+	expect(html).toContain(
+		"Every component's hydration behaviour funnels through the <code>shouldHydrate</code> predicate",
+	);
+	expect(html).toContain('<a href="/docs/Hydration">Hydration</a>');
+	expect(html).not.toContain("&gt;");
+	// The two source lines collapse into one blockquote, not two.
+	expect(html.match(/<blockquote>/g)?.length).toBe(1);
+});
