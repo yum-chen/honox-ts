@@ -49,6 +49,7 @@ import {
 	Stack,
 	Switch,
 	Table,
+	Tabs,
 	TagsInput,
 	Text,
 	Textarea,
@@ -660,6 +661,172 @@ export default createRoute((c) => {
 												}
 											/>
 										</div>
+									</Card>
+
+									{/* Tabs */}
+									<Card
+										title="Tabs Navigation"
+										description="Line, subtle, and enclosed tabs"
+										class={css({ overflow: "visible" })}
+									>
+										<Stack gap="6" class={css({ mt: "2", width: "full" })}>
+											{/* Line Variant */}
+											<div
+												class={css({
+													border: "1px solid",
+													borderColor: "border.default",
+													p: "4",
+													borderRadius: "md",
+													bg: "bg.default",
+												})}
+											>
+												<Text
+													size="xs"
+													class={css({
+														fontWeight: "bold",
+														mb: "2",
+														color: "fg.muted",
+													})}
+												>
+													Line (Default)
+												</Text>
+												<Tabs
+													interactive
+													defaultValue="overview"
+													colorPalette="blue"
+												>
+													<Tabs.List>
+														<Tabs.Trigger value="overview">
+															Overview
+														</Tabs.Trigger>
+														<Tabs.Trigger value="features">
+															Features
+														</Tabs.Trigger>
+														<Tabs.Trigger value="pricing">Pricing</Tabs.Trigger>
+														<Tabs.Indicator />
+													</Tabs.List>
+													<Tabs.Content value="overview">
+														<Text size="sm" class={css({ mt: "2" })}>
+															This is the overview panel. Fast, lightweight, and
+															responsive.
+														</Text>
+													</Tabs.Content>
+													<Tabs.Content value="features">
+														<Text size="sm" class={css({ mt: "2" })}>
+															This is the features panel. Accessible and
+															standard-compliant.
+														</Text>
+													</Tabs.Content>
+													<Tabs.Content value="pricing">
+														<Text size="sm" class={css({ mt: "2" })}>
+															This is the pricing panel. Designed with user
+															habits.
+														</Text>
+													</Tabs.Content>
+												</Tabs>
+											</div>
+
+											{/* Subtle Variant */}
+											<div
+												class={css({
+													border: "1px solid",
+													borderColor: "border.default",
+													p: "4",
+													borderRadius: "md",
+													bg: "bg.default",
+												})}
+											>
+												<Text
+													size="xs"
+													class={css({
+														fontWeight: "bold",
+														mb: "2",
+														color: "fg.muted",
+													})}
+												>
+													Subtle Variant
+												</Text>
+												<Tabs
+													interactive
+													defaultValue="react"
+													variant="subtle"
+													colorPalette="purple"
+												>
+													<Tabs.List>
+														<Tabs.Trigger value="react">React</Tabs.Trigger>
+														<Tabs.Trigger value="hono">Hono</Tabs.Trigger>
+														<Tabs.Trigger value="solid">Solid</Tabs.Trigger>
+														<Tabs.Indicator />
+													</Tabs.List>
+													<Tabs.Content value="react">
+														<Text size="sm" class={css({ mt: "2" })}>
+															React provides declarative, component-based
+															rendering.
+														</Text>
+													</Tabs.Content>
+													<Tabs.Content value="hono">
+														<Text size="sm" class={css({ mt: "2" })}>
+															Hono is an ultra-fast web framework for Cloudflare
+															Pages, Bun, and Node.
+														</Text>
+													</Tabs.Content>
+													<Tabs.Content value="solid">
+														<Text size="sm" class={css({ mt: "2" })}>
+															Solid is a declarative, efficient, and flexible
+															JavaScript library.
+														</Text>
+													</Tabs.Content>
+												</Tabs>
+											</div>
+
+											{/* Enclosed Variant */}
+											<div
+												class={css({
+													border: "1px solid",
+													borderColor: "border.default",
+													p: "4",
+													borderRadius: "md",
+													bg: "bg.default",
+												})}
+											>
+												<Text
+													size="xs"
+													class={css({
+														fontWeight: "bold",
+														mb: "2",
+														color: "fg.muted",
+													})}
+												>
+													Enclosed Variant
+												</Text>
+												<Tabs
+													interactive
+													defaultValue="account"
+													variant="enclosed"
+													colorPalette="blue"
+													fitted
+												>
+													<Tabs.List>
+														<Tabs.Trigger value="account">Account</Tabs.Trigger>
+														<Tabs.Trigger value="security">
+															Security
+														</Tabs.Trigger>
+														<Tabs.Indicator />
+													</Tabs.List>
+													<Tabs.Content value="account">
+														<Text size="sm" class={css({ mt: "2" })}>
+															Manage your personal profile and account settings.
+														</Text>
+													</Tabs.Content>
+													<Tabs.Content value="security">
+														<Text size="sm" class={css({ mt: "2" })}>
+															Configure multi-factor authentication and
+															passwords.
+														</Text>
+													</Tabs.Content>
+												</Tabs>
+											</div>
+										</Stack>
 									</Card>
 								</Grid>
 							</div>
