@@ -24,8 +24,8 @@ to islands (client JS snippets).
 
 ## Related Documentation
 
-- [Hydration](/docs/Hydration) — the 3-tier hydration model, decision checklist, and full
+- [Hydration](/docs/Hydration) — the hydration model with three distinct tiers, decision checklist, and full
   per-component classification
 - `app/components/ui/island-utils.ts` — the single decision entry point
-- `content/components/<Component>.mdx` (each Tier-1 / Tier-2 component) — its
+- `content/components/<Component>.mdx` (each Interactive-First / Smart-Detect component) — its
   own `# Hydration` section, plus `hydration-tier`/`category` frontmatter

@@ -9,13 +9,13 @@ export interface FileUploadProps extends FileUploadIslandProps {
 	 * Whether to enable interactivity (hydration).
 	 * - `true`  → always hydrate (explicit opt-in)
 	 * - `false` → never hydrate, render pure static markup (explicit opt-out)
-	 * - omitted → hydrate (Tier-1 auto-interactive)
+	 * - omitted → hydrate (Interactive-First auto-interactive)
 	 */
 	interactive?: boolean;
 }
 
 /**
- * FileUpload is auto-interactive (Tier-1): the dropzone, client-side
+ * FileUpload is auto-interactive (Interactive-First): the dropzone, client-side
  * validation, and the live file list all need JS, so it hydrates unless
  * explicitly opted out — in which case it degrades to a native
  * label + file input that still works for plain form submission.

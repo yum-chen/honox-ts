@@ -1,6 +1,6 @@
 ---
 title: "Collapsible"
-hydration-tier: "Tier 1"
+hydration-tier: "Interactive-First"
 category: "Overlays"
 ---
 
@@ -89,7 +89,7 @@ This component is available as a `collapsible` block in the [Page Builder](/docs
 | `defaultOpen`        | `boolean`                     | Whether the collapsible is open by default (uncontrolled).               |
 | `onOpenChange`       | `(open: boolean) => void`     | Callback for when the open state changes.                                |
 | `disabled`           | `boolean`                     | Whether the collapsible is disabled.                                     |
-| `interactive`        | `boolean`                     | Enable client-side interactivity. Collapsible is **Tier-1 (auto-interactive)**: it always hydrates as an island unless you pass `interactive={false}`. |
+| `interactive`        | `boolean`                     | Enable client-side interactivity. Collapsible is **Interactive-First (auto-interactive)**: it always hydrates as an island unless you pass `interactive={false}`. |
 | `class`              | `string`                      | Root element class name.                                                 |
 | `triggerClass`       | `string`                      | Trigger element class name.                                              |
 | `contentClass`       | `string`                      | Content element class name.                                              |
@@ -99,7 +99,7 @@ This component is available as a `collapsible` block in the [Page Builder](/docs
 
 # Hydration
 
-Collapsible is classified as **Tier-1 (auto-interactive)**.
+Collapsible is classified as **Interactive-First (auto-interactive)**.
 
 - It always renders as a hydrated client island (it needs JS to expand/collapse and to run `onOpenChange`).
 - The only way to opt out of hydration is to pass `interactive={false}`, in which case it renders the static `*-primitive` markup without the toggle behavior.

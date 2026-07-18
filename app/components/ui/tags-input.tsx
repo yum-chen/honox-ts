@@ -28,7 +28,7 @@ export function TagsInput(props: TagsInputProps) {
 		...rest
 	} = props;
 
-	// Tier-2 smart auto-detect: hydrate when any behavioural signal is present —
+	// Smart-Detect: hydrate when any behavioural signal is present —
 	// an event handler, controlled state (value / inputValue), or uncontrolled
 	// initial state (defaultValue / defaultInputValue). An explicit `interactive`
 	// knob overrides this: `true` forces, `false` forbids.

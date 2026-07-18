@@ -12,7 +12,7 @@ import {
 	Trigger,
 } from "./file-upload-primitive";
 
-test("FileUpload renders interactive island by default (Tier-1)", () => {
+test("FileUpload renders interactive island by default (Interactive-First)", () => {
 	const html = (<FileUpload label="Attachments" />).toString();
 
 	expect(html).toContain('data-interactive="true"');

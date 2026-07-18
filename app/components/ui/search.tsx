@@ -6,7 +6,7 @@ export interface SearchProps extends SearchBaseProps {
 	interactive?: boolean;
 }
 
-// Search is auto-interactive (Tier-1): autocomplete and instant filtering
+// Search is auto-interactive (Interactive-First): autocomplete and instant filtering
 // need JS, so it hydrates unless explicitly opted out — in which case it
 // degrades to a plain GET form answered by the server (or ignored on SSG).
 export function Search(props: SearchProps) {

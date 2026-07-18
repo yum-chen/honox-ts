@@ -1,6 +1,6 @@
 ---
 title: "Select"
-hydration-tier: "Tier 1"
+hydration-tier: "Interactive-First"
 category: "Forms"
 ---
 
@@ -41,7 +41,7 @@ Opening the list highlights the currently selected option (or the first enabled 
 
 # Hydration
 
-**Tier 1 — auto-interactive.** Opening the dropdown and selecting an option require client JS, and there is no static fallback (the native `<select>` is visually hidden and exists only for form submission), so `Select` hydrates by default. Pass `interactive={false}` to force a purely static render.
+**Interactive-First — auto-interactive.** Opening the dropdown and selecting an option require client JS, and there is no static fallback (the native `<select>` is visually hidden and exists only for form submission), so `Select` hydrates by default. Pass `interactive={false}` to force a purely static render.
 
 | `interactive` prop | Result |
 | :--- | :--- |

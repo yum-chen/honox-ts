@@ -18,7 +18,7 @@
  *  - `interactive === true`  → always hydrate (explicit opt-in)
  *  - `interactive` omitted    → hydrate iff `hasSignal`
  *
- * For a component that is auto-interactive by default (Tier-1: overlays,
+ * For a component that is auto-interactive by default (Interactive-First: overlays,
  * modals, splitter, …), pass `hasSignal = true` so it hydrates unless
  * explicitly opted out.
  */

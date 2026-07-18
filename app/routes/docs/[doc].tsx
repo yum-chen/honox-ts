@@ -7,9 +7,9 @@ import { loadDocBySlug, loadDocs } from "../../lib/docs";
 import { markdownContentClass } from "../../utils/markdown-content-style";
 
 const TIER_COLOR: Record<string, string> = {
-	"Tier 1": "purple",
-	"Tier 2": "blue",
-	"Tier 3": "gray",
+	"Interactive-First": "purple",
+	"Smart-Detect": "blue",
+	"Static-Only": "gray",
 };
 
 export default createRoute(

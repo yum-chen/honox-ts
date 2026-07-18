@@ -100,8 +100,8 @@ collections:
       - label: Hydration Tier
         name: hydration-tier
         widget: select
-        options: ["Tier 1", "Tier 2", "Tier 3"]
-        hint: "Tier 1 = auto-interactive, Tier 2 = smart auto-detect, Tier 3 = presentational (never hydrates). See /docs/Hydration."
+        options: ["Interactive-First", "Smart-Detect", "Static-Only"]
+        hint: "Interactive-First = auto-interactive, Smart-Detect = smart auto-detect, Static-Only = presentational (never hydrates). See /docs/Hydration."
         required: false
       - label: Category
         name: category

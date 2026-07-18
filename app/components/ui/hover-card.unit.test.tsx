@@ -1,4 +1,4 @@
-import { expect, test, describe } from "bun:test";
+import { describe, expect, test } from "bun:test";
 import { HoverCard } from "./hover-card";
 
 describe("HoverCard Unit Tests", () => {
@@ -38,10 +38,7 @@ describe("HoverCard Unit Tests", () => {
 
 	test("should render custom content when provided", () => {
 		const html = (
-			<HoverCard
-				interactive={false}
-				content={<div>Custom Content</div>}
-			/>
+			<HoverCard interactive={false} content={<div>Custom Content</div>} />
 		).toString();
 
 		expect(html).toContain("Custom Content");

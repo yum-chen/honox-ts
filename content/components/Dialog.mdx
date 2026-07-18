@@ -1,6 +1,6 @@
 ---
 title: "Dialog"
-hydration-tier: "Tier 1"
+hydration-tier: "Interactive-First"
 category: "Overlays"
 ---
 
@@ -18,7 +18,7 @@ A modal window overlaid on the page that requires user interaction before contin
 
 # Hydration
 
-**Tier 1 — auto-interactive by default.** A `Dialog` has no meaningful static fallback — opening, focus trapping, and ESC handling all require client-side JavaScript — so it hydrates as an island by default. Pass `interactive={false}` to render a static, inert dialog shell that ships no client JS.
+**Interactive-First — auto-interactive by default.** A `Dialog` has no meaningful static fallback — opening, focus trapping, and ESC handling all require client-side JavaScript — so it hydrates as an island by default. Pass `interactive={false}` to render a static, inert dialog shell that ships no client JS.
 
 | `interactive` prop | Result |
 | :--- | :--- |

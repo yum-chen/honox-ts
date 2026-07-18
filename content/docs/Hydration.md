@@ -43,9 +43,9 @@ export function shouldHydrate(interactive: unknown, hasSignal: boolean): boolean
 
 ---
 
-## The 3-Tier Model
+## The Hydration Tier Model
 
-### Tier-1 — Auto-interactive
+### Interactive-First — Auto-interactive
 
 > **Core rule: `shouldHydrate(interactive, true)`**
 
@@ -60,7 +60,7 @@ Applies to:
 - Expand / collapse (collapsible)
 - Pure client singletons (toast)
 
-### Tier-2 — Smart auto-detect
+### Smart-Detect — Smart auto-detect
 
 > **Core rule: `shouldHydrate(interactive, hasSignal)`**
 
@@ -78,7 +78,7 @@ Applies to:
 - Pagination / tags-input (state + handlers; a `type="link"` pagination that supplies
   `getPageUrl` is pure navigation and stays static)
 
-### Tier-3 — Presentational
+### Static-Only — Presentational
 
 > **Never mounts an island**
 
@@ -98,9 +98,9 @@ Applies to:
 ## Full Component Classification
 
 > Status legend: `✅` conforms to the convention; `⚠️` diverges from the convention and
-> needs migration (see Section 7). After the latest cleanup pass, **all components are `✅`**.
+> needs migration. After the latest cleanup pass, **all components are `✅`**.
 
-### Tier-1 (auto-interactive)
+### Interactive-First (auto-interactive)
 
 | Component | Rule | Trigger | Status |
 |-----------|------|---------|--------|
@@ -111,11 +111,11 @@ Applies to:
 | `hover-card` | `shouldHydrate(interactive, true)` | Always hydrates | ✅ `hover-card.tsx` |
 | `popover` | `shouldHydrate(interactive, true)` | Always hydrates | ✅ `popover.tsx` |
 | `menu` | `shouldHydrate(interactive, true)` | Always hydrates | ✅ `menu.tsx` |
-| `select` | `shouldHydrate(interactive, true)` | Always hydrates — opening the dropdown and selecting an item require JS; there is no static fallback (the native `<select>` is visually hidden and exists only for form submission) | ✅ `select.tsx` (Tier-1) |
-| `collapsible` | `shouldHydrate(interactive, true)` | Always hydrates (expand/collapse needs JS) | ✅ `collapsible.tsx` (Tier-1) |
+| `select` | `shouldHydrate(interactive, true)` | Always hydrates — opening the dropdown and selecting an item require JS; there is no static fallback (the native `<select>` is visually hidden and exists only for form submission) | ✅ `select.tsx` (Interactive-First) |
+| `collapsible` | `shouldHydrate(interactive, true)` | Always hydrates (expand/collapse needs JS) | ✅ `collapsible.tsx` (Interactive-First) |
 | `toast` | Always island (client singleton) | No prop, always an island | ✅ `toast.tsx` |
 
-### Tier-2 (smart auto-detect)
+### Smart-Detect (smart auto-detect)
 
 | Component | Behaviour signal (`hasSignal` is true when…) | Status |
 |-----------|-----------------------------------------------|--------|
@@ -131,14 +131,14 @@ Applies to:
 | `field` | `value` / `defaultValue` / `onValueChange` / `validator` / `minLength` | ✅ `field.tsx` |
 | `combobox` | `open` / `inputValue` / `onToggle` / `onInputChange` / `onItemSelect` | ✅ `combobox.tsx` |
 | `radio-group` | `value` / `defaultValue` / `onValueChange` | ✅ `radio-group.tsx` |
-| `avatar` | `src` (async image load / error lifecycle) | ✅ `avatar.tsx` (Tier-2) |
+| `avatar` | `src` (async image load / error lifecycle) | ✅ `avatar.tsx` (Smart-Detect) |
 | `pagination` | `onPageChange`, or non-link `page` / `defaultPage` / `pageSize` / `defaultPageSize` | ✅ `pagination.tsx` |
 | `tags-input` | `onValueChange` / `onInputValueChange` / `value` / `inputValue` / `defaultValue` / `defaultInputValue` | ✅ `tags-input.tsx` |
-| `paginated-table` | Always island (manages internal pagination state) | ✅ `paginated-table.tsx` (Tier-2 logic) |
+| `paginated-table` | Always island (manages internal pagination state) | ✅ `paginated-table.tsx` (Smart-Detect logic) |
 | `date-picker` | `value` / `defaultValue` / `focusedValue` / `open` / `defaultOpen` / `onValueChange` / `onOpenChange` / (keyboard/click/typing events) | ✅ `date-picker.tsx` |
 | `color-picker` | `value` / `defaultValue` / `format` / `defaultFormat` / `open` / `defaultOpen` / `onValueChange` / `onFormatChange` / `onOpenChange` / (pointer/keyboard/input events) | ✅ `color-picker.tsx` |
 
-### Tier-3 (presentational)
+### Static-Only (presentational)
 
 | Component | Notes | Status |
 |-----------|-------|--------|
@@ -160,7 +160,7 @@ Applies to:
 
 ## Trigger Conditions per Tier
 
-### Tier-1 conditions
+### Interactive-First conditions
 
 - The component's core interaction (opening an overlay, dragging a splitter, expand/collapse,
   modal focus-trap) **cannot be expressed in pure HTML**, so `hasSignal`
@@ -170,7 +170,7 @@ Applies to:
 - `toast` is special: it is a global client singleton (`toaster.create(...)`), and does not
   expose an `interactive` prop.
 
-### Tier-2 conditions
+### Smart-Detect conditions
 
 Each component's `hasSignal` is a boolean OR over "is this prop defined?":
 
@@ -196,7 +196,7 @@ Decision principles:
 6. Any one of the above being present makes `hasSignal` true, which triggers hydration;
    if all are absent, the component renders as pure static markup.
 
-> **`avatar` is special among Tier-2 components:** its signal is the async-load cue `src`.
+> **`avatar` is special among Smart-Detect components:** its signal is the async-load cue `src`.
 > When `src` is present the image needs client-side load/error handling, so
 > `shouldHydrate(interactive, Boolean(src))` hydrates it; an `avatar` with no `src` (e.g. a
 > initials fallback) stays static. An explicit `interactive={false}` suppresses hydration even
@@ -207,7 +207,7 @@ Decision principles:
 > `onPageChange` handler is supplied. Only in button mode (or with `onPageChange`) do the
 > `page` / `defaultPage` / `pageSize` / `defaultPageSize` props count as signals.
 
-### Tier-3 conditions
+### Static-Only conditions
 
 - The component holds no client state and responds to no events.
 - It does not declare an `interactive` prop. (Historically `badge` / `heading` / `text` /
@@ -221,20 +221,20 @@ Decision principles:
 Walk the list in order; stop at the first match:
 
 1. **Does its existence depend entirely on client JS?**
-   Overlay / modal / drag / expand-collapse → **Tier-1**, use
+   Overlay / modal / drag / expand-collapse → **Interactive-First**, use
    `shouldHydrate(interactive, true)`.
 2. **Is it a form control or a visually-selectable component that may be controlled or
    uncontrolled?**
-   button / checkbox / switch / slider / combobox / row-click table … → **Tier-2**,
+   button / checkbox / switch / slider / combobox / row-click table … → **Smart-Detect**,
    define `hasSignal` (state + handlers) then call `shouldHydrate(interactive, hasSignal)`.
 3. **Is it purely typographic / layout / decorative?**
-   text / heading / alert / group / progress … → **Tier-3**, no `interactive` prop, no island.
+   text / heading / alert / group / progress … → **Static-Only**, no `interactive` prop, no island.
 
 **Hard implementation requirements:**
 
 - No component may write a bare `if (interactive) { … }` branch; always go through `shouldHydrate`.
 - `interactive` is only a "knob": `true` forces, `false` forbids, `undefined` defers to `hasSignal`.
-- Every Tier-1 / Tier-2 component should add a `# Hydration` section to its
+- Every Interactive-First / Smart-Detect component should add a `# Hydration` section to its
   `content/components/<Component>.mdx` and cross-reference this file, and set
   its frontmatter `hydration-tier` to match.
 
@@ -250,9 +250,9 @@ The following divergences were resolved during convention rollout; kept here for
 | 2 | `radio-group` | `interactive ? Island : Root`, forcing callers to pass `interactive` | Switched to `shouldHydrate(interactive, hasSignal)`, signals `value` / `defaultValue` / `onValueChange` |
 | 3 | `avatar` | Ad-hoc `if (rest.src || interactive)` | Switched to `shouldHydrate(interactive, Boolean(rest.src))`, unified entry point |
 | 4 | `badge` / `heading` / `text` / `fieldset` | Dead `interactive` prop declared, leaked onto the DOM via `restProps` (`interactive="true"`) | Removed the `interactive` prop declaration |
-| 5 | `collapsible` | Tier not documented explicitly | Added a `# Hydration` section to `docs/Collapsible.md`, marking it Tier-1 |
+| 5 | `collapsible` | Tier not documented explicitly | Added a `# Hydration` section to `docs/Collapsible.md`, marking it Interactive-First |
 | 6 | `tags-input` | Bare `if (isInteractive)` branch, no `interactive` prop, no `shouldHydrate`, and `defaultValue` / `defaultInputValue` omitted from the signal set (an uncontrolled tags-input rendered static) | Switched to `shouldHydrate(interactive, hasSignal)`, added the `interactive` knob, extended the signal set to include `defaultValue` / `defaultInputValue` |
-| 7 | `pagination` / `avatar` | Missing from the tier tables (`pagination` absent entirely; `avatar` mis-classified as Tier-1) and `pagination` over-hydrated in link mode | Added `pagination` + `tags-input` to Tier-2; moved `avatar` to Tier-2 (load-cue signal); gated `pagination` link-mode so pure-navigation stays static |
+| 7 | `pagination` / `avatar` | Missing from the tier tables (`pagination` absent entirely; `avatar` mis-classified as Tier-1) and `pagination` over-hydrated in link mode | Added `pagination` + `tags-input` to Smart-Detect; moved `avatar` to Smart-Detect (load-cue signal); gated `pagination` link-mode so pure-navigation stays static |
 
 > Note: item 4 was a real bug — `badge` / `heading` / `text` / `fieldset` would render
 > `interactive` as an invalid HTML attribute on the DOM; it was prioritised for repair.
@@ -263,5 +263,5 @@ The following divergences were resolved during convention rollout; kept here for
 
 - [UI Components Architecture](/docs/ARCHITECTURE) — the project-level overview
 - `app/components/ui/island-utils.ts` — the single decision entry point
-- `content/components/<Component>.mdx` (each Tier-1 / Tier-2 component) — its
+- `content/components/<Component>.mdx` (each Interactive-First / Smart-Detect component) — its
   own `# Hydration` section, plus `hydration-tier`/`category` frontmatter

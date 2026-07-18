@@ -31,7 +31,7 @@ export interface DocSummary {
 	section: "Guides" | "Components";
 	/** Fine-grained grouping, components only (e.g. "Layout", "Forms", "Overlays"). */
 	category?: string;
-	/** Hydration tier per app/components/ui/island-utils.ts, components only. */
+	/** Hydration tier (Interactive-First | Smart-Detect | Static-Only), components only. */
 	hydrationTier?: string;
 }
 
