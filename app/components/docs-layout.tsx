@@ -360,7 +360,7 @@ function DocsHeader({
 							{link.label}
 						</Anchor>
 					))}
-					{editUrl && (
+					{editUrl ? (
 						<Anchor
 							href={editUrl}
 							class={cx(
@@ -369,6 +369,16 @@ function DocsHeader({
 							)}
 						>
 							Edit
+						</Anchor>
+					) : (
+						<Anchor
+							href={"/admin"}
+							class={cx(
+								button({ variant: "outline", size: "sm" }),
+								css({ textStyle: "sm", fontWeight: "medium" }),
+							)}
+						>
+							Admin
 						</Anchor>
 					)}
 					{githubLink && (
