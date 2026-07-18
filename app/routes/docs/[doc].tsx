@@ -1,10 +1,481 @@
-import { css } from "design-system/css";
+import { css, cx } from "design-system/css";
+import { button } from "design-system/recipes";
 import { ssgParams } from "hono/ssg";
 import { createRoute } from "honox/factory";
-import { DocsLayout } from "../../components/docs-layout";
-import { Badge, Stack } from "../../components/ui";
-import { loadDocBySlug, loadDocs, loadDocsConfig } from "../../lib/docs";
+import {
+	Anchor,
+	Badge,
+	Heading,
+	Layout,
+	Search,
+	Stack,
+	Text,
+	type LayoutProps,
+} from "../../components/ui";
+import {
+	loadDocBySlug,
+	loadDocs,
+	loadDocsConfig,
+	type DocSummary,
+	type DocsConfig,
+	type DocsNavLinkConfig,
+} from "../../lib/docs";
 import { markdownContentClass } from "../../utils/markdown-content-style";
+
+// ---------------------------------------------------------------------------
+// Inlined docs nav shell.
+//
+// Previously extracted into `app/components/docs-nav.tsx` and imported by every
+// docs route. Intentionally un-DRY now: the header, sidenav and shell styling
+// live directly in this page so there is no shared nav component to import.
+// (Only the pure data types come from `lib/docs.ts` — importing a type is not
+// importing a component.)
+// ---------------------------------------------------------------------------
+
+function isGithubLink(link: DocsNavLinkConfig): boolean {
+	try {
+		return new URL(link.href).hostname === "github.com";
+	} catch {
+		return false;
+	}
+}
+
+function GitHubIcon() {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="20"
+			height="20"
+			viewBox="0 0 24 24"
+			fill="currentColor"
+		>
+			<title>GitHub</title>
+			<path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.221-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.269 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.295 2.747-1.026 2.747-1.026.546 1.378.202 2.397.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2Z" />
+		</svg>
+	);
+}
+
+function ChevronDownIcon() {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="16"
+			height="16"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		>
+			<title>Toggle menu</title>
+			<path d="m6 9 6 6 6-6" />
+		</svg>
+	);
+}
+
+function ExternalLinkIcon() {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="16"
+			height="16"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		>
+			<title>External link</title>
+			<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+			<path d="M15 3h6v6" />
+			<path d="M10 14 21 3" />
+		</svg>
+	);
+}
+
+interface DocGroup {
+	label: string;
+	items: DocSummary[];
+}
+
+// Fully data-driven: each configured group claims every doc matching its
+// `section` and/or `category` filter (both are AND'd when both are set), in
+// the order the CMS singleton lists them. Anything no group claims falls into
+// a trailing fallback group, so this stays usable for any doc collection
+// shape without editing this file.
+function buildDocGroups(docs: DocSummary[], config: DocsConfig): DocGroup[] {
+	const claimed = new Set<string>();
+
+	const groups = config.groups
+		.map((groupConfig) => {
+			const items = docs.filter((doc) => {
+				if (groupConfig.section && doc.section !== groupConfig.section) {
+					return false;
+				}
+				if (groupConfig.category && doc.category !== groupConfig.category) {
+					return false;
+				}
+				return true;
+			});
+			for (const doc of items) claimed.add(doc.slug);
+			return { label: groupConfig.label, items };
+		})
+		.filter((group) => group.items.length > 0);
+
+	const unclaimed = docs.filter((doc) => !claimed.has(doc.slug));
+	if (unclaimed.length > 0) {
+		groups.push({
+			label: config.fallbackLabel || "Other",
+			items: unclaimed,
+		});
+	}
+
+	return groups;
+}
+
+interface DocsSidenavProps {
+	groups: DocGroup[];
+	activeSlug?: string;
+	links?: DocsNavLinkConfig[];
+}
+
+function DocsSidenav({ groups, activeSlug, links }: DocsSidenavProps) {
+	return (
+		<nav
+			class={css({
+				display: "flex",
+				flexDirection: "column",
+				gap: "6",
+			})}
+		>
+			{groups.map((group) => (
+				<div key={group.label}>
+					<Text
+						size="xs"
+						class={css({
+							fontWeight: "semibold",
+							textTransform: "uppercase",
+							letterSpacing: "wide",
+							color: "fg.muted",
+							mb: "2",
+							display: "block",
+						})}
+					>
+						{group.label}
+					</Text>
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "0.5",
+						})}
+					>
+						{group.items.map((doc) => {
+							const isActive = doc.slug === activeSlug;
+							return (
+								<a
+									key={doc.slug}
+									href={`/docs/${doc.slug}`}
+									aria-current={isActive ? "page" : undefined}
+									class={css({
+										display: "block",
+										px: "3",
+										// ~44px touch target on mobile; compact on desktop
+										py: { base: "2.5", md: "1.5" },
+										borderRadius: "md",
+										fontSize: "sm",
+										textDecoration: "none",
+										color: isActive ? "fg" : "fg.muted",
+										bg: isActive ? "blue.4" : "transparent",
+										fontWeight: isActive ? "semibold" : "normal",
+										_hover: {
+											bg: isActive ? "blue.4" : "bg.subtle",
+											color: "fg",
+										},
+									})}
+								>
+									{doc.title}
+								</a>
+							);
+						})}
+					</div>
+				</div>
+			))}
+			{links && links.length > 0 && (
+				<div
+					class={css({
+						borderTopWidth: "1px",
+						borderColor: "border",
+						pt: "4",
+						display: "flex",
+						flexDirection: "column",
+						gap: "0.5",
+					})}
+				>
+					{links.map((link) => (
+						<Anchor
+							key={link.href}
+							href={link.href}
+							target="_blank"
+							rel="noopener noreferrer"
+							variant="plain"
+							class={css({
+								display: "flex",
+								alignItems: "center",
+								gap: "2",
+								px: "3",
+								py: { base: "2.5", md: "1.5" },
+								borderRadius: "md",
+								fontSize: "sm",
+								textDecoration: "none",
+								color: "fg.muted",
+								_hover: {
+									bg: "bg.subtle",
+									color: "fg",
+								},
+							})}
+						>
+							{isGithubLink(link) ? <GitHubIcon /> : <ExternalLinkIcon />}
+							{link.label}
+						</Anchor>
+					))}
+				</div>
+			)}
+		</nav>
+	);
+}
+
+// Mobile sidenav: a native <details> disclosure bar attached under the header
+// row instead of a Drawer overlay. Zero JS / no island, so it works before
+// hydration and without JS at all — and since every doc link is a full-page
+// MPA navigation, the collapsed-after-navigation state of an in-flow
+// disclosure is the natural resting position rather than a bug to fight.
+function MobileNav({ groups, activeSlug, links }: DocsSidenavProps) {
+	return (
+		<details
+			class={css({
+				display: { base: "block", md: "none" },
+				borderTopWidth: "1px",
+				borderColor: { _light: "white.a4", _dark: "black.a4" },
+				"& summary svg": {
+					transition: "transform 0.2s",
+				},
+				// Explicit [open] selector: Panda's _open condition targets
+				// data-state attrs, not the native <details> open attribute.
+				"&[open] summary svg": {
+					transform: "rotate(180deg)",
+				},
+			})}
+		>
+			<summary
+				class={css({
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "space-between",
+					gap: "2",
+					px: "4",
+					py: "3",
+					fontSize: "sm",
+					fontWeight: "medium",
+					cursor: "pointer",
+					userSelect: "none",
+					listStyle: "none",
+					"&::-webkit-details-marker": {
+						display: "none",
+					},
+				})}
+			>
+				Menu
+				<ChevronDownIcon />
+			</summary>
+			<div
+				class={css({
+					maxH: "60vh",
+					overflowY: "auto",
+					px: "4",
+					pb: "4",
+				})}
+			>
+				<DocsSidenav groups={groups} activeSlug={activeSlug} links={links} />
+			</div>
+		</details>
+	);
+}
+
+interface DocsHeaderProps {
+	editUrl?: string;
+	groups: DocGroup[];
+	activeSlug?: string;
+	links?: DocsNavLinkConfig[];
+	headerLinks?: DocsNavLinkConfig[];
+}
+
+function DocsHeader({
+	editUrl,
+	groups,
+	activeSlug,
+	links,
+	headerLinks,
+}: DocsHeaderProps) {
+	const githubLink = links?.find(isGithubLink);
+	return (
+		<>
+			<div
+				class={css({
+					maxWidth: "7xl",
+					mx: "auto",
+					px: { base: "4", md: "6", lg: "8" },
+					py: "4",
+					display: "flex",
+					alignItems: "center",
+					gap: { base: "4", md: "8" },
+				})}
+			>
+				<Anchor
+					href="/"
+					variant="plain"
+					class={css({ textDecoration: "none", flexShrink: "0" })}
+				>
+					<Stack direction="horizontal" gap="3" align="center">
+						<Heading
+							as="h1"
+							class={css({
+								fontSize: "lg",
+								fontWeight: "bold",
+								tracking: "tight",
+							})}
+						>
+							Artefact UI
+						</Heading>
+					</Stack>
+				</Anchor>
+
+				<div
+					class={css({
+						flex: "1",
+						maxWidth: "md",
+						mx: { base: "0", md: "auto" },
+					})}
+				>
+					<Search
+						src="/api/docs/search.json"
+						placeholder="Search docs..."
+						itemLabel="docs"
+						showCount={false}
+						syncUrl={false}
+					/>
+				</div>
+
+				<nav
+					class={css({
+						display: { base: "none", md: "flex" },
+						gap: "6",
+						alignItems: "center",
+						flexShrink: "0",
+					})}
+				>
+					{headerLinks?.map((link) => (
+						<Anchor
+							key={link.href}
+							href={link.href}
+							variant="plain"
+							class={css({ textStyle: "sm", fontWeight: "medium" })}
+						>
+							{link.label}
+						</Anchor>
+					))}
+					{editUrl ? (
+						<Anchor
+							href={editUrl}
+							class={cx(
+								button({ variant: "outline", size: "sm" }),
+								css({ textStyle: "sm", fontWeight: "medium" }),
+							)}
+						>
+							Edit
+						</Anchor>
+					) : (
+						<Anchor
+							href={"/admin"}
+							class={cx(
+								button({ variant: "outline", size: "sm" }),
+								css({ textStyle: "sm", fontWeight: "medium" }),
+							)}
+						>
+							Admin
+						</Anchor>
+					)}
+					{githubLink && (
+						<Anchor
+							href={githubLink.href}
+							target="_blank"
+							rel="noopener noreferrer"
+							aria-label="View on GitHub"
+							class={cx(
+								button({ variant: "plain", size: "sm" }),
+								css({ px: "0" }),
+							)}
+						>
+							<GitHubIcon />
+						</Anchor>
+					)}
+				</nav>
+			</div>
+
+			<MobileNav groups={groups} activeSlug={activeSlug} links={links} />
+		</>
+	);
+}
+
+/** CMS Edit deep-link for a doc, honoring the Collections mapping from the
+ * DocsConfig singleton. `||` rather than `??`: an untouched optional CMS
+ * field arrives as "" and must fall back to the folder name too. */
+function docEditUrl(doc: DocSummary, config: DocsConfig): string {
+	const cmsCollection =
+		config.collections?.find((c) => c.folder === doc.collection)
+			?.cmsCollection || doc.collection;
+	return `/admin/#/collections/${cmsCollection}/entries/${doc.slug}`;
+}
+
+/** Shared `<Layout>` props for the docs shell, so every docs route renders
+ * the identical frame: viewport-filling canvas, sticky glass header, and a
+ * sticky sider rail that hides below `md` (the header's <details> menu takes
+ * over there). Spread first, then pass the route's header/sider/content. */
+const docsShellProps = {
+	fullHeight: true,
+	stickyHeader: true,
+	stickySider: true,
+	siderHideBelow: "md",
+	class: css({ bg: "bg.canvas" }),
+	headerClass: css({
+		borderBottomWidth: "1px",
+		borderColor: { _light: "white.a4", _dark: "black.a4" },
+		bg: { _light: "white.a7", _dark: "black.a7" },
+		backdropFilter: "blur(20px) saturate(180%)",
+		boxShadow: {
+			_light:
+				"inset 0 1px 0 0 rgba(255, 255, 255, 0.5), 0 4px 30px rgba(0, 0, 0, 0.03)",
+			_dark:
+				"inset 0 1px 0 0 rgba(255, 255, 255, 0.15), 0 4px 30px rgba(0, 0, 0, 0.2)",
+		},
+	}),
+	bodyClass: css({
+		maxWidth: "7xl",
+		width: "full",
+		mx: "auto",
+		px: { base: "4", md: "6", lg: "8" },
+		py: { base: "8", md: "12" },
+		gap: "10",
+	}),
+	// The sider top clears the sticky glass header (~4.5rem tall) plus a gap
+	// so the first nav group isn't blurred behind it while scrolling.
+	siderClass: css({
+		top: "24",
+		maxH: "calc(100vh - 7rem)",
+	}),
+} satisfies Partial<LayoutProps>;
 
 const TIER_COLOR: Record<number, string> = {
 	1: "purple",
@@ -26,7 +497,7 @@ export default createRoute(
 
 	async (c) => {
 		const slug = c.req.param("doc");
-		const [doc, docs, docsConfig] = await Promise.all([
+		const [doc, docs, config] = await Promise.all([
 			loadDocBySlug(slug),
 			loadDocs(),
 			loadDocsConfig(),
@@ -36,47 +507,78 @@ export default createRoute(
 			return c.notFound();
 		}
 
+		const groups = buildDocGroups(docs, config);
 		const DocContent = doc.Component;
 
 		return c.render(
-			<DocsLayout docs={docs} config={docsConfig} activeSlug={slug}>
-				<title>{doc.title} - Docs - Artefact</title>
-
-				{(doc.category || doc.hydration) && (
-					<Stack
-						direction="horizontal"
-						gap="2"
-						align="center"
-						class={css({ mb: "6" })}
-					>
-						{doc.category && (
-							<Badge variant="subtle" colorPalette="cyan" size="sm">
-								{doc.category}
-							</Badge>
-						)}
-						{doc.hydration && (
-							<Badge
-								variant="subtle"
-								colorPalette={TIER_COLOR[doc.hydration] ?? "gray"}
-								size="sm"
-							>
-								{TIER_LABEL[doc.hydration] ?? `Tier ${doc.hydration}`}
-							</Badge>
-						)}
-					</Stack>
-				)}
-
-				{DocContent ? (
-					<div class={markdownContentClass}>
-						<DocContent />
-					</div>
-				) : (
-					<div
-						class={markdownContentClass}
-						dangerouslySetInnerHTML={{ __html: doc.html ?? "" }}
+			<Layout
+				{...docsShellProps}
+				header={
+					<DocsHeader
+						editUrl={docEditUrl(doc, config)}
+						groups={groups}
+						activeSlug={slug}
+						links={config.links}
+						headerLinks={config.headerLinks}
 					/>
-				)}
-			</DocsLayout>,
+				}
+				sider={
+					<DocsSidenav groups={groups} activeSlug={slug} links={config.links} />
+				}
+				content={
+					<>
+						<title>{doc.title} - Docs - Artefact</title>
+
+						{/* Bigger than the content's own h1s (markdownContentClass fixes
+						    those at "2xl") so the page title reads as a distinct, higher
+						    level of hierarchy rather than just another section heading.
+						    Deliberately a flat literal size, not a responsive object: this
+						    repo's staticCss config can't statically generate responsive
+						    recipe-variant classes (no `jsx: [...]` mapping — see
+						    panda.config.ts's staticCss.recipes comment), so a `{ base, md }`
+						    value here renders the right classes in HTML but with no
+						    matching CSS ever emitted for the breakpoint-scoped one. */}
+						<Heading as="h1" size="3xl" class={css({ mb: "6" })}>
+							{doc.title}
+						</Heading>
+
+						{(doc.category || doc.hydration) && (
+							<Stack
+								direction="horizontal"
+								gap="2"
+								align="center"
+								class={css({ mb: "6" })}
+							>
+								{doc.category && (
+									<Badge variant="subtle" colorPalette="cyan" size="sm">
+										{doc.category}
+									</Badge>
+								)}
+								{doc.hydration && (
+									<Badge
+										variant="subtle"
+										colorPalette={TIER_COLOR[doc.hydration] ?? "gray"}
+										size="sm"
+									>
+										{TIER_LABEL[doc.hydration] ?? `Tier ${doc.hydration}`}
+									</Badge>
+								)}
+							</Stack>
+						)}
+
+						{DocContent ? (
+							<div class={markdownContentClass}>
+								<DocContent />
+							</div>
+						) : (
+							<div
+								class={markdownContentClass}
+								dangerouslySetInnerHTML={{ __html: doc.html ?? "" }}
+							/>
+						)}
+					</>
+				}
+			/>,
 		);
 	},
 );
