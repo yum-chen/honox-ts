@@ -64,3 +64,14 @@ test("markdownToHtml converts a multi-line blockquote into one <blockquote>", ()
 	// The two source lines collapse into one blockquote, not two.
 	expect(html.match(/<blockquote>/g)?.length).toBe(1);
 });
+
+test("markdownToHtml converts a horizontal rule to <hr />", () => {
+	const markdown = ["## Section one", "", "---", "", "## Section two"].join(
+		"\n",
+	);
+
+	const html = markdownToHtml(markdown);
+
+	expect(html).toContain("<hr />");
+	expect(html).not.toContain("<p>---</p>");
+});
