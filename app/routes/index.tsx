@@ -49,11 +49,6 @@ import {
 	Stack,
 	Switch,
 	Table,
-	Tabs,
-	TabsContent,
-	TabsIndicator,
-	TabsList,
-	TabsTrigger,
 	TagsInput,
 	Text,
 	Textarea,
@@ -437,20 +432,29 @@ export default createRoute((c) => {
 						</Text>
 					</div>
 
-					<Tabs interactive colorPalette="blue" defaultValue="forms">
-						<TabsList>
-							<TabsTrigger value="forms">Form Controls</TabsTrigger>
-							<TabsTrigger value="pickers">Complex Pickers</TabsTrigger>
-							<TabsTrigger value="overlays">
-								Overlays &amp; Navigation
-							</TabsTrigger>
-							<TabsTrigger value="feedback">
-								Feedback &amp; Utilities
-							</TabsTrigger>
-							<TabsIndicator />
-						</TabsList>
-						<TabsContent value="forms">
-							<div class={css({ mt: "6" })}>
+					<div
+						class={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "16",
+							mt: "10",
+						})}
+					>
+						<div>
+							<Heading
+								as="h3"
+								size="xl"
+								class={css({
+									mb: "6",
+									fontWeight: "semibold",
+									borderBottom: "1px solid",
+									borderColor: "border.default",
+									pb: "2",
+								})}
+							>
+								Form Controls
+							</Heading>
+							<div class={css({ mt: "2" })}>
 								<Grid columns={{ base: 1, md: 2, lg: 3 }} gap="6">
 									{/* Switch */}
 									<Card
@@ -648,9 +652,23 @@ export default createRoute((c) => {
 									</Card>
 								</Grid>
 							</div>
-						</TabsContent>
-						<TabsContent value="pickers">
-							<div class={css({ mt: "6" })}>
+						</div>
+
+						<div>
+							<Heading
+								as="h3"
+								size="xl"
+								class={css({
+									mb: "6",
+									fontWeight: "semibold",
+									borderBottom: "1px solid",
+									borderColor: "border.default",
+									pb: "2",
+								})}
+							>
+								Complex Pickers
+							</Heading>
+							<div class={css({ mt: "2" })}>
 								<Grid columns={{ base: 1, md: 2 }} gap="6">
 									{/* DatePicker */}
 									<Card
@@ -734,9 +752,23 @@ export default createRoute((c) => {
 									</Card>
 								</Grid>
 							</div>
-						</TabsContent>
-						<TabsContent value="overlays">
-							<div class={css({ mt: "6" })}>
+						</div>
+
+						<div>
+							<Heading
+								as="h3"
+								size="xl"
+								class={css({
+									mb: "6",
+									fontWeight: "semibold",
+									borderBottom: "1px solid",
+									borderColor: "border.default",
+									pb: "2",
+								})}
+							>
+								Overlays &amp; Navigation
+							</Heading>
+							<div class={css({ mt: "2" })}>
 								<Grid columns={{ base: 1, md: 2, lg: 3 }} gap="6">
 									{/* Popover */}
 									<Card
@@ -945,9 +977,23 @@ export default createRoute((c) => {
 									</Card>
 								</Grid>
 							</div>
-						</TabsContent>
-						<TabsContent value="feedback">
-							<div class={css({ mt: "6" })}>
+						</div>
+
+						<div>
+							<Heading
+								as="h3"
+								size="xl"
+								class={css({
+									mb: "6",
+									fontWeight: "semibold",
+									borderBottom: "1px solid",
+									borderColor: "border.default",
+									pb: "2",
+								})}
+							>
+								Feedback &amp; Utilities
+							</Heading>
+							<div class={css({ mt: "2" })}>
 								<Grid columns={{ base: 1, md: 2, lg: 3 }} gap="6">
 									{/* Progress */}
 									<Card
@@ -1029,8 +1075,8 @@ export default createRoute((c) => {
 									</Card>
 								</Grid>
 							</div>
-						</TabsContent>
-					</Tabs>
+						</div>
+					</div>
 				</div>
 			</section>
 

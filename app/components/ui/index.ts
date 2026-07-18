@@ -82,16 +82,6 @@ export {
 	type TableProps,
 	type TableRow,
 } from "./table";
-export {
-	Tabs,
-	TabsAddTrigger,
-	TabsContent,
-	TabsIndicator,
-	type TabsItem,
-	TabsList,
-	type TabsProps,
-	TabsTrigger,
-} from "./tabs";
 export { TagsInput, type TagsInputProps } from "./tags-input";
 export * as TagsInputPrimitive from "./tags-input-primitive";
 export { Text, type TextProps } from "./text";

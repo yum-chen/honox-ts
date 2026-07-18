@@ -70,7 +70,6 @@ export default defineConfig({
 			splitter: ["*"],
 			switch: ["*"],
 			table: ["*"],
-			tabs: ["*"],
 			text: ["*"],
 			textarea: ["*"],
 			toast: ["*"],

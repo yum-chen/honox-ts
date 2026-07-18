@@ -79,7 +79,7 @@ matters when state (`value` / `checked` / `defaultValue`) or a handler
 Applies to:
 
 - Form controls (button, checkbox, switch, textarea, field, slider, combobox, radio-group)
-- Selectable groups (tabs, segment-group, toggle-group)
+- Selectable groups (segment-group, toggle-group)
 - Tables with row clicks (table)
 - Avatar with a `src` (the async image load / error lifecycle is a client-only cue)
 - Pagination / tags-input (state + handlers; a `type="link"` pagination that supplies
@@ -129,7 +129,6 @@ Applies to:
 | `button` | `onClick` / `onPointerDown` / `onSubmit` | ✅ `button.tsx` |
 | `card` | `onClick` / `onPointerDown` | ✅ `card.tsx` |
 | `table` | any `row.onClick` | ✅ `table.tsx` |
-| `tabs` | `value` / `defaultValue` / `onValueChange` / `closable` / `editable` / `onTabClose` / `onTabAdd` | ✅ `tabs.tsx` |
 | `segment-group` | `value` / `defaultValue` / `onValueChange` | ✅ `segment-group.tsx` |
 | `toggle-group` | `value` / `defaultValue` / `onValueChange` | ✅ `toggle-group.tsx` |
 | `slider` | `value` / `defaultValue` / `onChange` / `onDraggingChange` | ✅ `slider.tsx` |
@@ -183,12 +182,12 @@ Applies to:
 Each component's `hasSignal` is a boolean OR over "is this prop defined?":
 
 ```ts
-// Typical pattern (tabs shown)
+// Typical pattern (segment-group shown)
 const hasSignal =
 	rest.value !== undefined ||
 	rest.defaultValue !== undefined ||
 	rest.onValueChange !== undefined;
-if (shouldHydrate(interactive, hasSignal)) return <TabsIsland {...rest} />;
+if (shouldHydrate(interactive, hasSignal)) return <SegmentGroupIsland {...rest} />;
 return <Root {...rest}>{/* static structure */}</Root>;
 ```
 
@@ -233,7 +232,7 @@ Walk the list in order; stop at the first match:
    `shouldHydrate(interactive, true)`.
 2. **Is it a form control or a visually-selectable component that may be controlled or
    uncontrolled?**
-   button / checkbox / switch / slider / tabs / combobox / row-click table … → **Tier-2**,
+   button / checkbox / switch / slider / combobox / row-click table … → **Tier-2**,
    define `hasSignal` (state + handlers) then call `shouldHydrate(interactive, hasSignal)`.
 3. **Is it purely typographic / layout / decorative?**
    text / heading / alert / group / progress … → **Tier-3**, no `interactive` prop, no island.
