@@ -2,8 +2,6 @@
 title: CMS Page Builder
 ---
 
-# CMS Page Builder
-
 ## Introduction
 
 The [Sveltia CMS](https://sveltiacms.app/en/docs/intro) based dynamic Page Builder allows non-technical editors to create complex, recursively nested pages entirely through the CMS user interface (`/admin/`).

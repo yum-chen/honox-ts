@@ -366,7 +366,14 @@ export function DocsLayout({ docs, activeSlug, children }: DocsLayoutProps) {
 					<Sidenav groups={groups} activeSlug={activeSlug} />
 				</aside>
 
-				<main class={css({ flex: "1", minWidth: "0" })}>{children}</main>
+				<main class={css({ flex: "1", minWidth: "0" })}>
+					{activeDoc && (
+						<Heading as="h1" size="2xl" class={css({ mb: "6" })}>
+							{activeDoc.title}
+						</Heading>
+					)}
+					{children}
+				</main>
 			</div>
 		</div>
 	);

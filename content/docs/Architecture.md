@@ -2,8 +2,6 @@
 title: Architecture
 ---
 
-# Architecture
-
 This project is built on [**HonoX**](https://github.com/honojs/honox) **+** [**@hono/vite-ssg**](https://github.com/honojs/vite-plugins/tree/main/packages/ssg) (SSG, static site generation). Pages emit **static HTML** by default; only components that genuinely need client-side interactivity are "promoted" to islands (client JS snippets).
 
 > Every component's hydration behaviour funnels through the `shouldHydrate` predicate
