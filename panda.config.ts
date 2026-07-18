@@ -32,6 +32,7 @@ export default defineConfig({
 		recipes: {
 			datePicker: ["*"],
 			select: ["*"],
+			search: ["*"],
 			pagination: ["*"],
 			absoluteCenter: ["*"],
 			avatar: ["*"],

@@ -86,7 +86,7 @@ export const search = defineSlotRecipe({
 			// dead: that token was stripped from the Panda preset by this repo's
 			// "Remove Panda Preset Colors" plugin and never replaced, so it
 			// silently compiled to invalid, ignored CSS and rendered transparent.)
-			bg: "colorPalette.solid.bg",
+			bg: "gray.surface.bg",
 			borderWidth: "1px",
 			borderColor: "gray.outline.border",
 			borderRadius: "l2",
@@ -104,7 +104,7 @@ export const search = defineSlotRecipe({
 			animationDuration: "fast",
 		},
 		item: {
-			bg: "colorPalette.solid.bg",
+			bg: "transparent",
 			display: "flex",
 			flexDirection: "column",
 			gap: "0.5",
