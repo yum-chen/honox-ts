@@ -1,20 +1,17 @@
 ---
-title: "Combobox"
-hydration-tier: "Tier 2"
-category: "Forms"
+title: Combobox
+hydration-tier: Tier 2
+category: Forms
 ---
 
 import { Combobox } from "../../app/components/ui";
 import { DemoPreview } from "../../app/components/demo-preview";
 
-
 # Combobox
-
 
 # Introduction
 
 A widget that combines a text input with a listbox, allowing users to filter and select from a list of options.
-
 
 # Hydration
 
@@ -29,14 +26,13 @@ It hydrates as an island when **any** of the following signals is present (or `i
 - `onItemSelect` (item selection callback — select-only comboboxes hydrate on this)
 
 | `interactive` prop | Result |
-| :--- | :--- |
+| --- | --- |
 | omitted, **no** signal | Static — no client JS |
 | omitted, a signal present | Hydrates as an island |
 | `true` | Hydrates as an island |
 | `false` | Static — no client JS |
 
 All interactivity decisions in the library route through the shared `shouldHydrate()` helper in `app/components/ui/island-utils.ts`.
-
 
 # Usage
 
@@ -99,7 +95,7 @@ This component is available as a `combobox` block in the [Page Builder](/docs/Pa
 # Props
 
 | Prop | Type | Description |
-| :--- | :--- | :--- |
+| --- | --- | --- |
 | `items` | `ComboboxItem[]` | An array of items to display in the list. |
 | `label` | `Child` | The label for the combobox. |
 | `placeholder` | `string` | The placeholder text for the input. |
@@ -111,12 +107,10 @@ This component is available as a `combobox` block in the [Page Builder](/docs/Pa
 | `onInputChange` | `(value: string) => void` | Callback triggered when the input value changes. |
 | `onItemSelect` | `(value: string) => void` | Callback triggered when an item is selected. |
 
-
 ## ComboboxItem
 
 | Prop | Type | Description |
-| :--- | :--- | :--- |
+| --- | --- | --- |
 | `label` | `string` | The display text for the item. |
 | `value` | `string` | The unique value for the item. |
 | `disabled` | `boolean` | Whether the item is disabled. |
-

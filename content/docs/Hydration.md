@@ -262,5 +262,4 @@ The following divergences were resolved during convention rollout; kept here for
 
 - [UI Components Architecture](/docs/Architecture) — the project-level overview
 - `app/components/ui/island-utils.ts` — the single decision entry point
-- `content/components/<Component>.mdx` (each Tier-1 / Tier-2 component) — its
-  own `# Hydration` section, plus `hydration-tier`/`category` frontmatter
+- `content/components/<Component>.mdx` (each Tier-1 / Tier-2 component) — its own `# Hydration` section, plus `hydration-tier`/`category` frontmatter

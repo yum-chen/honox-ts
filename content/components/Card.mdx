@@ -1,23 +1,19 @@
 ---
-title: "Card"
-hydration-tier: "Tier 2"
-category: "Data Display"
+title: Card
+hydration-tier: Tier 2
+category: Data Display
 ---
 
 import { Card, Button } from "../../app/components/ui";
 import { DemoPreview } from "../../app/components/demo-preview";
 
-
 # Card
-
 
 # Introduction
 
 A flexible container for grouping related content, with optional header, body, footer, image, and avatar slots.
 
-
 # Usage
-
 
 ## Basic Card
 
@@ -46,7 +42,6 @@ export default function MyPage() {
   );
 }
 ```
-
 
 ## Card with Image
 
@@ -81,24 +76,29 @@ This component is available as a `card` block in the [Page Builder](/docs/PageBu
 
 # Props
 
-
 ## Card
 
 | Prop | Type | Description |
-| :--- | :--- | :--- |
-| `title` | `string \| JSX.Element` | The card title. |
-| `description` | `string \| JSX.Element` | The card description. |
-| `body` | `string \| JSX.Element` | The main body content. |
-| `footer` | `string \| JSX.Element` | Footer content. |
+| --- | --- | --- |
+
+| `title` | \`string \ | JSX.Element\` | The card title. |
+| `description` | \`string \ | JSX.Element\` | The card description. |
+| `body` | \`string \ | JSX.Element\` | The main body content. |
+| `footer` | \`string \ | JSX.Element\` | Footer content. |
+
 | `avatar` | `JSX.Element` | Element shown in the header (e.g. an avatar). |
 | `headerAction` | `JSX.Element` | Element shown at the end of the header (e.g. a menu). |
-| `image` | `string \| JSX.Element` | Image source or element. |
-| `imagePosition` | `"top" \| "bottom" \| "left" \| "right"` | Where the image is placed. Default: `"top"`. |
+
+| `image` | \`string \ | JSX.Element\` | Image source or element. |
+
+| `imagePosition` | \`"top" \ | "bottom" \ | "left" \ | "right"\` | Where the image is placed. Default: `"top"`. |
+
 | `headerClass` | `string` | Custom CSS classes for the header. |
 | `bodyClass` | `string` | Custom CSS classes for the body. |
 | `footerClass` | `string` | Custom CSS classes for the footer. |
 | `imageClass` | `string` | Custom CSS classes for the image. |
-| `variant` | `"elevated" \| "outline" \| "subtle"` | The visual style of the card. |
+
+| `variant` | \`"elevated" \ | "outline" \ | "subtle"\` | The visual style of the card. |
+
 | `interactive` | `boolean` | Enable client-side hydration. |
 | `class` | `string` | Custom CSS classes for the root element. |
-

@@ -1,8 +1,13 @@
 ---
-title: "Server Components & Islands Architecture"
-date: "2026-06-15"
-description: "Understanding the islands architecture pattern for building performant web applications with minimal client-side JavaScript. Perfect for modern web development."
-tags: ["architecture", "performance", "islands"]
+title: Server Components & Islands Architecture
+date: 2026-06-15
+description: Understanding the islands architecture pattern for building performant web applications with minimal client-side JavaScript. Perfect for modern web development.
+author: ''
+readTime: ''
+tags:
+  - architecture
+  - performance
+  - islands
 draft: false
 ---
 
@@ -13,6 +18,7 @@ The islands architecture is a modern approach to building performant web applica
 ## What is Islands Architecture?
 
 Islands architecture involves:
+
 - Server-rendered HTML for static content
 - Isolated interactive "islands" for dynamic components
 - Minimal JavaScript sent to the client

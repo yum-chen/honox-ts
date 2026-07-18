@@ -1,20 +1,17 @@
 ---
-title: "Switch"
-hydration-tier: "Tier 2"
-category: "Forms"
+title: Switch
+hydration-tier: Tier 2
+category: Forms
 ---
 
 import { Switch } from "../../app/components/ui";
 import { DemoPreview } from "../../app/components/demo-preview";
 
-
 # Switch
-
 
 # Introduction
 
 A control that allows the user to toggle between checked and unchecked states.
-
 
 # Usage
 
@@ -40,11 +37,12 @@ export default function MyPage() {
 
 ## CMS Page Builder
 
-This component is available as a `switch` block in the [Page Builder](/docs/PageBuilder) (`content/pages/*.json`). **Known gap:** the CMS exposes a "Label" field, but the `switch` block renderer (`app/components/page-registry.tsx`) never forwards it into `Switch`'s `children` slot, so it currently has no visible effect:
+This component is available as a `switch` block in the [Page Builder](/docs/PageBuilder) (`content/pages/*.json`):
 
 ```json
 {
   "type": "switch",
+  "label": "Dark Mode",
   "checked": true,
   "colorPalette": "blue"
 }
@@ -52,14 +50,15 @@ This component is available as a `switch` block in the [Page Builder](/docs/Page
 
 # Props
 
-| Prop              | Type                                      | Description                                        |
-| :---------------- | :---------------------------------------- | :------------------------------------------------- |
-| `children`        | `any`                                     | Label content to be rendered next to the switch.   |
-| `class`           | `string`                                  | Custom CSS classes.                                |
-| `checked`         | `boolean`                                 | Whether the switch is checked (controlled).        |
-| `defaultChecked`  | `boolean`                                 | The initial checked state (uncontrolled).          |
-| `disabled`        | `boolean`                                 | Whether the switch is disabled.                    |
+| Prop | Type | Description |
+| --- | --- | --- |
+| `children` | `any` | Label content to be rendered next to the switch. |
+| `class` | `string` | Custom CSS classes. |
+| `checked` | `boolean` | Whether the switch is checked (controlled). |
+| `defaultChecked` | `boolean` | The initial checked state (uncontrolled). |
+| `disabled` | `boolean` | Whether the switch is disabled. |
 | `onCheckedChange` | `(details: { checked: boolean }) => void` | Callback triggered when the checked state changes. |
-| `size`            | `"sm" \| "md" \| "lg"`                    | The size of the switch.                            |
-| `interactive`     | `boolean`                                 | Forces hydration as an island.                     |
 
+| `size` | \`"sm" \ | "md" \ | "lg"\` | The size of the switch. |
+
+| `interactive` | `boolean` | Forces hydration as an island. |

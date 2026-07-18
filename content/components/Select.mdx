@@ -1,15 +1,13 @@
 ---
-title: "Select"
-hydration-tier: "Tier 1"
-category: "Forms"
+title: Select
+hydration-tier: Tier 1
+category: Forms
 ---
 
 import { Select } from "../../app/components/ui";
 import { DemoPreview } from "../../app/components/demo-preview";
 
-
 # Select
-
 
 # Introduction
 
@@ -17,18 +15,17 @@ A dropdown control for picking one or more options from a list — an accessible
 
 When to reach for something else:
 
-- With fewer than ~5 options, a `RadioGroup` is usually clearer.
+- With fewer than \~5 options, a `RadioGroup` is usually clearer.
 - If the user should be able to type to filter the options, use `Combobox`.
 
 The component renders a visually hidden native `<select>` alongside the custom UI, so a `name` prop makes it participate in regular form submission with no extra wiring.
-
 
 # Keyboard Interaction
 
 The trigger is a `role="combobox"` button; focus stays on it while the highlighted option is reported through `aria-activedescendant`.
 
 | Key | Behavior |
-| :--- | :--- |
+| --- | --- |
 | `Enter` / `Space` | Open the list; when open, select the highlighted option. |
 | `ArrowDown` / `ArrowUp` | Open the list, or move the highlight (wraps, skips disabled options). |
 | `Home` / `End` | Highlight the first / last enabled option. |
@@ -38,19 +35,17 @@ The trigger is a `role="combobox"` button; focus stays on it while the highlight
 
 Opening the list highlights the currently selected option (or the first enabled one), and keyboard navigation keeps the highlighted option scrolled into view.
 
-
 # Hydration
 
 **Tier 1 — auto-interactive.** Opening the dropdown and selecting an option require client JS, and there is no static fallback (the native `<select>` is visually hidden and exists only for form submission), so `Select` hydrates by default. Pass `interactive={false}` to force a purely static render.
 
 | `interactive` prop | Result |
-| :--- | :--- |
+| --- | --- |
 | omitted | Hydrates as an island |
 | `true` | Hydrates as an island |
 | `false` | Static — no client JS |
 
 All interactivity decisions in the library route through the shared `shouldHydrate()` helper in `app/components/ui/island-utils.ts`.
-
 
 # Usage
 
@@ -92,7 +87,6 @@ export default function MyPage() {
 }
 ```
 
-
 ## Multiple selection
 
 The list stays open while options are toggled, and the trigger shows the selected labels joined with commas.
@@ -107,7 +101,6 @@ The list stays open while options are toggled, and the trigger shows the selecte
 />
 ```
 
-
 ## In a form
 
 The hidden native `<select>` carries the selection, so a plain form post works:
@@ -118,7 +111,6 @@ The hidden native `<select>` carries the selection, so a plain form post works:
   <Button type="submit">Save</Button>
 </form>
 ```
-
 
 ## Sizes and variants
 
@@ -144,11 +136,10 @@ This component is available as a `select` block in the [Page Builder](/docs/Page
 }
 ```
 
-
 # Props
 
 | Prop | Type | Description |
-| :--- | :--- | :--- |
+| --- | --- | --- |
 | `items` | `SelectItem[]` | The options to display in the list. |
 | `label` | `Child` | Label rendered above the trigger and associated with it. |
 | `placeholder` | `string` | Text shown in the trigger while nothing is selected. |
@@ -163,8 +154,11 @@ This component is available as a `select` block in the [Page Builder](/docs/Page
 | `readOnly` | `boolean` | Selection is visible but the list cannot be opened. |
 | `required` | `boolean` | Marks the control required (`aria-required`, hidden select `required`). |
 | `open` | `boolean` | Controlled open state of the dropdown. |
-| `size` | `"xs" \| "sm" \| "md" \| "lg" \| "xl"` | Size of the trigger and list. Defaults to `md`. |
-| `variant` | `"outline" \| "surface"` | Visual variant of the trigger. Defaults to `outline`. |
+
+| `size` | \`"xs" \ | "sm" \ | "md" \ | "lg" \ | "xl"\` | Size of the trigger and list. Defaults to `md`. |
+
+| `variant` | \`"outline" \ | "surface"\` | Visual variant of the trigger. Defaults to `outline`. |
+
 | `interactive` | `boolean` | Overrides the hydration decision (see below). |
 | `onValueChange` | `(values: string[]) => void` | Called with the full selection whenever it changes (select, deselect, clear). |
 | `onItemSelect` | `(value: string) => void` | Called with the value of the option that was interacted with. |
@@ -173,12 +167,10 @@ This component is available as a `select` block in the [Page Builder](/docs/Page
 
 > Callback props only work when the Select is composed from client-side code (inside another island). Props serialised from a server-rendered route must be plain data.
 
-
 ## SelectItem
 
 | Prop | Type | Description |
-| :--- | :--- | :--- |
+| --- | --- | --- |
 | `label` | `string` | The display text for the option. Also used for typeahead matching. |
 | `value` | `string` | The unique value for the option. |
 | `disabled` | `boolean` | Whether the option can be selected. |
-

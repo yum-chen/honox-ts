@@ -1,7 +1,7 @@
 ---
-title: "Toast"
-hydration-tier: "Tier 1"
-category: "Feedback"
+title: Toast
+hydration-tier: Tier 1
+category: Feedback
 ---
 
 import { Toast, Button } from "../../app/components/ui";
@@ -108,7 +108,7 @@ The home-page demo triggers toasts by dispatching the underlying `park-ui:toast:
 `Toast.toaster` (or any instance returned by `createToaster`) provides the following helpers:
 
 | Method | Signature |
-| :--- | :--- |
+| --- | --- |
 | `create` | `(options: Omit<ToastOptions, "id">) => string` |
 | `success` | `(title: string, options?: Partial<ToastOptions>) => string` |
 | `error` | `(title: string, options?: Partial<ToastOptions>) => string` |
@@ -128,8 +128,10 @@ The home-page demo triggers toasts by dispatching the underlying `park-ui:toast:
 ## createToaster(config)
 
 | Property | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `placement` | `"top-start" \| "top" \| "top-end" \| "bottom-start" \| "bottom" \| "bottom-end"` | `"bottom-end"` | Screen corner/edge the viewport anchors to. Also determines the default swipe-to-dismiss direction and the enter/exit slide direction. |
+| --- | --- | --- | --- |
+
+| `placement` | \`"top-start" \ | "top" \ | "top-end" \ | "bottom-start" \ | "bottom" \ | "bottom-end"\` | `"bottom-end"` | Screen corner/edge the viewport anchors to. Also determines the default swipe-to-dismiss direction and the enter/exit slide direction. |
+
 | `overlap` | `boolean` | `false` | Reserved for stacked/overlapping layout. |
 | `max` | `number` | `24` | Maximum toasts kept at once; oldest is evicted first. |
 | `duration` | `number` | `5000` | Default auto-dismiss duration in ms for toasts that don't specify their own. |
@@ -139,11 +141,12 @@ The home-page demo triggers toasts by dispatching the underlying `park-ui:toast:
 ## ToastOptions
 
 | Property | Type | Description |
-| :--- | :--- | :--- |
+| --- | --- | --- |
 | `title` | `string` | The toast title. |
 | `description` | `string` | The toast description. |
-| `type` | `"info" \| "success" \| "warning" \| "error" \| "loading"` | Intent/style of the toast — drives the accent color, indicator icon, and accessible role/`aria-live` (`error` → `role="alert"`/`assertive`, everything else → `role="status"`/`polite`). |
+
+| `type` | \`"info" \ | "success" \ | "warning" \ | "error" \ | "loading"\` | Intent/style of the toast — drives the accent color, indicator icon, and accessible role/`aria-live` (`error` → `role="alert"`/`assertive`, everything else → `role="status"`/`polite`). |
+
 | `duration` | `number` | Auto-dismiss duration in milliseconds. `0` or `Infinity` disables auto-dismiss. |
 | `closable` | `boolean` | Whether a visible close button is rendered. The toast can still be dismissed via <kbd>Escape</kbd> or swipe regardless of this flag. |
 | `action` | `{ label: string; onClick: () => void }` | Optional action button. |
-

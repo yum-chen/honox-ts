@@ -1,15 +1,13 @@
 ---
-title: "Carousel"
-hydration-tier: "Tier 1"
-category: "Data Display"
+title: Carousel
+hydration-tier: Tier 1
+category: Data Display
 ---
 
 import { Carousel } from "../../app/components/ui";
 import { DemoPreview } from "../../app/components/demo-preview";
 
-
 # Carousel
-
 
 # Introduction
 
@@ -18,9 +16,7 @@ scroll-snap — not transform math. Supports paging by group (`slidesPerPage`),
 looping, autoplay, mouse-drag scrolling, keyboard navigation, and vertical
 orientation.
 
-
 # Usage
-
 
 ## Basic carousel
 
@@ -52,7 +48,6 @@ export default function Page() {
 }
 ```
 
-
 ## Multiple slides per page, looping
 
 ```tsx
@@ -64,7 +59,6 @@ export default function Page() {
   colorPalette="purple"
 />
 ```
-
 
 ## Autoplay with pause-on-hover
 
@@ -78,7 +72,6 @@ export default function Page() {
 />
 ```
 
-
 ## Vertical orientation
 
 ```tsx
@@ -86,7 +79,6 @@ export default function Page() {
   <Carousel slides={slides} orientation="vertical" class={css({ height: "full" })} />
 </div>
 ```
-
 
 ## Overlaid (inline) controls
 
@@ -110,11 +102,9 @@ This component is available as a `carousel` block in the [Page Builder](/docs/Pa
 }
 ```
 
----
-
+***
 
 # Props
-
 
 ## Carousel
 
@@ -124,29 +114,38 @@ indicator dots) for you. For full manual composition, use `Carousel.Root`
 and the exported parts directly (see [Manual composition](#manual-composition)).
 
 | Prop | Type | Description | Default |
-| :--- | :--- | :--- | :--- |
+| --- | --- | --- | --- |
 | `slides` | `JSX.Element[]` | The slide contents. `slideCount` is derived from its length. | - |
 | `interactive` | `boolean` | Forces hydration as an island. | `true` |
 | `page` | `number` | Whether the carousel is on a given page (controlled). | - |
 | `defaultPage` | `number` | Initial page (uncontrolled). | `0` |
 | `slidesPerPage` | `number` | Number of slides visible at once. | `1` |
-| `slidesPerMove` | `number \| "auto"` | Slides advanced per page step. `"auto"` uses `slidesPerPage`. | `"auto"` |
-| `orientation` | `"horizontal" \| "vertical"` | Scroll axis. | `"horizontal"` |
+
+| `slidesPerMove` | \`number \ | "auto"\` | Slides advanced per page step. `"auto"` uses `slidesPerPage`. | `"auto"` |
+| `orientation` | \`"horizontal" \ | "vertical"\` | Scroll axis. | `"horizontal"` |
+
 | `loop` | `boolean` | Wraps around at the first/last page. | `false` |
 | `spacing` | `string` | Gap between slides (any CSS length). | `"0px"` |
 | `padding` | `string` | Extra scroll padding at each end (any CSS length). | - |
 | `autoSize` | `boolean` | Lets slides size themselves instead of splitting evenly by `slidesPerPage`. | `false` |
 | `allowMouseDrag` | `boolean` | Enables click-and-drag scrolling with the mouse (touch/trackpad scrolling always works natively). | `false` |
-| `autoplay` | `boolean \| { delay: number }` | Auto-advances pages. Always wraps at the end regardless of `loop`. | `false` |
+
+| `autoplay` | \`boolean \ | { delay: number }\` | Auto-advances pages. Always wraps at the end regardless of `loop`. | `false` |
+
 | `pauseOnHover` | `boolean` | Pauses autoplay while the pointer is over the carousel. | `false` |
-| `snapType` | `"proximity" \| "mandatory"` | CSS scroll-snap strictness. | `"mandatory"` |
+
+| `snapType` | \`"proximity" \ | "mandatory"\` | CSS scroll-snap strictness. | `"mandatory"` |
+
 | `disabled` | `boolean` | Disables all triggers/indicators and dragging. | `false` |
 | `showControls` | `boolean` | Renders `PrevTrigger`/`NextTrigger` in the default `Control`. | `true` |
 | `showIndicators` | `boolean` | Renders an `IndicatorGroup` in the default `Control`. | `true` |
 | `showAutoplayTrigger` | `boolean` | Renders an `AutoplayTrigger` in the default `Control`. | `false` |
 | `itemClass` | `string` | Custom class applied to every generated `Item`. | - |
-| `size` | `"sm" \| "md" \| "lg"` | Size of the triggers/indicators. | `"md"` |
-| `colorPalette` | `"gray" \| "blue" \| "cyan" \| "green" \| "orange" \| "purple" \| "red" \| "teal" \| "indigo" \| "pink" \| "yellow" \| "success" \| "error" \| "warning"` | Accent color for the active indicator/pressed autoplay trigger. | `"green"` |
+
+| `size` | \`"sm" \ | "md" \ | "lg"\` | Size of the triggers/indicators. | `"md"` |
+
+| `colorPalette` | \`"gray" \ | "blue" \ | "cyan" \ | "green" \ | "orange" \ | "purple" \ | "red" \ | "teal" \ | "indigo" \ | "pink" \ | "yellow" \ | "success" \ | "error" \ | "warning"\` | Accent color for the active indicator/pressed autoplay trigger. | `"green"` |
+
 | `inline` | `boolean` | Overlays `Control` on top of the item group instead of stacking below it. | `false` |
 | `translations` | `CarouselTranslations` | Localized strings (aria-labels, progress text). | - |
 | `onPageChange` | `(details: { page: number; pageSnapPoint: number }) => void` | Called when the active page settles. | - |
@@ -155,24 +154,22 @@ and the exported parts directly (see [Manual composition](#manual-composition)).
 | `class` | `string` | Custom CSS classes for the root element. | - |
 | `classNames` | `Record<string, string>` | Custom CSS classes per part (`root`, `itemGroup`, `item`, `control`, `prevTrigger`, `nextTrigger`, `indicatorGroup`, `indicator`, `autoplayTrigger`). | - |
 
-
 ### Carousel.Item
 
 | Prop | Type | Description | Default |
-| :--- | :--- | :--- | :--- |
+| --- | --- | --- | --- |
 | `index` | `number` | The slide's position. Required. | - |
-| `snapAlign` | `"start" \| "center" \| "end"` | Which edge of the slide snaps into view. | `"start"` |
 
+| `snapAlign` | \`"start" \ | "center" \ | "end"\` | Which edge of the slide snaps into view. | `"start"` |
 
 ### Carousel.Indicator
 
 | Prop | Type | Description | Default |
-| :--- | :--- | :--- | :--- |
+| --- | --- | --- | --- |
 | `index` | `number` | The page it jumps to. Required. | - |
 | `readOnly` | `boolean` | Renders the dot without a click handler. | `false` |
 
----
-
+***
 
 # Architecture notes
 
@@ -180,7 +177,7 @@ and the exported parts directly (see [Manual composition](#manual-composition)).
   `overflow: auto` grid/flex container with `scroll-snap-type`; paging calls
   `scrollTo(...)` on it. This means touch swipe, trackpad scroll, and
   focused-element arrow-key scrolling work even before hydration finishes —
-  only the trigger/indicator *clicks* and autoplay require JavaScript.
+  only the trigger/indicator _clicks_ and autoplay require JavaScript.
 - **`pageSnapPoints`** is the item index each page starts at, computed with
   the same structural formula Ark UI's `@zag-js/carousel` machine uses
   (`getPageSnapPoints`) — deterministic from `slideCount`/`slidesPerPage`/
@@ -204,7 +201,7 @@ and the exported parts directly (see [Manual composition](#manual-composition)).
   `isPlaying`/etc. through refs rather than closing over them directly —
   putting reactive state in its dependency array reattaches the listener on
   every change, and `pauseOnHover`'s own `setIsPlaying` (fired by
-  `pointerenter`, which lands *just before* the paired click in a real
+  `pointerenter`, which lands _just before_ the paired click in a real
   click gesture) would otherwise tear the click listener down in the gap
   between the mouse arriving and the button being pressed.
 - **Simplifications vs. upstream Ark UI:** in-view tracking uses the same

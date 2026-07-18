@@ -1,10 +1,10 @@
 {
-  "title": "CMS Test Page",
+  "title": "Test Page",
   "content": [
     {
       "type": "heading",
-      "text": "CMS Component Page Demo",
       "size": "4xl",
+      "text": "CMS Component Page Demo",
       "as": "h1"
     },
     {
@@ -19,8 +19,8 @@
       "children": [
         {
           "type": "heading",
-          "text": "1. Nested Card & Leaves",
           "size": "2xl",
+          "text": "1. Nested Card & Leaves",
           "as": "h2"
         },
         {
@@ -49,8 +49,8 @@
         },
         {
           "type": "heading",
-          "text": "2. Collapsible Container",
           "size": "2xl",
+          "text": "2. Collapsible Container",
           "as": "h2"
         },
         {
@@ -72,13 +72,14 @@
         },
         {
           "type": "heading",
-          "text": "3. Interactive Combobox",
           "size": "2xl",
+          "text": "3. Interactive Combobox",
           "as": "h2"
         },
         {
           "type": "combobox",
           "label": "Choose Your Favorite Framework",
+          "placeholder": "Select a framework...",
           "items": [
             {
               "label": "HonoX",
@@ -96,13 +97,12 @@
               "label": "Vue",
               "value": "vue"
             }
-          ],
-          "placeholder": "Select a framework..."
+          ]
         },
         {
           "type": "heading",
-          "text": "4. Modals & Overlays",
           "size": "2xl",
+          "text": "4. Modals & Overlays",
           "as": "h2"
         },
         {
@@ -215,15 +215,14 @@
           "disabled": false
         }
       ],
-      "colorPalette": "",
-      "size": "md"
+      "size": "md",
+      "colorPalette": ""
     },
     {
       "type": "radioCardGroup",
       "label": "Plan",
       "defaultValue": "pro",
       "variant": "surface",
-      "colorPalette": "blue",
       "items": [
         {
           "label": "Hobby",
@@ -240,7 +239,8 @@
           "value": "enterprise",
           "disabled": true
         }
-      ]
+      ],
+      "colorPalette": "blue"
     },
     {
       "type": "editable",
@@ -252,31 +252,43 @@
     },
     {
       "type": "heading",
-      "text": "5. New Component Bindings",
       "size": "2xl",
+      "text": "5. New Component Bindings",
       "as": "h2"
     },
     {
       "type": "breadcrumb",
-      "items": [
-        { "label": "Home", "href": "/" },
-        { "label": "Docs", "href": "/docs" },
-        { "label": "Test Page" }
-      ],
       "variant": "underline",
+      "items": [
+        {
+          "label": "Home",
+          "href": "/"
+        },
+        {
+          "label": "Docs",
+          "href": "/docs"
+        },
+        {
+          "label": "Test Page"
+        }
+      ],
       "size": "md"
     },
     {
       "type": "datePicker",
       "label": "Check-in Date",
-      "selectionMode": "single",
       "placeholder": "YYYY-MM-DD",
+      "selectionMode": "single",
       "colorPalette": "blue"
     },
     {
       "type": "tagsInput",
       "label": "Amenities",
-      "defaultValue": ["WiFi", "Fireplace", "Hot Tub"]
+      "defaultValue": [
+        "WiFi",
+        "Fireplace",
+        "Hot Tub"
+      ]
     },
     {
       "type": "stack",
@@ -289,39 +301,46 @@
         },
         {
           "type": "spinner",
-          "size": "lg",
-          "label": "Loading"
+          "label": "Loading",
+          "size": "lg"
         }
       ]
     },
     {
       "type": "table",
-      "columns": [
-        { "header": "Room", "key": "room" },
-        { "header": "Price", "key": "price", "align": "end" }
-      ],
       "rows": "[{\"room\": \"Cabin Loft\", \"price\": \"$180/night\"}, {\"room\": \"Cabin Suite\", \"price\": \"$240/night\"}]",
       "variant": "plain",
+      "columns": [
+        {
+          "header": "Room",
+          "key": "room"
+        },
+        {
+          "header": "Price",
+          "key": "price",
+          "align": "end"
+        }
+      ],
       "striped": true
     },
     {
       "type": "tooltip",
-      "content": "Free cancellation up to 24 hours before check-in.",
       "triggerText": "Cancellation Policy",
-      "placement": "top",
-      "showArrow": true
+      "showArrow": true,
+      "content": "Free cancellation up to 24 hours before check-in.",
+      "placement": "top"
     },
     {
       "type": "absoluteCenter",
-      "axis": "both",
       "children": [
         {
           "type": "badge",
-          "text": "Centered Badge",
+          "variant": "solid",
           "colorPalette": "purple",
-          "variant": "solid"
+          "text": "Centered Badge"
         }
-      ]
+      ],
+      "axis": "both"
     },
     {
       "type": "splitter",
@@ -329,11 +348,21 @@
       "panels": [
         {
           "id": "left",
-          "content": [{ "type": "text", "content": "Left panel" }]
+          "content": [
+            {
+              "type": "text",
+              "content": "Left panel"
+            }
+          ]
         },
         {
           "id": "right",
-          "content": [{ "type": "text", "content": "Right panel" }]
+          "content": [
+            {
+              "type": "text",
+              "content": "Right panel"
+            }
+          ]
         }
       ]
     }

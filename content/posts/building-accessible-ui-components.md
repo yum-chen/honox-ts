@@ -2,12 +2,14 @@
 title: Building Accessible UI Components
 date: 2026-06-10
 description: Best practices for creating accessible, keyboard-navigable components that work for everyone. WCAG 2.1 AA compliance made practical.
+cover: https://picsum.photos/seed/building-accessible-ui-components/1200/675
+author: ''
+readTime: ''
 tags:
   - accessibility
   - ui
   - best-practices
 draft: false
-cover: https://picsum.photos/seed/building-accessible-ui-components/1200/675
 ---
 
 # Building Accessible UI Components

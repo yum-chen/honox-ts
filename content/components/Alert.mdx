@@ -1,20 +1,17 @@
 ---
-title: "Alert"
-hydration-tier: "Tier 3"
-category: "Feedback"
+title: Alert
+hydration-tier: Tier 3
+category: Feedback
 ---
 
 import { Alert, AlertIcon } from "../../app/components/ui";
 import { DemoPreview } from "../../app/components/demo-preview";
 
-
 # Alert
-
 
 # Introduction
 
 Displays a brief, important message in a way that attracts the user's attention without interrupting the user's tasks.
-
 
 # Usage
 
@@ -58,14 +55,15 @@ This component is available as an `alert` block in the [Page Builder](/docs/Page
 
 # Props
 
-| Prop          | Type                                          | Description                                               |
-| :------------ | :-------------------------------------------- | :-------------------------------------------------------- |
-| `title`       | `string`                                      | The title of the alert.                                   |
-| `description` | `string`                                      | The description of the alert.                             |
-| `indicator`   | `Child`                                       | An icon or element to be rendered as an indicator.        |
-| `children`    | `Child`                                       | Additional content to be rendered inside the component.   |
-| `class`       | `string`                                      | Custom CSS classes.                                       |
-| `status`      | `"info" \| "success" \| "warning" \| "error" \| "neutral"` | The status color palette of the alert.                    |
-| `variant`     | `"subtle" \| "solid" \| "outline"`            | The visual style of the alert.                            |
-| `aria-live`   | `"polite" \| "assertive" \| "off"`            | The aria-live setting of the alert. Defaults to "polite". |
+| Prop | Type | Description |
+| --- | --- | --- |
+| `title` | `string` | The title of the alert. |
+| `description` | `string` | The description of the alert. |
+| `indicator` | `Child` | An icon or element to be rendered as an indicator. |
+| `children` | `Child` | Additional content to be rendered inside the component. |
+| `class` | `string` | Custom CSS classes. |
 
+| `status` | \`"info" \ | "success" \ | "warning" \ | "error" \ | "neutral"\` | The status color palette of the alert. |
+
+| `variant` | \`"subtle" \ | "solid" \ | "outline"\` | The visual style of the alert. |
+| `aria-live` | \`"polite" \ | "assertive" \ | "off"\` | The aria-live setting of the alert. Defaults to "polite". |

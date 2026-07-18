@@ -63,7 +63,7 @@ The Page Builder supports a rich palette of over 40 layout, typography, decorati
 * **RadioGroup** / **RadioCardGroup**: Custom radio lists with accessible single-select logic.
 * **SegmentGroup**: Sliding segmented controls for tabbed selection.
 * **Slider**: Range slider components.
-* **Switch**: Toggle switches. (**Known gap:** the CMS "Label" field isn't wired to a visible label — see the [Switch docs](/docs/Switch).)
+* **Switch**: Toggle switches.
 * **Editable**: Inline click-to-edit text.
 * **ColorPicker**: Saturation/hue/alpha color picker with hex/RGBA/HSLA input.
 * **FileUpload**: Drag-and-drop or click-to-browse file selection.

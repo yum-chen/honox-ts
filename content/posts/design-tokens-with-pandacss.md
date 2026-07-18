@@ -1,10 +1,15 @@
 ---
-title: "Design Tokens with PandaCSS"
-date: "2026-06-22"
-description: "A deep dive into using PandaCSS design tokens to create consistent, maintainable design systems. Learn how to leverage the power of type-safe CSS-in-JS."
-tags: ["design", "pandacss", "css"]
-draft: false
+title: Design Tokens with PandaCSS
+date: 2026-06-22
+description: A deep dive into using PandaCSS design tokens to create consistent, maintainable design systems. Learn how to leverage the power of type-safe CSS-in-JS.
 cover: https://picsum.photos/seed/design-tokens-with-pandacss/1200/675
+author: ''
+readTime: ''
+tags:
+  - design
+  - pandacss
+  - css
+draft: false
 ---
 
 # Design Tokens with PandaCSS
@@ -14,6 +19,7 @@ PandaCSS is a modern CSS-in-JS library that provides type-safe styling with zero
 ## Why Design Tokens?
 
 Design tokens are the visual design atoms of your design system:
+
 - Colors
 - Typography
 - Spacing

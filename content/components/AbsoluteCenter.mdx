@@ -1,20 +1,17 @@
 ---
-title: "AbsoluteCenter"
-hydration-tier: "Tier 3"
-category: "Layout"
+title: AbsoluteCenter
+hydration-tier: Tier 3
+category: Layout
 ---
 
 import { AbsoluteCenter } from "../../app/components/ui";
 import { DemoPreview } from "../../app/components/demo-preview";
 
-
 # AbsoluteCenter
-
 
 # Introduction
 
 A utility component for centering content within its parent container.
-
 
 # Usage
 
@@ -47,7 +44,7 @@ export default function MyPage() {
 
 This component is available as an `absoluteCenter` block in the [Page Builder](/docs/PageBuilder) (`content/pages/*.json`):
 
-```json
+```markdown
 {
   "type": "absoluteCenter",
   "axis": "both",
@@ -59,9 +56,9 @@ This component is available as an `absoluteCenter` block in the [Page Builder](/
 
 # Props
 
-| Prop       | Type                                   | Description                                  |
-| :--------- | :------------------------------------- | :------------------------------------------- |
-| `children` | `any`                                  | Content to be rendered inside the component. |
-| `class`    | `string`                               | Custom CSS classes.                          |
-| `axis`     | `"horizontal" \| "vertical" \| "both"` | The axis to center the content on.           |
+| Prop | Type | Description |
+| --- | --- | --- |
+| `children` | `any` | Content to be rendered inside the component. |
+| `class` | `string` | Custom CSS classes. |
 
+| `axis` | \`"horizontal" \ | "vertical" \ | "both"\` | The axis to center the content on. |

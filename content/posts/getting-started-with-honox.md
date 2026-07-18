@@ -1,10 +1,15 @@
 ---
-title: "Getting Started with HonoX"
-date: "2026-06-28"
-description: "Learn how to build full-stack applications with HonoX, the meta-framework built on top of Hono. This comprehensive guide covers routing, middleware, and deployment strategies."
-tags: ["tutorial", "honox", "getting-started"]
-draft: false
+title: Getting Started with HonoX
+date: 2026-06-28
+description: Learn how to build full-stack applications with HonoX, the meta-framework built on top of Hono. This comprehensive guide covers routing, middleware, and deployment strategies.
 cover: https://picsum.photos/seed/getting-started-with-honox/1200/675
+author: ''
+readTime: ''
+tags:
+  - tutorial
+  - honox
+  - getting-started
+draft: false
 ---
 
 # Getting Started with HonoX
@@ -14,6 +19,7 @@ HonoX is a powerful meta-framework built on top of Hono that enables you to buil
 ## What is HonoX?
 
 HonoX combines the simplicity of Hono with advanced features like:
+
 - File-based routing
 - Server-side rendering (SSR)
 - Static site generation (SSG)
@@ -29,7 +35,7 @@ npm create honox@latest
 
 A typical HonoX project looks like:
 
-```
+```plain
 my-app/
   ├── app/
   │   ├── routes/       # File-based routing

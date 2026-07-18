@@ -13,17 +13,13 @@ This project is built on [**HonoX**](https://github.com/honojs/honox) **+** [**@
 > classification.
 
 1. **Zero redundant JS** — components with no interaction need never ship a hydration script.
-2. **Zero silent breakage** — components that _do_ need interaction should hydrate automatically,
-   even if the caller forgets to pass `interactive`.
-3. **Single source of truth** — every "should this hydrate?" decision goes through one shared
-   `shouldHydrate` function, eliminating per-component ad-hoc `if (interactive)` branches.
+2. **Zero silent breakage** — components that _do_ need interaction should hydrate automatically, even if the caller forgets to pass `interactive`.
+3. **Single source of truth** — every "should this hydrate?" decision goes through one shared `shouldHydrate` function, eliminating per-component ad-hoc `if (interactive)` branches.
 
 ***
 
 ## Related Documentation
 
-- [Hydration](/docs/Hydration) — the 3-tier hydration model, decision checklist, and full
-  per-component classification
+- [Hydration](/docs/Hydration) — the 3-tier hydration model, decision checklist, and full per-component classification
 - `app/components/ui/island-utils.ts` — the single decision entry point
-- `content/components/<Component>.mdx` (each Tier-1 / Tier-2 component) — its
-  own `# Hydration` section, plus `hydration-tier`/`category` frontmatter
+- `content/components/<Component>.mdx` (each Tier-1 / Tier-2 component) — its own `# Hydration` section, plus `hydration-tier`/`category` frontmatter
