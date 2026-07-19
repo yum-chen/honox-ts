@@ -49,6 +49,7 @@ import {
 	Stack,
 	Switch,
 	Table,
+	Tabs,
 	TagsInput,
 	Text,
 	Textarea,
@@ -246,6 +247,17 @@ export default createRoute((c) => {
 						})}
 					>
 						<Anchor
+							href="#tabs-showcase"
+							variant="plain"
+							class={css({
+								display: { base: "none", md: "block" },
+								textStyle: "sm",
+								fontWeight: "medium",
+							})}
+						>
+							Tabs Showcase
+						</Anchor>
+						<Anchor
 							href="/blog"
 							variant="plain"
 							class={css({
@@ -367,6 +379,203 @@ export default createRoute((c) => {
 							Component Hub
 						</Button>
 					</div>
+				</div>
+			</section>
+
+			{/* Brand New Tabs Showcase Section */}
+			<section
+				id="tabs-showcase"
+				class={css({ py: "12", px: "6", maxW: "5xl", mx: "auto" })}
+			>
+				<div class={css({ textAlign: "center", mb: "8" })}>
+					<Heading as="h2" size="3xl" class={css({ fontWeight: "bold" })}>
+						Intuitive Tabs Showcase
+					</Heading>
+					<Text size="md" class={css({ color: "fg.muted", mt: "2" })}>
+						Re-implemented completely in pure Hono/JSX with sliding indicators,
+						manual/automatic focus activation, and full keyboard navigation
+						support.
+					</Text>
+				</div>
+
+				<div
+					class={css({
+						bg: "bg.default",
+						p: "6",
+						borderRadius: "l3",
+						border: "1px solid",
+						borderColor: "border",
+					})}
+				>
+					<Tabs
+						defaultValue="features"
+						interactive
+						variant="enclosed"
+						size="md"
+					>
+						<Tabs.List class={css({ mb: "4" })}>
+							<Tabs.Trigger value="features">⚡ Key Features</Tabs.Trigger>
+							<Tabs.Trigger value="pricing">💎 Pricing Plans</Tabs.Trigger>
+							<Tabs.Trigger value="tech-stack">🛠️ Technology Stack</Tabs.Trigger>
+							<Tabs.Indicator />
+						</Tabs.List>
+
+						<Tabs.Content value="features">
+							<Grid columns={{ base: 1, md: 3 }} gap="6">
+								<Card
+									title="Lightning Fast"
+									description="SSR by default with minimal static footprint. Hydrates only when interaction is required."
+								>
+									<Badge
+										colorPalette="green"
+										variant="subtle"
+										class={css({ mt: "2" })}
+									>
+										Zero JS Option
+									</Badge>
+								</Card>
+								<Card
+									title="Completely Accessible"
+									description="Following WAI-ARIA standards exactly. Fully keyboard navigable with roving tabIndex and aria states."
+								>
+									<Badge
+										colorPalette="blue"
+										variant="subtle"
+										class={css({ mt: "2" })}
+									>
+										A11y Compliant
+									</Badge>
+								</Card>
+								<Card
+									title="Stunning Design"
+									description="Sliding indicator transitions and pixel-perfect layouts mapped to modern user habits."
+								>
+									<Badge
+										colorPalette="purple"
+										variant="subtle"
+										class={css({ mt: "2" })}
+									>
+										Panda CSS
+									</Badge>
+								</Card>
+							</Grid>
+						</Tabs.Content>
+
+						<Tabs.Content value="pricing">
+							<Grid
+								columns={{ base: 1, md: 2 }}
+								gap="6"
+								class={css({ maxW: "3xl", mx: "auto" })}
+							>
+								<Card
+									title="Starter"
+									description="Perfect for side projects and individual developers looking to prototype fast."
+								>
+									<div
+										class={css({
+											mt: "4",
+											display: "flex",
+											alignItems: "baseline",
+										})}
+									>
+										<Heading
+											size="3xl"
+											class={css({ fontWeight: "extrabold" })}
+										>
+											$0
+										</Heading>
+										<Text size="sm" class={css({ color: "fg.muted", ml: "1" })}>
+											/month
+										</Text>
+									</div>
+									<Button
+										variant="outline"
+										colorPalette="blue"
+										size="sm"
+										class={css({ mt: "4", width: "full" })}
+									>
+										Get Started
+									</Button>
+								</Card>
+								<Card
+									title="Pro"
+									description="Comprehensive features, unlimited pages, analytics integration, and dedicated priority support."
+								>
+									<div
+										class={css({
+											mt: "4",
+											display: "flex",
+											alignItems: "baseline",
+										})}
+									>
+										<Heading
+											size="3xl"
+											class={css({ fontWeight: "extrabold" })}
+										>
+											$29
+										</Heading>
+										<Text size="sm" class={css({ color: "fg.muted", ml: "1" })}>
+											/month
+										</Text>
+									</div>
+									<Button
+										variant="solid"
+										colorPalette="blue"
+										size="sm"
+										class={css({ mt: "4", width: "full" })}
+									>
+										Upgrade to Pro
+									</Button>
+								</Card>
+							</Grid>
+						</Tabs.Content>
+
+						<Tabs.Content value="tech-stack">
+							<Card
+								title="Modern Web Stack"
+								description="Engineered from the ground up for maximum production readiness and speed."
+							>
+								<Stack gap="4" class={css({ mt: "4" })}>
+									<div
+										class={css({
+											display: "flex",
+											justifyContent: "space-between",
+											alignItems: "center",
+										})}
+									>
+										<Text size="sm" class={css({ fontWeight: "bold" })}>
+											HonoX Meta-Framework
+										</Text>
+										<Badge colorPalette="orange">Fast &amp; Server-First</Badge>
+									</div>
+									<div
+										class={css({
+											display: "flex",
+											justifyContent: "space-between",
+											alignItems: "center",
+										})}
+									>
+										<Text size="sm" class={css({ fontWeight: "bold" })}>
+											Panda CSS
+										</Text>
+										<Badge colorPalette="yellow">Zero Runtime CSS-in-JS</Badge>
+									</div>
+									<div
+										class={css({
+											display: "flex",
+											justifyContent: "space-between",
+											alignItems: "center",
+										})}
+									>
+										<Text size="sm" class={css({ fontWeight: "bold" })}>
+											Bun Tooling
+										</Text>
+										<Badge colorPalette="pink">Next-Gen Speed</Badge>
+									</div>
+								</Stack>
+							</Card>
+						</Tabs.Content>
+					</Tabs>
 				</div>
 			</section>
 

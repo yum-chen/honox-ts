@@ -43,6 +43,7 @@ import { spinner } from "./spinner";
 import { splitter } from "./splitter";
 import { switchRecipe } from "./switch";
 import { table } from "./table";
+import { tabs } from "./tabs";
 import { tagsInput } from "./tags-input";
 import { text } from "./text";
 import { textarea } from "./textarea";
@@ -105,4 +106,5 @@ export const slotRecipes = {
 	search,
 	colorPicker,
 	datePicker,
+	tabs,
 };
