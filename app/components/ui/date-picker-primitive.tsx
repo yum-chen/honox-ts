@@ -8,6 +8,10 @@ import {
 	useId,
 	useState,
 } from "hono/jsx";
+import { CalendarIcon } from "../../icons/calendar";
+import { ChevronLeftIcon } from "../../icons/chevron-left";
+import { ChevronRightIcon } from "../../icons/chevron-right";
+import { CloseIcon } from "../../icons/close";
 
 export class CalendarDate {
 	constructor(
@@ -634,25 +638,7 @@ export function DatePickerTrigger(
 			class={cx(context?.styles.trigger, classProp)}
 			{...rest}
 		>
-			{children || (
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					strokeWidth="2"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-				>
-					<title>Calendar</title>
-					<rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-					<line x1="16" x2="16" y1="2" y2="6" />
-					<line x1="8" x2="8" y1="2" y2="6" />
-					<line x1="3" x2="21" y1="10" y2="10" />
-				</svg>
-			)}
+			{children || <CalendarIcon width="16" height="16" />}
 		</button>
 	);
 }
@@ -672,23 +658,7 @@ export function DatePickerClearTrigger(
 			class={cx(context?.styles.clearTrigger, classProp)}
 			{...rest}
 		>
-			{children || (
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					strokeWidth="2"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-				>
-					<title>Clear</title>
-					<line x1="18" x2="6" y1="6" y2="18" />
-					<line x1="6" x2="18" y1="6" y2="18" />
-				</svg>
-			)}
+			{children || <CloseIcon width="16" height="16" />}
 		</button>
 	);
 }
@@ -798,22 +768,7 @@ export function DatePickerPrevTrigger(
 			class={cx(context?.styles.prevTrigger, classProp)}
 			{...rest}
 		>
-			{children || (
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					strokeWidth="2"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-				>
-					<title>Previous</title>
-					<polyline points="15 18 9 12 15 6" />
-				</svg>
-			)}
+			{children || <ChevronLeftIcon width="16" height="16" />}
 		</button>
 	);
 }
@@ -833,22 +788,7 @@ export function DatePickerNextTrigger(
 			class={cx(context?.styles.nextTrigger, classProp)}
 			{...rest}
 		>
-			{children || (
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					strokeWidth="2"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-				>
-					<title>Next</title>
-					<polyline points="9 18 15 12 9 6" />
-				</svg>
-			)}
+			{children || <ChevronRightIcon width="16" height="16" />}
 		</button>
 	);
 }

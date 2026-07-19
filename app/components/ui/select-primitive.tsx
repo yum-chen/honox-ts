@@ -11,6 +11,9 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
+import { CheckIcon } from "../../icons/check";
+import { ChevronsUpDownIcon } from "../../icons/chevrons-up-down";
+import { CloseIcon } from "../../icons/close";
 
 type SelectStyles = ReturnType<typeof select>;
 
@@ -295,21 +298,7 @@ function Indicator(props: PropsWithChildren<{ class?: string }>) {
 			{...rest}
 		>
 			{children || (
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					strokeWidth="2"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-					aria-hidden="true"
-				>
-					<path d="m7 15 5 5 5-5" />
-					<path d="m7 9 5-5 5 5" />
-				</svg>
+				<ChevronsUpDownIcon width="16" height="16" aria-hidden="true" />
 			)}
 		</span>
 	);
@@ -465,22 +454,7 @@ function ItemIndicator(props: PropsWithChildren<{ class?: string }>) {
 			style={{ display: isSelected ? "inline-flex" : "none" }}
 			{...rest}
 		>
-			{children || (
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					strokeWidth="2"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-					aria-hidden="true"
-				>
-					<path d="M20 6 9 17l-5-5" />
-				</svg>
-			)}
+			{children || <CheckIcon width="16" height="16" aria-hidden="true" />}
 		</div>
 	);
 }
@@ -532,23 +506,7 @@ function ClearTrigger(props: PropsWithChildren<{ class?: string }>) {
 			class={cx(context?.styles.clearTrigger, classProp)}
 			{...rest}
 		>
-			{children || (
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					strokeWidth="2"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-					aria-hidden="true"
-				>
-					<path d="M18 6 6 18" />
-					<path d="m6 6 12 12" />
-				</svg>
-			)}
+			{children || <CloseIcon width="16" height="16" aria-hidden="true" />}
 		</button>
 	);
 }

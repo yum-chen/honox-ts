@@ -10,6 +10,10 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
+import { ChevronLeftIcon } from "../../icons/chevron-left";
+import { ChevronRightIcon } from "../../icons/chevron-right";
+import { PauseIcon } from "../../icons/pause";
+import { PlayIcon } from "../../icons/play";
 
 type CarouselStyles = ReturnType<typeof carousel>;
 
@@ -448,39 +452,9 @@ export function Control(props: ControlProps) {
 	);
 }
 
-const DefaultPrevIcon = () => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="16"
-		height="16"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		stroke-width="2"
-		stroke-linecap="round"
-		stroke-linejoin="round"
-	>
-		<title>Previous slide</title>
-		<path d="m15 18-6-6 6-6" />
-	</svg>
-);
+const DefaultPrevIcon = () => <ChevronLeftIcon width="16" height="16" />;
 
-const DefaultNextIcon = () => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="16"
-		height="16"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		stroke-width="2"
-		stroke-linecap="round"
-		stroke-linejoin="round"
-	>
-		<title>Next slide</title>
-		<path d="m9 18 6-6-6-6" />
-	</svg>
-);
+const DefaultNextIcon = () => <ChevronRightIcon width="16" height="16" />;
 
 export interface TriggerProps extends PropsWithChildren {
 	class?: string;
@@ -607,31 +581,9 @@ export function Indicator(props: IndicatorProps) {
 	);
 }
 
-const DefaultPlayIcon = () => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="16"
-		height="16"
-		viewBox="0 0 24 24"
-		fill="currentColor"
-	>
-		<title>Play</title>
-		<path d="M8 5v14l11-7z" />
-	</svg>
-);
+const DefaultPlayIcon = () => <PlayIcon width="16" height="16" />;
 
-const DefaultPauseIcon = () => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="16"
-		height="16"
-		viewBox="0 0 24 24"
-		fill="currentColor"
-	>
-		<title>Pause</title>
-		<path d="M6 5h4v14H6zM14 5h4v14h-4z" />
-	</svg>
-);
+const DefaultPauseIcon = () => <PauseIcon width="16" height="16" />;
 
 export function AutoplayTrigger(props: TriggerProps) {
 	const { children, class: classProp, ...rest } = props;

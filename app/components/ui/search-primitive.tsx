@@ -1,5 +1,6 @@
 import { css, cx } from "design-system/css";
 import { useEffect, useId, useMemo, useRef, useState } from "hono/jsx";
+import { SearchIcon as SearchIconImport } from "../../icons/search";
 import {
 	filterEntries,
 	type SearchIndexDocument,
@@ -48,22 +49,9 @@ const countRowClass = css({
 	color: "fg.muted",
 });
 
-function SearchIcon() {
-	return (
-		<svg
-			width="20"
-			height="20"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-		>
-			<title>Search</title>
-			<circle cx="11" cy="11" r="8" />
-			<path d="m21 21-4.3-4.3" />
-		</svg>
-	);
-}
+const SearchIcon = (props: any) => (
+	<SearchIconImport width="20" height="20" {...props} />
+);
 
 // Split `text` into plain and highlighted segments for the given tokens
 function highlightSegments(

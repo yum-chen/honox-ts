@@ -11,6 +11,9 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
+import { CheckIcon } from "../../icons/check";
+import { ChevronsUpDownIcon } from "../../icons/chevrons-up-down";
+import { CloseIcon } from "../../icons/close";
 
 type ComboboxStyles = ReturnType<typeof combobox>;
 
@@ -227,23 +230,7 @@ export function Trigger(props: PropsWithChildren<{ class?: string }>) {
 			class={cx(context?.styles.trigger, classProp)}
 			{...rest}
 		>
-			{children || (
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					<title>Open</title>
-					<path d="m7 15 5 5 5-5" />
-					<path d="m7 9 5-5 5 5" />
-				</svg>
-			)}
+			{children || <ChevronsUpDownIcon width="16" height="16" />}
 		</button>
 	);
 }
@@ -263,23 +250,7 @@ export function ClearTrigger(props: PropsWithChildren<{ class?: string }>) {
 			class={cx(context?.styles.clearTrigger, classProp)}
 			{...rest}
 		>
-			{children || (
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					<title>Clear</title>
-					<path d="M18 6 6 18" />
-					<path d="m6 6 12 12" />
-				</svg>
-			)}
+			{children || <CloseIcon width="16" height="16" />}
 		</button>
 	);
 }
@@ -454,22 +425,7 @@ export function ItemIndicator(
 			style={{ display: isSelected ? "inline-flex" : "none" }}
 			{...rest}
 		>
-			{children || (
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					<title>Selected</title>
-					<path d="M20 6 9 17l-5-5" />
-				</svg>
-			)}
+			{children || <CheckIcon width="16" height="16" />}
 		</div>
 	);
 }

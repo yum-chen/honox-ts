@@ -3,6 +3,7 @@ import type { BreadcrumbVariantProps } from "design-system/recipes";
 import { breadcrumb } from "design-system/recipes";
 import type { Child, PropsWithChildren } from "hono/jsx";
 import { createContext, useContext } from "hono/jsx";
+import { ChevronRightIcon as ChevronRightIconImport } from "../../icons/chevron-right";
 
 type BreadcrumbStyles = ReturnType<typeof breadcrumb>;
 
@@ -96,22 +97,7 @@ function Ellipsis(props: { class?: string }) {
 }
 
 function ChevronRightIcon() {
-	return (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		>
-			<title>Chevron Right</title>
-			<path d="m9 18 6-6-6-6" />
-		</svg>
-	);
+	return <ChevronRightIconImport />;
 }
 
 export type { LinkProps, RootProps };

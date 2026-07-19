@@ -1,4 +1,5 @@
 import { css } from "design-system/css";
+import { ChevronDownIcon } from "../icons/chevron-down";
 import { type ComponentBlock, propsOf } from "./block-types";
 import {
 	AbsoluteCenter,
@@ -305,24 +306,14 @@ const registry: Record<string, BlockRenderer> = {
 		}
 
 		const indicator = showIndicator ? (
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
+			<ChevronDownIcon
 				width="20"
 				height="20"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
 				class={css({
 					transition: "transform 0.2s",
 					"[data-state=open] &": { transform: "rotate(180deg)" },
 				})}
-			>
-				<title>Chevron Down</title>
-				<path d="m6 9 6 6 6-6" />
-			</svg>
+			/>
 		) : undefined;
 
 		return (

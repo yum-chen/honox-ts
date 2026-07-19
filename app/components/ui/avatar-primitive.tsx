@@ -3,6 +3,7 @@ import type { AvatarVariantProps } from "design-system/recipes";
 import { avatar } from "design-system/recipes";
 import type { JSX, PropsWithChildren } from "hono/jsx";
 import { createContext, useContext } from "hono/jsx";
+import { UserIcon as UserIconImport } from "../../icons/user";
 
 type AvatarStyles = ReturnType<typeof avatar>;
 type AvatarStatus = "idle" | "loading" | "loaded" | "error";
@@ -108,23 +109,7 @@ const getInitials = (name: string) => {
 	return firstName && lastName ? `${firstName[0]}${lastName[0]}` : firstName[0];
 };
 
-const UserIcon = () => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="24"
-		height="24"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		strokeWidth="2"
-		strokeLinecap="round"
-		strokeLinejoin="round"
-	>
-		<title>User</title>
-		<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-		<circle cx="12" cy="7" r="4" />
-	</svg>
-);
+const UserIcon = () => <UserIconImport />;
 
 interface AvatarBaseProps extends RootProps {
 	src?: string;

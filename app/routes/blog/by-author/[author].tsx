@@ -13,6 +13,9 @@ import {
 	Stack,
 	Text,
 } from "../../../components/ui";
+import { ArrowLeftIcon } from "../../../icons/arrow-left";
+import { ArrowRightIcon } from "../../../icons/arrow-right";
+import { UserIcon } from "../../../icons/user";
 import { loadPosts } from "../../../lib/posts";
 
 export default createRoute(
@@ -38,13 +41,6 @@ export default createRoute(
 		);
 
 		const authorName = blogPosts[0]?.author || authorParam;
-
-		const icon = (
-			<>
-				<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-				<circle cx="12" cy="7" r="4" />
-			</>
-		);
 
 		return c.render(
 			<Layout
@@ -91,18 +87,11 @@ export default createRoute(
 										_hover: { bg: "blue.3" },
 									})}
 								>
-									<svg
+									<ArrowLeftIcon
 										width="16"
 										height="16"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
 										style={{ marginRight: "8px" }}
-									>
-										<title>Back</title>
-										<path d="M19 12H5M12 19l-7-7 7-7" />
-									</svg>
+									/>
 									All Posts
 								</Button>
 							</a>
@@ -141,18 +130,12 @@ export default createRoute(
 								},
 							})}
 						>
-							<svg
+							<UserIcon
 								width="36"
 								height="36"
-								viewBox="0 0 24 24"
-								fill="none"
 								stroke="white"
-								stroke-width="2"
 								style={{ position: "relative", zIndex: "1" }}
-							>
-								<title>Author</title>
-								{icon}
-							</svg>
+							/>
 						</Stack>
 
 						<Badge
@@ -242,18 +225,12 @@ export default createRoute(
 										shadow: "lg",
 									})}
 								>
-									<svg
+									<UserIcon
 										width="48"
 										height="48"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
 										stroke-width="1.5"
 										class={css({ color: "fg.muted" })}
-									>
-										<title>Author</title>
-										{icon}
-									</svg>
+									/>
 								</Stack>
 								<Heading
 									as="h3"
@@ -472,17 +449,7 @@ export default createRoute(
 													})}
 												>
 													Read more
-													<svg
-														width="16"
-														height="16"
-														viewBox="0 0 24 24"
-														fill="none"
-														stroke="currentColor"
-														stroke-width="2"
-													>
-														<title>Arrow</title>
-														<path d="M5 12h14M12 5l7 7-7 7" />
-													</svg>
+													<ArrowRightIcon width="16" height="16" />
 												</Button>
 											</a>
 										</Stack>
@@ -587,18 +554,11 @@ export default createRoute(
 									transition: "all 0.2s",
 								})}
 							>
-								<svg
+								<ArrowLeftIcon
 									width="18"
 									height="18"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
 									style={{ marginRight: "8px" }}
-								>
-									<title>Back</title>
-									<path d="M19 12H5M12 19l-7-7 7-7" />
-								</svg>
+								/>
 								Back to All Posts
 							</Button>
 						</a>

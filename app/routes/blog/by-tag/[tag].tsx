@@ -13,6 +13,10 @@ import {
 	Stack,
 	Text,
 } from "../../../components/ui";
+import { ArrowLeftIcon } from "../../../icons/arrow-left";
+import { ArrowRightIcon } from "../../../icons/arrow-right";
+import { CheckIcon } from "../../../icons/check";
+import { TagIcon } from "../../../icons/tag";
 import { loadPosts } from "../../../lib/posts";
 
 export default createRoute(
@@ -28,13 +32,6 @@ export default createRoute(
 
 		const { posts, tags } = await loadPosts();
 		const blogPosts = posts.filter((post) => post.tags.includes(tagFilter));
-
-		const icon = (
-			<>
-				<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
-				<line x1="7" y1="7" x2="7.01" y2="7" />
-			</>
-		);
 
 		return c.render(
 			<Layout
@@ -81,18 +78,11 @@ export default createRoute(
 										_hover: { bg: "blue.3" },
 									})}
 								>
-									<svg
+									<ArrowLeftIcon
 										width="16"
 										height="16"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
 										style={{ marginRight: "8px" }}
-									>
-										<title>Back</title>
-										<path d="M19 12H5M12 19l-7-7 7-7" />
-									</svg>
+									/>
 									All Posts
 								</Button>
 							</a>
@@ -131,18 +121,12 @@ export default createRoute(
 								},
 							})}
 						>
-							<svg
+							<TagIcon
 								width="36"
 								height="36"
-								viewBox="0 0 24 24"
-								fill="none"
 								stroke="white"
-								stroke-width="2"
 								style={{ position: "relative", zIndex: "1" }}
-							>
-								<title>Tag</title>
-								{icon}
-							</svg>
+							/>
 						</Stack>
 
 						<Badge
@@ -272,21 +256,15 @@ export default createRoute(
 												})}
 											>
 												{tag === tagFilter && (
-													<svg
+													<CheckIcon
 														width="14"
 														height="14"
-														viewBox="0 0 24 24"
-														fill="none"
-														stroke="currentColor"
 														stroke-width="2.5"
 														style={{
 															marginRight: "6px",
 															verticalAlign: "middle",
 														}}
-													>
-														<title>Selected</title>
-														<polyline points="20 6 9 17 4 12" />
-													</svg>
+													/>
 												)}
 												{tag}
 											</Badge>
@@ -322,18 +300,12 @@ export default createRoute(
 										shadow: "lg",
 									})}
 								>
-									<svg
+									<TagIcon
 										width="48"
 										height="48"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
 										stroke-width="1.5"
 										class={css({ color: "fg.muted" })}
-									>
-										<title>Tag</title>
-										{icon}
-									</svg>
+									/>
 								</Stack>
 								<Heading
 									as="h3"
@@ -552,17 +524,7 @@ export default createRoute(
 													})}
 												>
 													Read more
-													<svg
-														width="16"
-														height="16"
-														viewBox="0 0 24 24"
-														fill="none"
-														stroke="currentColor"
-														stroke-width="2"
-													>
-														<title>Arrow</title>
-														<path d="M5 12h14M12 5l7 7-7 7" />
-													</svg>
+													<ArrowRightIcon width="16" height="16" />
 												</Button>
 											</a>
 										</Stack>
@@ -667,18 +629,11 @@ export default createRoute(
 									transition: "all 0.2s",
 								})}
 							>
-								<svg
+								<ArrowLeftIcon
 									width="18"
 									height="18"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
 									style={{ marginRight: "8px" }}
-								>
-									<title>Back</title>
-									<path d="M19 12H5M12 19l-7-7 7-7" />
-								</svg>
+								/>
 								Back to All Posts
 							</Button>
 						</a>

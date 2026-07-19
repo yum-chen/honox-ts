@@ -13,6 +13,10 @@ import {
 	Stack,
 	Text,
 } from "../../components/ui";
+import { ArrowRightIcon } from "../../icons/arrow-right";
+import { FilterIcon } from "../../icons/filter";
+import { MailIcon } from "../../icons/mail";
+import { SearchIcon } from "../../icons/search";
 import { loadPosts } from "../../lib/posts";
 import { filterEntries } from "../../utils/search";
 
@@ -301,17 +305,7 @@ export default createRoute(async (c) => {
 									},
 								})}
 							>
-								<svg
-									width="18"
-									height="18"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-								>
-									<title>Filter</title>
-									<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-								</svg>
+								<FilterIcon width="18" height="18" />
 								Browse tags
 							</Button>
 						}
@@ -396,19 +390,12 @@ export default createRoute(async (c) => {
 						animation: "pulse",
 					})}
 				>
-					<svg
+					<SearchIcon
 						width="40"
 						height="40"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
 						stroke-width="1.5"
 						class={css({ color: "fg.muted" })}
-					>
-						<title>Search</title>
-						<circle cx="11" cy="11" r="8" />
-						<path d="m21 21-4.3-4.3" />
-					</svg>
+					/>
 				</Stack>
 				<Heading as="h3" size="xl" class={css({ mb: "3" })}>
 					No articles found
@@ -601,17 +588,7 @@ export default createRoute(async (c) => {
 											})}
 										>
 											Read more
-											<svg
-												width="14"
-												height="14"
-												viewBox="0 0 24 24"
-												fill="none"
-												stroke="currentColor"
-												stroke-width="2"
-											>
-												<title>Arrow</title>
-												<path d="M5 12h14M12 5l7 7-7 7" />
-											</svg>
+											<ArrowRightIcon width="14" height="14" />
 										</Button>
 									</a>
 								</Stack>
@@ -750,18 +727,7 @@ export default createRoute(async (c) => {
 							shadow: "lg",
 						})}
 					>
-						<svg
-							width="28"
-							height="28"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="white"
-							stroke-width="2"
-						>
-							<title>Newsletter</title>
-							<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-							<polyline points="22,6 12,13 2,6" />
-						</svg>
+						<MailIcon width="28" height="28" stroke="white" />
 					</Stack>
 
 					<Badge
@@ -810,18 +776,7 @@ export default createRoute(async (c) => {
 									zIndex: "1",
 								})}
 							>
-								<svg
-									width="20"
-									height="20"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-								>
-									<title>Email</title>
-									<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-									<polyline points="22,6 12,13 2,6" />
-								</svg>
+								<MailIcon width="20" height="20" />
 							</div>
 							<input
 								type="email"

@@ -3,6 +3,7 @@ import type { TagsInputVariantProps } from "design-system/recipes";
 import { tagsInput } from "design-system/recipes";
 import type { PropsWithChildren } from "hono/jsx";
 import { createContext, useContext, useId } from "hono/jsx";
+import { CloseIcon } from "../../icons/close";
 
 type TagsInputStyles = ReturnType<typeof tagsInput>;
 
@@ -259,24 +260,7 @@ export function ItemInput(props: { class?: string } & any) {
 	);
 }
 
-const XIcon = () => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="24"
-		height="24"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		stroke-width="2"
-		stroke-linecap="round"
-		stroke-linejoin="round"
-		style={{ width: "1em", height: "1em" }}
-	>
-		<title>Close</title>
-		<path d="M18 6 6 18" />
-		<path d="m6 6 12 12" />
-	</svg>
-);
+const XIcon = () => <CloseIcon style={{ width: "1em", height: "1em" }} />;
 
 export function ItemDeleteTrigger(
 	props: PropsWithChildren<{ class?: string }>,

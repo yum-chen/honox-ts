@@ -1,6 +1,7 @@
 import { cx } from "design-system/css";
 import { type DropdownVariantProps, dropdown } from "design-system/recipes";
 import type { JSX } from "hono/jsx";
+import { EllipsisIcon as EllipsisIconImport } from "../../icons/ellipsis";
 import InteractiveDropdownRoot from "../../islands/dropdown";
 import { Button, ButtonGroup } from "./button";
 // Import primitive components from dropdown-primitive
@@ -471,23 +472,7 @@ function DropdownRoot(props: DropdownProps) {
 // ============= DropdownButton Component =============
 
 const EllipsisIcon = () => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="16"
-		height="16"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		strokeWidth="2"
-		strokeLinecap="round"
-		strokeLinejoin="round"
-		aria-hidden="true"
-	>
-		<title>More Actions</title>
-		<circle cx="12" cy="12" r="1" />
-		<circle cx="19" cy="12" r="1" />
-		<circle cx="5" cy="12" r="1" />
-	</svg>
+	<EllipsisIconImport width="16" height="16" aria-hidden="true" />
 );
 
 export interface DropdownButtonProps extends DropdownProps {

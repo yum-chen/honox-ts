@@ -1,3 +1,4 @@
+import { CloseIcon } from "../../icons/close";
 import ButtonIsland from "../../islands/button";
 import {
 	ButtonGroup as ButtonGroupPrimitive,
@@ -12,24 +13,6 @@ const hasButtonSignal = (p: ButtonProps): boolean =>
 	p.onClick !== undefined ||
 	p.onPointerDown !== undefined ||
 	p.onSubmit !== undefined;
-
-const CloseIcon = () => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="24"
-		height="24"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		stroke-width="2"
-		stroke-linecap="round"
-		stroke-linejoin="round"
-	>
-		<title>Close</title>
-		<path d="M18 6 6 18" />
-		<path d="m6 6 12 12" />
-	</svg>
-);
 
 export function IconButton(props: ButtonProps) {
 	if (shouldHydrate(props.interactive, hasButtonSignal(props))) {
