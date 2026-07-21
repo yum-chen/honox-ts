@@ -46,6 +46,7 @@ import {
 	Stack,
 	Switch,
 	Table,
+	Tabs,
 	TagsInput,
 	Text,
 	Textarea,
@@ -728,6 +729,50 @@ const registry: Record<string, BlockRenderer> = {
 		);
 	},
 	colorPicker: (b) => <ColorPicker interactive {...propsOf(b)} />,
+
+	tabs: (b) => {
+		const { items, variant, size, orientation, activationMode, ...rest } =
+			propsOf(b);
+		const tabItems = Array.isArray(items)
+			? (items as Record<string, unknown>[])
+			: [];
+		const defaultActive =
+			(tabItems.find((item) => !item.disabled)?.value as string) ||
+			(tabItems[0]?.value as string);
+
+		return (
+			<Tabs
+				interactive
+				defaultValue={defaultActive}
+				variant={variant as "line" | "subtle" | "enclosed"}
+				size={size as "xs" | "sm" | "md" | "lg"}
+				orientation={orientation as "horizontal" | "vertical"}
+				activationMode={activationMode as "manual" | "automatic"}
+				{...rest}
+			>
+				<Tabs.List>
+					{tabItems.map((item) => (
+						<Tabs.Trigger
+							key={String(item.value)}
+							value={String(item.value)}
+							disabled={Boolean(item.disabled)}
+						>
+							{String(item.label)}
+						</Tabs.Trigger>
+					))}
+					<Tabs.Indicator />
+				</Tabs.List>
+
+				{tabItems.map((item) => (
+					<Tabs.Content key={String(item.value)} value={String(item.value)}>
+						{Array.isArray(item.content)
+							? renderBlocks(item.content as ComponentBlock[])
+							: null}
+					</Tabs.Content>
+				))}
+			</Tabs>
+		);
+	},
 
 	breadcrumb: (b) => <Breadcrumb {...propsOf(b)} />,
 	datePicker: (b) => <DatePicker interactive {...propsOf(b)} />,

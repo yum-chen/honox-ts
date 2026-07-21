@@ -492,6 +492,77 @@
           "text": "Footer slot"
         }
       ]
+    },
+    {
+      "type": "heading",
+      "size": "2xl",
+      "text": "7. Nested Tabs Component",
+      "as": "h2"
+    },
+    {
+      "type": "tabs",
+      "variant": "enclosed",
+      "size": "md",
+      "items": [
+        {
+          "value": "amenities",
+          "label": "🏡 Included Amenities",
+          "content": [
+            {
+              "type": "text",
+              "content": "Our high-end mountain cabin offers a full array of resort-level comforts."
+            },
+            {
+              "type": "stack",
+              "direction": "horizontal",
+              "gap": "2",
+              "children": [
+                {
+                  "type": "badge",
+                  "colorPalette": "green",
+                  "text": "WiFi 6"
+                },
+                {
+                  "type": "badge",
+                  "colorPalette": "blue",
+                  "text": "Hot Tub"
+                },
+                {
+                  "type": "badge",
+                  "colorPalette": "orange",
+                  "text": "Fireplace"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "rates",
+          "label": "💳 Flexible Rates",
+          "content": [
+            {
+              "type": "text",
+              "content": "Select the reservation tier that best matches your vacation plans."
+            },
+            {
+              "type": "radioCardGroup",
+              "label": "Reservation Class",
+              "defaultValue": "weekend",
+              "variant": "outline",
+              "items": [
+                {
+                  "label": "Weekday Pass — $150/night",
+                  "value": "weekday"
+                },
+                {
+                  "label": "Weekend Escape — $220/night",
+                  "value": "weekend"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
