@@ -1,0 +1,111 @@
+---
+title: Clipboard
+hydration: 2
+category: Forms
+---
+
+import { Clipboard } from "../../app/components/ui";
+import { DemoPreview } from "../../app/components/demo-preview";
+
+# Introduction
+
+A readonly field paired with a copy-to-clipboard trigger, with built-in
+copied/not-copied indicator states.
+
+# Usage
+
+<DemoPreview>
+  <div style={{ width: "100%", maxWidth: "360px" }}>
+    <Clipboard
+      label="Clone Command"
+      value="git clone https://github.com/honojs/honox"
+      interactive
+    />
+  </div>
+</DemoPreview>
+
+```tsx
+import { Clipboard } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Clipboard
+      label="Clone Command"
+      value="git clone https://github.com/honojs/honox"
+    />
+  );
+}
+```
+
+## Custom Composition
+
+Pass `children` to `Clipboard.Trigger` to override the default copy/check
+icon swap, or compose the parts directly for full control:
+
+```tsx
+import { Clipboard } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Clipboard.Root value="npm install honox">
+      <Clipboard.Label>Install Command</Clipboard.Label>
+      <Clipboard.Control>
+        <Clipboard.Input />
+        <Clipboard.Trigger>
+          <Clipboard.CopyText />
+        </Clipboard.Trigger>
+      </Clipboard.Control>
+    </Clipboard.Root>
+  );
+}
+```
+
+# Props
+
+## Root
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `value` | `string` | The text to copy (controlled). |
+| `defaultValue` | `string` | The initial text to copy (uncontrolled). |
+| `disabled` | `boolean` | Disables the trigger. |
+| `timeout` | `number` | Milliseconds the copied state stays active before reverting. Default `3000`. |
+| `translations` | `Partial<ClipboardTranslations>` | Overrides for the trigger's `aria-label`. |
+| `onValueChange` | `(details: { value: string }) => void` | Called when the value changes (e.g. via a custom input). |
+| `onStatusChange` | `(details: { copied: boolean }) => void` | Called when the copied state flips. |
+| `size` | `"sm" \| "md" \| "lg"` | Visual size. Default `"md"`. |
+| `colorPalette` | `string` | The color theme. Default `"green"`. |
+| `interactive` | `boolean` | Forces (or suppresses) hydration as an island. |
+| `class` | `string` | Custom CSS classes for the root element. |
+
+## Default composition
+
+These only apply to the top-level `<Clipboard>` (not `Clipboard.Root`),
+which renders `Label` + `Control` (`Input` + `Trigger`) for you.
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `label` | `JSX.Element \| string` | Label rendered above the control. |
+| `children` | `JSX.Element` | Custom `Trigger` content, overriding the default copy/check icon swap. |
+
+## Sub-components
+
+| Part | Description |
+| --- | --- |
+| `Clipboard.Label` | `<label>` bound to the readonly input. |
+| `Clipboard.Control` | Wraps `Input` and `Trigger`. |
+| `Clipboard.Input` | Readonly `<input>` showing the current value; selects its text on focus. Manually copying via Ctrl/Cmd+C also triggers the copied state. |
+| `Clipboard.Trigger` | Copies `value` to the clipboard on click. Accepts `asChild` to merge onto a custom child instead of rendering a `<button>`. |
+| `Clipboard.Indicator` | Renders both `children` and a `copied` variant as sibling nodes, toggled via `hidden` — use for custom copied/not-copied icon or text swaps. |
+| `Clipboard.CopyText` | Convenience `Indicator` that swaps between `"Copy"` / `"Copied"` text (override via `children`/`copied` props). |
+| `Clipboard.Context` | Render-prop access to the clipboard context: `<Clipboard.Context>{(ctx) => ...}</Clipboard.Context>`. |
+
+# Accessibility
+
+- `Trigger` gets an `aria-label` from `translations.triggerLabel(copied)`
+  (default `"Copy to clipboard"` / `"Copied to clipboard"`), announcing the
+  state change to assistive tech.
+- `Input` is `readOnly`, not `disabled`, so it stays focusable and its text
+  selectable/copyable via native keyboard shortcuts even without clicking
+  the trigger.
+- `data-copied` is mirrored onto every part for state-based styling.
