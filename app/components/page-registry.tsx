@@ -46,6 +46,7 @@ import {
 	Stack,
 	Switch,
 	Table,
+	Tabs,
 	TagsInput,
 	Text,
 	Textarea,
@@ -827,6 +828,23 @@ const registry: Record<string, BlockRenderer> = {
 		// HonoX snapshots to HTML for hydration, `panels` is a plain prop and
 		// would otherwise get JSON-serialized as a raw JSX element).
 		return <Splitter interactive={false} panels={resolvedPanels} {...rest} />;
+	},
+
+	tabs: (b) => {
+		const { items, ...rest } = propsOf(b);
+		const resolvedItems = Array.isArray(items)
+			? items.map((item: any) => ({
+					value: item.value,
+					label: item.label,
+					content:
+						Array.isArray(item.content) && item.content.length > 0 ? (
+							<div class={css({ mt: "4" })}>
+								{renderChildren(item.content)}
+							</div>
+						) : undefined,
+				}))
+			: [];
+		return <Tabs interactive items={resolvedItems} {...rest} />;
 	},
 };
 

@@ -995,6 +995,31 @@ collections:
                             widget: list
                             types: *leaf_components
                             required: false
+                  - label: Tabs
+                    name: tabs
+                    widget: object
+                    fields:
+                      - label: Variant
+                        name: variant
+                        widget: select
+                        options: [line, subtle, enclosed]
+                        default: line
+                      - label: Size
+                        name: size
+                        widget: select
+                        options: [xs, sm, md, lg]
+                        default: md
+                      - label: Items
+                        name: items
+                        widget: list
+                        fields:
+                          - { label: Value, name: value, widget: string }
+                          - { label: Label, name: label, widget: string }
+                          - label: Content
+                            name: content
+                            widget: list
+                            types: *leaf_components
+                            required: false
                   - label: Button
                     name: button
                     widget: object
@@ -1449,6 +1474,31 @@ collections:
                 widget: list
                 fields:
                   - { label: ID, name: id, widget: string }
+                  - label: Content
+                    name: content
+                    widget: list
+                    types: *nestable_components
+                    required: false
+          - label: Tabs
+            name: tabs
+            widget: object
+            fields:
+              - label: Variant
+                name: variant
+                widget: select
+                options: [line, subtle, enclosed]
+                default: line
+              - label: Size
+                name: size
+                widget: select
+                options: [xs, sm, md, lg]
+                default: md
+              - label: Items
+                name: items
+                widget: list
+                fields:
+                  - { label: Value, name: value, widget: string }
+                  - { label: Label, name: label, widget: string }
                   - label: Content
                     name: content
                     widget: list
