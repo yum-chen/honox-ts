@@ -15,12 +15,11 @@ import { ChevronDownIcon as ChevronDownIconImport } from "../../icons/chevron-do
 import { ExternalLinkIcon as ExternalLinkIconImport } from "../../icons/external-link";
 import { GitHubIcon as GitHubIconImport } from "../../icons/github";
 import {
-	type DocSummary,
 	type DocsConfig,
 	type DocsNavLinkConfig,
-	loadDocs,
 	loadDocsConfig,
-} from "../../lib/docs";
+} from "../../lib/configs";
+import { type DocSummary, loadDocs } from "../../lib/docs";
 
 // ---------------------------------------------------------------------------
 // Inlined docs nav shell.

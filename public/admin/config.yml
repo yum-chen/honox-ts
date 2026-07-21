@@ -1636,7 +1636,7 @@ collections:
 singletons:
   - name: configs
     label: Configs
-    file: content/config/configs.json
+    file: content/configs.json
     fields:
       - label: Collections
         name: collections

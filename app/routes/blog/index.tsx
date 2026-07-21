@@ -17,7 +17,7 @@ import { ArrowRightIcon } from "../../icons/arrow-right";
 import { FilterIcon } from "../../icons/filter";
 import { MailIcon } from "../../icons/mail";
 import { SearchIcon } from "../../icons/search";
-import { type DocsNavLinkConfig, loadDocsConfig } from "../../lib/docs";
+import { type DocsNavLinkConfig, loadDocsConfig } from "../../lib/configs";
 import { loadPosts } from "../../lib/posts";
 import { filterEntries } from "../../utils/search";
 

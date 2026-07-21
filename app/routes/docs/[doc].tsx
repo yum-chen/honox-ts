@@ -16,13 +16,11 @@ import { ChevronDownIcon as ChevronDownIconImport } from "../../icons/chevron-do
 import { ExternalLinkIcon as ExternalLinkIconImport } from "../../icons/external-link";
 import { GitHubIcon as GitHubIconImport } from "../../icons/github";
 import {
-	type DocSummary,
 	type DocsConfig,
 	type DocsNavLinkConfig,
-	loadDocBySlug,
-	loadDocs,
 	loadDocsConfig,
-} from "../../lib/docs";
+} from "../../lib/configs";
+import { type DocSummary, loadDocBySlug, loadDocs } from "../../lib/docs";
 import { markdownContentClass } from "../../utils/markdown-content-style";
 
 // ---------------------------------------------------------------------------
