@@ -67,6 +67,10 @@
     {
       "label": "Docs",
       "href": "/docs"
+    },
+    {
+      "label": "Notes",
+      "href": "/notes"
     }
   ],
   "blog": {
