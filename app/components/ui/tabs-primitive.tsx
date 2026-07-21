@@ -45,6 +45,7 @@ export interface RootProps extends TabsVariantProps, PropsWithChildren {
 	disabled?: boolean;
 	rootRef?: any;
 	class?: string;
+	items?: any[];
 }
 
 export function Root(props: RootProps) {
@@ -58,6 +59,7 @@ export function Root(props: RootProps) {
 		orientation = "horizontal",
 		disabled,
 		rootRef,
+		items,
 		...rest
 	} = localProps;
 

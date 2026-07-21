@@ -492,6 +492,39 @@
           "text": "Footer slot"
         }
       ]
+    },
+    {
+      "type": "heading",
+      "size": "2xl",
+      "text": "7. Tabs Component",
+      "as": "h2"
+    },
+    {
+      "type": "tabs",
+      "variant": "line",
+      "size": "md",
+      "items": [
+        {
+          "value": "react",
+          "label": "React",
+          "content": [
+            {
+              "type": "text",
+              "content": "React is a popular JavaScript library for building user interfaces."
+            }
+          ]
+        },
+        {
+          "value": "solid",
+          "label": "Solid",
+          "content": [
+            {
+              "type": "text",
+              "content": "SolidJS is a declarative, efficient and flexible library for building user interfaces."
+            }
+          ]
+        }
+      ]
     }
   ]
 }

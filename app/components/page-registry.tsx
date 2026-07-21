@@ -839,12 +839,12 @@ const registry: Record<string, BlockRenderer> = {
 					content:
 						Array.isArray(item.content) && item.content.length > 0 ? (
 							<div class={css({ mt: "4" })}>
-								{renderChildren(item.content)}
+								{renderBlocks(item.content)}
 							</div>
 						) : undefined,
 				}))
 			: [];
-		return <Tabs interactive items={resolvedItems} {...rest} />;
+		return <Tabs interactive={false} items={resolvedItems} {...rest} />;
 	},
 };
 
