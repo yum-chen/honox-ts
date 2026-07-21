@@ -1,5 +1,4 @@
 import type { JSX } from "hono/jsx";
-import { useRef } from "hono/jsx";
 import { CloseIcon } from "../../icons/close";
 import DialogIsland from "../../islands/dialog";
 import { IconButton } from "./button";
@@ -68,7 +67,7 @@ export function Dialog(props: DialogProps) {
 		confirm,
 		closable = true,
 		children,
-		rootRef: rootRefProp,
+		rootRef,
 		role,
 		"aria-label": ariaLabel,
 		...rest
@@ -77,9 +76,6 @@ export function Dialog(props: DialogProps) {
 	// Dev aid: a dialog must have an accessible name (WAI-ARIA). The Content
 	// component already warns client-side when neither `title` nor `aria-label`
 	// resolves to one, so we don't duplicate that warning here.
-
-	const localRef = useRef<HTMLElement>(null);
-	const rootRef = rootRefProp || localRef;
 
 	return (
 		<Root {...rest} rootRef={rootRef} dialogRole={role}>

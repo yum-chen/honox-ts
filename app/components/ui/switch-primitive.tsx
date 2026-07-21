@@ -2,7 +2,6 @@ import { cx } from "design-system/css";
 import type { SwitchRecipeVariantProps } from "design-system/recipes";
 import { switchRecipe } from "design-system/recipes";
 import type { Child } from "hono/jsx";
-import { useState } from "hono/jsx";
 import { useFieldContext } from "./field-primitive";
 
 export interface SwitchProps extends SwitchRecipeVariantProps {
@@ -139,33 +138,5 @@ export function Switch(props: SwitchProps) {
 				</span>
 			)}
 		</label>
-	);
-}
-
-export interface InteractiveSwitchProps extends SwitchProps {
-	defaultChecked?: boolean;
-}
-
-export function InteractiveSwitch(props: InteractiveSwitchProps) {
-	const {
-		checked: checkedProp,
-		defaultChecked,
-		onCheckedChange,
-		...rest
-	} = props;
-
-	const [isChecked, setIsChecked] = useState(checkedProp ?? !!defaultChecked);
-	const isControlled = checkedProp !== undefined;
-	const checked = isControlled ? checkedProp : isChecked;
-
-	const handleCheckedChange = (details: { checked: boolean }) => {
-		if (!isControlled) {
-			setIsChecked(details.checked);
-		}
-		onCheckedChange?.(details);
-	};
-
-	return (
-		<Switch {...rest} checked={checked} onCheckedChange={handleCheckedChange} />
 	);
 }

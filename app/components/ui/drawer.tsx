@@ -1,5 +1,4 @@
 import type { JSX } from "hono/jsx";
-import { useRef } from "hono/jsx";
 import { CloseIcon } from "../../icons/close";
 import DrawerIsland from "../../islands/drawer";
 import { IconButton } from "./button";
@@ -66,14 +65,11 @@ export function Drawer(props: DrawerProps) {
 		confirm,
 		closable = true,
 		children,
-		rootRef: rootRefProp,
+		rootRef,
 		role,
 		"aria-label": ariaLabel,
 		...rest
 	} = props;
-
-	const localRef = useRef<HTMLElement>(null);
-	const rootRef = rootRefProp || localRef;
 
 	return (
 		<Root {...rest} rootRef={rootRef} dialogRole={role}>

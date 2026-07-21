@@ -2,7 +2,6 @@ import { cx } from "design-system/css";
 import type { CheckboxVariantProps } from "design-system/recipes";
 import { checkbox } from "design-system/recipes";
 import type { Child } from "hono/jsx";
-import { useEffect, useRef, useState } from "hono/jsx";
 import { useFieldContext } from "./field-primitive";
 
 export interface CheckboxProps extends CheckboxVariantProps {
@@ -17,6 +16,7 @@ export interface CheckboxProps extends CheckboxVariantProps {
 	id?: string;
 	name?: string;
 	value?: string;
+	ref?: any;
 	[key: string]: unknown;
 }
 
@@ -35,16 +35,9 @@ export function Checkbox(props: CheckboxProps) {
 		id = field?.id,
 		name,
 		value = "on",
+		ref,
 		...restProps
 	} = localProps;
-
-	const inputRef = useRef<HTMLInputElement>(null);
-
-	useEffect(() => {
-		if (inputRef.current) {
-			inputRef.current.indeterminate = checked === "indeterminate";
-		}
-	}, [checked]);
 
 	const handleChange = (e: Event) => {
 		const target = e.target as HTMLInputElement;
@@ -79,9 +72,7 @@ export function Checkbox(props: CheckboxProps) {
 			{...restProps}
 		>
 			<input
-				ref={(el: HTMLInputElement | null) => {
-					inputRef.current = el;
-				}}
+				ref={ref}
 				type="checkbox"
 				style={{
 					border: "0",
@@ -150,41 +141,5 @@ export function Checkbox(props: CheckboxProps) {
 				</span>
 			)}
 		</label>
-	);
-}
-
-export interface InteractiveCheckboxProps extends CheckboxProps {
-	defaultChecked?: boolean | "indeterminate";
-}
-
-export function InteractiveCheckbox(props: InteractiveCheckboxProps) {
-	const {
-		checked: checkedProp,
-		defaultChecked,
-		onCheckedChange,
-		...rest
-	} = props;
-
-	const [isChecked, setIsChecked] = useState(
-		checkedProp ?? defaultChecked ?? false,
-	);
-	const isControlled = checkedProp !== undefined;
-	const checked = isControlled ? checkedProp : isChecked;
-
-	const handleCheckedChange = (details: {
-		checked: boolean | "indeterminate";
-	}) => {
-		if (!isControlled) {
-			setIsChecked(details.checked);
-		}
-		onCheckedChange?.(details);
-	};
-
-	return (
-		<Checkbox
-			{...rest}
-			checked={checked}
-			onCheckedChange={handleCheckedChange}
-		/>
 	);
 }

@@ -1,11 +1,10 @@
-import Toaster, { createToaster, toaster } from "../../islands/toast";
+import Toaster, { createToaster, Root, toaster } from "../../islands/toast";
 import {
 	ActionTrigger,
 	CloseTrigger,
 	Context,
 	Description,
 	Indicator,
-	Root,
 	Title,
 } from "./toast-primitive";
 
