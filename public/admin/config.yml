@@ -564,6 +564,20 @@ collections:
                                 widget: select
                                 options: [blue, green, red, purple, orange, amber, cyan, slate]
                                 required: false
+                          - label: Color Picker
+                            name: colorPicker
+                            widget: object
+                            fields: &colorpicker_fields
+                              - { label: Label, name: label, widget: string, required: false }
+                              - { label: Default Value, name: defaultValue, widget: string, required: false, default: "#7c3aed", hint: "Hex color, e.g. #7c3aed" }
+                              - { label: Trigger (Popover Swatch), name: trigger, widget: boolean, default: false }
+                              - { label: Close On Select, name: closeOnSelect, widget: boolean, default: false }
+                              - { label: Disabled, name: disabled, widget: boolean, default: false }
+                              - label: Size
+                                name: size
+                                widget: select
+                                options: [sm, md, lg]
+                                default: md
                           - label: File Upload
                             name: fileUpload
                             widget: object
@@ -1071,6 +1085,10 @@ collections:
                     name: switch
                     widget: object
                     fields: *switch_fields
+                  - label: Color Picker
+                    name: colorPicker
+                    widget: object
+                    fields: *colorpicker_fields
                   - label: File Upload
                     name: fileUpload
                     widget: object
@@ -1079,6 +1097,43 @@ collections:
                     name: carousel
                     widget: object
                     fields: *carousel_fields
+
+                  - label: Tabs
+                    name: tabs
+                    widget: object
+                    fields: &tabs_fields
+                      - label: Variant
+                        name: variant
+                        widget: select
+                        options: [line, subtle, enclosed]
+                        default: line
+                      - label: Size
+                        name: size
+                        widget: select
+                        options: [xs, sm, md, lg]
+                        default: md
+                      - label: Orientation
+                        name: orientation
+                        widget: select
+                        options: [horizontal, vertical]
+                        default: horizontal
+                      - label: Activation Mode
+                        name: activationMode
+                        widget: select
+                        options: [automatic, manual]
+                        default: automatic
+                      - label: Items
+                        name: items
+                        widget: list
+                        fields:
+                          - { label: Value, name: value, widget: string }
+                          - { label: Label, name: label, widget: string }
+                          - { label: Disabled, name: disabled, widget: boolean, default: false }
+                          - label: Content
+                            name: content
+                            widget: list
+                            types: *leaf_components
+                            required: false
 
                   - label: Grid
                     name: grid
@@ -1526,6 +1581,10 @@ collections:
             name: switch
             widget: object
             fields: *switch_fields
+          - label: Color Picker
+            name: colorPicker
+            widget: object
+            fields: *colorpicker_fields
           - label: File Upload
             name: fileUpload
             widget: object
@@ -1534,6 +1593,10 @@ collections:
             name: carousel
             widget: object
             fields: *carousel_fields
+          - label: Tabs
+            name: tabs
+            widget: object
+            fields: *tabs_fields
           - label: Layout
             name: layout
             widget: object
