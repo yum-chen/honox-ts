@@ -99,7 +99,7 @@ Page Builder layouts are one of three content types under `content/`, each disco
 
 * Loaded with `import.meta.glob("/content/pages/*.json", { import: "default" })` in `app/routes/pages/[slug].tsx`.
 * Each file is parsed as plain JSON — no markdown involved — and its `content` array is handed directly to `<PageRenderer />` (see Architecture above), which recursively compiles it into the matching UI components.
-* This is the only pipeline of the three with no separate parse/compile step: the JSON *is* the render tree.
+* This is the only pipeline of the three with no separate parse/compile step: the JSON _is_ the render tree.
 
 ### 2. Plain markdown (`content/posts/*.md`, `content/docs/*.md`)
 
