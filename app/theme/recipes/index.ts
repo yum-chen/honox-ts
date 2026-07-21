@@ -1,3 +1,4 @@
+import { tabs } from "./tabs";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { anchor } from "./anchor";
@@ -105,4 +106,5 @@ export const slotRecipes = {
 	search,
 	colorPicker,
 	datePicker,
+	tabs,
 };
