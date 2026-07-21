@@ -1,5 +1,4 @@
 import type { JSX } from "hono/jsx";
-import { useRef } from "hono/jsx";
 import { CloseIcon } from "../../icons/close";
 import DrawerIsland from "../../islands/drawer";
 import { IconButton } from "./button";
@@ -72,11 +71,8 @@ export function Drawer(props: DrawerProps) {
 		...rest
 	} = props;
 
-	const localRef = useRef<HTMLElement>(null);
-	const rootRef = rootRefProp || localRef;
-
 	return (
-		<Root {...rest} rootRef={rootRef} dialogRole={role}>
+		<Root {...rest} rootRef={rootRefProp} dialogRole={role}>
 			{trigger && <Trigger asChild>{trigger}</Trigger>}
 			<Backdrop />
 			<Positioner>

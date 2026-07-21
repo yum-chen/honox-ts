@@ -1,5 +1,4 @@
 import type { JSX } from "hono/jsx";
-import { useRef } from "hono/jsx";
 import { CloseIcon } from "../../icons/close";
 import DialogIsland from "../../islands/dialog";
 import { IconButton } from "./button";
@@ -78,11 +77,8 @@ export function Dialog(props: DialogProps) {
 	// component already warns client-side when neither `title` nor `aria-label`
 	// resolves to one, so we don't duplicate that warning here.
 
-	const localRef = useRef<HTMLElement>(null);
-	const rootRef = rootRefProp || localRef;
-
 	return (
-		<Root {...rest} rootRef={rootRef} dialogRole={role}>
+		<Root {...rest} rootRef={rootRefProp} dialogRole={role}>
 			{trigger && <Trigger asChild>{trigger}</Trigger>}
 			<Backdrop />
 			<Positioner>

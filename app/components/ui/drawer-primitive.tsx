@@ -2,15 +2,8 @@ import { css, cx } from "design-system/css";
 import type { DrawerVariantProps } from "design-system/recipes";
 import { drawer } from "design-system/recipes";
 import type { PropsWithChildren } from "hono/jsx";
-import {
-	cloneElement,
-	createContext,
-	useContext,
-	useId,
-	useRef,
-	useState,
-} from "hono/jsx";
-import { hasPart, useOverlay } from "./overlay-a11y";
+import { cloneElement, createContext, useContext, useId } from "hono/jsx";
+import { hasPart } from "./overlay-a11y";
 
 type DrawerStyles = ReturnType<typeof drawer>;
 
@@ -385,72 +378,4 @@ export function ActionTrigger(props: ActionTriggerProps) {
 		</button>
 	);
 }
-
-// Interactive version with state management and full a11y behavior
-// (focus trap, Escape, inert background, scroll lock, focus return).
-// The behavior layer itself lives in `./overlay-a11y` (`useOverlay`) and is
-// shared with Dialog so nested overlays cooperate on `inert` and focus.
-
-export interface InteractiveDrawerProps extends RootProps {
-	defaultOpen?: boolean;
-	/** Close when Escape is pressed. Default: true. */
-	closeOnEscape?: boolean;
-	/** Close when the backdrop is clicked / interaction occurs outside. Default: true. */
-	closeOnInteractOutside?: boolean;
-	/** Element to focus when the drawer opens. Defaults to the first focusable. */
-	initialFocusEl?: () => HTMLElement | null;
-	/** Element to focus when the drawer closes. Defaults to the trigger. */
-	finalFocusEl?: () => HTMLElement | null;
-}
-
-export function InteractiveDrawer(props: InteractiveDrawerProps) {
-	const {
-		open: openProp,
-		onOpenChange: onOpenChangeProp,
-		defaultOpen,
-		id: idProp,
-		dialogRole,
-		closeOnEscape = true,
-		closeOnInteractOutside = true,
-		initialFocusEl,
-		finalFocusEl,
-		...rest
-	} = props;
-	const [isOpen, setIsOpen] = useState(openProp ?? defaultOpen ?? false);
-
-	const isControlled = openProp !== undefined;
-	const open = isControlled ? openProp : isOpen;
-
-	const fallbackId = useId();
-	const rootId = idProp || `drawer-${fallbackId}`;
-	const rootRef = useRef<HTMLElement>(null);
-
-	const handleOpenChange = (nextOpen: boolean) => {
-		if (!isControlled) {
-			setIsOpen(nextOpen);
-		}
-		onOpenChangeProp?.(nextOpen);
-	};
-
-	// Click delegation + focus trap / Escape / inert / scroll lock / focus return.
-	useOverlay({
-		rootRef,
-		open,
-		closeOnEscape,
-		closeOnInteractOutside,
-		onChange: handleOpenChange,
-		initialFocusEl,
-		finalFocusEl,
-	});
-
-	return (
-		<Root
-			{...rest}
-			id={rootId}
-			open={open}
-			onOpenChange={handleOpenChange}
-			rootRef={rootRef}
-			dialogRole={dialogRole}
-		/>
-	);
-}
+export { useDrawerContext };
