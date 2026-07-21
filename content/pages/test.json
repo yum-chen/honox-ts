@@ -492,6 +492,62 @@
           "text": "Footer slot"
         }
       ]
+    },
+    {
+      "type": "heading",
+      "size": "2xl",
+      "text": "7. Dynamic Tabs Navigation",
+      "as": "h2"
+    },
+    {
+      "type": "tabs",
+      "defaultValue": "details",
+      "variant": "enclosed",
+      "size": "md",
+      "orientation": "horizontal",
+      "items": [
+        {
+          "value": "details",
+          "label": "Cabin Details",
+          "content": [
+            {
+              "type": "text",
+              "content": "Our cozy mountain cabins are fully equipped with luxury amenities, a warm stone fireplace, and panoramic views of the Cascades."
+            }
+          ]
+        },
+        {
+          "value": "amenities",
+          "label": "Key Amenities",
+          "content": [
+            {
+              "type": "stack",
+              "direction": "vertical",
+              "gap": "2",
+              "children": [
+                {
+                  "type": "badge",
+                  "variant": "subtle",
+                  "colorPalette": "blue",
+                  "text": "Indoor Hot Tub"
+                },
+                {
+                  "type": "badge",
+                  "variant": "subtle",
+                  "colorPalette": "purple",
+                  "text": "Stone Fireplace"
+                },
+                {
+                  "type": "badge",
+                  "variant": "subtle",
+                  "colorPalette": "green",
+                  "text": "High-Speed WiFi"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }

@@ -12,10 +12,10 @@ describe("Layout Component", () => {
 			/>
 		).toString();
 
-		expect(html).toContain("id=\"test-header\"");
-		expect(html).toContain("id=\"test-sider\"");
-		expect(html).toContain("id=\"test-content\"");
-		expect(html).toContain("id=\"test-footer\"");
+		expect(html).toContain('id="test-header"');
+		expect(html).toContain('id="test-sider"');
+		expect(html).toContain('id="test-content"');
+		expect(html).toContain('id="test-footer"');
 		expect(html).toContain("<header");
 		expect(html).toContain("<aside");
 		expect(html).toContain("<main");
@@ -32,10 +32,10 @@ describe("Layout Component", () => {
 			</Layout>
 		).toString();
 
-		expect(html).toContain("id=\"test-header\"");
-		expect(html).toContain("id=\"test-sider\"");
-		expect(html).toContain("id=\"test-content\"");
-		expect(html).toContain("id=\"test-footer\"");
+		expect(html).toContain('id="test-header"');
+		expect(html).toContain('id="test-sider"');
+		expect(html).toContain('id="test-content"');
+		expect(html).toContain('id="test-footer"');
 		expect(html).toContain("<header");
 		expect(html).toContain("<aside");
 		expect(html).toContain("<main");
@@ -56,7 +56,7 @@ describe("Layout Component", () => {
 				<Layout.Content>Content</Layout.Content>
 			</Layout>
 		).toString();
-		expect(withSider).toContain("data-has-sider=\"true\"");
+		expect(withSider).toContain('data-has-sider="true"');
 	});
 
 	it("should respect explicit hasSider prop", () => {
@@ -65,14 +65,16 @@ describe("Layout Component", () => {
 				<Layout.Content>Content</Layout.Content>
 			</Layout>
 		).toString();
-		expect(html).toContain("data-has-sider=\"true\"");
+		expect(html).toContain('data-has-sider="true"');
 	});
 
 	it("should respect local override props on subcomponents", () => {
 		const html = (
 			<Layout>
 				<Layout.Header sticky>Header</Layout.Header>
-				<Layout.Sider width="lg" sticky>Sider</Layout.Sider>
+				<Layout.Sider width="lg" sticky>
+					Sider
+				</Layout.Sider>
 			</Layout>
 		).toString();
 
