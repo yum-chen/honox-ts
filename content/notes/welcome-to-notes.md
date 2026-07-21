@@ -1,5 +1,5 @@
 ---
-title: Welcome to Notes
+title: Quick Notes
 updated: 2026-07-20
 color: orange
 pinned: true
@@ -7,6 +7,8 @@ archived: false
 tags:
   - meta
 ---
+
+# **Welcome to Notes**
 
 This is the Notes app. Every note is a plain Markdown file under `content/notes/`, edited through the CMS at `/admin`.
 
