@@ -1,0 +1,205 @@
+---
+title: Carousel Carrousel
+hydration: 1
+category: Data Display
+---
+
+import { Carousel } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Un diaporama qui parcourt un ensemble de diapositives en utilisant du vrai CSS natif
+scroll-snap - ne transforme pas les mathématiques. Prend en charge la pagination par groupe (`slidesPerPage`),
+boucle, lecture automatique, défilement par glissement de la souris, navigation au clavier et vertical
+orientation.
+
+# Utilisation
+
+## Carrousel de base
+
+<DemoPreview>
+  <div style={{ width: "100%", maxWidth: "360px" }}>
+    <Carousel
+      slides={[
+        <div style={{ padding: "3rem 1rem", textAlign: "center", background: "var(--colors-blue-3)" }}>Slide 1</div>,
+        <div style={{ padding: "3rem 1rem", textAlign: "center", background: "var(--colors-purple-3)" }}>Slide 2</div>,
+        <div style={{ padding: "3rem 1rem", textAlign: "center", background: "var(--colors-green-3)" }}>Slide 3</div>,
+      ]}
+    />
+  </div>
+</DemoPreview>
+
+```tsx
+import { Carousel } from "../components/ui";
+
+export default function Page() {
+  return (
+    <Carousel
+      slides={[
+        <div>Slide 1</div>,
+        <div>Slide 2</div>,
+        <div>Slide 3</div>,
+      ]}
+    />
+  );
+}
+```
+
+## Plusieurs diapositives par page, en boucle
+
+```tsx
+<Carousel
+  slides={slides}
+  slidesPerPage={3}
+  spacing="16px"
+  loop
+  colorPalette="purple"
+/>
+```
+
+## Lecture automatique avec pause au survol
+
+```tsx
+<Carousel
+  slides={slides}
+  autoplay={{ delay: 2500 }}
+  pauseOnHover
+  loop
+  showAutoplayTrigger
+/>
+```
+
+## Orientation verticale
+
+```tsx
+<div class={css({ height: "72" })}>
+  <Carousel slides={slides} orientation="vertical" class={css({ height: "full" })} />
+</div>
+```
+
+## Contrôles superposés (en ligne)
+
+```tsx
+<Carousel slides={slides} inline loop />
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc « carrousel » dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`). Les diapositives sont des enregistrements plats `{ image, caption, href }`, et non des blocs de composants imbriqués :
+
+```json
+{
+  "type": "carousel",
+  "slides": [
+    { "image": "/hero-1.jpg", "caption": "Slide 1" },
+    { "image": "/hero-2.jpg", "caption": "Slide 2" }
+  ],
+  "loop": true,
+  "autoplayDelay": 3000
+}
+```
+
+***
+
+# Propriétés
+
+## Carrousel
+
+Le composant pratique basé sur les données : passez des « diapositives » et il compose
+`ItemGroup`/`Item` plus un `Control` par défaut (déclencheurs précédent/suivant et
+points indicateurs) pour vous. Pour une composition manuelle complète, utilisez `Carousel.Root`
+et les pièces exportées directement (voir [Composition manuelle](#manual-composition)).
+
+| Propriété | Type | Description | Défaut |
+| --- | --- | --- | --- |
+| `slides` | `JSX.Element[]` | Le contenu de la diapositive. `slideCount` est dérivé de sa longueur. | - |
+| `interactive` | `boolean` | Force l’hydratation comme une île. | `true` |
+| `page` | `number` | Si le carrousel est sur une page donnée (contrôlé). | - |
+| `defaultPage` | `number` | Page initiale (non contrôlée). | `0` |
+| `slidesPerPage` | `number` | Nombre de diapositives visibles à la fois. | `1` |
+
+| `slidesPerMove` | \`number \ | "auto"\` | Slides advanced per page step. `"auto"` uses `slidesPerPage`. | `"auto"` |
+| `orientation` | \`"horizontal" \ | "verticale"\` | Scroll axis. | `"horizontal"` |
+
+| `loop` | `boolean` | S'enroule à la première/dernière page. | `false` |
+| `spacing` | `string` | Espace entre les diapositives (n'importe quelle longueur CSS). | `"0px"` |
+| `padding` | `string` | Remplissage de défilement supplémentaire à chaque extrémité (n'importe quelle longueur CSS). | - |
+| `autoSize` | `boolean` | Permet aux diapositives de se redimensionner au lieu de se diviser uniformément par `slidesPerPage`. | `false` |
+| `allowMouseDrag` | `boolean` | Permet le défilement par clic-glisser avec la souris (le défilement tactile/trackpad fonctionne toujours de manière native). | `false` |
+
+| `autoplay` | \`boolean \ | \{ délai : numéro \}\` | Auto-advances pages. Always wraps at the end regardless of `loop`. | `false` |
+
+| `pauseOnHover` | `boolean` | Met en pause la lecture automatique lorsque le pointeur se trouve sur le carrousel. | `false` |
+
+| `snapType` | \`"proximity" \ | "obligatoire"\` | CSS scroll-snap strictness. | `"mandatory"` |
+
+| `disabled` | `boolean` | Désactive tous les déclencheurs/indicateurs et le glissement. | `false` |
+| `showControls` | `boolean` | Rend `PrevTrigger`/`NextTrigger` dans le `Control` par défaut. | `true` |
+| `showIndicators` | `boolean` | Rend un « IndicatorGroup » dans le « Control » par défaut. | `true` |
+| `showAutoplayTrigger` | `boolean` | Rend un « AutoplayTrigger » dans le « Control » par défaut. | `false` |
+| `itemClass` | `string` | Classe personnalisée appliquée à chaque « élément » généré. | - |
+
+| `size` | \`"sm" \ | "md" \ | "lg"\` | Size of the triggers/indicators. | `"md"` |
+
+| `colorPalette` | \`"gray" \ | "bleu" \ | "cyan" \ | "green" \ | "orange" \ | "purple" \ | "red" \ | "teal" \ | "indigo" \ | "pink" \ | "yellow" \ | "success" \ | "error" \ | "warning"\` | Accent color for the active indicator/pressed autoplay trigger. | `"green"` |
+
+| `inline` | `boolean` | Superpose « Contrôle » au-dessus du groupe d'éléments au lieu de l'empiler en dessous. | `false` |
+| `translations` | `CarouselTranslations` | Chaînes localisées (étiquettes d'aria, texte de progression). | - |
+| `onPageChange` | `(details: { page: number; pageSnapPoint: number }) => void` | Appelé lorsque la page active se stabilise. | - |
+| `onAutoplayStatusChange` | `(details: { type: string; isPlaying: boolean; page: number }) => void` | Appelé lorsque la lecture automatique démarre/coche/s'arrête. | - |
+| `onDragStatusChange` | `(details: { type: string; isDragging: boolean; page: number }) => void` | Appelé lors du glisser début/déplacement/fin. | - |
+| `class` | `string` | Classes CSS personnalisées pour l'élément racine. | - |
+| `classNames` | `Record<string, string>` | Classes CSS personnalisées par partie (`root`, `itemGroup`, `item`, `control`, `prevTrigger`, `nextTrigger`, `indicatorGroup`, `indicator`, `autoplayTrigger`). | - |
+
+### Carrousel.Item
+
+| Propriété | Type | Description | Défaut |
+| --- | --- | --- | --- |
+| `index` | `number` | La position de la diapositive. Requis. | - |
+
+| `snapAlign` | \`"start" \ | "centre" \ | "end"\` | Which edge of the slide snaps into view. | `"start"` |
+
+### Carrousel.Indicateur
+
+| Propriété | Type | Description | Défaut |
+| --- | --- | --- | --- |
+| `index` | `number` | La page à laquelle il accède. Requis. | - |
+| `readOnly` | `boolean` | Restitue le point sans gestionnaire de clic. | `false` |
+
+***
+
+# Notes d'architecture
+
+- **Défilement natif, pas de transformations.** `ItemGroup` est un véritable  `overflow : conteneur grille/flex automatique avec `scroll-snap-type` ; appels de recherche de personnes
+  `scrollTo(...)` dessus. Cela signifie glisser le doigt, faire défiler le trackpad et
+  le défilement des touches fléchées des éléments ciblés fonctionne avant même la fin de l'hydratation -
+  seuls les _clics_ du déclencheur/indicateur et la lecture automatique nécessitent JavaScript.
+- **`pageSnapPoints`** est l'index d'élément auquel chaque page commence, calculé avec  la même formule structurelle que la machine `@zag-js/carousel` d'Ark UI utilise
+  (`getPageSnapPoints`) — déterministe à partir de `slideCount`/`slidesPerPage`/
+  `slidesPerMove` seul, donc c'est identique sur le serveur et avant
+  hydratation (aucune mesure de disposition nécessaire pour le SSR).
+- **Les enfants ne restituent pas l'hydratation.** Comme les autres projets de ce projet  îles, les correctifs racine interactifs `Carousel` `data-current`,
+  `disabled`, `data-inview` et `aria-hidden` sur le DOM déjà rendu
+  directement (voir `applyPageState` dans `carousel-primitive.tsx`) plutôt que
+  régénération des enfants `Item`/`Indicator` — HonoX réhydrate l'eau d'une île
+  enfants à partir d'un instantané HTML sérialisé, et non en réinvoquant le
+  composant qui les a produits.
+- **Ne comptez jamais sur un `onClick` JSX pour un bouton déclencheur/indicateur.** Pour le  même raison : `PrevTrigger`/`NextTrigger`/`Indicator`/`AutoplayTrigger` sont
+  composé comme des enfants, donc hono/jsx/dom ne réconcilie jamais son propre synthétique
+  des accessoires d'événement sur ces nœuds déjà montés - un "onClick" sur eux
+  ne tire jamais en silence. Toute la gestion des clics est déléguée depuis la racine dans un
+  unique `useEffect` (`target.closest('[data-part="..."]')`), mise en miroir
+  `dropdown-primitive.tsx`/`combobox-primitive.tsx`. Cet effet (et le
+  `pauseOnHover` one) se monte exactement une fois et lit `scrollNext`/`scrollPrev`/
+  `est en train de jouer`/etc. via les références plutôt que de les fermer directement -
+  mettre l'état réactif dans son tableau de dépendances rattache l'écouteur sur
+  chaque changement, et le propre `setIsPlaying` de `pauseOnHover` (déclenché par
+  `pointerenter`, qui atterrit _juste avant_ le clic apparié dans un véritable
+  geste de clic) autrement déchirerait l'auditeur de clic dans l'espace
+  entre l'arrivée de la souris et le bouton enfoncé.
+- **Simplifications par rapport à l'interface utilisateur Ark en amont :** le suivi en vue utilise la même chose  mathématiques de plage d'index comme le rendu SSR (pas un vrai `IntersectionObserver`),
+  et le `tabindex` de `ItemGroup` est toujours `0` (non basculé selon qu'un
+  la diapositive contient un élément focalisable). Il s’agit dans les deux cas de compromis pragmatiques
+  couvrir le cas courant de slidesPerPage fixe ; RTL (`dir`) n'est pas pris en charge,
+  correspondant au reste de cette bibliothèque de composants.

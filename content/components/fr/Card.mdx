@@ -1,0 +1,102 @@
+---
+title: Card Carte
+hydration: 2
+category: Data Display
+---
+
+import { Card, Button } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Un conteneur flexible pour regrouper le contenu associé, avec des emplacements facultatifs pour l'en-tête, le corps, le pied de page, l'image et l'avatar.
+
+# Utilisation
+
+## Carte de base
+
+<DemoPreview>
+  <Card
+    variant="elevated"
+    title="Project title"
+    description="A short description of the project."
+    body="Main content of the card goes here."
+    footer={<Button>View</Button>}
+  />
+</DemoPreview>
+
+```tsx
+import { Card, Button } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Card
+      variant="elevated"
+      title="Project title"
+      description="A short description of the project."
+      body="Main content of the card goes here."
+      footer={<Button>View</Button>}
+    />
+  );
+}
+```
+
+## Carte avec image
+
+```tsx
+import { Card } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Card
+      image="/cover.png"
+      imagePosition="top"
+      title="Card with image"
+      body="Content beneath the image."
+    />
+  );
+}
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc `card` dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) :
+
+```json
+{
+  "type": "card",
+  "title": "Project title",
+  "description": "A short description of the project.",
+  "body": "Main content of the card goes here.",
+  "variant": "elevated"
+}
+```
+
+# Propriétés
+
+## Carte
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+
+| `title` | \`string \ | JSX.Élément\` | The card title. |
+| `description` | \`string \ | JSX.Élément\` | The card description. |
+| `body` | \`string \ | JSX.Élément\` | The main body content. |
+| `footer` | \`string \ | JSX.Élément\` | Footer content. |
+
+| `avatar` | `JSX.Element` | Élément affiché dans l'en-tête (par exemple un avatar). |
+| `headerAction` | `JSX.Element` | Élément affiché à la fin de l’en-tête (par exemple un menu). |
+
+| `image` | \`string \ | JSX.Élément\` | Image source or element. |
+
+| `imagePosition` | \`"top" \ | "bas" \ | "left" \ | "right"\` | Where the image is placed. Default: `"top"`. |
+
+| `headerClass` | `string` | Classes CSS personnalisées pour l'en-tête. |
+| `bodyClass` | `string` | Classes CSS personnalisées pour le corps. |
+| `footerClass` | `string` | Classes CSS personnalisées pour le pied de page. |
+| `imageClass` | `string` | Classes CSS personnalisées pour l'image. |
+
+| `variant` | \`"elevated" \ | "contour" \ | "subtle"\` | The visual style of the card. |
+
+| `interactive` | `boolean` | Activez l’hydratation côté client. |
+| `class` | `string` | Classes CSS personnalisées pour l'élément racine. |

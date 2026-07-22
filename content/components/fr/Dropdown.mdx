@@ -1,0 +1,312 @@
+---
+title: Dropdown Menu Déroulant
+hydration: 1
+category: Overlays
+---
+
+import { Dropdown, Button } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Une liste d'actions ou d'options qui apparaissent lorsqu'elles sont déclenchées. Prend en charge la personnalisation
+emplacements avec retournement automatique du débordement de la fenêtre, une flèche en option avec une géométrie pointant au centre,
+case à cocher/radio/éléments de groupe, sous-menus en cascade et cliquez/survol/contexte
+modes de déclenchement du menu.
+
+# Utilisation
+
+## Liste déroulante de base
+
+<DemoPreview>
+  <Dropdown
+    trigger={<Button>Open Dropdown</Button>}
+    items={[
+      { type: "item", label: "Edit", value: "edit" },
+      { type: "separator" },
+      { type: "checkbox", label: "Bold", value: "bold", checked: true },
+      {
+        type: "radio-group",
+        value: "theme",
+        label: "Theme",
+        items: [
+          { type: "radio", label: "Light", value: "light" },
+          { type: "radio", label: "Dark", value: "dark" },
+        ],
+      },
+    ]}
+  />
+</DemoPreview>
+
+```tsx
+import { Dropdown, Button } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Dropdown
+      trigger={<Button>Open Dropdown</Button>}
+      items={[
+        { type: "item", label: "Edit", value: "edit" },
+        { type: "separator" },
+        { type: "checkbox", label: "Bold", value: "bold", checked: true },
+        {
+          type: "radio-group",
+          value: "theme",
+          label: "Theme",
+          items: [
+            { type: "radio", label: "Light", value: "light" },
+            { type: "radio", label: "Dark", value: "dark" },
+          ],
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Bouton avec menu déroulant
+
+```tsx
+import { Dropdown } from "../components/ui";
+
+export default function Page() {
+  return (
+    <Dropdown.Button
+      type="primary"
+      items={[{ type: "item", label: "Submit & Close", value: "close" }]}
+      onClick={() => console.log("Primary click!")}
+    >
+      Submit Action
+    </Dropdown.Button>
+  );
+}
+```
+
+## Style personnalisé et noms de classes sémantiques
+
+```tsx
+<Dropdown
+  trigger={<Button>Styled Dropdown</Button>}
+  classNames={{
+    content: "custom-menu-card",
+    item: "custom-menu-item"
+  }}
+  styles={{
+    content: { boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }
+  }}
+  items={[{ type: "item", label: "Custom Styled Item", value: "styled" }]}
+/>
+```
+
+## Flèche pointant vers le centre
+
+```tsx
+<Dropdown
+  trigger={<Button>Center Arrow</Button>}
+  arrow={{ pointAtCenter: true }}
+  placement="bottomRight"
+  items={[{ type: "item", label: "Item 1", value: "1" }]}
+/>
+```
+
+## Groupes et sous-menus en cascade
+
+```tsx
+<Dropdown
+  trigger={<Button>Open Dropdown</Button>}
+  items={[
+    {
+      type: "group",
+      label: "File",
+      items: [
+        { type: "item", label: "New", value: "new" },
+        { type: "item", label: "Open", value: "open" },
+      ],
+    },
+    { type: "separator" },
+    {
+      type: "submenu",
+      label: "Share",
+      items: [
+        { type: "item", label: "Email", value: "email" },
+        { type: "item", label: "Link", value: "link" },
+      ],
+    },
+  ]}
+/>
+```
+
+## Emplacement personnalisé, flèche et déclencheur de survol
+
+```tsx
+<Dropdown
+  trigger={<Button>Hover Me</Button>}
+  placement="bottomRight"
+  triggerMode="hover"
+  arrow={true}
+  mouseEnterDelay={100}
+  mouseLeaveDelay={150}
+  items={[
+    { type: "item", label: "Profile", value: "profile" },
+    { type: "item", label: "Settings", value: "settings" },
+    { type: "separator" },
+    { type: "item", label: "Logout", value: "logout" },
+  ]}
+/>
+```
+
+## Menu contextuel
+
+Un déclencheur câblé pour « contextMenu » s'ouvre lors d'un clic droit, ancré
+au pointeur, au lieu de se comporter comme un bouton :
+
+```tsx
+<Dropdown
+  trigger={<div>Right-click this area</div>}
+  trigger={"contextMenu"}
+  items={[
+    { type: "item", label: "Copy", value: "copy" },
+    { type: "item", label: "Paste", value: "paste" },
+  ]}
+/>
+```
+
+## État ouvert contrôlé
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<Dropdown
+  open={open}
+  onOpenChange={setOpen}
+  trigger={<Button>Open Dropdown</Button>}
+  items={[{ type: "item", label: "Edit", value: "edit" }]}
+/>;
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc « menu » dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) — le bloc CMS est étiqueté « Menu » mais s'affiche via ce composant « Dropdown » :
+
+```json
+{
+  "type": "menu",
+  "triggerText": "Open Dropdown",
+  "items": [
+    { "type": "item", "label": "Edit", "value": "edit" },
+    { "type": "separator" },
+    { "type": "item", "label": "Delete", "value": "delete" }
+  ]
+}
+```
+
+# Propriétés
+
+## Dérouler
+
+| Propriété | Type | Description | Défaut |
+| --- | --- | --- | --- |
+| `trigger` | `JSX.Element` | Élément qui ouvre le menu lorsqu'il est activé. | - |
+| `items` | `DropdownItem[]` | Les éléments de menu à restituer. | - |
+| `open` | `boolean` | Si le menu est ouvert (contrôlé). | - |
+| `defaultOpen` | `boolean` | Si le menu est ouvert par défaut (non contrôlé). | `false` |
+| `disabled` | `boolean` | Désactive tous les modes de déclenchement et rend le déclencheur inerte. | `false` |
+| `interactive` | `boolean` | Force l’hydratation comme une île. La valeur par défaut est « vrai ». | `true` |
+
+| `arrow` | \`boolean \ | \{ pointAtCenter ? : booléen \}\` | Show a pointer arrow pointing from the menu to the trigger. Can align exactly with the trigger's center. | `false` |
+
+| `placement` | `string` | Emplacement du menu : `"haut"` \ | `"topLeft"` \ | `"topRight"` \ | `"bottom"` \ | `"bottomLeft"` \ | `"bottomRight"` \ | `"left"` \ | `"leftTop"` \ | `"leftBottom"` \ | `"right"` \ | `"rightTop"` \ | `"rightBottom"`. Dash-case aliases are also accepted. | `"bottomLeft"` |
+
+| `trigger` | \`("click" \ | "survoler" \ | "contextMenu" \ | "contextDropdown")[] \ | string\` | Trigger interaction modes to open/close the menu. (Aliased as `triggerMode`). | `["click"]` |
+
+| `mouseEnterDelay` | `number` | Délai en ms avant ouverture lorsque le déclencheur inclut `"hover"`. | `150` |
+| `mouseLeaveDelay` | `number` | Délai en ms avant la fermeture lorsque le déclencheur inclut `"hover"`. | `100` |
+| `closeOnEscape` | `boolean` | Fermez lorsque vous appuyez sur Échap. | `true` |
+
+| `onOpenChange` | \`(open: boolean, info?: \{ source: 'trigger' \ | 'menu' \}) => vide\` | Called when the menu opens or closes. `source` specifies what triggered the action. | - |
+
+| `onSelect` | `(value: string) => void` | Appelé avec la « valeur » d'un élément lorsqu'il est activé. | - |
+
+| `size` | \`"xs" \ | "sm" \ | "md" \ | "lg" \ | "xl"\` | The size of the menu. | `"md"` |
+
+| `class` | `string` | Classes CSS personnalisées pour l'élément racine. | - |
+| `contentClass` | `string` | Classes CSS personnalisées pour l'élément de contenu. | - |
+| `positionerClass` | `string` | Classes CSS personnalisées pour l'élément positionneur. | - |
+| `destroyOnHidden` | `boolean` | S'il faut détruire/démonter le contenu contextuel du DOM lorsqu'il est masqué. (Aliasmé « destroyPopupOnHide »). | `false` |
+| `popupRender` | `(menu: JSX.Element) => JSX.Element` | Personnalisez/enveloppez le contenu de la fenêtre contextuelle. (Alias ​​​​comme `dropdownRender`). | - |
+| `classNames` | `Record<string, string>` | Classes CSS personnalisées pour chaque composant de structure sémantique dans la liste déroulante. | - |
+| `styles` | `Record<string, any>` | Styles en ligne personnalisés pour chaque composant de structure sémantique dans la liste déroulante. | - |
+
+### Noms de classe et emplacements de styles :
+
+- `root` (ou `positioner`) : le conteneur de positionnement absolu de superposition.- `content` : La carte contextuelle contenant les éléments de la liste.- `item` : élément de liste individuel (y compris les éléments de case à cocher et de radio).- `trigger` : le bouton/wrapper de déclenchement principal.- `arrow` : l'enveloppe extérieure de la flèche.- `arrowTip` : Le diamant intérieur stylisé.
+### Élément déroulant
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+
+| `type` | \`"item" \ | "séparateur" \ | "checkbox" \ | "radio" \ | "radio-group" \ | "submenu" \ | "group"\` | The kind of menu entry. |
+
+| `label` | `string` | Afficher le texte (pour « élément », « case à cocher », « radio », « sous-menu » et éventuellement « groupe »). |
+| `value` | `string` | Valeur unique (pour `item`, `checkbox`, `radio`, `radio-group`). |
+| `checked` | `boolean` | État coché (pour `checkbox`, `radio`). |
+| `icon` | `JSX.Element` | Icône principale (pour « élément », « case à cocher », « radio », « sous-menu »). |
+| `indicator` | `JSX.Element` | Élément indicateur de fin personnalisé (pour `item`). |
+| `items` | `DropdownItem[]` | Éléments imbriqués (pour `radio-group`, `submenu`, `group`). Les éléments de sous-menu/groupe peuvent eux-mêmes être n'importe quel « DropdownItem », y compris d'autres sous-menus. |
+| `disabled` | `boolean` | Si l'élément (ou, pour le « sous-menu », l'ensemble du menu imbriqué) est désactivé. |
+| `class` | `string` | Classes CSS personnalisées pour l'élément. |
+
+***
+
+## Dropdown.Button (DropdownButton)
+
+Un bouton avec un menu déroulant, rendu sous la forme d'un groupe de boutons attachés continus.
+
+| Propriété | Type | Description | Défaut |
+| --- | --- | --- | --- |
+
+| `type` | \`"default" \ | "primaire" \ | "dashed" \ | "link" \ | "text" \ | "solid" \ | "outline" \ | "subtle" \ | "plain" \ | "surface"\` | The type of buttons to render. | `"outline"` |
+
+| `danger` | `boolean` | Rend les boutons avec un thème visuel de danger. | `false` |
+| `disabled` | `boolean` | Désactive à la fois le bouton principal et le déclencheur de liste déroulante. | `false` |
+| `loading` | `boolean` | Rend le bouton principal en état de chargement/occupé. | `false` |
+| `onClick` | `(e: MouseEvent) => void` | Cliquez sur le gestionnaire d'événements pour le bouton gauche/primaire. | - |
+| `icon` | `JSX.Element` | Icône du bouton droit/déclencheur. | `<EllipsisIcon />` |
+| `buttonsRender` | `(buttons: JSX.Element[]) => JSX.Element[]` | Fonction de rendu personnalisé pour personnaliser les deux boutons. | - |
+
+Prend en charge tous les accessoires `Dropdown` courants tels que `items`, `placement`, `arrow`, `classNames`, `styles`, etc.
+
+***
+
+# Note
+
+Veuillez vous assurer que `trigger` accepte `onMouseEnter`, `onMouseLeave`, `onFocus`,
+et `onClick` — l'élément déclencheur est cloné sur place avec ceux-ci (et le
+attributs ARIA/`data-*`) pertinents attachés, plutôt qu'encapsulés.
+
+# Limites
+
+L'îlot interactif positionne le menu par rapport à celui de son déclencheur
+wrapper (`position : absolue`, pas un portail) : il se retourne du côté opposé
+lorsque le placement demandé déborderait de la fenêtre, et serre le
+axe transversal pour que le menu ne s'affiche jamais hors écran. Il ne suit pas le défilement
+conteneurs ou redimensionner les observateurs comme le fait l'interface utilisateur flottante - repositionnement uniquement
+se réexécute sur la fenêtre « redimensionner » lorsqu'elle est ouverte, et faire défiler la page déplace le menu
+avec le déclencheur gratuitement. Un menu ouvert du plus profond d'un défilement
+ou le conteneur `overflow : caché` peut toujours être visuellement coupé par cela
+conteneur, le même compromis `Popover` et `Tooltip` font.
+
+Les menus et sous-menus contextuels sont les
+exception : puisqu'ils ne sont pas ancrés à la boîte d'un déclencheur (un menu contextuel
+s'ouvre au pointeur ; un sous-menu s'ouvre à côté d'un élément de menu), ils sont positionnés
+avec `position : fixe` et coordonnées roulées à la main à la place, et sont réexécutés sur
+Échapper/faire défiler/redimensionner comme le reste du menu.
+
+Chaque sous-menu est son propre îlot interactif imbriqué, limité via un
+Marqueur `data-overlay-root` donc positionnement d'un menu parent et clic extérieur
+la logique n'atteint pas le contenu propre d'un sous-menu (et vice versa). Sélection d'un
+l'élément normal ferme tous les niveaux de menu ouverts dans lesquels il bouillonne ; basculer un
+la case à cocher/l'élément radio à l'intérieur de n'importe quel niveau maintient toute la pile ouverte.
+
+L'animation de sortie `_closed` (`slide-fade-out`) est jouée avant que le menu ne soit ouvert.
+effectivement supprimé de la mise en page - la fermeture ne le cache pas instantanément.

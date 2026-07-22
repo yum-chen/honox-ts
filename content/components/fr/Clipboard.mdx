@@ -1,0 +1,109 @@
+---
+title: Clipboard Presse-papiers
+hydration: 2
+category: Forms
+---
+
+import { Clipboard } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Un champ en lecture seule associé à un déclencheur de copie dans le presse-papiers, avec
+états des indicateurs copiés/non copiés.
+
+# Utilisation
+
+<DemoPreview>
+  <div style={{ width: "100%", maxWidth: "360px" }}>
+    <Clipboard
+      label="Clone Command"
+      value="git clone https://github.com/honojs/honox"
+      interactive
+    />
+  </div>
+</DemoPreview>
+
+```tsx
+import { Clipboard } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Clipboard
+      label="Clone Command"
+      value="git clone https://github.com/honojs/honox"
+    />
+  );
+}
+```
+
+## Composition personnalisée
+
+Passez « children » à « Clipboard.Trigger » pour remplacer la copie/vérification par défaut
+échangez des icônes ou composez les pièces directement pour un contrôle total :
+
+```tsx
+import { Clipboard } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Clipboard.Root value="npm install honox">
+      <Clipboard.Label>Install Command</Clipboard.Label>
+      <Clipboard.Control>
+        <Clipboard.Input />
+        <Clipboard.Trigger>
+          <Clipboard.CopyText />
+        </Clipboard.Trigger>
+      </Clipboard.Control>
+    </Clipboard.Root>
+  );
+}
+```
+
+# Propriétés
+
+## Racine
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `value` | `string` | Le texte à copier (contrôlé). |
+| `defaultValue` | `string` | Le texte initial à copier (non contrôlé). |
+| `disabled` | `boolean` | Désactive le déclencheur. |
+| `timeout` | `number` | Millisecondes pendant lesquelles l'état copié reste actif avant de revenir. Par défaut `3000`. |
+| `translations` | `Partial<ClipboardTranslations>` | Remplacements pour « aria-label » du déclencheur. |
+| `onValueChange` | `(details: { value: string }) => void` | Appelé lorsque la valeur change (par exemple via une entrée personnalisée). |
+| `onStatusChange` | `(details: { copied: boolean }) => void` | Appelé lorsque l'état copié est inversé. |
+| `size` | `"sm" \| "md" \| "lg"` | Visual size. Default `"md"`. |
+| `colorPalette` | `string` | Le thème des couleurs. « vert » par défaut. |
+| `interactive` | `boolean` | Force (ou supprime) l’hydratation comme une île. |
+| `class` | `string` | Classes CSS personnalisées pour l'élément racine. |
+
+## Composition par défaut
+
+Ceux-ci s'appliquent uniquement au `<Clipboard>` de niveau supérieur (pas à `Clipboard.Root`),
+qui restitue `Label` + `Control` (`Input` + `Trigger`) pour vous.
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `label` | `JSX.Element \| chaîne` | Label rendered above the control. |
+| `children` | `JSX.Element` | Contenu « Trigger » personnalisé, remplaçant l'échange d'icônes de copie/vérification par défaut. |
+
+## Sous-composants
+
+| Partie | Description |
+| --- | --- |
+| `Clipboard.Label` | `<label>` lié à l'entrée en lecture seule. |
+| `Clipboard.Control` | Enveloppe « Input » et « Trigger ». |
+| `Clipboard.Input` | Lecture seule `<input>` affichant la valeur actuelle ; sélectionne son texte sur le focus. La copie manuelle via Ctrl/Cmd+C déclenche également l'état copié. |
+| `Clipboard.Trigger` | Copie la « valeur » dans le presse-papiers au clic. Accepte `asChild` pour fusionner sur un enfant personnalisé au lieu de restituer un `<button>`. |
+| `Clipboard.Indicator` | Rend à la fois les « enfants » et une variante « copiée » en tant que nœuds frères, basculés via « caché » — à utiliser pour les échanges d'icônes ou de texte copiés/non copiés personnalisés. |
+| `Clipboard.CopyText` | Commodité de l'indicateur qui permute entre le texte "Copier" / "Copié" (remplacement via les accessoires "enfants"/"copiés"). |
+| `Clipboard.Context` | Accès Render-prop au contexte du presse-papiers : `<Clipboard.Context>{(ctx) => ...}</Clipboard.Context>`. |
+
+# Accessibilité
+
+- `Trigger` obtient un `aria-label` de `translations.triggerLabel (copié)`  (par défaut `"Copier dans le presse-papier"` / `"Copié dans le presse-papier"`), annonçant le
+  changement d’état vers la technologie d’assistance.
+- `Input` est `readOnly`, pas `disabled`, donc il reste focalisable et son texte  sélectionnable/copiable via des raccourcis clavier natifs même sans cliquer
+  le déclencheur.
+- « data-copied » est reflété sur chaque partie pour un style basé sur l'état.

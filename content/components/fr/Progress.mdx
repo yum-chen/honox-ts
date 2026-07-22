@@ -1,0 +1,87 @@
+---
+title: Progress Barre de Progression
+hydration: 3
+category: Feedback
+---
+
+import { Progress } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Un composant qui montre la progression d'une opération sous forme de barre linéaire ou d'indicateur circulaire.
+
+# Utilisation
+
+## Progression linéaire
+
+<DemoPreview>
+  <div style={{ width: "100%", maxWidth: "320px" }}>
+    <Progress value={72} showValueText />
+  </div>
+</DemoPreview>
+
+```tsx
+import { Progress } from "../components/ui";
+
+export default function MyPage() {
+  return <Progress value={72} showValueText />;
+}
+```
+
+## Progrès circulaire
+
+<DemoPreview>
+  <Progress type="circular" value={40} showValueText />
+</DemoPreview>
+
+```tsx
+import { Progress } from "../components/ui";
+
+export default function MyPage() {
+  return <Progress type="circular" value={40} showValueText />;
+}
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc `progress` dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) :
+
+```json
+{
+  "type": "progress",
+  "value": 72,
+  "showValueText": true
+}
+```
+
+# Propriétés
+
+## Progrès
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+
+| `value` | \`number \ | nul\` | The current value. |
+
+| `min` | `number` | La valeur minimale. Par défaut : `0`. |
+| `max` | `number` | La valeur maximale. Par défaut : « 100 ». |
+| `label` | `Child` | Etiquette à afficher au-dessus de l'indicateur. |
+| `showValueText` | `boolean` | S'il faut afficher le texte de la valeur. Par défaut : `false`. |
+| `valueText` | `Child` | Texte de valeur personnalisé à afficher. |
+
+| `type` | \`"linear" \ | "circulaire"\` | The visual style of the progress. Default: `"linear"`. |
+| `variant` | \`"solid" \ | "subtil"\` | The visual variant. |
+
+| `shape` | \`"square" \ | "arrondi" \ | "full"\` | The shape of the indicator. |
+
+| `striped` | `boolean` | S'il faut afficher un remplissage rayé (linéaire). |
+| `animated` | `boolean` | Si le remplissage s'anime. |
+
+| `size` | \`"xs" \ | "sm" \ | "md" \ | "lg" \ | "xl"\` | The size of the indicator. |
+
+| `class` | `string` | Classes CSS personnalisées pour l'élément racine. |
+
+# Sous-composants
+
+`Progress.Root`, `Progress.Track`, `Progress.Range`, `Progress.Circle`, `Progress.CircleTrack`, `Progress.CircleRange`, `Progress.Label`, `Progress.ValueText`, `Progress.View`

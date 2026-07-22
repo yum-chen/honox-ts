@@ -1,0 +1,99 @@
+---
+title: Collapsible Pliable
+hydration: 1
+category: Overlays
+---
+
+import { Collapsible } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Un composant interactif qui peut être développé ou réduit pour afficher ou masquer le contenu.
+
+# Utilisation
+
+## Pliable de base
+
+<DemoPreview>
+  <Collapsible
+    trigger="Show more"
+    content={<p>Additional details go here.</p>}
+    defaultOpen
+  />
+</DemoPreview>
+
+```tsx
+import { Collapsible } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Collapsible
+      trigger="Show more"
+      content={<p>Additional details go here.</p>}
+      defaultOpen
+    />
+  );
+}
+```
+
+## Avec indicateur et état contrôlé
+
+```tsx
+import { Collapsible } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Collapsible
+      trigger="Details"
+      content={<p>Content revealed on toggle.</p>}
+      indicatorPlacement="start"
+      onOpenChange={(open) => console.log("open:", open)}
+    />
+  );
+}
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc « pliable » dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`). `trigger` est une liste de blocage imbriquée (le CMS soumet toujours un tableau, même pour un seul élément déclencheur) :
+
+```json
+{
+  "type": "collapsible",
+  "trigger": [{ "type": "button", "text": "Show more" }],
+  "showIndicator": true,
+  "children": [
+    { "type": "text", "content": "Additional details go here." }
+  ]
+}
+```
+
+# Propriétés
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+
+| `trigger` | \`JSX.Element \ | chaîne\` | The trigger element or string. A string is wrapped in a button. |
+
+| `content` | `JSX.Element` | Le contenu à afficher ou à masquer. |
+| `indicator` | `JSX.Element` | Élément indicateur optionnel (par exemple un chevron). |
+
+| `indicatorPlacement` | \`"start" \ | "fin"\` | Where to place the indicator relative to the trigger. Default: `"end"`. |
+
+| `open` | `boolean` | Si le pliable est ouvert (contrôlé). |
+| `defaultOpen` | `boolean` | Si le pliable est ouvert par défaut (non contrôlé). |
+| `onOpenChange` | `(open: boolean) => void` | Rappel lorsque l'état d'ouverture change. |
+| `disabled` | `boolean` | Si le pliable est désactivé. |
+| `interactive` | `boolean` | Activez l’interactivité côté client. Pliable est **Tier-1 (auto-interactif)** : il s'hydrate toujours comme une île à moins que vous ne réussissiez `interactive={false}`. |
+| `class` | `string` | Nom de la classe de l'élément racine. |
+| `triggerClass` | `string` | Nom de la classe de l'élément déclencheur. |
+| `contentClass` | `string` | Nom de la classe de l'élément de contenu. |
+| `indicatorClass` | `string` | Nom de la classe de l'élément indicateur. |
+| `id` | `string` | ID pour le pliable. |
+
+# Hydratation
+
+Le pliable est classé **Tier-1 (auto-interactif)**.
+
+- Il s'affiche toujours comme un îlot client hydraté (il a besoin de JS pour se développer/se réduire et exécuter « onOpenChange »).- La seule façon de désactiver l'hydratation est de transmettre `interactive={false}`, auquel cas il restitue le balisage statique `*-primitive` sans le comportement de bascule.- Ceci est implémenté via le prédicat partagé « shouldHydrate(interactive, true) » dans « app/components/ui/island-utils.ts », la source unique de vérité pour toutes les décisions d'hydratation.

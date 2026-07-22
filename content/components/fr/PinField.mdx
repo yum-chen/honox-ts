@@ -1,0 +1,142 @@
+---
+title: PinField Champ de Code PIN
+hydration: 2
+category: Forms
+---
+
+import { PinField } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Une entrée segmentée pour les codes courts de longueur fixe — mots de passe à usage unique, SMS/e-mail
+codes de vérification, codes PIN. Chaque personnage a sa propre boîte, avec clavier
+navigation, prise en charge du collage/remplissage automatique et même étiquette/texte d'assistance/erreur
+conventions de texte/validateur comme « Champ ».
+
+# Utilisation
+
+<DemoPreview>
+  <div style={{ width: "100%", maxWidth: "320px" }}>
+    <PinField
+      label="Verification code"
+      helperText="Check your email for the 6-digit code"
+      count={6}
+      otp
+      blurOnComplete
+      validator={(value) => value !== "000000" || "That code isn't valid"}
+    />
+  </div>
+</DemoPreview>
+
+```tsx
+import { PinField } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <PinField
+      label="Verification code"
+      helperText="Check your email for the 6-digit code"
+      count={6}
+      otp
+      blurOnComplete
+      onValueComplete={(details) => console.log(details.valueAsString)}
+    />
+  );
+}
+```
+
+## Format des caractères
+
+`format` (""numérique"` | `"alphanumérique"` | `"alphabétique"`, par défaut `"numérique"`)
+restreint ce qu'une boîte accepte et sélectionne le bon clavier mobile via
+`mode d'entrée`. Transmettez `pattern` avec une source d'expression rationnelle personnalisée par caractère à
+remplacez-le entièrement – ​​utile pour les codes de style coupon.
+
+```tsx
+<PinField format="alphanumeric" count={8} placeholder="_" />
+```
+
+## Remplissage automatique
+
+`otp` marque le champ comme un code à usage unique SMS/e-mail. Plutôt que de mettre
+`autocomplete="one-time-code"` sur chaque case (ce qui rend les navigateurs et les mots de passe
+les gestionnaires affichent une possibilité de remplissage sur chacun d'eux à la fois), seule la case à laquelle l'utilisateur
+remplirait ensuite l'annonce - et accepte la longueur complète du code, donc un mobile
+La suggestion OTP du clavier ou un collage complet peut atterrir d'un seul coup et obtenir
+redistribué automatiquement dans les cases restantes. Une boîte sur deux opte
+des superpositions d'icônes de saisie automatique et de gestionnaire de mots de passe.
+
+## Comportement du clavier et du pointeur
+
+- **Taper** un caractère valide remplit la case actuelle et fait avancer le focus ; un  le contenu de la boîte déjà focalisée est sélectionné en premier (`selectOnFocus`, activé par
+  par défaut), donc la saisie remplace toujours plutôt que d'être bloquée silencieusement.
+- **Retour arrière** sur une case vide s'efface et revient à la précédente.- **Flèche gauche/droite** déplace le focus entre les cases ; **Les flèches haut/bas** sont  supprimé plutôt que de ne rien faire d’utile.
+- **Coller** ou une saisie automatique du système d'exploitation/gestionnaire de mots de passe distribue les caractères  à travers les cases en commençant par celle sur laquelle il a atterri.
+- **Tab** et le focus du clic/pointeur s'arrête sur la première case vide – vous ne pouvez pas  sautez devant un espace, modifiez uniquement une case déjà remplie ou continuez là où vous
+  laissé tomber.
+
+## Validation
+
+Comme `Field`, `PinField` accepte un `validateur` qui s'exécute sur le joint
+valeur et peut renvoyer « false » (erreur générique) ou une « chaîne » (message personnalisé).
+Il n'est revalidé qu'une fois que chaque case est remplie.
+
+```tsx
+<PinField
+  count={6}
+  validator={(value) =>
+    value !== "000000" || "That code isn't valid"
+  }
+  errorText="Enter the code we sent you"
+/>
+```
+
+## Formulaires : soumission et réinitialisation automatiques
+
+`form` associe l'entrée de soumission cachée du champ à un `<form id>` ailleurs
+dans le document (ou omettez-le si le champ réside déjà dans le formulaire).
+`autoSubmit` appelle `form.requestSubmit()` au moment où chaque case est remplie,
+après avoir tiré `onAutoSubmit` ; appuyer sur **Entrée** dans n'importe quelle case tente également
+soumettre, car un formulaire avec plusieurs entrées frères supprime le propre du navigateur
+soumettre sur Entrée. Réinitialisation du formulaire (un `<button type="reset">` natif, ou
+`form.reset()`) remet le champ à vide.
+
+```tsx
+<form id="verify-form">
+  <PinField form="verify-form" name="code" count={6} otp autoSubmit />
+  <button type="reset">Clear</button>
+</form>
+```
+
+# Propriétés
+
+| Propriété | Type | Défaut | Description |
+| --- | --- | --- | --- |
+| `count` | `number` | `4` | Nombre de cartons. |
+| `value` | `string[]` | - | Valeur contrôlée, une entrée par case (force le mode interactif). |
+| `defaultValue` | `string[]` | - | Valeur initiale, une entrée par case (force le mode interactif). |
+| `format` | `"numeric" \| "alphanumeric" \| "alphabétique"` | `"numeric"` | Character class accepted per box. |
+| `pattern` | `string` | - | Source d'expression rationnelle personnalisée par caractère, remplace le « format ». |
+| `placeholder` | `string` | `"○"` | Affiché dans chaque case vide. |
+| `mask` | `boolean` | - | Renvoie chaque boîte sous la forme `type="password"`. |
+| `otp` | `boolean` | - | Cible le remplissage automatique `autocomplete="one-time-code"` au niveau de la case active uniquement. |
+| `blurOnComplete` | `boolean` | - | Brouille la dernière case une fois que chaque case est remplie. |
+| `autoFocus` | `boolean` | - | Concentre la première case sur la monture. |
+| `selectOnFocus` | `boolean` | `true` | Sélectionne le contenu d'une boîte sur le focus afin que la saisie le remplace. |
+| `disabled` | `boolean` | - | Désactive chaque case. |
+| `readOnly` | `boolean` | - | Empêche l'édition. |
+| `required` | `boolean` | - | Marque chaque case comme requis. |
+| `invalid` | `boolean` | - | Force l'état invalide, en remplaçant `validator`. |
+| `name` | `string` | - | Nom du champ de formulaire pour l’entrée de soumission masquée. |
+| `form` | `string` | - | Associe l'entrée masquée (et `autoSubmit`/reset) à un `<form id>`. |
+| `autoSubmit` | `boolean` | - | Appelle `form.requestSubmit()` une fois terminé (force le mode interactif). |
+| `onAutoSubmit` | `(valueAsString: string) => void` | - | Lancé juste avant la tentative de soumission « autoSubmit ». |
+| `label` | `Child` | - | L'étiquette du champ. |
+| `helperText` | `Child` | - | Texte d'aide affiché sous les cases. |
+| `errorText` | `Child` | - | Texte d'erreur affiché lorsqu'il n'est pas valide ; un résultat de chaîne `validator` remplace cela. |
+| `validator` | `(value: string) => boolean \| string` | - | Validates the joined value once complete (forces interactive mode). |
+| `onValueChange` | `(details: { value: string[]; valueAsString: string }) => void` | - | Se déclenche à chaque changement (force le mode interactif). |
+| `onValueComplete` | `(details: { value: string[]; valueAsString: string }) => void` | - | Se déclenche une fois que chaque boîte est remplie. |
+| `onValueInvalid` | `(details: { index: number; value: string }) => void` | - | Se déclenche lorsqu'un caractère tapé/collé est rejeté par `format`/`pattern`. |
+| `interactive` | `boolean` | - | Force ou interdit l’hydratation comme une île. |

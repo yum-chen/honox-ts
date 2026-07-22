@@ -1,0 +1,109 @@
+---
+title: Tabs Onglets
+hydration: 2
+category: Navigation
+---
+
+import { Tabs, Stack, Badge } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Un élément de navigation ou de mise en page qui organise le contenu en panneaux commutables et mutuellement exclusifs.
+
+# Utilisation
+
+<DemoPreview>
+  <Tabs defaultValue="features" interactive variant="enclosed" size="md">
+    <Tabs.List>
+      <Tabs.Trigger value="features">⚡ Key Features</Tabs.Trigger>
+      <Tabs.Trigger value="pricing">💎 Pricing Plans</Tabs.Trigger>
+      <Tabs.Indicator />
+    </Tabs.List>
+
+    <Tabs.Content value="features">
+      Our Hono/JSX Tabs component supports zero runtime styled-system classes, smooth sliding indicator transitions, and native keyboard interaction.
+    </Tabs.Content>
+
+    <Tabs.Content value="pricing">
+      Flexible subscription pricing for individuals, start-ups, and scaling enterprise workspaces.
+    </Tabs.Content>
+  </Tabs>
+</DemoPreview>
+
+```tsx
+import { Tabs } from "../components/ui/tabs";
+
+<Tabs defaultValue="features" interactive variant="enclosed" size="md">
+  <Tabs.List>
+    <Tabs.Trigger value="features">⚡ Key Features</Tabs.Trigger>
+    <Tabs.Trigger value="pricing">💎 Pricing Plans</Tabs.Trigger>
+    <Tabs.Indicator />
+  </Tabs.List>
+
+  <Tabs.Content value="features">
+    Our Hono/JSX Tabs component supports zero-runtime classes, smooth sliding transitions, and native keyboard interaction.
+  </Tabs.Content>
+
+  <Tabs.Content value="pricing">
+    Flexible subscription pricing for individuals, start-ups, and scaling enterprise workspaces.
+  </Tabs.Content>
+</Tabs>;
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc « onglets » dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`), conçu avec une API propre et aplatie :
+
+```json
+{
+  "type": "tabs",
+  "variant": "enclosed",
+  "size": "md",
+  "items": [
+    {
+      "value": "features",
+      "label": "⚡ Key Features",
+      "content": [
+        {
+          "type": "text",
+          "content": "Our high-end tabs component is lightning fast."
+        }
+      ]
+    },
+    {
+      "value": "pricing",
+      "label": "💎 Pricing Plans",
+      "content": [
+        {
+          "type": "text",
+          "content": "Starting from $0/mo."
+        }
+      ]
+    }
+  ]
+}
+```
+
+# Propriétés
+
+## Racine
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `defaultValue` | `string` | La valeur de tabulation sélectionnée initiale lors du rendu (non contrôlé). |
+| `value` | `string` | La valeur de tabulation sélectionnée contrôlée. |
+| `variant` | \`"line" \ | "subtil" \ | "enclosed"\` | Visual appearance of the tabs list and indicator. Default `"line"`. |
+| `size` | \`"xs" \ | "sm" \ | "md" \ | "lg"\` | The overall height, spacing and padding of tab items. Default `"md"`. |
+| `orientation` | \`"horizontal" \ | "verticale"\` | The layout flow of triggers. Default `"horizontal"`. |
+| `activationMode` | \`"automatic" \ | "manuel"\` | In manual mode, triggers are activated on Enter/Space click; in automatic mode, they activate instantly on focus. Default `"automatic"`. |
+| `loopFocus` | `boolean` | Indique si le focus du clavier revient au début ou à la fin de la liste. Par défaut « vrai ». |
+| `lazyMount` | `boolean` | Retardez le rendu des panneaux de contenu des onglets jusqu'à leur première visite. Par défaut `false`. |
+| `unmountOnExit` | `boolean` | Détruisez les éléments du panneau à onglets du DOM lorsqu'ils deviennent inactifs. Par défaut `false`. |
+| `onValueChange` | `(details: { value: string }) => void` | Appelé lorsque la valeur de l'onglet actif change. |
+| `onFocusChange` | `(details: { value: string }) => void` | Appelé lorsqu'un autre déclencheur d'onglet reçoit le focus clavier ou clic. |
+
+# Accessibilité
+
+Ce composant est entièrement conforme au **modèle de conception des onglets WAI-ARIA** :
+- Définit `role="tablist"` sur le conteneur de liste et `aria-orientation` mappé à la mise en page.- Définit `role="tab"` sur les déclencheurs, avec `aria-selected` correspondant à l'état actif et `aria-controls` référençant les ID du panneau.- Prise en charge du clavier : ArrowRight/ArrowLeft (ou ArrowDown/ArrowUp lorsqu'il est vertical) navigue dans les déclencheurs avec tabIndex itinérant. Accueil/Fin déplace immédiatement le focus vers les points de terminaison. Enter/Space active les déclencheurs en mode manuel.

@@ -1,0 +1,135 @@
+---
+title: Fieldset Ensemble de Champs
+hydration: 3
+category: Layout
+---
+
+import { Fieldset, Field } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+## Introduction
+
+Regroupe les contrôles de formulaire associés sous un `<fieldset>` natif, avec un
+légende, texte d'aide et texte d'erreur. Contrairement à `Field`, il n'a pas de validateur de
+son propre — c'est une primitive de regroupement statique, rendue par le serveur, donc elle ne
+hydrate comme un îlot client. Il fournit son `désactivé`/`invalide`/`obligatoire`
+état comme contexte aux « champs » imbriqués, correspondant au Fieldset d'Ark UI - voir
+[Propagation du contexte](#context-propagation-to-nested-fields).
+
+## Utilisation
+
+<DemoPreview>
+  <div style={{ width: "100%", maxWidth: "320px" }}>
+    <Fieldset legend="User Profile" helperText="Manage your info." required>
+      <Field label="Name" placeholder="Jane Doe" />
+    </Fieldset>
+  </div>
+</DemoPreview>
+
+```tsx
+import { Fieldset, Field } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Fieldset
+      legend="User Profile"
+      helperText="Manage your info."
+      required
+      errorText="Something went wrong."
+    >
+      <Field>...</Field>
+    </Fieldset>
+  );
+}
+```
+
+Passer `errorText` suffit à mettre l'ensemble de champs dans son état invalide —
+vous n'avez pas besoin de transmettre également « invalide ». Passez `invalid={false}` explicitement si
+vous souhaitez supprimer le style d'erreur tout en conservant le texte.
+
+### Propagation du contexte vers les champs imbriqués
+
+`Fieldset` expose son état `disabled`/`invalid`/`required` comme contexte.
+Chaque « champ » imbriqué le lit comme une solution de secours pour son propre - donc un niveau de groupe
+« disabled » ou « obligatoire » n'a pas besoin d'être répété dans chaque champ :
+
+```tsx
+<Fieldset legend="Shipping address" disabled required>
+  <Field label="Street" />   {/* renders disabled + required */}
+  <Field label="Apt #" required={false} />  {/* opts back out of required */}
+</Fieldset>
+```
+
+Le propre accessoire d'un « Champ » l'emporte toujours sur celui hérité. Pour « invalide »
+plus précisément, l'héritage ne s'applique que lorsque le « Champ » n'a aucune validation de
+son propre (pas de `validator`, `minLength` ou de prop explicite `invalid`) - un `Field`
+qui valide sa propre valeur n’est jamais silencieusement ignorée par le groupe.
+
+Cette propagation est à un seul niveau : uniquement « Champ » (et tout ce qui est construit dessus,
+comme `Textarea`) consulte le contexte de `Fieldset`. Un simple « Switch » ou « Checkbox »
+placé directement à l'intérieur d'un `Fieldset` - sans emballage `Field` - ne sélectionnera pas
+améliore le style du groupe, bien que le `<fieldset désactivé>` natif bloque toujours
+interaction avec lui indépendamment.
+
+### Composition
+
+« children » est toujours le groupe de contrôles de formulaire réels — « Fieldset » l'enveloppe
+dans un récipient d'espacement pour vous. `legend` / `helperText` / `errorText` accepter
+n'importe quel « enfant », pas seulement des chaînes, donc un contenu riche (une icône, un badge) appartient
+là plutôt que dans « enfants  » :
+
+```tsx
+<Fieldset legend={<>Profile <Badge>New</Badge></>}>
+  <Field>...</Field>
+  <Textarea>...</Textarea>
+</Fieldset>
+```
+
+Ne placez pas `FieldsetLegend` (ou `FieldsetHelperText` / `FieldsetErrorText`)
+à l'intérieur de `children` — `Fieldset` enveloppe `children` dans un `<div>` et les navigateurs
+utilisez uniquement un `<légende>` pour calculer le nom accessible de l'ensemble de champs lorsqu'il s'agit d'un
+enfant direct de `<fieldset>`, pas lorsqu'il est imbriqué dans un wrapper. Le
+sous-composants exportés (`FieldsetLegend`, `FieldsetHelperText`,
+`FieldsetErrorText`, `FieldsetContent`, `FieldsetControl`,
+`FieldsetRequiredIndicator`) existent pour être réutilisés dans un balisage entièrement construit à la main, et non
+comme une autre façon de composer dans `Fieldset` lui-même.
+
+### Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc `fieldset` dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) :
+
+```json
+{
+  "type": "fieldset",
+  "legend": "User Profile",
+  "helperText": "Manage your info.",
+  "required": true,
+  "children": [
+    { "type": "field", "label": "Name" }
+  ]
+}
+```
+
+## Propriétés
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `children` | `any` | Contrôles de formulaire à restituer à l’intérieur de l’ensemble de champs. |
+| `class` | `string` | Classes CSS personnalisées. |
+| `id` | `string` | Identifiant unique. Généré automatiquement en cas d'omission. |
+| `disabled` | `boolean` | Désactive l'ensemble de champs. Le `<fieldset désactivé>` natif désactive automatiquement chaque contrôle descendant et les `Field` imbriqués le récupèrent également comme contexte - voir [Propagation du contexte] (#context-propagation-to-nested-fields). |
+| `invalid` | `boolean` | Si l'ensemble de champs est dans un état invalide. La valeur par défaut est « true » chaque fois que « errorText » est défini, vous n'avez donc généralement pas besoin de le transmettre explicitement. |
+| `required` | `boolean` | Marque le groupe comme requis et ajoute un indicateur requis à la légende. |
+| `legend` | `Child` | Le texte de légende pour l'ensemble de champs. Toujours rendu comme un enfant direct de `<fieldset>` — voir [Composition](#composition). |
+| `helperText` | `Child` | Texte d'aide affiché sous la légende. |
+| `errorText` | `Child` | Texte d'erreur affiché lorsque l'ensemble de champs n'est pas valide. |
+
+## Liaisons CMS
+
+`legend`, `helperText`, `errorText`, `disabled`, `invalid` et `required`
+sont exposés sous forme de champs modifiables dans `public/admin/config.yml`, plus un
+Liste « enfants » pour imbriquer d'autres blocs - les mêmes accessoires pratiques
+documenté ci-dessus. `id`/`class` et les sous-composants de composition
+(`FieldsetContent`, `FieldsetControl`, `FieldsetRequiredIndicator`, etc.) sont
+non exposé : il s'agit d'une API de niveau JSX pour les développeurs qui créent manuellement des pages, et non
+quelque chose qu'un bloc CMS piloté par JSON peut exprimer.

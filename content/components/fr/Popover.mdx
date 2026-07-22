@@ -1,0 +1,96 @@
+---
+title: Popover Popover
+hydration: 1
+category: Overlays
+---
+
+import { Popover, Button } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Un élément interactif qui affiche du contenu supplémentaire dans un calque sur son ancre.
+
+# Utilisation
+
+<DemoPreview>
+  <Popover
+    placement="right"
+    trigger={<Button>Open Popover</Button>}
+    title="Title"
+    description="Description"
+    body="Popover Body"
+  />
+</DemoPreview>
+
+```tsx
+import { Popover } from "../components/ui/popover";
+import { Button } from "../components/ui/button";
+
+<Popover
+  placement="right"
+  trigger={<Button>Open Popover</Button>}
+  title="Title"
+  description="Description"
+  body="Popover Body"
+/>;
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc `popover` dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) :
+
+```json
+{
+  "type": "popover",
+  "triggerText": "Open Popover",
+  "title": "Title",
+  "description": "Description",
+  "body": "Popover Body"
+}
+```
+
+# Propriétés
+
+## Racine
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `children` | `any` | Sous-composants Popover. |
+| `open` | `boolean` | Si le popover est ouvert (contrôlé). |
+| `defaultOpen` | `boolean` | État ouvert initial (non contrôlé). Par défaut `false`. |
+| `onOpenChange` | `(details: { open: boolean }) => void` | Appelé lorsque le popover s'ouvre ou se ferme. |
+
+| `placement` | \`"top" \ | "bas" \ | "left" \ | "right"\` | Which side of the trigger the content opens on. Default `"bottom"`. Flips to the opposite side automatically if there isn't enough viewport room. |
+
+| `interactive` | `boolean` | Force l’hydratation comme une île. La valeur par défaut est « vrai ». |
+| `id` | `string` | Identifiant unique du popover. |
+| `closeOnEscape` | `boolean` | Fermez lorsque vous appuyez sur Échap. Par défaut « vrai ». |
+| `closeOnInteractOutside` | `boolean` | Fermez l'interaction du pointeur à l'extérieur ou lorsque le focus s'éloigne du popover. Par défaut « vrai ». |
+| `onClose` | `() => void` | Rappel déclenché à la fermeture du popover. |
+| `onToggle` | `() => void` | Rappel déclenché lorsque le popover bascule. |
+
+## Déclenchement
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `asChild` | `boolean` | S'il faut fusionner les accessoires sur l'élément enfant immédiat. |
+
+# Limites
+
+L'îlot interactif positionne et dimensionne le popover par rapport à son déclencheur :
+il se retourne du côté opposé (par exemple « bas » → « haut ») lorsque le message demandé
+le placement déborderait de la fenêtre et serrerait l'axe transversal de sorte que le
+le contenu n’est jamais rendu hors écran. Il ne suit pas les conteneurs de défilement ou
+redimensionnez les observateurs comme le fait l'interface utilisateur flottante : le repositionnement ne s'exécute que sur
+la fenêtre « redimensionne » pendant que le popover est ouvert, et (puisque le positionneur est
+ancré via `position: absolue` au propre wrapper du déclencheur) en faisant défiler le
+la page le déplace avec le déclencheur gratuitement.
+
+L'imbrication du déclencheur d'un Popover dans le contenu d'un autre Popover est prise en charge
+(la délégation de clic est limitée à chaque instance de popover), mais l'imbrication d'un Popover
+à l'intérieur du déclencheur d'une info-bulle, ou vice versa, ne l'est pas — les deux composants ne le font pas
+coordonner la propriété des « parties de données » entre les types de composants.
+
+L'animation de sortie `_closed` (`scale-fade-out`) est jouée avant que le popover ne soit
+effectivement supprimé de la mise en page - la fermeture ne le cache pas instantanément.

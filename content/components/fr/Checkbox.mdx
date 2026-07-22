@@ -1,0 +1,79 @@
+---
+title: Checkbox Case à Cocher
+hydration: 2
+category: Forms
+---
+
+import { Checkbox } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Un contrôle qui permet à l'utilisateur de basculer entre les états coché, non coché et indéterminé.
+
+# Utilisation
+
+<DemoPreview>
+  <Checkbox defaultChecked interactive>Accept Terms and Conditions</Checkbox>
+</DemoPreview>
+
+```tsx
+import { Checkbox } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Checkbox
+      defaultChecked={true}
+      onCheckedChange={(details) => console.log(details.checked)}
+      interactive
+    >
+      Accept Terms and Conditions
+    </Checkbox>
+  );
+}
+```
+
+## État indéterminé
+
+```tsx
+import { Checkbox } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Checkbox checked="indeterminate" interactive>
+      Parent Checkbox
+    </Checkbox>
+  );
+}
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc `checkbox` dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) :
+
+```json
+{
+  "type": "checkbox",
+  "label": "Accept Terms and Conditions",
+  "checked": true,
+  "colorPalette": "blue"
+}
+```
+
+# Propriétés
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `children` | `any` | Étiquetez le contenu à afficher à côté de la case à cocher. |
+| `class` | `string` | Classes CSS personnalisées. |
+
+| `checked` | \`boolean \ | "indéterminé"\` | Whether the checkbox is checked (controlled). |
+| `defaultChecked` | \`boolean \ | "indéterminé"\` | The initial checked state (uncontrolled). |
+
+| `disabled` | `boolean` | Si la case à cocher est désactivée. |
+
+| `onCheckedChange` | \`(details: \{ checked: boolean \ | "indéterminé" \}) => vide\` | Callback triggered when the checked state changes. |
+
+| `size` | \`"sm" \ | "md" \ | "lg"\` | The size of the checkbox. |
+
+| `interactive` | `boolean` | Force l’hydratation comme une île. |

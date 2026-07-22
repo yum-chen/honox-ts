@@ -1,0 +1,100 @@
+---
+title: Breadcrumb Fil d'Ariane
+hydration: 3
+category: Navigation
+---
+
+import { Breadcrumb } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Une aide à la navigation qui affiche l'emplacement de la page actuelle dans une hiérarchie à l'aide d'une liste de liens.
+
+# Utilisation
+
+## Fil d'Ariane de base
+
+<DemoPreview>
+  <Breadcrumb
+    items={[
+      { label: "Home", href: "/" },
+      { label: "Components", href: "/components" },
+      { label: "Breadcrumb" },
+    ]}
+  />
+</DemoPreview>
+
+```tsx
+import { Breadcrumb } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Breadcrumb
+      items={[
+        { label: "Home", href: "/" },
+        { label: "Components", href: "/components" },
+        { label: "Breadcrumb" },
+      ]}
+    />
+  );
+}
+```
+
+## Séparateur personnalisé
+
+```tsx
+import { Breadcrumb } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Breadcrumb
+      separator="/"
+      items={[
+        { label: "Home", href: "/" },
+        { label: "Breadcrumb" },
+      ]}
+    />
+  );
+}
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc « fil d'Ariane » dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) :
+
+```json
+{
+  "type": "breadcrumb",
+  "items": [
+    { "label": "Home", "href": "/" },
+    { "label": "Docs", "href": "/docs" },
+    { "label": "Breadcrumb" }
+  ],
+  "variant": "underline",
+  "size": "md"
+}
+```
+
+# Propriétés
+
+## Fil d'Ariane
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `items` | `BreadcrumbItem[]` | Éléments du fil d’Ariane à afficher. |
+| `separator` | `Child` | Séparateur personnalisé entre les éléments. Par défaut : une icône en forme de chevron à droite. |
+
+| `variant` | \`"underline" \ | "plaine"\` | The visual style of the breadcrumb. |
+
+| `size` | \`"xs" \ | "sm" \ | "md" \ | "lg"\` | The size of the breadcrumb. |
+
+| `class` | `string` | Classes CSS personnalisées pour l'élément racine. |
+
+### Élément de fil d'Ariane
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `label` | `Child` | Afficher le texte ou le nœud JSX. |
+| `href` | `string` | S'il est présent, s'affiche sous forme de lien ; sinon, il s'affiche sous forme de texte brut (page actuelle). |
+| `current` | `boolean` | Marque la page actuelle. La valeur par défaut est « true » pour le dernier élément. |

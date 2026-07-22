@@ -1,0 +1,79 @@
+---
+title: Skeleton Squelette
+hydration: 3
+category: Feedback
+---
+
+import { Skeleton } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Un espace réservé utilisé pour indiquer que le contenu est en cours de chargement, avec une variété d'options d'animation et de forme.
+
+# Utilisation
+
+## Squelette de base
+
+<DemoPreview>
+  <div style={{ display: "flex", flexDirection: "column", gap: "1rem", width: "100%", maxWidth: "320px" }}>
+    <Skeleton shape="circle" size="12" />
+    <Skeleton height="6" width="40" />
+    <Skeleton shape="text" noOfLines={3} />
+  </div>
+</DemoPreview>
+
+```tsx
+import { Skeleton, SkeletonCircle, SkeletonText } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <div>
+      <SkeletonCircle size="12" />
+      <Skeleton height="6" width="40" />
+      <SkeletonText noOfLines={3} />
+    </div>
+  );
+}
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc « squelette » dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`). Les options `shape` du CMS sont `box`/`circle`/`text`, mappées au véritable accessoire `shape` (`box` passe à la valeur par défaut) :
+
+```json
+{
+  "type": "skeleton",
+  "shape": "text",
+  "noOfLines": 3
+}
+```
+
+# Propriétés
+
+## Squelette
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `loading` | `boolean` | S'il faut afficher le squelette. Par défaut : « vrai ». |
+| `circle` | `boolean` | Rendre le squelette sous forme de cercle. |
+
+| `variant` | \`"pulse" \ | "briller" \ | "none"\` | The animation style. |
+
+| `class` | `string` | Classes CSS personnalisées pour l'élément racine. |
+
+Tous les autres attributs natifs `<div>` (par exemple `style`, `id`, `width`, `height`) sont transmis à l'élément sous-jacent.
+
+## SqueletteCercle
+
+Mêmes accessoires que `Skeleton`, préconfiguré avec `circle`.
+
+## Texte Squelette
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `noOfLines` | `number` | Nombre de lignes à afficher. Par défaut : `3`. |
+
+| `gap` | \`string \ | numéro\` | Gap between lines. Default: `"2"`. |
+
+Plus tous les accessoires « Squelette ».

@@ -1,0 +1,151 @@
+---
+title: Field Champ
+hydration: 2
+category: Forms
+---
+
+import { Field } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Un composant fondamental pour les champs de formulaire, la gestion des étiquettes, du texte d'assistance, des messages d'erreur et de l'état de validation. Il suit le modèle « Smart Switcher », s'hydratant automatiquement comme un îlot interactif en cas de besoin.
+
+# Utilisation
+
+## Hydratation automatique intelligente
+
+Le composant `Field` détermine automatiquement s'il doit être interactif. Il devient une île si l'un des accessoires suivants est fourni : `interactive`, `onValueChange`, `value`, `defaultValue`, `validator` ou `minLength`.
+
+## Validation
+
+Field prend en charge la validation intégrée et personnalisée.
+
+### Longueur minimale
+
+L'utilisation de `minLength` affichera automatiquement un message d'erreur si l'entrée est trop courte.
+
+```tsx
+<Field
+  label="Username"
+  minLength={5}
+  placeholder="Enter at least 5 characters"
+/>
+```
+
+### Validateur personnalisé
+
+La prop `validator` accepte une fonction qui renvoie `true` pour valide, `false` pour invalide (en utilisant le message d'erreur par défaut) ou une `string` comme message d'erreur personnalisé.
+
+```tsx
+<Field
+  label="Email"
+  validator={(value) => {
+    if (!value.includes("@")) return "Must be a valid email";
+    return true;
+  }}
+/>
+```
+
+La façon la plus simple d'utiliser Field consiste à utiliser les accessoires aplatis. Il rendra automatiquement une entrée.
+
+<DemoPreview>
+  <div style={{ width: "100%", maxWidth: "320px" }}>
+    <Field
+      label="Username"
+      helperText="Choose a unique username."
+      placeholder="Type here..."
+      minLength={3}
+    />
+  </div>
+</DemoPreview>
+
+```tsx
+import { Field } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Field
+      label="Username"
+      helperText="Choose a unique username."
+      placeholder="Type here..."
+      minLength={3}
+    />
+  );
+}
+```
+
+## Héritage des ensembles de champs
+
+Un `Field` imbriqué dans un `Fieldset` hérite du groupe `disabled`/`required`
+état, et son état "invalide" également - mais seulement lorsque le "Champ" n'a pas
+validation qui lui est propre (pas de `validator`/`minLength` et pas de `invalid` explicite
+soutenir). Un accessoire explicite sur « Field » l'emporte toujours sur la valeur héritée.
+
+```tsx
+<Fieldset legend="Shipping address" disabled>
+  {/* inherits disabled — no need to repeat it */}
+  <Field label="Street" />
+</Fieldset>
+```
+
+Notez que le `<fieldset désactivé>` natif désactive également chaque formulaire descendant
+contrôle au niveau du navigateur quel que soit cet héritage - l'héritage
+La prop `disabled` maintient uniquement le style/ARIA du `Field` en synchronisation avec cela,
+il ne peut pas être remplacé par activé à partir d'un ensemble de champs désactivé.
+
+## Composition
+
+Pour plus de contrôle, vous pouvez envelopper d'autres composants comme « Textarea » ou des entrées personnalisées. Le « Field » fournit un contexte à ses enfants.
+
+```tsx
+import { Field, Textarea } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Field
+      label="Bio"
+      helperText="Tell us about yourself."
+      minLength={10}
+    >
+      <Textarea placeholder="A short bio" />
+    </Field>
+  );
+}
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc `field` dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) :
+
+```json
+{
+  "type": "field",
+  "label": "Username",
+  "helperText": "Choose a unique username.",
+  "required": true
+}
+```
+
+# Propriétés
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `children` | `any` | Contenu à restituer à l'intérieur du composant. Si elle est fournie, l’entrée interne n’est pas rendue. |
+| `class` | `string` | Classes CSS personnalisées. |
+| `id` | `string` | Identifiant unique. S’il n’est pas fourni, un est généré. |
+| `label` | `Child` | L'étiquette du champ. |
+| `helperText` | `Child` | Le texte d'assistance pour le champ. |
+| `errorText` | `Child` | Le texte d'erreur pour le champ. S'il est fourni sous forme de chaîne, il sera utilisé comme message. |
+| `disabled` | `boolean` | Si le champ est désactivé. |
+| `invalid` | `boolean` | Si le champ est dans un état invalide. |
+| `required` | `boolean` | Si le champ est obligatoire. |
+| `readOnly` | `boolean` | Indique si le champ est en lecture seule. |
+| `value` | `string` | La valeur actuelle (force le mode interactif). |
+| `defaultValue` | `string` | La valeur initiale (force le mode interactif). |
+| `onValueChange` | `(val: string) => void` | Rappel déclenché lorsque la valeur change (force le mode interactif). |
+| `minLength` | `number` | Validation de la longueur minimale (force le mode interactif). |
+
+| `validator` | \`(val: string) => boolean \ | chaîne\` | Custom validation function (forces interactive mode). |
+
+| `interactive` | `boolean` | Force l’hydratation comme une île. |

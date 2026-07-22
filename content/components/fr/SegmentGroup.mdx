@@ -1,0 +1,64 @@
+---
+title: SegmentGroup Groupe de Segments
+hydration: 2
+category: Forms
+---
+
+import { SegmentGroup } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+Un groupe de boutons de type radio qui ressemblent à un seul contrôle segmenté.
+
+## Utilisation
+
+<DemoPreview>
+  <SegmentGroup
+    label="View"
+    items={[
+      { label: "List", value: "list" },
+      { label: "Grid", value: "grid" },
+    ]}
+  />
+</DemoPreview>
+
+### Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc `segmentGroup` dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) :
+
+```json
+{
+  "type": "segmentGroup",
+  "label": "View",
+  "items": [
+    { "label": "List", "value": "list" },
+    { "label": "Grid", "value": "grid" }
+  ]
+}
+```
+
+## Propriétés
+
+| Propriété | Type | Défaut | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | - | Étiquette de groupe. |
+| `items` | `SegmentGroupItem[]` | - | Tableau d'éléments avec « label » et « value ». |
+
+## Configuration du CMS
+
+```yaml
+- label: SegmentGroup
+  name: segment-group
+  widget: object
+  fields:
+    - { label: Label, name: label, widget: string, required: false }
+    - label: Items
+      name: items
+      widget: list
+      fields:
+        - { label: Label, name: label, widget: string }
+        - { label: Value, name: value, widget: string }
+```
+
+## Hydratation
+
+Niveau 2 : s'hydrate lorsque « value », « defaultValue » ou « onValueChange » est fourni.

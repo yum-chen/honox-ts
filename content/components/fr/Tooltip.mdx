@@ -1,0 +1,95 @@
+---
+title: Tooltip Infobulle
+hydration: 1
+category: Overlays
+---
+
+import { Tooltip, Button } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Un composant pour afficher des informations contextuelles en survol ou en focus.
+
+# Utilisation
+
+## Wrapper de haut niveau
+
+<DemoPreview>
+  <Tooltip content="This is the tooltip content" placement="bottom" showArrow asChild>
+    <Button>Hover me</Button>
+  </Tooltip>
+</DemoPreview>
+
+```tsx
+import { Tooltip } from "../components/ui/tooltip";
+import { Button } from "../components/ui/button";
+
+export default function MyPage() {
+  return (
+    <Tooltip content="This is the tooltip content" placement="bottom" showArrow asChild>
+      <Button>Hover me</Button>
+    </Tooltip>
+  );
+}
+```
+
+Préférez `asChild` lorsque le déclencheur est déjà un élément focalisable (un
+`Button`, un lien, …) : il fusionne le `aria-describeby` de l'info-bulle, le survol/le focus
+les écouteurs et les attributs `data-*` directement sur cet élément. Sans
+`asChild`, le déclencheur est enveloppé dans un `<div tabindex="0">` supplémentaire — utile
+pour envelopper du contenu inerte (texte brut, icône) qui n'est pas lui-même focalisable,
+mais cela ajoute un deuxième taquet de tabulation redondant lorsque l'enfant est déjà
+interactif.
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc `tooltip` dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`). Le déclencheur CMS est une simple chaîne `triggerText`, enveloppée automatiquement dans un contour `Button` avec `asChild` (le même modèle que `Popover`/`HoverCard` utilise) :
+
+```json
+{
+  "type": "tooltip",
+  "content": "Free cancellation up to 24 hours before check-in.",
+  "triggerText": "Cancellation Policy",
+  "placement": "top",
+  "showArrow": true
+}
+```
+
+# Propriétés
+
+## Info-bulle (wrapper de haut niveau)
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `children` | `any` | L'élément qui déclenche l'info-bulle. |
+| `content` | `any` | Le contenu à afficher dans l’info-bulle. |
+| `showArrow` | `boolean` | S'il faut afficher une flèche pointant vers le déclencheur. |
+
+| `placement` | \`"top" \ | "bas" \ | "left" \ | "right"\` | Which side of the trigger the content opens on. Default `"top"`. Flips to the opposite side automatically if there isn't enough viewport room. |
+
+| `open` | `boolean` | Si l'info-bulle est ouverte (contrôlée). |
+| `defaultOpen` | `boolean` | État ouvert initial (non contrôlé). Par défaut `false`. |
+| `onOpenChange` | `(details: { open: boolean }) => void` | Appelé lorsque l'info-bulle s'ouvre ou se ferme. |
+| `openDelay` | `number` | Délai (ms) avant l'affichage en survol. Par défaut « 100 ». |
+| `closeDelay` | `number` | Délai (ms) avant de se cacher lors du retrait de la souris. Par défaut « 100 ». |
+| `closeOnEscape` | `boolean` | Fermez lorsque vous appuyez sur Échap. Par défaut « vrai ». |
+| `disabled` | `boolean` | Si l'info-bulle est désactivée. |
+| `interactive` | `boolean` | Force l’hydratation comme une île. La valeur par défaut est « vrai ». |
+| `id` | `string` | Identifiant unique de l'info-bulle. |
+| `asChild` | `boolean` | S'il faut fusionner les accessoires sur l'élément enfant immédiat au lieu de les envelopper dans un « div ». |
+
+Passer la souris sur le déclencheur ou le concentrer ouvre l'info-bulle ; déplacer le pointeur
+sur le propre contenu de l'info-bulle (par exemple un lien à l'intérieur) la maintient ouverte, par
+[WCAG 1.4.13](https://www.w3.org/WAI/WCAG21/Understanding/content-on-hover-or-focus.html).
+La mise au point du déclencheur (navigation au clavier) l'ouvre immédiatement et le flou
+le ferme immédiatement — les `openDelay`/`closeDelay` ne s'appliquent qu'au survol.
+
+# Limites
+
+L'îlot interactif positionne et dimensionne l'info-bulle par rapport à son
+déclencheur : il se retourne du côté opposé (par exemple "haut" → "bas") lorsque le
+le placement demandé déborderait de la fenêtre et serrerait l'axe transversal de manière à
+le contenu n'est jamais rendu hors écran. Il ne suit pas les conteneurs de défilement ou
+redimensionner les observateurs comme le fait l'interface utilisateur flottante : le repositionnement ne se réexécute que lorsque
+l'info-bulle s'ouvre et sur la fenêtre « redimensionner ».

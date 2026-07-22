@@ -1,0 +1,138 @@
+---
+title: Grid Grille
+hydration: 3
+category: Layout
+---
+
+import { Grid } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Une primitive de mise en page CSS Grid réactive. Disposez les enfants avec un message explicite
+nombre de colonnes/lignes, ou laissez-les s'ajuster automatiquement en fonction d'une largeur enfant minimale -
+les deux prennent en charge les valeurs réactives (par point d'arrêt).
+
+# Utilisation
+
+## Colonnes fixes
+
+<DemoPreview>
+  <Grid columns={3} gap="4" style={{ width: "100%" }}>
+    <div style={{ padding: "1rem", textAlign: "center", background: "var(--colors-blue-3)", borderRadius: "8px" }}>1</div>
+    <div style={{ padding: "1rem", textAlign: "center", background: "var(--colors-blue-3)", borderRadius: "8px" }}>2</div>
+    <div style={{ padding: "1rem", textAlign: "center", background: "var(--colors-blue-3)", borderRadius: "8px" }}>3</div>
+  </Grid>
+</DemoPreview>
+
+```tsx
+import { Grid } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Grid columns={3} gap="4">
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+    </Grid>
+  );
+}
+```
+
+## Ajustement automatique par largeur minimale de l'enfant
+
+Aucun point d'arrêt n'est nécessaire : les colonnes sont ajoutées ou supprimées automatiquement au fur et à mesure
+le conteneur est redimensionné.
+
+<DemoPreview>
+  <Grid minChildWidth="120px" gap="4" style={{ width: "100%" }}>
+    <div style={{ padding: "1rem", textAlign: "center", background: "var(--colors-purple-3)", borderRadius: "8px" }}>A</div>
+    <div style={{ padding: "1rem", textAlign: "center", background: "var(--colors-purple-3)", borderRadius: "8px" }}>B</div>
+    <div style={{ padding: "1rem", textAlign: "center", background: "var(--colors-purple-3)", borderRadius: "8px" }}>C</div>
+    <div style={{ padding: "1rem", textAlign: "center", background: "var(--colors-purple-3)", borderRadius: "8px" }}>D</div>
+  </Grid>
+</DemoPreview>
+
+```tsx
+import { Grid } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Grid minChildWidth="120px" gap="4">
+      <div>A</div>
+      <div>B</div>
+      <div>C</div>
+      <div>D</div>
+    </Grid>
+  );
+}
+```
+
+## Nombre de colonnes réactives
+
+```tsx
+import { Grid } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Grid columns={{ base: 1, md: 2, lg: 3 }} gap="4">
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+    </Grid>
+  );
+}
+```
+
+## Séparer les espaces entre les colonnes et les lignes
+
+```tsx
+import { Grid } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Grid columns={2} columnGap="6" rowGap="2">
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      <div>4</div>
+    </Grid>
+  );
+}
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc `grid` dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) :
+
+```json
+{
+  "type": "grid",
+  "columns": 3,
+  "gap": "4",
+  "children": [
+    { "type": "text", "content": "1" },
+    { "type": "text", "content": "2" },
+    { "type": "text", "content": "3" }
+  ]
+}
+```
+
+# Propriétés
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `children` | `any` | Contenu à restituer à l’intérieur de la grille. |
+| `class` | `string` | Classes CSS personnalisées. |
+
+| `columns` | \`Responsive\<number \ | chaîne\>\` | Number of columns (`repeat(columns, minmax(0, 1fr))`). Takes precedence over `minChildWidth` if both are set. |
+| `rows` | \`Responsive\<number \ | chaîne\>\` | Number of rows (`repeat(rows, minmax(0, 1fr))`). |
+| `minChildWidth` | \`Responsive\<number \ | chaîne\>\` | Auto-fits as many columns as fit, each at least this wide (`repeat(auto-fit, minmax(width, 1fr))`). Ignored when `columns` is set. |
+
+| `gap` | \`string \ | nombre \ | Responsive\<...\>\` | Gap between cells. Defaults to `"8px"` unless `columnGap`/`rowGap` is set. |
+| `columnGap` | \`string \ | nombre \ | Responsive\<...\>\` | Gap between columns only. |
+| `rowGap` | \`string \ | nombre \ | Responsive\<...\>\` | Gap between rows only. |
+
+`Responsive<T>` accepte soit une valeur simple, soit un objet par point d'arrêt,
+par ex. `{ base : 1, md : 2, lg : 3 }`, en utilisant les mêmes points d'arrêt que le reste de
+le système de conception (`base`, `sm`, `md`, `lg`, `xl`, `2xl`).

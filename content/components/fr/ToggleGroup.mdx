@@ -1,0 +1,138 @@
+---
+title: ToggleGroup Groupe de Boutons Bascules
+hydration: 2
+category: Forms
+---
+
+import { ToggleGroup, Stack } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Un ensemble de boutons à bascule pour une sélection unique ou multiple, exclusive ou
+inclusif — par ex. contrôles de mise en forme du texte (gras/italique/souligné) ou un
+sélecteur de vue.
+
+# Hydratation
+
+**Niveau 2 — détection automatique intelligente.** Un `ToggleGroup` s'affiche au format HTML statique et
+ne livre aucun client JS à moins qu'un signal comportemental ne soit présent. Passer
+`interactive={true}` pour forcer l'hydratation, ou `interactive={false}` pour forcer
+un rendu statique.
+
+Il s'hydrate comme une île lorsque **l'un** des signaux suivants est présent
+(ou `interactive={true}` est défini) :
+
+- `valeur` (sélection contrôlée)- `defaultValue` (sélection initiale non contrôlée)- `onValueChange`
+| `interactive` prop | Résultat |
+| --- | --- |
+| omitted, **no** signal | Static — no client JS |
+| omitted, a signal present | Hydrates as an island |
+| `true` | Hydrates as an island |
+| `false` | Static — no client JS |
+
+# Utilisation
+
+<DemoPreview>
+  <Stack direction="horizontal" gap="6">
+    <ToggleGroup
+      multiple
+      defaultValue={["bold"]}
+      items={[
+        { label: "B", value: "bold" },
+        { label: "I", value: "italic" },
+        { label: "U", value: "underline" },
+      ]}
+      interactive
+    />
+    <ToggleGroup
+      defaultValue={["list"]}
+      items={[
+        { label: "Grid", value: "grid" },
+        { label: "List", value: "list" },
+      ]}
+      interactive
+    />
+  </Stack>
+</DemoPreview>
+
+```tsx
+import { ToggleGroup } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <ToggleGroup
+      multiple
+      defaultValue={["bold"]}
+      items={[
+        { label: "B", value: "bold" },
+        { label: "I", value: "italic" },
+        { label: "U", value: "underline" },
+      ]}
+    />
+  );
+}
+```
+
+## Composition personnalisée
+
+Passez « enfants » au lieu de « éléments » pour un contrôle total sur chaque bouton
+contenu:
+
+```tsx
+import { ToggleGroup } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <ToggleGroup defaultValue={["list"]}>
+      <ToggleGroup.Item value="grid">Grid</ToggleGroup.Item>
+      <ToggleGroup.Item value="list">List</ToggleGroup.Item>
+    </ToggleGroup>
+  );
+}
+```
+
+# Propriétés
+
+## Racine
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `value` | `string[]` | Les valeurs actuellement enfoncées (contrôlées). |
+| `defaultValue` | `string[]` | Les valeurs initialement pressées (non contrôlées). |
+| `onValueChange` | `(value: string[]) => void` | Appelé lorsque la sélection change. |
+| `multiple` | `boolean` | Autoriser plusieurs éléments à être pressés à la fois. Par défaut `false` (sélection unique, désactivable). |
+| `disabled` | `boolean` | Désactive chaque élément. |
+| `orientation` | `"horizontal" \| "verticale" | Layout flow, and the axis Arrow keys roam. Default `"horizontal"`. |
+| `id` | `string` | L'identifiant de l'élément racine. |
+| `variant` | `"outline" \| "fantôme" | Visual style. Default `"outline"`. |
+| `size` | `"sm" \| "md" \| "lg"` | Visual size. Default `"md"`. |
+| `interactive` | `boolean` | Annule la décision d’hydratation (voir ci-dessus). |
+| `class` | `string` | Classes CSS personnalisées pour l'élément racine. |
+
+## Composition par défaut
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `items` | `ToggleGroupItem[]` | Boutons à afficher lorsque « enfants » est omis. |
+
+## Basculer un élément de groupe
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `value` | `string` | La valeur unique de l'objet. |
+| `label` | `string \| JSX.Élément` | The button's display content. |
+| `disabled` | `boolean` | Désactive ce bouton. |
+
+## Sous-composants
+
+| Partie | Description |
+| --- | --- |
+| `ToggleGroup.Item` | Un bouton bascule. Nécessite un accessoire `value` ; rend `role="checkbox"` en mode `multiple` ou `role="radio"` sinon. |
+
+# Accessibilité
+
+- La racine a `role="group"`.- Les éléments s'affichent `role="checkbox"` + `aria-pressed` lorsqu'ils sont `multiple`, ou  `role="radio"` + `aria-checked` sinon.
+- Les touches fléchées (Droite/Bas pour avancer, Gauche/Haut pour reculer) parcourent le focus  entre les éléments activés ; Accueil/Fin passer au premier/dernier élément activé –
+  correspondant à «l'orientation».
+- `data-state` (`on`/`off`) et `data-disabled` sont reflétés sur chaque élément  pour le style.

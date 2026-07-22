@@ -1,0 +1,74 @@
+---
+title: HoverCard Carte de Survol
+hydration: 1
+category: Overlays
+---
+
+import { HoverCard } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Un popover qui apparaît lorsque l'utilisateur survole un déclencheur, utile pour afficher des informations supplémentaires.
+
+# Utilisation
+
+## HoverCard de base
+
+<DemoPreview>
+  <HoverCard
+    trigger={<a href="#">Hover me</a>}
+    title="Supplementary information"
+    description="Shown on hover, positioned automatically."
+    showArrow
+  />
+</DemoPreview>
+
+```tsx
+import { HoverCard } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <HoverCard.Root>
+      <HoverCard.Trigger>
+        <a href="#">Hover me</a>
+      </HoverCard.Trigger>
+      <HoverCard.Positioner>
+        <HoverCard.Content>
+          Supplementary information shown on hover.
+        </HoverCard.Content>
+      </HoverCard.Positioner>
+    </HoverCard.Root>
+  );
+}
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc `hoverCard` dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) :
+
+```json
+{
+  "type": "hoverCard",
+  "triggerText": "Hover me",
+  "showArrow": true,
+  "title": "Supplementary information",
+  "description": "Shown on hover."
+}
+```
+
+# Propriétés
+
+## Carte de survol
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `interactive` | `boolean` | Activez l’hydratation côté client. Par défaut : « vrai ». |
+| `open` | `boolean` | État ouvert contrôlé. |
+| `openDelay` | `number` | Délai en ms avant ouverture au survol. |
+| `closeDelay` | `number` | Retard en ms avant fermeture en congé. |
+| `class` | `string` | Classes CSS personnalisées pour l'élément racine. |
+
+# Sous-composants
+
+`HoverCard.Root`, `HoverCard.Trigger`, `HoverCard.Positioner`, `HoverCard.Content`, `HoverCard.Arrow`, `HoverCard.ArrowTip`

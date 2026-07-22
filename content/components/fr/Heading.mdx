@@ -1,0 +1,53 @@
+---
+title: Heading Titre
+hydration: 3
+category: Typography
+---
+
+import { Heading } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Un composant polymorphe pour afficher les titres et les titres avec un style cohérent.
+
+# Utilisation
+
+<DemoPreview>
+  <Heading as="h1" size="3xl">Page Title</Heading>
+</DemoPreview>
+
+```tsx
+import { Heading } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Heading as="h1" size="3xl">
+      Page Title
+    </Heading>
+  );
+}
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc `heading` dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) :
+
+```json
+{
+  "type": "heading",
+  "text": "Page Title",
+  "as": "h1",
+  "size": "3xl"
+}
+```
+
+# Propriétés
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `children` | `any` | Le texte ou le contenu. |
+| `class` | `string` | Classes CSS personnalisées. |
+| `as` | `string` | L'élément HTML à restituer (par exemple, "h1", "h2"). La valeur par défaut est "h2". |
+| `size` | `string` | La variante de taille de police. |
+| `interactive` | `boolean` | S'il faut activer l'hydratation côté client. |

@@ -1,0 +1,119 @@
+---
+title: Slider Curseur
+hydration: 2
+category: Forms
+---
+
+import { Slider } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Contrôle qui permet à l'utilisateur de sélectionner une valeur (ou une plage de valeurs) sur une échelle continue.
+
+# Utilisation
+
+## Curseur de base
+
+<DemoPreview>
+  <div style={{ width: "100%", maxWidth: "280px" }}>
+    <Slider
+      label="Volume"
+      defaultValue={30}
+      min={0}
+      max={100}
+      showValueText
+      interactive
+    />
+  </div>
+</DemoPreview>
+
+```tsx
+import { Slider } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Slider
+      label="Volume"
+      defaultValue={30}
+      min={0}
+      max={100}
+      showValueText
+      interactive
+    />
+  );
+}
+```
+
+## Avec des marques
+
+```tsx
+import { Slider } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Slider
+      defaultValue={50}
+      marks={[
+        { value: 0, label: "0" },
+        { value: 50, label: "50" },
+        { value: 100, label: "100" },
+      ]}
+      interactive
+    />
+  );
+}
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc `slider` dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) :
+
+```json
+{
+  "type": "slider",
+  "label": "Volume",
+  "defaultValue": 30,
+  "min": 0,
+  "max": 100,
+  "showValueText": true
+}
+```
+
+# Propriétés
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+
+| `value` | \`number \ | numéro[]\` | The current value(s) (controlled). |
+| `defaultValue` | \`number \ | numéro[]\` | The initial value(s) (uncontrolled). |
+
+| `min` | `number` | La valeur minimale. |
+| `max` | `number` | La valeur maximale. |
+| `step` | `number` | L'incrément de pas. |
+| `onChange` | `(details: { value: number[] }) => void` | Rappel déclenché lorsque la valeur change. |
+| `onDraggingChange` | `(details: { dragging: boolean }) => void` | Rappel déclenché lorsque l'état de déplacement change. |
+
+| `label` | \`string \ | JSX.Élément\` | Label displayed above the slider. |
+
+| `showValueText` | `boolean` | Indique s'il faut afficher le texte de la valeur actuelle. |
+| `formatValue` | `(value: number) => string` | Formateur personnalisé pour le texte de valeur. |
+
+| `marks` | \`\{ value: number; label: string \ | JSX.Élément \}[]\` | Tick marks to display along the track. |
+| `orientation` | \`"horizontal" \ | "verticale"\` | The orientation of the slider. |
+
+| `height` | `string` | Hauteur (obligatoire pour l'orientation verticale). |
+| `disabled` | `boolean` | Si le curseur est désactivé. |
+| `readOnly` | `boolean` | Indique si le curseur est en lecture seule. |
+| `interactive` | `boolean` | Activez l’interactivité côté client. |
+
+| `size` | \`"sm" \ | "md" \ | "lg"\` | The size of the slider. |
+
+| `colorPalette` | `string` | Le thème de couleur du curseur. |
+| `class` | `string` | Classes CSS personnalisées pour l'élément racine. |
+| `trackClass` | `string` | Classes CSS personnalisées pour la piste. |
+| `rangeClass` | `string` | Classes CSS personnalisées pour la plage. |
+| `thumbClass` | `string` | Classes CSS personnalisées pour le pouce. |
+| `labelClass` | `string` | Classes CSS personnalisées pour l'étiquette. |
+| `valueTextClass` | `string` | Classes CSS personnalisées pour le texte de la valeur. |
+| `markClass` | `string` | Classes CSS personnalisées pour les marques. |

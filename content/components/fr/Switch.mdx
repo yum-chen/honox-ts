@@ -1,0 +1,62 @@
+---
+title: Switch Commutateur
+hydration: 2
+category: Forms
+---
+
+import { Switch } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Un contrôle qui permet à l'utilisateur de basculer entre les états coché et non coché.
+
+# Utilisation
+
+<DemoPreview>
+  <Switch defaultChecked interactive>Enable Notifications</Switch>
+</DemoPreview>
+
+```tsx
+import { Switch } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Switch
+      defaultChecked={true}
+      onCheckedChange={(details) => console.log(details.checked)}
+      interactive
+    >
+      Enable Notifications
+    </Switch>
+  );
+}
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc `switch` dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) :
+
+```json
+{
+  "type": "switch",
+  "label": "Dark Mode",
+  "checked": true,
+  "colorPalette": "blue"
+}
+```
+
+# Propriétés
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `children` | `any` | Contenu de l’étiquette à afficher à côté du commutateur. |
+| `class` | `string` | Classes CSS personnalisées. |
+| `checked` | `boolean` | Si l'interrupteur est vérifié (contrôlé). |
+| `defaultChecked` | `boolean` | L'état vérifié initial (non contrôlé). |
+| `disabled` | `boolean` | Si le commutateur est désactivé. |
+| `onCheckedChange` | `(details: { checked: boolean }) => void` | Rappel déclenché lorsque l'état vérifié change. |
+
+| `size` | \`"sm" \ | "md" \ | "lg"\` | The size of the switch. |
+
+| `interactive` | `boolean` | Force l’hydratation comme une île. |

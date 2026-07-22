@@ -1,0 +1,106 @@
+---
+title: Dialog Dialogue
+hydration: 1
+category: Overlays
+---
+
+import { Dialog, Button } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Une fenêtre modale superposée sur la page qui nécessite une interaction de l'utilisateur avant de continuer.
+
+# Hydratation
+
+**Niveau 1 — auto-interactif par défaut.** Un « dialogue » n'a pas de solution de secours statique significative : l'ouverture, le recouvrement du focus et la gestion ESC nécessitent tous du JavaScript côté client - il s'hydrate donc comme une île par défaut. Passez `interactive={false}` pour afficher un shell de dialogue statique et inerte qui ne fournit aucun JS client.
+
+| `interactive` prop | Résultat |
+| --- | --- |
+| omitted | Hydrates as an island (default) |
+| `true` | Hydrates as an island |
+| `false` | Static — no client JS |
+
+Toutes les décisions d'interactivité dans la bibliothèque sont acheminées via l'assistant partagé `shouldHydrate()` dans `app/components/ui/island-utils.ts`.
+
+# Accessibilité
+
+Conforme au [modèle de conception Dialog (Modal) WAI-ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/). Lorsqu'elle est hydratée (`interactive` par défaut est `true`), la boîte de dialogue présente le comportement suivant :
+
+- **Le focus se déplace dans la boîte de dialogue à l'ouverture** — vers `initialFocusEl()`, sinon le premier élément focalisable, sinon le contenu lui-même.- **Le focus est piégé lorsqu'il est ouvert** — Cycle `Tab` / `Shift+Tab` uniquement dans le contenu de la boîte de dialogue. Les boîtes de dialogue imbriquées sont gérées : seule la boîte de dialogue la plus haute piège et possède "Escape".- **`Escape` ferme** la boîte de dialogue (sauf si `closeOnEscape={false}`).- **L'arrière-plan est inerte** — tout ce qui se trouve en dehors de la boîte de dialogue (y compris une boîte de dialogue parent derrière une boîte de dialogue imbriquée) devient « inerte » + est supprimé de l'ordre de tabulation, tandis que la sous-arborescence de la boîte de dialogue reste interactive.- **Le défilement du corps est verrouillé** lorsqu'au moins une boîte de dialogue est ouverte et restauré à la fermeture de la dernière.- **Le focus revient au déclencheur à la fermeture** (ou à `finalFocusEl()` si fourni).- **Nom accessible** — dérivé de `title` (`aria-labelledby`) ou d'un `aria-label` explicite. Un « console.warn » côté client est émis si aucun des deux n'est présent.- **`role="alertdialog"`** — transmettez `role="alertdialog"` pour les confirmations destructives et pointez `initialFocusEl` sur l'action d'annulation/sécurité afin qu'elle reçoive le focus en premier. Avec `closeOnInteractOutside={false}`, la boîte de dialogue ne peut être fermée que via un bouton ou `Escape`.
+# Utilisation
+
+## Boîte de dialogue de base
+
+<DemoPreview>
+  <Dialog
+    trigger={<Button>Open Dialog</Button>}
+    title="Confirm action"
+    description="Are you sure you want to continue?"
+    body="This action cannot be undone."
+    cancel={<Button variant="outline">Cancel</Button>}
+    confirm={<Button>Confirm</Button>}
+  />
+</DemoPreview>
+
+```tsx
+import { Dialog, Button } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Dialog
+      trigger={<Button>Open Dialog</Button>}
+      title="Confirm action"
+      description="Are you sure you want to continue?"
+      body="This action cannot be undone."
+      cancel={<Button variant="outline">Cancel</Button>}
+      confirm={<Button>Confirm</Button>}
+    />
+  );
+}
+```
+
+## Constructeur de pages CMS
+
+Ce composant est disponible sous forme de bloc « dialogue » dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`). `trigger` est une liste de blocage imbriquée (le CMS soumet toujours un tableau) :
+
+```json
+{
+  "type": "dialog",
+  "title": "Confirm action",
+  "description": "Are you sure you want to continue?",
+  "confirmText": "Confirm",
+  "cancelText": "Cancel",
+  "trigger": [{ "type": "button", "text": "Open Dialog" }]
+}
+```
+
+# Propriétés
+
+## Dialogue
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `trigger` | `JSX.Element` | Élément qui ouvre la boîte de dialogue lorsqu'il est activé. |
+
+| `title` | \`string \ | JSX.Élément\` | The dialog title. |
+| `description` | \`string \ | JSX.Élément\` | The dialog description. |
+| `body` | \`string \ | JSX.Élément\` | The main body content. |
+| `footer` | \`string \ | JSX.Élément\` | Custom footer content. |
+
+| `cancel` | `JSX.Element` | Élément rendu comme un déclencheur de fermeture (annulation). |
+| `confirm` | `JSX.Element` | Élément rendu comme déclencheur d'action. |
+| `closable` | `boolean` | S'il faut afficher le bouton de fermeture. Par défaut : « vrai ». |
+| `interactive` | `boolean` | Activez l’hydratation côté client pour un comportement interactif. |
+| `class` | `string` | Classes CSS personnalisées pour l'élément racine. |
+
+| `role` | \`"dialog" \ | "dialogue d'alerte"\` | Dialog variant. Use `"alertdialog"` for destructive confirmations. Default: `"dialog"`. |
+
+| `aria-label` | `string` | Nom accessible lorsqu'aucun « titre » n'est fourni. |
+| `closeOnEscape` | `boolean` | Fermez lorsque `Escape` est enfoncé. Par défaut : « vrai ». |
+| `closeOnInteractOutside` | `boolean` | Fermez lorsque vous cliquez sur la toile de fond. Par défaut : « vrai ». |
+
+| `initialFocusEl` | \`() => HTMLElement \ | nul\` | Element to focus on open. Defaults to the first focusable. |
+| `finalFocusEl` | \`() => HTMLElement \ | nul\` | Element to focus on close. Defaults to the trigger. |
+
+Des accessoires supplémentaires (par exemple `open`, `defaultOpen`, `onOpenChange`, `id`) sont transmis à la primitive de dialogue sous-jacente.
