@@ -30,6 +30,7 @@ import { icon } from "./icon";
 import { input } from "./input";
 import { layout } from "./layout";
 import { pagination } from "./pagination";
+import { pinField } from "./pin-field";
 import { popover } from "./popover";
 import { progress } from "./progress";
 import { radioCardGroup } from "./radio-card-group";
@@ -95,6 +96,7 @@ export const slotRecipes = {
 	fieldset,
 	hoverCard,
 	dropdown,
+	pinField,
 	popover,
 	progress,
 	slider,
