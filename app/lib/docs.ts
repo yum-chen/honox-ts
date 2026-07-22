@@ -11,14 +11,13 @@ import { type DocsConfig, loadDocsConfig } from "./configs";
 // Plain .md is parsed with the same hand-rolled pipeline as blog posts; .mdx
 // is compiled to a real component (via @mdx-js/rollup, configured in
 // vite.config.ts) so pages can embed live, actually-rendered examples.
-// content/posts and content/notes are excluded (any locale depth): both have
-// their own loader/route (app/lib/posts.ts, app/lib/notes.ts).
+// content/posts is excluded (any locale depth): blog posts have their own
+// loader/route (app/lib/posts.ts).
 const markdownModules = import.meta.glob(
 	[
 		"/content/*/*.md",
 		"/content/*/*/*.md",
 		"!/content/posts/**",
-		"!/content/notes/**",
 	],
 	{ query: "?raw", import: "default" },
 ) as Record<string, () => Promise<string>>;

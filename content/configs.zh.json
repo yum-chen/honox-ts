@@ -67,10 +67,6 @@
     {
       "label": "文档",
       "href": "/docs"
-    },
-    {
-      "label": "笔记",
-      "href": "/notes"
     }
   ],
   "blog": {
