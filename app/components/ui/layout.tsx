@@ -2,6 +2,7 @@ import { cx } from "design-system/css";
 import { layout } from "design-system/recipes";
 import type { JSX, PropsWithChildren } from "hono/jsx";
 import { createContext, Fragment, useContext } from "hono/jsx";
+import { ChevronDownIcon } from "../../icons/chevron-down";
 
 type LayoutStyles = ReturnType<typeof layout>;
 
@@ -156,8 +157,24 @@ export interface LayoutProps
 		/** Sider rail width: sm (14rem), md (16rem, default), lg (18rem). */
 		siderWidth?: "sm" | "md" | "lg";
 		/** Hide the sider under this breakpoint. Pair with an in-flow
-		 * disclosure (e.g. a `<details>` menu) so small screens keep a nav. */
+		 * disclosure so small screens keep a nav — set `mobileNav` below to
+		 * use the built-in one instead of hand-rolling it per page. */
 		siderHideBelow?: "sm" | "md" | "lg";
+		/** Render a built-in `<details>` "Menu" disclosure containing `sider`.
+		 * Requires `sider`. Nested inside the same `<header>` as `header`
+		 * (rather than rendered as its own element) so it inherits
+		 * `stickyHeader` instead of scrolling away separately — pair with
+		 * `siderHideBelow` to also collapse it at the right breakpoint;
+		 * without that it just always shows. */
+		mobileNav?: boolean;
+		/** Label next to the disclosure's chevron. @default "Menu" */
+		mobileNavLabel?: string | JSX.Element;
+		/** Extra block rendered above `sider`'s content inside the disclosure
+		 * panel, set off by a divider — e.g. header links/actions that get
+		 * collapsed out of the desktop header below the same breakpoint. */
+		mobileNavActions?: string | JSX.Element;
+		/** Extra class for the `<details>` element. */
+		mobileNavClass?: string;
 		/** Force layout direction to horizontal/hasSider */
 		hasSider?: boolean;
 		/** Extra class for the `<header>` part. */
@@ -214,11 +231,15 @@ export function Layout(props: LayoutProps) {
 		siderWidth,
 		siderHideBelow,
 		hasSider,
+		mobileNav,
+		mobileNavLabel,
+		mobileNavActions,
 		headerClass,
 		siderClass,
 		contentClass,
 		footerClass,
 		bodyClass,
+		mobileNavClass,
 		...rest
 	} = props;
 
@@ -248,11 +269,31 @@ export function Layout(props: LayoutProps) {
 			</main>
 		);
 
+		const showMobileNav = mobileNav && sider !== undefined;
+
 		return (
 			<LayoutContext.Provider value={contextValue}>
 				<div class={cx(classes.root, classProp)} {...rest}>
-					{header !== undefined && (
-						<header class={cx(classes.header, headerClass)}>{header}</header>
+					{(header !== undefined || showMobileNav) && (
+						<header class={cx(classes.header, headerClass)}>
+							{header}
+							{showMobileNav && (
+								<details class={cx(classes.mobileNav, mobileNavClass)}>
+									<summary class={classes.mobileNavToggle}>
+										{mobileNavLabel ?? "Menu"}
+										<ChevronDownIcon width="16" height="16" />
+									</summary>
+									<div class={classes.mobileNavPanel}>
+										{mobileNavActions !== undefined && (
+											<div class={classes.mobileNavActions}>
+												{mobileNavActions}
+											</div>
+										)}
+										{sider}
+									</div>
+								</details>
+							)}
+						</header>
 					)}
 					{sider !== undefined ? (
 						<div class={cx(classes.body, bodyClass)}>

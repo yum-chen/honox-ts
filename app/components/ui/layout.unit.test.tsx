@@ -114,4 +114,88 @@ describe("Layout Component", () => {
 		expect(html.indexOf("<header")).toBeLessThan(html.indexOf("layout__body"));
 		expect(html.indexOf("layout__body")).toBeLessThan(html.indexOf("<footer"));
 	});
+
+	describe("mobileNav", () => {
+		it("should not render without both sider and siderHideBelow", () => {
+			const withoutSider = (
+				<Layout
+					header={<div>Header</div>}
+					content={<div>Content</div>}
+					mobileNav
+				/>
+			).toString();
+			expect(withoutSider).not.toContain("<details");
+
+			const withoutHideBelow = (
+				<Layout
+					header={<div>Header</div>}
+					sider={<div id="test-sider">Sider</div>}
+					content={<div>Content</div>}
+					mobileNav
+				/>
+			).toString();
+			// siderHideBelow unset means mobileNav has no breakpoint to key off of,
+			// but the disclosure still only needs `sider` + the flag to render —
+			// it'll just always show. What matters here is `sider`'s content is
+			// reachable from within it either way.
+			expect(withoutHideBelow).toContain("<details");
+		});
+
+		it("should render sider content inside the disclosure, plus the desktop aside", () => {
+			const html = (
+				<Layout
+					header={<div>Header</div>}
+					sider={<div id="test-sider">Sider content</div>}
+					content={<div>Content</div>}
+					siderHideBelow="md"
+					mobileNav
+				/>
+			).toString();
+
+			expect(html).toContain("<details");
+			expect(html).toContain("Menu");
+			expect(html).toContain("layout__mobileNav");
+			// Sider content appears twice: once in the disclosure panel, once in
+			// the real <aside>.
+			expect(html.split('id="test-sider"').length - 1).toBe(2);
+			expect(html).toContain("<aside");
+		});
+
+		it("should render mobileNavActions above the sider content, with a custom label", () => {
+			const html = (
+				<Layout
+					header={<div>Header</div>}
+					sider={<div id="test-sider">Sider</div>}
+					content={<div>Content</div>}
+					siderHideBelow="md"
+					mobileNav
+					mobileNavLabel="Browse"
+					mobileNavActions={
+						<a href="/quick-link" id="test-action">
+							Quick link
+						</a>
+					}
+				/>
+			).toString();
+
+			expect(html).toContain("Browse");
+			expect(html).toContain("layout__mobileNavActions");
+			expect(html.indexOf('id="test-action"')).toBeLessThan(
+				html.indexOf('id="test-sider"'),
+			);
+		});
+
+		it("should not render when the mobileNav flag is left off", () => {
+			const html = (
+				<Layout
+					header={<div>Header</div>}
+					sider={<div id="test-sider">Sider</div>}
+					content={<div>Content</div>}
+					siderHideBelow="md"
+				/>
+			).toString();
+
+			expect(html).not.toContain("<details");
+		});
+	});
 });

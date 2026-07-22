@@ -12,7 +12,6 @@ import {
 	Stack,
 	Text,
 } from "../../components/ui";
-import { ChevronDownIcon as ChevronDownIconImport } from "../../icons/chevron-down";
 import { ExternalLinkIcon as ExternalLinkIconImport } from "../../icons/external-link";
 import { GitHubIcon as GitHubIconImport } from "../../icons/github";
 import {
@@ -44,7 +43,6 @@ function isGithubLink(link: DocsNavLinkConfig): boolean {
 }
 
 const GitHubIcon = () => <GitHubIconImport width="20" height="20" />;
-const ChevronDownIcon = () => <ChevronDownIconImport width="16" height="16" />;
 const ExternalLinkIcon = () => (
 	<ExternalLinkIconImport width="16" height="16" />
 );
@@ -209,168 +207,91 @@ function DocsSidenav({
 	);
 }
 
-interface MobileNavProps extends DocsSidenavProps {
+interface HeaderActionsProps {
+	links?: DocsNavLinkConfig[];
 	headerLinks?: DocsNavLinkConfig[];
 	editUrl?: string;
-	docsUi?: DocsUiConfig;
 	currentPath: string;
+	currentLocale: string;
+	/** Smaller text/controls for the mobile disclosure panel vs. the desktop
+	 * header row. */
+	compact?: boolean;
 }
 
-// Mobile sidenav: a native <details> disclosure bar attached under the header
-// row instead of a Drawer overlay. Zero JS / no island, so it works before
-// hydration and without JS at all — and since every doc link is a full-page
-// MPA navigation, the collapsed-after-navigation state of an in-flow
-// disclosure is the natural resting position rather than a bug to fight.
-//
-// The top-level header nav (headerLinks, edit/admin, language switcher,
-// GitHub) is hidden in the desktop header row below `md`, so its actions
-// render here instead, as a block inside the expandable panel, above the doc
-// groups list. That keeps them inside <details>'s native show/hide behavior
-// (no extra CSS needed for visibility) while staying out of <summary> itself
-// — interactive links/buttons in there would also toggle the disclosure on
-// every click, and the language switcher is a client-hydrated dropdown, not
-// a plain link, so that conflict would be visible in practice.
-function MobileNav({
-	groups,
-	activeSlug,
+// The actions shared between the desktop header row (`nav`, hidden below
+// `md`) and Layout's built-in mobile disclosure (`mobileNav`, which takes
+// over below `md` via `siderHideBelow`) — headerLinks, edit/admin, language
+// switcher, GitHub. Rendered from a single function so both stay in sync.
+function HeaderActions({
 	links,
 	headerLinks,
 	editUrl,
-	docsUi,
 	currentPath,
-	currentLocale = "en",
-}: MobileNavProps) {
+	currentLocale,
+	compact,
+}: HeaderActionsProps) {
 	const githubLink = links?.find(isGithubLink);
 	const localiseLink = (href: string) => localiseHref(href, currentLocale);
-	const ui = { ...DEFAULT_DOCS_UI, ...docsUi };
+	const textStyle = compact ? "xs" : "sm";
 
 	return (
-		<details
-			class={css({
-				display: { base: "block", md: "none" },
-				borderTopWidth: "1px",
-				borderColor: { _light: "white.a4", _dark: "black.a4" },
-				"& summary svg": {
-					transition: "transform 0.2s",
-				},
-				// Explicit [open] selector: Panda's _open condition targets
-				// data-state attrs, not the native <details> open attribute.
-				"&[open] summary svg": {
-					transform: "rotate(180deg)",
-				},
-			})}
-		>
-			<summary
-				class={css({
-					display: "flex",
-					alignItems: "center",
-					justifyContent: "space-between",
-					gap: "2",
-					px: "4",
-					py: "3",
-					fontSize: "sm",
-					fontWeight: "medium",
-					cursor: "pointer",
-					userSelect: "none",
-					listStyle: "none",
-					"&::-webkit-details-marker": {
-						display: "none",
-					},
-				})}
-			>
-				{ui.menu}
-				<ChevronDownIcon />
-			</summary>
-			<div
-				class={css({
-					maxH: "60vh",
-					overflowY: "auto",
-					px: "4",
-					pb: "4",
-				})}
-			>
-				<div
-					class={css({
-						display: "flex",
-						flexWrap: "wrap",
-						alignItems: "center",
-						gap: "3",
-						pb: "4",
-						mb: "4",
-						borderBottomWidth: "1px",
-						borderColor: { _light: "white.a4", _dark: "black.a4" },
-					})}
+		<>
+			{headerLinks?.map((link) => (
+				<Anchor
+					key={link.href}
+					href={localiseLink(link.href)}
+					variant="plain"
+					class={css({ textStyle, fontWeight: "medium" })}
 				>
-					{headerLinks?.map((link) => (
-						<Anchor
-							key={link.href}
-							href={localiseLink(link.href)}
-							variant="plain"
-							class={css({ textStyle: "xs", fontWeight: "medium" })}
-						>
-							{currentLocale === "zh" && link.label === "Blog"
-								? "博客"
-								: currentLocale === "zh" && link.label === "Docs"
-									? "文档"
-									: link.label}
-						</Anchor>
-					))}
-					{editUrl ? (
-						<Anchor
-							href={editUrl}
-							class={cx(
-								button({ variant: "outline", size: "sm" }),
-								css({ textStyle: "xs", fontWeight: "medium" }),
-							)}
-						>
-							{currentLocale === "zh" ? "编辑" : "Edit"}
-						</Anchor>
-					) : (
-						<Anchor
-							href={"/admin"}
-							class={cx(
-								button({ variant: "outline", size: "sm" }),
-								css({ textStyle: "xs", fontWeight: "medium" }),
-							)}
-						>
-							{currentLocale === "zh" ? "内容管理" : "Admin"}
-						</Anchor>
+					{currentLocale === "zh" && link.label === "Blog"
+						? "博客"
+						: currentLocale === "zh" && link.label === "Docs"
+							? "文档"
+							: link.label}
+				</Anchor>
+			))}
+			{editUrl ? (
+				<Anchor
+					href={editUrl}
+					class={cx(
+						button({ variant: "outline", size: "sm" }),
+						css({ textStyle, fontWeight: "medium" }),
 					)}
-					<LanguageSwitcher
-						currentPath={currentPath}
-						currentLocale={currentLocale}
-					/>
-					{githubLink && (
-						<Anchor
-							href={githubLink.href}
-							target="_blank"
-							rel="noopener noreferrer"
-							aria-label="View on GitHub"
-							class={cx(
-								button({ variant: "plain", size: "sm" }),
-								css({ px: "0" }),
-							)}
-						>
-							<GitHubIcon />
-						</Anchor>
+				>
+					{currentLocale === "zh" ? "编辑" : "Edit"}
+				</Anchor>
+			) : (
+				<Anchor
+					href={"/admin"}
+					class={cx(
+						button({ variant: "outline", size: "sm" }),
+						css({ textStyle, fontWeight: "medium" }),
 					)}
-				</div>
-
-				<DocsSidenav
-					groups={groups}
-					activeSlug={activeSlug}
-					links={links}
-					currentLocale={currentLocale}
-				/>
-			</div>
-		</details>
+				>
+					{currentLocale === "zh" ? "内容管理" : "Admin"}
+				</Anchor>
+			)}
+			<LanguageSwitcher
+				currentPath={currentPath}
+				currentLocale={currentLocale}
+			/>
+			{githubLink && (
+				<Anchor
+					href={githubLink.href}
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label="View on GitHub"
+					class={cx(button({ variant: "plain", size: "sm" }), css({ px: "0" }))}
+				>
+					<GitHubIcon />
+				</Anchor>
+			)}
+		</>
 	);
 }
 
 interface DocsHeaderProps {
 	editUrl?: string;
-	groups: DocGroup[];
-	activeSlug?: string;
 	links?: DocsNavLinkConfig[];
 	headerLinks?: DocsNavLinkConfig[];
 	docsUi?: DocsUiConfig;
@@ -378,156 +299,99 @@ interface DocsHeaderProps {
 	currentLocale: string;
 }
 
+// Desktop-only header row (logo, search, nav actions). Hidden below `md` —
+// Layout's `mobileNav` (see docsShellProps) takes over there, reusing
+// `HeaderActions` and `DocsSidenav` instead of duplicating this markup.
 function DocsHeader({
 	editUrl,
-	groups,
-	activeSlug,
 	links,
 	headerLinks,
 	docsUi,
 	currentPath,
 	currentLocale,
 }: DocsHeaderProps) {
-	const githubLink = links?.find(isGithubLink);
 	const localiseLink = (href: string) => localiseHref(href, currentLocale);
 	const ui = { ...DEFAULT_DOCS_UI, ...docsUi };
 
 	return (
-		<>
+		<div
+			class={css({
+				maxWidth: "7xl",
+				mx: "auto",
+				px: { base: "4", md: "6", lg: "8" },
+				py: "4",
+				display: "flex",
+				alignItems: "center",
+				gap: { base: "4", md: "8" },
+			})}
+		>
+			<Anchor
+				href={localiseLink("/")}
+				variant="plain"
+				class={css({ textDecoration: "none", flexShrink: "0" })}
+			>
+				<Stack direction="horizontal" gap="3" align="center">
+					<Heading
+						as="h1"
+						class={css({
+							fontSize: "lg",
+							fontWeight: "bold",
+							tracking: "tight",
+						})}
+					>
+						Artefact UI
+					</Heading>
+				</Stack>
+			</Anchor>
+
 			<div
 				class={css({
-					maxWidth: "7xl",
-					mx: "auto",
-					px: { base: "4", md: "6", lg: "8" },
-					py: "4",
-					display: "flex",
-					alignItems: "center",
-					gap: { base: "4", md: "8" },
+					flex: "1",
+					maxWidth: "md",
+					mx: { base: "0", md: "auto" },
 				})}
 			>
-				<Anchor
-					href={localiseLink("/")}
-					variant="plain"
-					class={css({ textDecoration: "none", flexShrink: "0" })}
-				>
-					<Stack direction="horizontal" gap="3" align="center">
-						<Heading
-							as="h1"
-							class={css({
-								fontSize: "lg",
-								fontWeight: "bold",
-								tracking: "tight",
-							})}
-						>
-							Artefact UI
-						</Heading>
-					</Stack>
-				</Anchor>
-
-				<div
-					class={css({
-						flex: "1",
-						maxWidth: "md",
-						mx: { base: "0", md: "auto" },
-					})}
-				>
-					<Search
-						locale={currentLocale}
-						src="/api/docs/search.json"
-						placeholder={ui.searchPlaceholder}
-						itemLabel={ui.searchItemLabel}
-						showCount={false}
-						syncUrl={false}
-					/>
-				</div>
-
-				<nav
-					class={css({
-						display: { base: "none", md: "flex" },
-						gap: "6",
-						alignItems: "center",
-						flexShrink: "0",
-					})}
-				>
-					{headerLinks?.map((link) => (
-						<Anchor
-							key={link.href}
-							href={localiseLink(link.href)}
-							variant="plain"
-							class={css({ textStyle: "sm", fontWeight: "medium" })}
-						>
-							{currentLocale === "zh" && link.label === "Blog"
-								? "博客"
-								: currentLocale === "zh" && link.label === "Docs"
-									? "文档"
-									: link.label}
-						</Anchor>
-					))}
-					{editUrl ? (
-						<Anchor
-							href={editUrl}
-							class={cx(
-								button({ variant: "outline", size: "sm" }),
-								css({ textStyle: "sm", fontWeight: "medium" }),
-							)}
-						>
-							{currentLocale === "zh" ? "编辑" : "Edit"}
-						</Anchor>
-					) : (
-						<Anchor
-							href={"/admin"}
-							class={cx(
-								button({ variant: "outline", size: "sm" }),
-								css({ textStyle: "sm", fontWeight: "medium" }),
-							)}
-						>
-							{currentLocale === "zh" ? "内容管理" : "Admin"}
-						</Anchor>
-					)}
-					<LanguageSwitcher
-						currentPath={currentPath}
-						currentLocale={currentLocale}
-					/>
-					{githubLink && (
-						<Anchor
-							href={githubLink.href}
-							target="_blank"
-							rel="noopener noreferrer"
-							aria-label="View on GitHub"
-							class={cx(
-								button({ variant: "plain", size: "sm" }),
-								css({ px: "0" }),
-							)}
-						>
-							<GitHubIcon />
-						</Anchor>
-					)}
-				</nav>
+				<Search
+					locale={currentLocale}
+					src="/api/docs/search.json"
+					placeholder={ui.searchPlaceholder}
+					itemLabel={ui.searchItemLabel}
+					showCount={false}
+					syncUrl={false}
+				/>
 			</div>
 
-			<MobileNav
-				groups={groups}
-				activeSlug={activeSlug}
-				links={links}
-				headerLinks={headerLinks}
-				editUrl={editUrl}
-				docsUi={docsUi}
-				currentPath={currentPath}
-				currentLocale={currentLocale}
-			/>
-		</>
+			<nav
+				class={css({
+					display: { base: "none", md: "flex" },
+					gap: "6",
+					alignItems: "center",
+					flexShrink: "0",
+				})}
+			>
+				<HeaderActions
+					links={links}
+					headerLinks={headerLinks}
+					editUrl={editUrl}
+					currentPath={currentPath}
+					currentLocale={currentLocale}
+				/>
+			</nav>
+		</div>
 	);
 }
 
 /** Shared `<Layout>` props for the docs shell, so every docs route renders
  * the identical frame: viewport-filling canvas, sticky glass header, and a
- * sticky sider rail that hides below `md` (the header's <details> menu takes
- * over there). Spread first, then pass the route's header/sider/content. */
+ * sticky sider rail that hides below `md` (Layout's built-in `mobileNav`
+ * disclosure takes over there). Spread first, then pass the route's
+ * header/sider/content/mobileNavActions. */
 const docsShellProps = {
 	fullHeight: true,
 	stickyHeader: true,
 	stickySider: true,
 	siderHideBelow: "md",
+	mobileNav: true,
 	class: css({ bg: "bg.canvas" }),
 	headerClass: css({
 		borderBottomWidth: "1px",
@@ -565,6 +429,7 @@ export default createRoute(async (c) => {
 		loadDocsConfig(currentLocale),
 	]);
 	const groups = buildDocGroups(docs, config);
+	const ui = { ...DEFAULT_DOCS_UI, ...config.docsUi };
 
 	const localiseLink = (href: string) => localiseHref(href, currentLocale);
 
@@ -573,7 +438,6 @@ export default createRoute(async (c) => {
 			{...docsShellProps}
 			header={
 				<DocsHeader
-					groups={groups}
 					links={config.links}
 					headerLinks={config.headerLinks}
 					docsUi={config.docsUi}
@@ -586,6 +450,16 @@ export default createRoute(async (c) => {
 					groups={groups}
 					links={config.links}
 					currentLocale={currentLocale}
+				/>
+			}
+			mobileNavLabel={ui.menu}
+			mobileNavActions={
+				<HeaderActions
+					links={config.links}
+					headerLinks={config.headerLinks}
+					currentPath={currentPath}
+					currentLocale={currentLocale}
+					compact
 				/>
 			}
 			content={
