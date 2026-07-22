@@ -88,8 +88,7 @@ Applies to:
 > **Never mounts an island**
 
 Pure typographic / decorative components with no client behaviour. They **must not declare**
-**an `interactive` prop** (historically `badge` / `heading` / `text` / `fieldset` mistakenly
-declared it and leaked the attribute onto the DOM — now removed).
+**an `interactive` prop**.
 
 Applies to:
 
@@ -245,30 +244,3 @@ Walk the list in order; stop at the first match:
   its frontmatter `hydration` field (`1` / `2` / `3`) to match.
 
 ***
-
-## Historical Cleanup Log (already fixed)
-
-The following divergences were resolved during convention rollout; kept here for traceability:
-
-| # | Component | Original divergence | Fix |
-| --- | --- | --- | --- |
-| 1 | `splitter` / `dialog` / `drawer` | Hardcoded `interactive = true` + `if (interactive)`, bypassing `shouldHydrate` | Switched to `shouldHydrate(interactive, true)`, restoring the `interactive={false}` opt-out |
-| 2 | `radio-group` | `interactive ? Island : Root`, forcing callers to pass `interactive` | Switched to `shouldHydrate(interactive, hasSignal)`, signals `value` / `defaultValue` / `onValueChange` |
-
-| 3 | `avatar` | Ad-hoc \`if (rest.src |  | interactive)\` | Switched to `shouldHydrate(interactive, Boolean(rest.src))`, unified entry point |
-
-| 4 | `badge` / `heading` / `text` / `fieldset` | Dead `interactive` prop declared, leaked onto the DOM via `restProps` (`interactive="true"`) | Removed the `interactive` prop declaration |
-| 5 | `collapsible` | Tier not documented explicitly | Added a `# Hydration` section to `docs/Collapsible.md`, marking it Tier-1 |
-| 6 | `tags-input` | Bare `if (isInteractive)` branch, no `interactive` prop, no `shouldHydrate`, and `defaultValue` / `defaultInputValue` omitted from the signal set (an uncontrolled tags-input rendered static) | Switched to `shouldHydrate(interactive, hasSignal)`, added the `interactive` knob, extended the signal set to include `defaultValue` / `defaultInputValue` |
-| 7 | `pagination` / `avatar` | Missing from the tier tables (`pagination` absent entirely; `avatar` mis-classified as Tier-1) and `pagination` over-hydrated in link mode | Added `pagination` + `tags-input` to Tier-2; moved `avatar` to Tier-2 (load-cue signal); gated `pagination` link-mode so pure-navigation stays static |
-
-> Note: item 4 was a real bug — `badge` / `heading` / `text` / `fieldset` would render
-> `interactive` as an invalid HTML attribute on the DOM; it was prioritised for repair.
-
-***
-
-## Related Documentation
-
-- [UI Components Architecture](/docs/Architecture) — the project-level overview
-- `app/components/ui/island-utils.ts` — the single decision entry point
-- `content/components/<Component>.mdx` (each Tier-1 / Tier-2 component) — its own `# Hydration` section, plus `hydration`/`category` frontmatter
