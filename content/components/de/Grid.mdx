@@ -1,0 +1,137 @@
+---
+title: Grid (Raster)
+hydration: 3
+category: Layout
+---
+import { Grid } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Einführung
+
+A responsive CSS Grid layout primitive. Lay children out with an explicit
+column/row count, or let them auto-fit based on a minimum child width —
+both support responsive (per-breakpoint) values.
+
+# Verwendung
+
+## Fixed columns
+
+<DemoPreview>
+  <Grid columns={3} gap="4" style={{ width: "100%" }}>
+    <div style={{ padding: "1rem", textAlign: "center", background: "var(--colors-blue-3)", borderRadius: "8px" }}>1</div>
+    <div style={{ padding: "1rem", textAlign: "center", background: "var(--colors-blue-3)", borderRadius: "8px" }}>2</div>
+    <div style={{ padding: "1rem", textAlign: "center", background: "var(--colors-blue-3)", borderRadius: "8px" }}>3</div>
+  </Grid>
+</DemoPreview>
+
+```tsx
+import { Grid } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Grid columns={3} gap="4">
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+    </Grid>
+  );
+}
+```
+
+## Auto-fit by minimum child width
+
+No breakpoints needed — columns are added or dropped automatically as the
+container resizes.
+
+<DemoPreview>
+  <Grid minChildWidth="120px" gap="4" style={{ width: "100%" }}>
+    <div style={{ padding: "1rem", textAlign: "center", background: "var(--colors-purple-3)", borderRadius: "8px" }}>A</div>
+    <div style={{ padding: "1rem", textAlign: "center", background: "var(--colors-purple-3)", borderRadius: "8px" }}>B</div>
+    <div style={{ padding: "1rem", textAlign: "center", background: "var(--colors-purple-3)", borderRadius: "8px" }}>C</div>
+    <div style={{ padding: "1rem", textAlign: "center", background: "var(--colors-purple-3)", borderRadius: "8px" }}>D</div>
+  </Grid>
+</DemoPreview>
+
+```tsx
+import { Grid } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Grid minChildWidth="120px" gap="4">
+      <div>A</div>
+      <div>B</div>
+      <div>C</div>
+      <div>D</div>
+    </Grid>
+  );
+}
+```
+
+## Responsive column count
+
+```tsx
+import { Grid } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Grid columns={{ base: 1, md: 2, lg: 3 }} gap="4">
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+    </Grid>
+  );
+}
+```
+
+## Separate column and row gaps
+
+```tsx
+import { Grid } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Grid columns={2} columnGap="6" rowGap="2">
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      <div>4</div>
+    </Grid>
+  );
+}
+```
+
+## CMS Seiten-Builder
+
+This component is available as a `grid` block in the [Page Builder](/docs/PageBuilder) (`content/pages/*.json`):
+
+```json
+{
+  "type": "grid",
+  "columns": 3,
+  "gap": "4",
+  "children": [
+    { "type": "text", "content": "1" },
+    { "type": "text", "content": "2" },
+    { "type": "text", "content": "3" }
+  ]
+}
+```
+
+# Eigenschaften
+
+| Eigenschaft | Typ | Beschreibung |
+| --- | --- | --- |
+| `children` | `any` | Content to be rendered inside the grid. |
+| `class` | `string` | Custom CSS classes. |
+
+| `columns` | \`Responsive\<number \ | string\>\` | Number of columns (`repeat(columns, minmax(0, 1fr))`). Takes precedence over `minChildWidth` if both are set. |
+| `rows` | \`Responsive\<number \ | string\>\` | Number of rows (`repeat(rows, minmax(0, 1fr))`). |
+| `minChildWidth` | \`Responsive\<number \ | string\>\` | Auto-fits as many columns as fit, each at least this wide (`repeat(auto-fit, minmax(width, 1fr))`). Ignored when `columns` is set. |
+
+| `gap` | \`string \ | number \ | Responsive\<...\>\` | Gap between cells. Defaults to `"8px"` unless `columnGap`/`rowGap` is set. |
+| `columnGap` | \`string \ | number \ | Responsive\<...\>\` | Gap between columns only. |
+| `rowGap` | \`string \ | number \ | Responsive\<...\>\` | Gap between rows only. |
+
+`Responsive<T>` accepts either a plain value or a per-breakpoint object,
+e.g. `{ base: 1, md: 2, lg: 3 }`, using the same breakpoints as the rest of
+the design system (`base`, `sm`, `md`, `lg`, `xl`, `2xl`).

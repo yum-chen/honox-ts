@@ -1,0 +1,52 @@
+---
+title: Text
+hydration: 3
+category: Typography
+---
+import { Text } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Einführung
+
+A polymorphic component for displaying body text, paragraphs, or spans with consistent typography.
+
+# Verwendung
+
+<DemoPreview>
+  <Text size="lg">This is a paragraph.</Text>
+</DemoPreview>
+
+```tsx
+import { Text } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Text size="lg" class="muted">
+      This is a paragraph.
+    </Text>
+  );
+}
+```
+
+## CMS Seiten-Builder
+
+This component is available as a `text` block in the [Page Builder](/docs/PageBuilder) (`content/pages/*.json`):
+
+```json
+{
+  "type": "text",
+  "content": "This is a paragraph.",
+  "size": "lg"
+}
+```
+
+# Eigenschaften
+
+| Eigenschaft | Typ | Beschreibung |
+| --- | --- | --- |
+| `children` | `any` | The text or content. |
+| `class` | `string` | Custom CSS classes. |
+| `as` | `string` | The HTML element to render (e.g., "p", "span"). Defaults to "p". |
+| `size` | `string` | The font size variant. |
+| `variant` | `string` | Typographic style variant (e.g., "heading", "label"). |
+| `interactive` | `boolean` | Whether to enable client-side hydration. |

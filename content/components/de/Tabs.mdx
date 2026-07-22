@@ -1,0 +1,110 @@
+---
+title: Tabs (Registerkarten)
+hydration: 2
+category: Navigation
+---
+import { Tabs, Stack, Badge } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Einführung
+
+Ein Navigations- oder Layoutelement, das Inhalte in umschaltbaren, sich gegenseitig ausschließenden Bereichen organisiert.
+
+# Verwendung
+
+<DemoPreview>
+  <Tabs defaultValue="features" interactive variant="enclosed" size="md">
+    <Tabs.List>
+      <Tabs.Trigger value="features">⚡ Key Features</Tabs.Trigger>
+      <Tabs.Trigger value="pricing">💎 Pricing Plans</Tabs.Trigger>
+      <Tabs.Indicator />
+    </Tabs.List>
+
+    <Tabs.Content value="features">
+      Our Hono/JSX Tabs component supports zero runtime styled-system classes, smooth sliding indicator transitions, and native keyboard interaction.
+    </Tabs.Content>
+
+    <Tabs.Content value="pricing">
+      Flexible subscription pricing for individuals, start-ups, and scaling enterprise workspaces.
+    </Tabs.Content>
+  </Tabs>
+</DemoPreview>
+
+```tsx
+import { Tabs } from "../components/ui/tabs";
+
+<Tabs defaultValue="features" interactive variant="enclosed" size="md">
+  <Tabs.List>
+    <Tabs.Trigger value="features">⚡ Key Features</Tabs.Trigger>
+    <Tabs.Trigger value="pricing">💎 Pricing Plans</Tabs.Trigger>
+    <Tabs.Indicator />
+  </Tabs.List>
+
+  <Tabs.Content value="features">
+    Our Hono/JSX Tabs component supports zero-runtime classes, smooth sliding transitions, and native keyboard interaction.
+  </Tabs.Content>
+
+  <Tabs.Content value="pricing">
+    Flexible subscription pricing for individuals, start-ups, and scaling enterprise workspaces.
+  </Tabs.Content>
+</Tabs>;
+```
+
+## CMS Seiten-Builder
+
+Diese Komponente ist als `tabs`-Block im [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) verfügbar und wurde mit einer sauberen, abgeflachten API entwickelt:
+
+```json
+{
+  "type": "tabs",
+  "variant": "enclosed",
+  "size": "md",
+  "items": [
+    {
+      "value": "features",
+      "label": "⚡ Key Features",
+      "content": [
+        {
+          "type": "text",
+          "content": "Our high-end tabs component is lightning fast."
+        }
+      ]
+    },
+    {
+      "value": "pricing",
+      "label": "💎 Pricing Plans",
+      "content": [
+        {
+          "type": "text",
+          "content": "Starting from $0/mo."
+        }
+      ]
+    }
+  ]
+}
+```
+
+# Eigenschaften
+
+## Wurzel
+
+| Eigenschaft | Typ | Beschreibung |
+| --- | --- | --- |
+| `defaultValue` | `string` | Der anfänglich ausgewählte Tabulatorwert beim Rendern (unkontrolliert). |
+| `value` | `string` | Der gesteuerte ausgewählte Tabulatorwert. |
+| `variant` | \`"line" \ | "subtil" \ | "enclosed"\` | Visual appearance of the tabs list and indicator. Default `"line"`. |
+| `size` | \`"xs" \ | "sm" \ | "md" \ | "lg"\` | The overall height, spacing and padding of tab items. Default `"md"`. |
+| `orientation` | \`"horizontal" \ | „vertikal“\` | The layout flow of triggers. Default `"horizontal"`. |
+| `activationMode` | \`"automatic" \ | „manuell“\` | In manual mode, triggers are activated on Enter/Space click; in automatic mode, they activate instantly on focus. Default `"automatic"`. |
+| `loopFocus` | `boolean` | Ob der Tastaturfokus zum Anfang oder Ende der Liste zurückspringt. Standard `true`. |
+| `lazyMount` | `boolean` | Verzögern Sie das Rendern von Tab-Inhaltsbereichen, bis sie zum ersten Mal aufgerufen werden. Standard `false`. |
+| `unmountOnExit` | `boolean` | Zerstören Sie Tab-Panel-Elemente aus dem DOM, wenn sie inaktiv werden. Standard `false`. |
+| `onValueChange` | `(details: { value: string }) => void` | Wird aufgerufen, wenn sich der aktive Tabulatorwert ändert. |
+| `onFocusChange` | `(details: { value: string }) => void` | Wird aufgerufen, wenn ein anderer Tabulatorauslöser den Tastatur- oder Klickfokus erhält. |
+
+# Barrierefreiheit
+
+Diese Komponente entspricht vollständig dem **WAI-ARIA Tabs Design Pattern**:
+- Setzt `role="tablist"` auf den Listencontainer und `aria-orientation` auf das Layout.
+- Setzt `role="tab"` auf Trigger, wobei `aria-selected` dem aktiven Status entspricht und `aria-controls` auf Panel-IDs verweist.
+- Tastaturunterstützung: Pfeil nach rechts/Pfeil nach links (oder Pfeil nach unten/Pfeil nach oben, wenn vertikal) navigiert durch Trigger mit fokussierendem tabIndex. Home/End verschiebt den Fokus sofort auf Endpunkte. Enter/Leertaste aktiviert Trigger im manuellen Modus.

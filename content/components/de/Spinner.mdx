@@ -1,0 +1,47 @@
+---
+title: Spinner (Drehrad)
+hydration: 3
+category: Feedback
+---
+import { Spinner } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Einführung
+
+A component used to indicate a loading state.
+
+# Verwendung
+
+<DemoPreview>
+  <Spinner size="md" label="Loading..." />
+</DemoPreview>
+
+```tsx
+import { Spinner } from "../components/ui";
+
+export default function MyPage() {
+  return <Spinner size="md" label="Loading..." />;
+}
+```
+
+## CMS Seiten-Builder
+
+This component is available as a `spinner` block in the [Page Builder](/docs/PageBuilder) (`content/pages/*.json`):
+
+```json
+{
+  "type": "spinner",
+  "size": "lg",
+  "label": "Loading"
+}
+```
+
+# Eigenschaften
+
+| Eigenschaft | Typ | Beschreibung |
+| --- | --- | --- |
+| `class` | `string` | Custom CSS classes. |
+
+| `size` | \`"xs" \ | "sm" \ | "md" \ | "lg" \ | "xl" \ | "2xl" \ | "inherit"\` | The size of the spinner. |
+
+| `label` | `string` | An accessible label for screen readers. |

@@ -1,0 +1,145 @@
+---
+title: Button (Schaltfläche)
+hydration: 2
+category: Forms
+---
+import { Button, ButtonGroup } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Einführung
+
+Eine anklickbare Komponente zum Auslösen von Aktionen und Benutzerinteraktionen. Enthält Varianten für Symbole und gruppierte Schaltflächen.
+
+# Verwendung
+
+## Grundlegende Schaltfläche
+
+<DemoPreview>
+  <Button variant="solid" colorPalette="blue">Click me</Button>
+  <Button variant="outline" colorPalette="blue">Click me</Button>
+  <Button variant="subtle" colorPalette="blue">Click me</Button>
+  <Button variant="surface" colorPalette="blue">Click me</Button>
+  <Button variant="plain" colorPalette="blue">Click me</Button>
+</DemoPreview>
+
+```tsx
+import { Button } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Button variant="solid" colorPalette="blue">
+      Click me
+    </Button>
+  );
+}
+```
+
+## Ladezustand
+
+<DemoPreview>
+  <Button loading loadingText="Saving...">Save</Button>
+</DemoPreview>
+
+```tsx
+import { Button } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Button loading loadingText="Saving...">
+      Save
+    </Button>
+  );
+}
+```
+
+## IconButton
+
+Eine für Symbole optimierte Schaltfläche.
+
+```tsx
+import { IconButton } from "../components/ui";
+import { SearchIcon } from "./icons";
+
+export default function MyPage() {
+  return (
+    <IconButton aria-label="Search">
+      <SearchIcon />
+    </IconButton>
+  );
+}
+```
+
+## CloseButton
+
+Ein vorgefertigter Knopf zum Schließen von Elementen.
+
+```tsx
+import { CloseButton } from "../components/ui";
+
+export default function MyPage() {
+  return <CloseButton onClick={() => console.log("closed")} interactive />;
+}
+```
+
+## ButtonGroup
+
+<DemoPreview>
+  <ButtonGroup attached>
+    <Button>First</Button>
+    <Button>Second</Button>
+  </ButtonGroup>
+</DemoPreview>
+
+```tsx
+import { Button, ButtonGroup } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <ButtonGroup attached>
+      <Button>First</Button>
+      <Button>Second</Button>
+    </ButtonGroup>
+  );
+}
+```
+
+## CMS Seiten-Builder
+
+Diese Komponente ist als `button`-Block im [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) verfügbar:
+
+```json
+{
+  "type": "button",
+  "text": "Click me",
+  "variant": "solid",
+  "colorPalette": "blue"
+}
+```
+
+# Eigenschaften
+
+## Taste
+
+| Eigenschaft | Typ | Beschreibung |
+| --- | --- | --- |
+| `children` | `any` | Inhalt, der innerhalb der Komponente gerendert werden soll. |
+| `class` | `string` | Benutzerdefinierte CSS-Klassen. |
+
+| `variant` | \`"solid" \ | "Oberfläche" \ | "subtle" \ | "outline" \ | "plain"\` | The visual style of the button. |
+
+| `size` | \`"2xs" \ | "xs" \ | "sm" \ | "md" \ | "lg" \ | "xl" \ | "2xl"\` | The size of the button. |
+
+| `loading` | `boolean` | Bei `true` zeigt die Schaltfläche einen Lade-Spinner an. |
+| `loadingText` | `string` | Der Text, der beim Laden angezeigt werden soll. |
+
+| `type` | \`"button" \ | "einreichen" \ | "reset"\` | The HTML button type. |
+
+| `colorPalette` | `string` | Das Farbthema der Schaltfläche. |
+| `interactive` | `boolean` | Ob die kundenseitige Flüssigkeitszufuhr aktiviert werden soll. |
+
+## ButtonGroup
+
+| Eigenschaft | Typ | Beschreibung |
+| --- | --- | --- |
+| `children` | `any` | Zu gruppierende Schaltflächen. |
+| `attached` | `boolean` | Ob die Knöpfe aneinander befestigt werden sollen. |

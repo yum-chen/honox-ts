@@ -1,0 +1,139 @@
+---
+title: Editable (Direkt bearbeitbar)
+hydration: 2
+category: Forms
+---
+import { Editable, Stack } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Einführung
+
+An inline text field that displays as plain text until activated (by
+focus, click, or double-click), then swaps to an editable input with
+submit/cancel controls.
+
+# Verwendung
+
+<DemoPreview>
+  <Stack direction="vertical" gap="4" style={{ width: "100%", maxWidth: "320px" }}>
+    <Editable label="Project name" defaultValue="Artefact UI Suite" interactive />
+    <Editable label="Description" placeholder="Add a description…" interactive />
+  </Stack>
+</DemoPreview>
+
+```tsx
+import { Editable } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Editable label="Project name" defaultValue="Artefact UI Suite" />
+  );
+}
+```
+
+## Custom Composition
+
+Pass `children` for full control over the preview/input/controls layout:
+
+```tsx
+import { Editable } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Editable defaultValue="Untitled" activationMode="dblclick">
+      <Editable.Label>Title</Editable.Label>
+      <Editable.Area>
+        <Editable.Preview />
+        <Editable.Input />
+      </Editable.Area>
+      <Editable.Control>
+        <Editable.EditTrigger>Edit</Editable.EditTrigger>
+        <Editable.SubmitTrigger>Save</Editable.SubmitTrigger>
+        <Editable.CancelTrigger>Cancel</Editable.CancelTrigger>
+      </Editable.Control>
+    </Editable>
+  );
+}
+```
+
+## CMS Seiten-Builder
+
+This component is available as an `editable` block in the
+[Page Builder](/docs/PageBuilder) (`content/pages/*.json`):
+
+```json
+{
+  "type": "editable",
+  "label": "Project name",
+  "defaultValue": "Artefact UI Suite",
+  "placeholder": "Untitled",
+  "size": "md",
+  "activationMode": "focus",
+  "submitMode": "both"
+}
+```
+
+It always renders `interactive` in the Page Builder.
+
+# Eigenschaften
+
+## Root
+
+| Eigenschaft | Typ | Beschreibung |
+| --- | --- | --- |
+| `value` | `string` | The current value (controlled). |
+| `defaultValue` | `string` | The initial value (uncontrolled). |
+| `edit` | `boolean` | Whether edit mode is active (controlled). |
+| `defaultEdit` | `boolean` | The initial edit-mode state (uncontrolled). |
+| `activationMode` | `"focus" \| "dblclick" \| "click" \| "none"` | How the preview enters edit mode. Default `"focus"`. |
+| `submitMode` | `"enter" \| "blur" \| "both" \| "none"` | Which interactions commit the value. Default `"both"`. |
+| `selectOnFocus` | `boolean` | Whether the input's text is selected when it's focused. Default `true`. |
+| `autoResize` | `boolean` | Keep the preview visible (sized to content) while editing instead of hiding it. |
+| `disabled` | `boolean` | Disables all interaction. |
+| `readOnly` | `boolean` | Prevents entering edit mode while still allowing focus. |
+| `required` | `boolean` | Marks the underlying input required. |
+| `invalid` | `boolean` | Marks the field invalid. |
+| `placeholder` | `string \| { edit: string; preview: string }` | Placeholder text, optionally different between the input and the preview. |
+| `maxLength` | `number` | Maximum input length. |
+| `name` | `string` | Name of the underlying input, for native form submission. |
+| `form` | `string` | Associates the input with a `<form>` by id. |
+| `translations` | `Partial<EditableTranslations>` | Overrides for the edit/submit/cancel/input ARIA strings. |
+| `size` | `"2xs" \| "xs" \| "sm" \| "md" \| "lg"` | Visual size. Default `"md"`. |
+| `onValueChange` | `(details: { value: string }) => void` | Called as the input value changes. |
+| `onValueCommit` | `(details: { value: string }) => void` | Called when the value is submitted. |
+| `onValueRevert` | `(details: { value: string }) => void` | Called when editing is cancelled. |
+| `onEditChange` | `(details: { edit: boolean }) => void` | Called when edit mode toggles. |
+| `interactive` | `boolean` | Forces (or suppresses) hydration as an island. |
+| `class` | `string` | Custom CSS classes for the root element. |
+
+## Default composition
+
+| Eigenschaft | Typ | Beschreibung |
+| --- | --- | --- |
+| `label` | `JSX.Element \| string` | Label rendered above the field. |
+| `children` | `JSX.Element` | Extra content appended after the default preview/input/controls. |
+
+## Sub-components
+
+| Teil | Beschreibung |
+| --- | --- |
+| `Editable.Label` | `<label>` bound to the input; clicking it focuses the preview. |
+| `Editable.Area` | Wraps `Preview` and `Input` in the same layout slot. |
+| `Editable.Preview` | The read-only display shown when not editing; `role="button"`, keyboard-activatable per `activationMode`. |
+| `Editable.Input` | The `<input>` shown while editing; handles Escape-to-cancel and Enter/blur-to-submit per `submitMode`. |
+| `Editable.Control` | Wraps the edit/submit/cancel triggers. |
+| `Editable.EditTrigger` | Enters edit mode. Hidden while already editing. |
+| `Editable.SubmitTrigger` | Commits the value and exits edit mode. Hidden while not editing. |
+| `Editable.CancelTrigger` | Discards changes and exits edit mode. Hidden while not editing. |
+| `Editable.Context` | Render-prop access to the editable context: `<Editable.Context>{(ctx) => ...}</Editable.Context>`. |
+
+# Barrierefreiheit
+
+- `Preview` is keyboard-operable (`tabIndex={0}`, Enter/Space) whenever
+  `activationMode` is `"click"` or `"dblclick"`; with `"focus"` mode,
+  simply tabbing to it opens edit mode.
+- `EditTrigger` / `SubmitTrigger` / `CancelTrigger` get `aria-label`s from
+  `translations`, and are hidden (not just visually, via the `hidden`
+  attribute) when not applicable to the current mode.
+- `Input` carries `aria-invalid` when `invalid` is set and `aria-label`
+  from `translations.input`.

@@ -1,0 +1,86 @@
+---
+title: Progress (Fortschritt)
+hydration: 3
+category: Feedback
+---
+import { Progress } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Einführung
+
+A component that shows the completion progress of an operation as a linear bar or circular indicator.
+
+# Verwendung
+
+## Linear Progress
+
+<DemoPreview>
+  <div style={{ width: "100%", maxWidth: "320px" }}>
+    <Progress value={72} showValueText />
+  </div>
+</DemoPreview>
+
+```tsx
+import { Progress } from "../components/ui";
+
+export default function MyPage() {
+  return <Progress value={72} showValueText />;
+}
+```
+
+## Circular Progress
+
+<DemoPreview>
+  <Progress type="circular" value={40} showValueText />
+</DemoPreview>
+
+```tsx
+import { Progress } from "../components/ui";
+
+export default function MyPage() {
+  return <Progress type="circular" value={40} showValueText />;
+}
+```
+
+## CMS Seiten-Builder
+
+This component is available as a `progress` block in the [Page Builder](/docs/PageBuilder) (`content/pages/*.json`):
+
+```json
+{
+  "type": "progress",
+  "value": 72,
+  "showValueText": true
+}
+```
+
+# Eigenschaften
+
+## Progress
+
+| Eigenschaft | Typ | Beschreibung |
+| --- | --- | --- |
+
+| `value` | \`number \ | null\` | The current value. |
+
+| `min` | `number` | The minimum value. Default: `0`. |
+| `max` | `number` | The maximum value. Default: `100`. |
+| `label` | `Child` | Label to display above the indicator. |
+| `showValueText` | `boolean` | Whether to show the value text. Default: `false`. |
+| `valueText` | `Child` | Custom value text to display. |
+
+| `type` | \`"linear" \ | "circular"\` | The visual style of the progress. Default: `"linear"`. |
+| `variant` | \`"solid" \ | "subtle"\` | The visual variant. |
+
+| `shape` | \`"square" \ | "rounded" \ | "full"\` | The shape of the indicator. |
+
+| `striped` | `boolean` | Whether to show a striped fill (linear). |
+| `animated` | `boolean` | Whether the fill animates. |
+
+| `size` | \`"xs" \ | "sm" \ | "md" \ | "lg" \ | "xl"\` | The size of the indicator. |
+
+| `class` | `string` | Custom CSS classes for the root element. |
+
+# Sub-components
+
+`Progress.Root`, `Progress.Track`, `Progress.Range`, `Progress.Circle`, `Progress.CircleTrack`, `Progress.CircleRange`, `Progress.Label`, `Progress.ValueText`, `Progress.View`

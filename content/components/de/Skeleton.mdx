@@ -1,0 +1,78 @@
+---
+title: Skeleton (Skelett-Ladeanzeige)
+hydration: 3
+category: Feedback
+---
+import { Skeleton } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Einführung
+
+A placeholder used to indicate that content is loading, with a variety of animation and shape options.
+
+# Verwendung
+
+## Basic Skeleton
+
+<DemoPreview>
+  <div style={{ display: "flex", flexDirection: "column", gap: "1rem", width: "100%", maxWidth: "320px" }}>
+    <Skeleton shape="circle" size="12" />
+    <Skeleton height="6" width="40" />
+    <Skeleton shape="text" noOfLines={3} />
+  </div>
+</DemoPreview>
+
+```tsx
+import { Skeleton, SkeletonCircle, SkeletonText } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <div>
+      <SkeletonCircle size="12" />
+      <Skeleton height="6" width="40" />
+      <SkeletonText noOfLines={3} />
+    </div>
+  );
+}
+```
+
+## CMS Seiten-Builder
+
+This component is available as a `skeleton` block in the [Page Builder](/docs/PageBuilder) (`content/pages/*.json`). The CMS `shape` options are `box`/`circle`/`text`, mapped to the real `shape` prop (`box` falls through to the plain default):
+
+```json
+{
+  "type": "skeleton",
+  "shape": "text",
+  "noOfLines": 3
+}
+```
+
+# Eigenschaften
+
+## Skeleton
+
+| Eigenschaft | Typ | Beschreibung |
+| --- | --- | --- |
+| `loading` | `boolean` | Whether to show the skeleton. Default: `true`. |
+| `circle` | `boolean` | Render the skeleton as a circle. |
+
+| `variant` | \`"pulse" \ | "shine" \ | "none"\` | The animation style. |
+
+| `class` | `string` | Custom CSS classes for the root element. |
+
+All other native `<div>` attributes (e.g. `style`, `id`, `width`, `height`) are forwarded to the underlying element.
+
+## SkeletonCircle
+
+Same props as `Skeleton`, pre-configured with `circle`.
+
+## SkeletonText
+
+| Eigenschaft | Typ | Beschreibung |
+| --- | --- | --- |
+| `noOfLines` | `number` | Number of lines to display. Default: `3`. |
+
+| `gap` | \`string \ | number\` | Gap between lines. Default: `"2"`. |
+
+Plus all `Skeleton` props.

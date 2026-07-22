@@ -1,0 +1,78 @@
+---
+title: Checkbox (Kontrollkästchen)
+hydration: 2
+category: Forms
+---
+import { Checkbox } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Einführung
+
+Ein Steuerelement, mit dem der Benutzer zwischen aktivierten, nicht aktivierten und unbestimmten Zuständen wechseln kann.
+
+# Verwendung
+
+<DemoPreview>
+  <Checkbox defaultChecked interactive>Accept Terms and Conditions</Checkbox>
+</DemoPreview>
+
+```tsx
+import { Checkbox } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Checkbox
+      defaultChecked={true}
+      onCheckedChange={(details) => console.log(details.checked)}
+      interactive
+    >
+      Accept Terms and Conditions
+    </Checkbox>
+  );
+}
+```
+
+## Unbestimmter Zustand
+
+```tsx
+import { Checkbox } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Checkbox checked="indeterminate" interactive>
+      Parent Checkbox
+    </Checkbox>
+  );
+}
+```
+
+## CMS Seiten-Builder
+
+Diese Komponente ist als `checkbox`-Block im [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) verfügbar:
+
+```json
+{
+  "type": "checkbox",
+  "label": "Accept Terms and Conditions",
+  "checked": true,
+  "colorPalette": "blue"
+}
+```
+
+# Eigenschaften
+
+| Eigenschaft | Typ | Beschreibung |
+| --- | --- | --- |
+| `children` | `any` | Beschriften Sie den darzustellenden Inhalt neben dem Kontrollkästchen. |
+| `class` | `string` | Benutzerdefinierte CSS-Klassen. |
+
+| `checked` | \`boolean \ | „unbestimmt“\` | Whether the checkbox is checked (controlled). |
+| `defaultChecked` | \`boolean \ | „unbestimmt“\` | The initial checked state (uncontrolled). |
+
+| `disabled` | `boolean` | Ob das Kontrollkästchen deaktiviert ist. |
+
+| `onCheckedChange` | \`(details: \{ checked: boolean \ | "unbestimmt" \}) => void\` | Callback triggered when the checked state changes. |
+
+| `size` | \`"sm" \ | "md" \ | "lg"\` | The size of the checkbox. |
+
+| `interactive` | `boolean` | Erzwingt die Flüssigkeitszufuhr wie eine Insel. |
