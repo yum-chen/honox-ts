@@ -1,0 +1,67 @@
+---
+title: PinField Campo de Código
+hydration: 2
+category: Forms
+---
+
+import { PinField } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+Una entrada segmentada para códigos cortos de longitud fija: contraseñas de un solo uso, códigos de verificación por SMS/correo, PIN. Cada carácter tiene su propia casilla, con navegación por teclado, pegado/autocompletado, y las mismas convenciones de etiqueta/texto de ayuda/texto de error/validador que `Field`.
+
+## Uso
+
+<DemoPreview>
+  <div style={{ width: "100%", maxWidth: "320px" }}>
+    <PinField
+      label="Verification code"
+      helperText="Check your email for the 6-digit code"
+      count={6}
+      otp
+      blurOnComplete
+      validator={(value) => value !== "000000" || "That code isn't valid"}
+    />
+  </div>
+</DemoPreview>
+
+## Formato de carácter
+
+`format` (`"numeric"` | `"alphanumeric"` | `"alphabetic"`, por defecto `"numeric"`) restringe lo que acepta cada casilla y elige el teclado móvil adecuado mediante `inputMode`. Pasa `pattern` con una expresión regular personalizada para sobrescribirlo.
+
+## Autocompletado
+
+`otp` marca el campo como un código de un solo uso por SMS/correo. En lugar de poner `autocomplete="one-time-code"` en cada casilla (lo que hace que navegadores y gestores de contraseñas muestren un aviso de autocompletado en todas a la vez), solo la casilla que el usuario llenaría a continuación lo anuncia — y acepta la longitud completa del código, para que una sugerencia del teclado o un pegado completo se distribuya automáticamente entre las demás casillas. El resto desactiva el autocompletado y se oculta a los gestores de contraseñas.
+
+## Comportamiento de teclado y puntero
+
+Escribir un carácter válido llena la casilla actual y avanza el foco; el contenido de una casilla enfocada se selecciona primero (`selectOnFocus`, activado por defecto), así que escribir siempre reemplaza. **Backspace** en una casilla vacía la limpia y retrocede a la anterior; **flechas izquierda/derecha** mueven el foco entre casillas. Pegar o un autocompletado del sistema distribuye caracteres desde la casilla donde cae. **Tab** y el foco por clic no pueden saltar más allá de la primera casilla vacía.
+
+## Validación
+
+Igual que `Field`, `PinField` acepta un `validator` que se ejecuta sobre el valor unido y puede devolver `false` (error genérico) o una cadena (mensaje personalizado). Solo se revalida una vez que todas las casillas están llenas.
+
+## Formularios: autoenvío y reinicio
+
+`form` asocia la entrada oculta de envío con un `<form id>` en el documento (omítelo si el campo ya vive dentro del formulario). `autoSubmit` llama a `form.requestSubmit()` en cuanto se llenan todas las casillas, tras disparar `onAutoSubmit`; pulsar **Enter** en cualquier casilla también intenta enviar. Reiniciar el formulario vacía el campo.
+
+## Propiedades
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `count` | `number` | `4` | Número de casillas. |
+| `value` / `defaultValue` | `string[]` | - | Valor controlado/no controlado, una entrada por casilla (fuerza el modo interactivo). |
+| `format` | `"numeric" \| "alphanumeric" \| "alphabetic"` | `"numeric"` | Clase de carácter aceptada por casilla. |
+| `pattern` | `string` | - | Expresión regular personalizada por carácter, sobrescribe `format`. |
+| `otp` | `boolean` | - | Dirige el autocompletado `one-time-code` solo a la casilla activa. |
+| `mask` | `boolean` | - | Renderiza cada casilla como `type="password"`. |
+| `blurOnComplete` | `boolean` | - | Quita el foco de la última casilla al completarse. |
+| `selectOnFocus` | `boolean` | `true` | Selecciona el contenido de la casilla al enfocarla. |
+| `form` | `string` | - | Asocia la entrada oculta, `autoSubmit` y el reinicio con un `<form id>`. |
+| `autoSubmit` | `boolean` | - | Llama a `form.requestSubmit()` al completarse (fuerza el modo interactivo). |
+| `validator` | `(value: string) => boolean \| string` | - | Valida el valor unido (fuerza el modo interactivo). |
+| `label` / `helperText` / `errorText` | `Child` | - | Etiqueta, texto de ayuda y texto de error. |
+| `interactive` | `boolean` | - | Fuerza o impide la hidratación. |
+
+## Hidratación
+
+Nivel 2: Se hidrata cuando está presente `value`, `defaultValue`, `onValueChange`, `onValueComplete`, `onValueInvalid`, `validator`, `autoSubmit` u `onAutoSubmit`.

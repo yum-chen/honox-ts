@@ -1,0 +1,67 @@
+---
+title: PinField 密码输入框
+hydration: 2
+category: Forms
+---
+
+import { PinField } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+用于短固定长度验证码的分段输入框——一次性密码、短信/邮箱验证码、PIN 码。每个字符占一个方框，支持键盘导航、粘贴/自动填充，并与 `Field` 共用相同的标签、帮助文本、错误文本与校验器约定。
+
+## 用法
+
+<DemoPreview>
+  <div style={{ width: "100%", maxWidth: "320px" }}>
+    <PinField
+      label="Verification code"
+      helperText="Check your email for the 6-digit code"
+      count={6}
+      otp
+      blurOnComplete
+      validator={(value) => value !== "000000" || "That code isn't valid"}
+    />
+  </div>
+</DemoPreview>
+
+## 字符格式
+
+`format`（`"numeric"` | `"alphanumeric"` | `"alphabetic"`，默认 `"numeric"`）限制每个方框可接受的字符，并据此选择合适的移动端键盘（`inputMode`）。也可传入 `pattern` 使用自定义正则覆盖它。
+
+## 自动填充
+
+`otp` 表示这是短信/邮箱一次性验证码。`autocomplete="one-time-code"` 只会加在用户接下来要填写的那个方框上（而不是每个方框），避免浏览器/密码管理器在所有方框上同时弹出填充提示；该方框还会接受完整验证码长度，方便系统一次性填入后再自动分配到其余方框。其余方框会关闭自动填充并对密码管理器隐藏。
+
+## 键盘与指针行为
+
+输入合法字符会填充当前框并自动前进；聚焦方框时默认会全选已有内容（`selectOnFocus`），因此直接输入即可替换。空框上按 **Backspace** 会清空并回退到上一框；**方向键左/右** 用于在方框间移动焦点。粘贴或系统自动填充会从落点方框开始依次分配字符。**Tab** 与点击聚焦不会越过第一个空方框。
+
+## 校验
+
+与 `Field` 一样，`PinField` 接受 `validator`，对拼接后的值进行校验，可返回 `false`（通用错误）或字符串（自定义错误信息）；仅在全部填满后才会重新校验。
+
+## 表单：自动提交与重置
+
+`form` 用于将隐藏的提交输入框与页面中某个 `<form id>` 关联（若字段本身已在表单内则无需设置）。`autoSubmit` 会在全部填满时调用 `form.requestSubmit()`（触发前会先调用 `onAutoSubmit`）；在任意方框按 **Enter** 也会尝试提交。重置表单会将字段清空。
+
+## 属性
+
+| 属性 | 类型 | 默认 | 说明 |
+| --- | --- | --- | --- |
+| `count` | `number` | `4` | 方框数量。 |
+| `value` / `defaultValue` | `string[]` | - | 受控/非受控的值，每个方框一项（会强制启用交互模式）。 |
+| `format` | `"numeric" \| "alphanumeric" \| "alphabetic"` | `"numeric"` | 每个方框接受的字符类型。 |
+| `pattern` | `string` | - | 自定义单字符正则来源，覆盖 `format`。 |
+| `otp` | `boolean` | - | 仅在当前方框上启用 `one-time-code` 自动填充。 |
+| `mask` | `boolean` | - | 以 `type="password"` 渲染每个方框。 |
+| `blurOnComplete` | `boolean` | - | 填满后使最后一个方框失焦。 |
+| `selectOnFocus` | `boolean` | `true` | 聚焦时选中方框内容。 |
+| `form` | `string` | - | 关联的 `<form id>`，用于隐藏输入、`autoSubmit` 与重置。 |
+| `autoSubmit` | `boolean` | - | 填满后调用 `form.requestSubmit()`（会强制启用交互模式）。 |
+| `validator` | `(value: string) => boolean \| string` | - | 校验拼接后的值（会强制启用交互模式）。 |
+| `label` / `helperText` / `errorText` | `Child` | - | 标签、帮助文本与错误文本。 |
+| `interactive` | `boolean` | - | 强制启用或禁用水合。 |
+
+## 水合
+
+第二级：当存在 `value`、`defaultValue`、`onValueChange`、`onValueComplete`、`onValueInvalid`、`validator`、`autoSubmit` 或 `onAutoSubmit` 时进行水合。
