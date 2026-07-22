@@ -57,6 +57,8 @@ export { Layout, type LayoutProps } from "./layout";
 export { Loader, type LoaderProps } from "./loader";
 export { PaginatedTable } from "./paginated-table";
 export { Pagination, type PaginationProps } from "./pagination";
+export { PinField, type PinFieldProps } from "./pin-field";
+export * as PinFieldPrimitive from "./pin-field-primitive";
 export { Popover, type PopoverProps } from "./popover";
 export { Progress, type ProgressProps } from "./progress";
 export {

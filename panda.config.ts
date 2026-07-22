@@ -62,6 +62,7 @@ export default defineConfig({
 			layout: ["*"],
 			anchor: ["*"],
 			dropdown: ["*"],
+			pinField: ["*"],
 			popover: ["*"],
 			progress: ["*"],
 			radioCardGroup: ["*"],

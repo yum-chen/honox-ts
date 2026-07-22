@@ -36,6 +36,7 @@ import {
 	Loader,
 	PaginatedTable,
 	Pagination,
+	PinField,
 	Popover,
 	Progress,
 	RadioCardGroup,
@@ -312,7 +313,10 @@ export default createRoute((c) => {
 						>
 							{currentLocale === "zh" ? "内容管理" : "Sveltia CMS"}
 						</Anchor>
-						<LanguageSwitcher currentPath={currentPath} currentLocale={currentLocale} />
+						<LanguageSwitcher
+							currentPath={currentPath}
+							currentLocale={currentLocale}
+						/>
 						<Button
 							variant="solid"
 							colorPalette="blue"
@@ -853,6 +857,29 @@ export default createRoute((c) => {
 												interactive
 												label="Interests"
 												defaultValue={["Hono", "Vite", "Panda"]}
+											/>
+										</div>
+									</Card>
+
+									{/* PinField */}
+									<Card
+										title="Pin Field"
+										description="One-time code entry with paste & auto-advance"
+									>
+										<div class={css({ mt: "2" })}>
+											<PinField
+												interactive
+												label="Verification code"
+												helperText="Check your email for the 6-digit code"
+												count={6}
+												otp
+												blurOnComplete
+												defaultValue={["", "", "", "", "", ""]}
+												validator={(value: string) =>
+													value.length < 6 ||
+													value !== "000000" ||
+													"That code isn't valid"
+												}
 											/>
 										</div>
 									</Card>
