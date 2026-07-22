@@ -73,7 +73,8 @@ export async function loadDocsConfig(locale = "en"): Promise<DocsConfig> {
 		locale === "en"
 			? "/content/configs.json"
 			: `/content/configs.${locale}.json`;
-	const loader = docsConfigModule[path] ?? docsConfigModule["/content/configs.json"];
+	const loader =
+		docsConfigModule[path] ?? docsConfigModule["/content/configs.json"];
 	if (!loader) return EMPTY_DOCS_CONFIG;
 	return loader();
 }

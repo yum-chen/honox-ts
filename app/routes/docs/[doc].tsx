@@ -20,8 +20,76 @@ import {
 	type DocsNavLinkConfig,
 	loadDocsConfig,
 } from "../../lib/configs";
-import { type DocSummary, loadDocBySlug, loadDocs } from "../../lib/docs";
+import {
+	type DocSummary,
+	LOCALES,
+	loadDocBySlug,
+	loadDocs,
+} from "../../lib/docs";
 import { markdownContentClass } from "../../utils/markdown-content-style";
+
+// Full locale list (default first) and their display names for the
+// header's locale switcher.
+const ALL_LOCALES: readonly string[] = ["en", ...LOCALES];
+const LOCALE_NAMES: Record<string, string> = {
+	en: "English",
+	zh: "中文",
+	es: "Español",
+};
+
+// Page-chrome strings that aren't part of translated doc content or the
+// configs.<locale>.json singleton (search box, Edit/Admin button).
+const UI_STRINGS: Record<
+	string,
+	{
+		searchPlaceholder: string;
+		searchItemLabel: string;
+		edit: string;
+		admin: string;
+	}
+> = {
+	en: {
+		searchPlaceholder: "Search docs...",
+		searchItemLabel: "docs",
+		edit: "Edit",
+		admin: "Admin",
+	},
+	zh: {
+		searchPlaceholder: "搜索文档...",
+		searchItemLabel: "文档",
+		edit: "编辑",
+		admin: "内容管理",
+	},
+	es: {
+		searchPlaceholder: "Buscar documentación...",
+		searchItemLabel: "documentos",
+		edit: "Editar",
+		admin: "Administrar",
+	},
+};
+
+/** Prefixes an absolute in-app href with the current locale, e.g.
+ * `/docs/Button` → `/es/docs/Button`. No-op for the default locale, for
+ * external hrefs, or if already prefixed. */
+function localizeHref(href: string, locale: string): string {
+	if (
+		locale === "en" ||
+		!href.startsWith("/") ||
+		href.startsWith(`/${locale}`)
+	) {
+		return href;
+	}
+	return `/${locale}${href}`;
+}
+
+/** Strips a leading `/<locale>` segment from a path, if present. */
+function stripLocalePrefix(path: string, locale: string): string {
+	if (locale === "en") return path;
+	const prefix = `/${locale}`;
+	if (path === prefix) return "/";
+	if (path.startsWith(`${prefix}/`)) return path.slice(prefix.length);
+	return path;
+}
 
 // ---------------------------------------------------------------------------
 // Inlined docs nav shell.
@@ -109,16 +177,7 @@ function DocsSidenav({
 	links,
 	currentLocale = "en",
 }: DocsSidenavProps) {
-	const localiseLink = (href: string) => {
-		if (
-			currentLocale === "zh" &&
-			!href.startsWith("/zh") &&
-			href.startsWith("/")
-		) {
-			return `/zh${href}`;
-		}
-		return href;
-	};
+	const localiseLink = (href: string) => localizeHref(href, currentLocale);
 
 	return (
 		<nav
@@ -230,7 +289,12 @@ function DocsSidenav({
 // hydration and without JS at all — and since every doc link is a full-page
 // MPA navigation, the collapsed-after-navigation state of an in-flow
 // disclosure is the natural resting position rather than a bug to fight.
-function MobileNav({ groups, activeSlug, links }: DocsSidenavProps) {
+function MobileNav({
+	groups,
+	activeSlug,
+	links,
+	currentLocale,
+}: DocsSidenavProps) {
 	return (
 		<details
 			class={css({
@@ -276,28 +340,28 @@ function MobileNav({ groups, activeSlug, links }: DocsSidenavProps) {
 					pb: "4",
 				})}
 			>
-				<DocsSidenav groups={groups} activeSlug={activeSlug} links={links} />
+				<DocsSidenav
+					groups={groups}
+					activeSlug={activeSlug}
+					links={links}
+					currentLocale={currentLocale}
+				/>
 			</div>
 		</details>
 	);
 }
 
+/** Builds the URL for switching the current page from `currentLocale` to
+ * `targetLocale` — strips whatever locale prefix is active, then applies
+ * the target's. Works for any locale pair (en/zh/es), not just en↔zh. */
 function getLocaleToggleUrl(
 	currentPath: string,
-	targetLocale: "en" | "zh",
+	currentLocale: string,
+	targetLocale: string,
 ): string {
-	if (targetLocale === "zh") {
-		if (currentPath.startsWith("/zh")) {
-			return currentPath;
-		}
-		return currentPath === "/" ? "/zh" : `/zh${currentPath}`;
-	} else {
-		if (currentPath.startsWith("/zh")) {
-			const rest = currentPath.slice(3);
-			return rest === "" ? "/" : rest;
-		}
-		return currentPath;
-	}
+	const bare = stripLocalePrefix(currentPath, currentLocale);
+	if (targetLocale === "en") return bare;
+	return bare === "/" ? `/${targetLocale}` : `/${targetLocale}${bare}`;
 }
 
 interface DocsHeaderProps {
@@ -320,16 +384,8 @@ function DocsHeader({
 	currentLocale,
 }: DocsHeaderProps) {
 	const githubLink = links?.find(isGithubLink);
-	const localiseLink = (href: string) => {
-		if (
-			currentLocale === "zh" &&
-			!href.startsWith("/zh") &&
-			href.startsWith("/")
-		) {
-			return `/zh${href}`;
-		}
-		return href;
-	};
+	const localiseLink = (href: string) => localizeHref(href, currentLocale);
+	const ui = UI_STRINGS[currentLocale] ?? UI_STRINGS.en!;
 
 	return (
 		<>
@@ -372,10 +428,8 @@ function DocsHeader({
 				>
 					<Search
 						src="/api/docs/search.json"
-						placeholder={
-							currentLocale === "zh" ? "搜索文档..." : "Search docs..."
-						}
-						itemLabel={currentLocale === "zh" ? "文档" : "docs"}
+						placeholder={ui.searchPlaceholder}
+						itemLabel={ui.searchItemLabel}
 						showCount={false}
 						syncUrl={false}
 					/>
@@ -396,11 +450,7 @@ function DocsHeader({
 							variant="plain"
 							class={css({ textStyle: "sm", fontWeight: "medium" })}
 						>
-							{currentLocale === "zh" && link.label === "Blog"
-								? "博客"
-								: currentLocale === "zh" && link.label === "Docs"
-									? "文档"
-									: link.label}
+							{link.label}
 						</Anchor>
 					))}
 					{editUrl ? (
@@ -411,7 +461,7 @@ function DocsHeader({
 								css({ textStyle: "sm", fontWeight: "medium" }),
 							)}
 						>
-							{currentLocale === "zh" ? "编辑" : "Edit"}
+							{ui.edit}
 						</Anchor>
 					) : (
 						<Anchor
@@ -421,33 +471,24 @@ function DocsHeader({
 								css({ textStyle: "sm", fontWeight: "medium" }),
 							)}
 						>
-							{currentLocale === "zh" ? "内容管理" : "Admin"}
+							{ui.admin}
 						</Anchor>
 					)}
-					{currentLocale === "zh" ? (
-						<Anchor
-							href={getLocaleToggleUrl(currentPath, "en")}
-							variant="plain"
-							class={css({
-								textStyle: "sm",
-								fontWeight: "medium",
-								color: "blue.11",
-							})}
-						>
-							English
-						</Anchor>
-					) : (
-						<Anchor
-							href={getLocaleToggleUrl(currentPath, "zh")}
-							variant="plain"
-							class={css({
-								textStyle: "sm",
-								fontWeight: "medium",
-								color: "blue.11",
-							})}
-						>
-							中文
-						</Anchor>
+					{ALL_LOCALES.filter((locale) => locale !== currentLocale).map(
+						(locale) => (
+							<Anchor
+								key={locale}
+								href={getLocaleToggleUrl(currentPath, currentLocale, locale)}
+								variant="plain"
+								class={css({
+									textStyle: "sm",
+									fontWeight: "medium",
+									color: "blue.11",
+								})}
+							>
+								{LOCALE_NAMES[locale] ?? locale}
+							</Anchor>
+						),
 					)}
 					{githubLink && (
 						<Anchor
@@ -466,7 +507,12 @@ function DocsHeader({
 				</nav>
 			</div>
 
-			<MobileNav groups={groups} activeSlug={activeSlug} links={links} />
+			<MobileNav
+				groups={groups}
+				activeSlug={activeSlug}
+				links={links}
+				currentLocale={currentLocale}
+			/>
 		</>
 	);
 }
@@ -540,12 +586,9 @@ export default createRoute(
 	async (c) => {
 		const slug = c.req.param("doc");
 		const currentPath = c.req.path;
-		// Content locale: any /<locale>/docs/* prefix beyond /zh (e.g. /es)
-		// resolves translated content correctly via loadDocs/loadDocBySlug.
-		// NOTE: the header/sidenav chrome below (search placeholder, Edit/
-		// Admin, Blog/Docs labels, locale toggle) is still hardcoded to only
-		// branch on "zh" vs "en" — /es pages get correct translated doc
-		// content but English UI chrome until that's extended too.
+		// Content locale drives loadDocs/loadDocBySlug/loadDocsConfig and the
+		// header/sidenav chrome (search placeholder, Edit/Admin, link labels,
+		// locale switcher) uniformly for every entry in LOCALES.
 		const currentLocale = currentPath.startsWith("/zh")
 			? "zh"
 			: currentPath.startsWith("/es")
