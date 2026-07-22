@@ -41,6 +41,7 @@ import {
 	Progress,
 	RadioCardGroup,
 	RadioGroup,
+	RatingGroup,
 	Search,
 	SegmentGroup,
 	Select,
@@ -882,6 +883,35 @@ export default createRoute((c) => {
 												}
 											/>
 										</div>
+									</Card>
+
+									{/* RatingGroup */}
+									<Card
+										title="Rating Group"
+										description="Star ratings with half-value precision"
+									>
+										<Stack gap="4" align="flex-start" class={css({ mt: "2" })}>
+											<RatingGroup
+												interactive
+												label="Rate your experience"
+												defaultValue={3}
+											/>
+											<RatingGroup
+												interactive
+												label="Half-star precision"
+												allowHalf
+												defaultValue={3.5}
+												colorPalette="blue"
+											/>
+											<RatingGroup
+												label="Average rating"
+												readOnly
+												allowHalf
+												defaultValue={4.5}
+												colorPalette="orange"
+												size="sm"
+											/>
+										</Stack>
 									</Card>
 
 									{/* Field */}

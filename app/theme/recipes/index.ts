@@ -1,4 +1,3 @@
-import { ratingGroup } from "./rating-group";
 import { absoluteCenter } from "./absolute-center";
 import { alert } from "./alert";
 import { anchor } from "./anchor";
@@ -36,6 +35,7 @@ import { popover } from "./popover";
 import { progress } from "./progress";
 import { radioCardGroup } from "./radio-card-group";
 import { radioGroup } from "./radio-group";
+import { ratingGroup } from "./rating-group";
 import { search } from "./search";
 import { segmentGroup } from "./segment-group";
 import { select } from "./select";
@@ -54,22 +54,21 @@ import { toggleGroup } from "./toggle-group";
 import { tooltip } from "./tooltip";
 
 export const recipes = {
-    absoluteCenter,
-    badge,
-    button,
-    group,
-    heading,
-    spinner,
-    text,
-    textarea,
-    skeleton,
-    code,
-    input,
-    gridCol,
-    gridRow,
-    anchor,
-    icon,
-    ratingGroup
+	absoluteCenter,
+	badge,
+	button,
+	group,
+	heading,
+	spinner,
+	text,
+	textarea,
+	skeleton,
+	code,
+	input,
+	gridCol,
+	gridRow,
+	anchor,
+	icon,
 };
 
 export const slotRecipes = {
@@ -79,6 +78,7 @@ export const slotRecipes = {
 	pagination,
 	radioCardGroup,
 	radioGroup,
+	ratingGroup,
 	avatar,
 	toggleGroup,
 	segmentGroup,

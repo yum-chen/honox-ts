@@ -1,81 +1,39 @@
-'use client'
+import RatingGroupIsland from "../../islands/rating-group";
+import { shouldHydrate } from "./island-utils";
 import {
-  RatingGroup,
-  useRatingGroupContext,
-  useRatingGroupItemContext,
-} from '@ark-ui/react/rating-group'
-import { StarIcon } from 'lucide-react'
-import {
-  type ComponentProps,
-  cloneElement,
-  forwardRef,
-  isValidElement,
-  type ReactElement,
-} from 'react'
-import { createStyleContext, type HTMLStyledProps } from 'styled-system/jsx'
-import { ratingGroup } from 'styled-system/recipes'
+	Control,
+	Item,
+	ItemIndicator,
+	Label,
+	Root,
+	type RootProps,
+} from "./rating-group-primitive";
 
-const { withProvider, withContext } = createStyleContext(ratingGroup)
-
-export type RootProps = ComponentProps<typeof Root>
-export const Root = withProvider(RatingGroup.Root, 'root')
-export const RootProvider = withProvider(RatingGroup.RootProvider, 'root')
-export const Item = withContext(RatingGroup.Item, 'item')
-export const Label = withContext(RatingGroup.Label, 'label')
-
-export const HiddenInput = RatingGroup.HiddenInput
-
-export {
-  RatingGroupContext as Context,
-  RatingGroupItemContext as ItemContext,
-} from '@ark-ui/react/rating-group'
-
-interface ItemIndicatorProps extends HTMLStyledProps<'span'> {
-  icon?: ReactElement | undefined
+export interface RatingGroupProps extends RootProps {
+	interactive?: boolean;
 }
 
-const StyledItemIndicator = withContext('span', 'itemIndicator')
+const RatingGroupRoot = (props: RatingGroupProps) => {
+	const { interactive, ...rest } = props;
 
-const cloneIcon = (icon: ReactElement, type: string) => {
-  if (!isValidElement(icon)) return null
-  const props = { [`data-${type}`]: '', 'aria-hidden': true, fill: 'currentColor' }
-  return cloneElement(icon, props)
-}
+	const hasSignal =
+		rest.value !== undefined ||
+		rest.defaultValue !== undefined ||
+		rest.onValueChange !== undefined ||
+		rest.onHoveredValueChange !== undefined;
+	const Component = shouldHydrate(interactive, hasSignal)
+		? RatingGroupIsland
+		: Root;
 
-export const ItemIndicator = forwardRef<HTMLSpanElement, ItemIndicatorProps>(
-  function ItemIndicator(props, ref) {
-    const { icon = <StarIcon />, ...rest } = props
-    const item = useRatingGroupItemContext()
+	return <Component {...rest} />;
+};
 
-    return (
-      <StyledItemIndicator
-        ref={ref}
-        {...rest}
-        data-highlighted={item.highlighted ? '' : undefined}
-        data-checked={item.checked ? '' : undefined}
-        data-half={item.half ? '' : undefined}
-      >
-        {cloneIcon(icon, 'bg')}
-        {cloneIcon(icon, 'fg')}
-      </StyledItemIndicator>
-    )
-  },
-)
+const RatingGroup = Object.assign(RatingGroupRoot, {
+	Root: Root,
+	Label: Label,
+	Control: Control,
+	Item: Item,
+	ItemIndicator: ItemIndicator,
+});
 
-interface ItemsProps extends Omit<ComponentProps<typeof Item>, 'index'> {
-  icon?: ReactElement | undefined
-}
-
-export const Items = (props: ItemsProps) => {
-  const { icon, ...rest } = props
-  const ratingGroup = useRatingGroupContext()
-  return ratingGroup.items.map((item) => (
-    <Item key={item} index={item} {...rest}>
-      <ItemIndicator icon={icon} />
-    </Item>
-  ))
-}
-
-export const Control = withContext(RatingGroup.Control, 'control', {
-  defaultProps: { children: <Items /> },
-})
+export { RatingGroup };

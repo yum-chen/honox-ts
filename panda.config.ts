@@ -66,6 +66,7 @@ export default defineConfig({
 			popover: ["*"],
 			progress: ["*"],
 			radioCardGroup: ["*"],
+			ratingGroup: ["*"],
 			segmentGroup: ["*"],
 			skeleton: ["*"],
 			slider: ["*"],
