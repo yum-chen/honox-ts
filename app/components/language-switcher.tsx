@@ -191,7 +191,9 @@ export function LanguageSwitcher({
 											</svg>
 										</span>
 									) : (
-										<span class={css({ width: "4", height: "4", flexShrink: 0 })} />
+										<span
+											class={css({ width: "4", height: "4", flexShrink: 0 })}
+										/>
 									)}
 									<span class={css({ fontSize: "sm" })}>
 										{LOCALE_NAMES[locale] ?? locale}

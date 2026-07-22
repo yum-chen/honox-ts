@@ -14,11 +14,7 @@ import { type DocsConfig, loadDocsConfig } from "./configs";
 // content/posts is excluded (any locale depth): blog posts have their own
 // loader/route (app/lib/posts.ts).
 const markdownModules = import.meta.glob(
-	[
-		"/content/*/*.md",
-		"/content/*/*/*.md",
-		"!/content/posts/**",
-	],
+	["/content/*/*.md", "/content/*/*/*.md", "!/content/posts/**"],
 	{ query: "?raw", import: "default" },
 ) as Record<string, () => Promise<string>>;
 

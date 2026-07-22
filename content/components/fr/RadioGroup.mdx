@@ -1,0 +1,67 @@
+---
+title: RadioGroup Groupe d'options
+hydration: 2
+category: Forms
+---
+
+import { RadioGroup } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+A set of checkable buttons where only one can be checked at a time.
+
+## Usage
+
+<DemoPreview>
+  <RadioGroup
+    label="Choose an option"
+    items={[
+      { label: "Option A", value: "a" },
+      { label: "Option B", value: "b" },
+      { label: "Option C", value: "c" },
+    ]}
+  />
+</DemoPreview>
+
+### CMS Page Builder
+
+Ce composant est disponible en tant que bloc `radioGroup` dans le [Générateur de page](/docs/PageBuilder) (`content/pages/*.json`) :
+
+```json
+{
+  "type": "radioGroup",
+  "label": "Choose an option",
+  "items": [
+    { "label": "Option A", "value": "a" },
+    { "label": "Option B", "value": "b" }
+  ]
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | - | Group label. |
+| `items` | `RadioGroupItem[]` | - | Array of items with `label` and `value`. |
+
+| `orientation` | \`'horizontal' \ | 'vertical'\` | `'vertical'` | Layout orientation. |
+
+## CMS Configuration
+
+```yaml
+- label: RadioGroup
+  name: radio-group
+  widget: object
+  fields:
+    - { label: Label, name: label, widget: string, required: false }
+    - label: Items
+      name: items
+      widget: list
+      fields:
+        - { label: Label, name: label, widget: string }
+        - { label: Value, name: value, widget: string }
+```
+
+## Hydration
+
+Tier-2: Hydrates when `value`, `defaultValue`, or `onValueChange` is provided.

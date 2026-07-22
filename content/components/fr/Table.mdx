@@ -1,0 +1,112 @@
+---
+title: Table Tableau
+hydration: 2
+category: Data Display
+---
+
+import { Table } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+A flexible component for displaying tabular data.
+
+# Utilisation
+
+<DemoPreview>
+  <div style={{ width: "100%" }}>
+    <Table
+      variant="plain"
+      caption="Product Inventory"
+      columns={[
+        { header: "Name", key: "name" },
+        { header: "Category", key: "category" },
+        { header: "Price", key: "price", align: "end" },
+      ]}
+      rows={[
+        { name: "Laptop", category: "Electronics", price: "$999.00" },
+        { name: "Coffee Mug", category: "Home & Kitchen", price: "$15.00" },
+      ]}
+    />
+  </div>
+</DemoPreview>
+
+```tsx
+import { Table } from "../components/ui";
+
+export default function MyPage() {
+  const columns = [
+    { header: "Name", key: "name" },
+    { header: "Category", key: "category" },
+    { header: "Price", key: "price", align: "end" },
+  ];
+
+  const rows = [
+    { name: "Laptop", category: "Electronics", price: "$999.00" },
+    { name: "Coffee Mug", category: "Home & Kitchen", price: "$15.00" },
+  ];
+
+  return (
+    <Table
+      variant="plain"
+      caption="Product Inventory"
+      columns={columns}
+      rows={rows}
+      footer={
+        <tr>
+          <td colSpan={2}>Total</td>
+          <td style={{ textAlign: "end" }}>$1,014.00</td>
+        </tr>
+      }
+    />
+  );
+}
+```
+
+## Générateur de page CMS
+
+This component is available as a `table` block in the [Page Builder](/docs/PageBuilder) (`content/pages/*.json`). Since row data can't have a fixed CMS shape, `rows` is a JSON-encoded string field, parsed at render time:
+
+```json
+{
+  "type": "table",
+  "columns": [
+    { "header": "Room", "key": "room" },
+    { "header": "Price", "key": "price", "align": "end" }
+  ],
+  "rows": "[{\"room\": \"Cabin Loft\", \"price\": \"$180/night\"}, {\"room\": \"Cabin Suite\", \"price\": \"$240/night\"}]",
+  "variant": "plain",
+  "striped": true
+}
+```
+
+# Propriétés
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `columns` | `TableColumn[]` | Configuration for table columns. |
+| `rows` | `any[]` | Data to display in the table. |
+
+| `caption` | \`string \ | JSX.Element\` | Optional caption displayed at the top or bottom. |
+
+| `footer` | `JSX.Element` | Optional footer content. |
+
+| `variant` | \`"plain" \ | "surface"\` | The visual style of the table. |
+
+| `striped` | `boolean` | Whether to show zebra-striping on rows. |
+| `interactive` | `boolean` | Whether rows should show hover states. |
+| `columnBorder` | `boolean` | Whether to show borders between columns. |
+| `stickyHeader` | `boolean` | Whether the header should remain visible while scrolling. |
+| `class` | `string` | Custom CSS classes for the root element. |
+
+### TableColumn
+
+| Property | Type | Description |
+| --- | --- | --- |
+
+| `header` | \`string \ | JSX.Element\` | Header text or element. |
+
+| `key` | `string` | Key in the row data object. |
+| `render` | `(row, index) => JSX.Element` | Custom render function for the cell. |
+
+| `align` | \`"start" \ | "center" \ | "end"\` | Text alignment for the column. |

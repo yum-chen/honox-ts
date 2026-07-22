@@ -1,0 +1,89 @@
+---
+title: Avatar
+category: Data Display
+hydration: 2
+---
+
+import { Avatar, Stack } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+Displays a user's profile image, falling back to their initials or a
+generic user icon when no image is available or the image fails to load.
+
+# Hydration
+
+**Tier 2 — smart auto-detect.** `Avatar` renders as static HTML and ships
+no client JS unless a `src` is supplied.
+
+| `interactive` prop | Result |
+| --- | --- |
+| omitted, no `src` | Static — no client JS |
+| omitted, `src` present | Hydrates as an island |
+| `true` | Hydrates as an island |
+| `false` | Static — no client JS (image renders eagerly, with no load-error fallback) |
+
+# Utilisation
+
+<DemoPreview>
+  <Stack direction="horizontal" gap="4">
+    <Avatar name="Artefact UI" size="sm" variant="solid" colorPalette="blue" />
+    <Avatar
+      src="https://i.pravatar.cc/80"
+      name="Jane Doe"
+      size="md"
+      shape="rounded"
+    />
+    <Avatar size="lg" />
+  </Stack>
+</DemoPreview>
+
+```tsx
+import { Avatar } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Avatar
+      src="https://i.pravatar.cc/80"
+      name="Jane Doe"
+      size="md"
+      shape="rounded"
+    />
+  );
+}
+```
+
+# Propriétés
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `src` | `string` | Image URL. Supplying this is the Tier-2 hydration signal. |
+| `alt` | `string` | Alt text for the image. |
+| `name` | `string` | Used to derive initials (first + last name) when there's no image. |
+| `fallback` | `JSX.Element` | Custom fallback content, overriding the derived initials/icon. |
+
+| `status` | \`"idle" \ | "loading" \ | "loaded" \ | "error"\` | The image load state. Managed automatically by the island; only set this by hand on a static render. |
+
+| `size` | \`"full" \ | "2xs" \ | "xs" \ | "sm" \ | "md" \ | "lg" \ | "xl" \ | "2xl"\` | Visual size. Default `"md"`. |
+
+| `variant` | \`"solid" \ | "surface" \ | "subtle" \ | "outline"\` | Visual style. Default `"subtle"`. |
+
+| `shape` | \`"square" \ | "rounded" \ | "full"\` | Corner shape. Default `"full"`. |
+
+| `interactive` | `boolean` | Overrides the hydration decision (see above). |
+| `class` | `string` | Custom CSS classes for the root element. |
+
+## Sub-components
+
+For custom compositions, `Avatar.Root` / `Avatar.Image` / `Avatar.Fallback`
+are exported from the primitive alongside the default component — the same
+parts the default `src`/`name`/`fallback` API renders internally.
+
+# Accessibility
+
+- The fallback renders as a `<span>`; give the image a meaningful `alt` (or
+  omit it for purely decorative avatars) since the fallback itself carries
+  no independent accessible name beyond its visible initials/icon.
+- `data-state` (`idle`/`loading`/`loaded`/`error`) is set on the root,
+  image, and fallback for state-based styling.

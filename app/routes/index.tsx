@@ -312,7 +312,10 @@ export default createRoute((c) => {
 						>
 							{currentLocale === "zh" ? "内容管理" : "Sveltia CMS"}
 						</Anchor>
-						<LanguageSwitcher currentPath={currentPath} currentLocale={currentLocale} />
+						<LanguageSwitcher
+							currentPath={currentPath}
+							currentLocale={currentLocale}
+						/>
 						<Button
 							variant="solid"
 							colorPalette="blue"

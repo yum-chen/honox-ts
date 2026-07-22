@@ -1,0 +1,100 @@
+---
+title: Breadcrumb Fil d'Ariane
+hydration: 3
+category: Navigation
+---
+
+import { Breadcrumb } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introduction
+
+A navigation aid that shows the current page's location within a hierarchy using a list of links.
+
+# Utilisation
+
+## Basic Breadcrumb
+
+<DemoPreview>
+  <Breadcrumb
+    items={[
+      { label: "Home", href: "/" },
+      { label: "Components", href: "/components" },
+      { label: "Breadcrumb" },
+    ]}
+  />
+</DemoPreview>
+
+```tsx
+import { Breadcrumb } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Breadcrumb
+      items={[
+        { label: "Home", href: "/" },
+        { label: "Components", href: "/components" },
+        { label: "Breadcrumb" },
+      ]}
+    />
+  );
+}
+```
+
+## Custom Separator
+
+```tsx
+import { Breadcrumb } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <Breadcrumb
+      separator="/"
+      items={[
+        { label: "Home", href: "/" },
+        { label: "Breadcrumb" },
+      ]}
+    />
+  );
+}
+```
+
+## Générateur de page CMS
+
+Ce composant est disponible en tant que bloc `breadcrumb` dans le [Générateur de page](/docs/PageBuilder) (`content/pages/*.json`) :
+
+```json
+{
+  "type": "breadcrumb",
+  "items": [
+    { "label": "Home", "href": "/" },
+    { "label": "Docs", "href": "/docs" },
+    { "label": "Breadcrumb" }
+  ],
+  "variant": "underline",
+  "size": "md"
+}
+```
+
+# Propriétés
+
+## Breadcrumb
+
+| Propriété | Type | Description |
+| --- | --- | --- |
+| `items` | `BreadcrumbItem[]` | The breadcrumb items to render. |
+| `separator` | `Child` | Custom separator between items. Default: a chevron-right icon. |
+
+| `variant` | \`"underline" \ | "plain"\` | The visual style of the breadcrumb. |
+
+| `size` | \`"xs" \ | "sm" \ | "md" \ | "lg"\` | The size of the breadcrumb. |
+
+| `class` | `string` | Custom CSS classes for the root element. |
+
+### BreadcrumbItem
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `label` | `Child` | Display text or JSX node. |
+| `href` | `string` | If present, renders as a link; otherwise renders as plain text (current page). |
+| `current` | `boolean` | Marks the current page. Defaults to `true` for the last item. |
