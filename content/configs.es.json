@@ -79,5 +79,11 @@
     { "tier": 1, "label": "Auto-interactivo" },
     { "tier": 2, "label": "Detección automática inteligente" },
     { "tier": 3, "label": "Presentacional" }
-  ]
+  ],
+  "docsUi": {
+    "searchPlaceholder": "Buscar documentación...",
+    "searchItemLabel": "documentos",
+    "edit": "Editar",
+    "admin": "Administrar"
+  }
 }

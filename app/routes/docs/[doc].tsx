@@ -17,18 +17,15 @@ import { ChevronDownIcon as ChevronDownIconImport } from "../../icons/chevron-do
 import { ExternalLinkIcon as ExternalLinkIconImport } from "../../icons/external-link";
 import { GitHubIcon as GitHubIconImport } from "../../icons/github";
 import {
+	DEFAULT_DOCS_UI,
 	type DocsConfig,
 	type DocsNavLinkConfig,
+	type DocsUiConfig,
 	type HydrationTierConfig,
 	loadDocsConfig,
 } from "../../lib/configs";
 import { type DocSummary, loadDocBySlug, loadDocs } from "../../lib/docs";
-import {
-	DOCS_UI_STRINGS,
-	detectLocale,
-	isLocale,
-	localiseHref,
-} from "../../lib/i18n";
+import { detectLocale, isLocale, localiseHref } from "../../lib/i18n";
 import { markdownContentClass } from "../../utils/markdown-content-style";
 
 // ---------------------------------------------------------------------------
@@ -297,6 +294,7 @@ interface DocsHeaderProps {
 	activeSlug?: string;
 	links?: DocsNavLinkConfig[];
 	headerLinks?: DocsNavLinkConfig[];
+	docsUi?: DocsUiConfig;
 	currentPath: string;
 	currentLocale: string;
 }
@@ -307,12 +305,13 @@ function DocsHeader({
 	activeSlug,
 	links,
 	headerLinks,
+	docsUi,
 	currentPath,
 	currentLocale,
 }: DocsHeaderProps) {
 	const githubLink = links?.find(isGithubLink);
 	const localiseLink = (href: string) => localiseHref(href, currentLocale);
-	const ui = DOCS_UI_STRINGS[currentLocale] ?? DOCS_UI_STRINGS.en!;
+	const ui = { ...DEFAULT_DOCS_UI, ...docsUi };
 
 	return (
 		<>
@@ -534,6 +533,7 @@ export default createRoute(
 						activeSlug={slug}
 						links={config.links}
 						headerLinks={config.headerLinks}
+						docsUi={config.docsUi}
 						currentPath={currentPath}
 						currentLocale={currentLocale}
 					/>

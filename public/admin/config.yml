@@ -1742,3 +1742,35 @@ singletons:
         fields:
           - { label: Tier, name: tier, widget: number, i18n: duplicate }
           - { label: Label, name: label, widget: string, i18n: true }
+      - label: Docs UI
+        name: docsUi
+        widget: object
+        required: false
+        i18n: true
+        hint: "Page-chrome copy for the docs search box and header Edit/Admin buttons. Not doc content, so it lives here instead — every field is fully translated per locale."
+        fields:
+          - label: Search Placeholder
+            name: searchPlaceholder
+            widget: string
+            required: false
+            default: "Search docs..."
+            i18n: true
+          - label: Search Result Item Label
+            name: searchItemLabel
+            widget: string
+            required: false
+            default: docs
+            i18n: true
+            hint: "Noun used in the search result count, e.g. docs."
+          - label: Edit Button
+            name: edit
+            widget: string
+            required: false
+            default: Edit
+            i18n: true
+          - label: Admin Button
+            name: admin
+            widget: string
+            required: false
+            default: Admin
+            i18n: true

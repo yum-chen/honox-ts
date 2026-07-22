@@ -27,53 +27,6 @@ export const LOCALE_NAMES: Record<string, string> = {
 const COLLECTIONS = ["docs", "blog", "pages"] as const;
 
 /**
- * Page-chrome strings for the docs search box + header (Edit/Admin buttons)
- * that aren't part of translated doc content or the configs.<locale>.json
- * singleton. Shared by app/routes/docs/[doc].tsx and app/routes/docs/index.tsx
- * so both pages stay in sync across locales.
- */
-export const DOCS_UI_STRINGS: Record<
-	string,
-	{
-		searchPlaceholder: string;
-		searchItemLabel: string;
-		edit: string;
-		admin: string;
-	}
-> = {
-	en: {
-		searchPlaceholder: "Search docs...",
-		searchItemLabel: "docs",
-		edit: "Edit",
-		admin: "Admin",
-	},
-	zh: {
-		searchPlaceholder: "搜索文档...",
-		searchItemLabel: "文档",
-		edit: "编辑",
-		admin: "内容管理",
-	},
-	es: {
-		searchPlaceholder: "Buscar documentación...",
-		searchItemLabel: "documentos",
-		edit: "Editar",
-		admin: "Administrar",
-	},
-	pt: {
-		searchPlaceholder: "Buscar documentação...",
-		searchItemLabel: "documentos",
-		edit: "Editar",
-		admin: "Administrar",
-	},
-	fr: {
-		searchPlaceholder: "Rechercher dans les docs...",
-		searchItemLabel: "documents",
-		edit: "Modifier",
-		admin: "Administration",
-	},
-};
-
-/**
  * Search box strings for blog pages (index, by-author, by-tag). `placeholder`
  * is used on the blog index (searches all articles in context); `placeholderAll`
  * is used on filtered views (by-author/by-tag) where the box explicitly

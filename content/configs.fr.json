@@ -74,5 +74,11 @@
     "description": "Perspectives, mises à jour et histoires de notre équipe.",
     "newsletterHeading": "Restez à jour",
     "newsletterDescription": "Recevez les derniers articles et perspectives directement dans votre boîte de réception. Pas de spam, juste du contenu de qualité."
+  },
+  "docsUi": {
+    "searchPlaceholder": "Rechercher dans les docs...",
+    "searchItemLabel": "documents",
+    "edit": "Modifier",
+    "admin": "Administration"
   }
 }

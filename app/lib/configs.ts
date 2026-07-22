@@ -44,6 +44,16 @@ export interface HydrationTierConfig {
 	label: string;
 }
 
+/** Page-chrome copy for the docs search box and header Edit/Admin buttons —
+ * not part of translated doc content, so it lives on the configs singleton
+ * instead. Every field is fully translated per locale (not a matching key). */
+export interface DocsUiConfig {
+	searchPlaceholder?: string;
+	searchItemLabel?: string;
+	edit?: string;
+	admin?: string;
+}
+
 /** Shape of the `DocsConfig` singleton (content/configs.json) — drives
  * collection labeling plus the docs sidenav's grouping/ordering, so none of
  * it is hardcoded to any one collection. */
@@ -62,9 +72,20 @@ export interface DocsConfig {
 	/** Translated badge labels for a doc's numeric `hydration` tier. Falls back
 	 * to "Tier N" when a tier is missing. */
 	hydrationTiers?: HydrationTierConfig[];
+	/** Docs search box + header Edit/Admin button copy. */
+	docsUi?: DocsUiConfig;
 }
 
 const EMPTY_DOCS_CONFIG: DocsConfig = { groups: [] };
+
+/** Fallback for any `docsUi` field missing from the loaded config (e.g. a
+ * locale file predating the field, or a fresh checkout with no CMS edits yet). */
+export const DEFAULT_DOCS_UI: Required<DocsUiConfig> = {
+	searchPlaceholder: "Search docs...",
+	searchItemLabel: "docs",
+	edit: "Edit",
+	admin: "Admin",
+};
 
 // Singleton i18n uses the `{{locale}}` file-path placeholder (see the
 // `configs` entry in public/admin/config.yml), not the `structure` option —

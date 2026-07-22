@@ -79,5 +79,11 @@
     { "tier": 1, "label": "Auto-interactive" },
     { "tier": 2, "label": "Smart auto-detect" },
     { "tier": 3, "label": "Presentational" }
-  ]
+  ],
+  "docsUi": {
+    "searchPlaceholder": "Search docs...",
+    "searchItemLabel": "docs",
+    "edit": "Edit",
+    "admin": "Admin"
+  }
 }

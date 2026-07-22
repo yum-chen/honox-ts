@@ -79,5 +79,11 @@
     { "tier": 1, "label": "自动交互" },
     { "tier": 2, "label": "智能自动检测" },
     { "tier": 3, "label": "展示型" }
-  ]
+  ],
+  "docsUi": {
+    "searchPlaceholder": "搜索文档...",
+    "searchItemLabel": "文档",
+    "edit": "编辑",
+    "admin": "内容管理"
+  }
 }
