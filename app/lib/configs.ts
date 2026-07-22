@@ -52,6 +52,7 @@ export interface DocsUiConfig {
 	searchItemLabel?: string;
 	edit?: string;
 	admin?: string;
+	menu?: string;
 }
 
 /** Shape of the `DocsConfig` singleton (content/configs.json) — drives
@@ -85,6 +86,7 @@ export const DEFAULT_DOCS_UI: Required<DocsUiConfig> = {
 	searchItemLabel: "docs",
 	edit: "Edit",
 	admin: "Admin",
+	menu: "Menu",
 };
 
 // Singleton i18n uses the `{{locale}}` file-path placeholder (see the

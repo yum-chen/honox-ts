@@ -84,6 +84,7 @@
     "searchPlaceholder": "Buscar documentação...",
     "searchItemLabel": "documentos",
     "edit": "Editar",
-    "admin": "Administrar"
+    "admin": "Administrar",
+    "menu": "Menu"
   }
 }

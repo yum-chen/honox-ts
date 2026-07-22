@@ -84,6 +84,7 @@
     "searchPlaceholder": "Search docs...",
     "searchItemLabel": "docs",
     "edit": "Edit",
-    "admin": "Admin"
+    "admin": "Admin",
+    "menu": "Menu"
   }
 }

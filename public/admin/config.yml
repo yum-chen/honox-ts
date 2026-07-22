@@ -1821,3 +1821,10 @@ singletons:
             required: false
             default: Admin
             i18n: true
+          - label: Mobile Menu Toggle
+            name: menu
+            widget: string
+            required: false
+            default: Menu
+            i18n: true
+            hint: "Label for the mobile disclosure that expands into the sidenav."

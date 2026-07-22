@@ -242,6 +242,7 @@ function MobileNav({
 }: MobileNavProps) {
 	const githubLink = links?.find(isGithubLink);
 	const localiseLink = (href: string) => localiseHref(href, currentLocale);
+	const ui = { ...DEFAULT_DOCS_UI, ...docsUi };
 
 	return (
 		<details
@@ -277,7 +278,7 @@ function MobileNav({
 					},
 				})}
 			>
-				Menu
+				{ui.menu}
 				<ChevronDownIcon />
 			</summary>
 			<div

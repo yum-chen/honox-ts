@@ -290,7 +290,7 @@ function MobileNav({
 					},
 				})}
 			>
-				Menu
+				{ui.menu}
 				<ChevronDownIcon />
 			</summary>
 			<div
