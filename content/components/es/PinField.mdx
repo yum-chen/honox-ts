@@ -1,0 +1,111 @@
+---
+title: PinField
+hydration: 2
+category: Forms
+---
+
+import { PinField } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# Introducción
+
+Un componente de entrada elegante y altamente accesible diseñado para ingresar contraseñas de un solo uso (OTP), códigos de verificación o números PIN. Gestiona los estados de enfoque, la navegación por teclado, el pegado y la validación, hidratándose automáticamente como una isla interactiva cuando las señales de comportamiento están presentes.
+
+# Uso
+
+## Hidratación Automática Inteligente
+
+El componente `PinField` se hidrata automáticamente como una isla interactiva si se proporciona cualquiera de las siguientes propiedades: `interactive`, `onValueChange`, `onValueComplete`, `onValueInvalid`, `value`, `defaultValue` o `validator`.
+
+## Características Clave
+
+- **Sobrescribir por defecto**: Escribir en una celda llena reemplaza automáticamente el carácter actual y mueve el enfoque a la siguiente celda.
+- **Borrado Natural**: Presionar `Backspace` elimina caracteres y mueve el enfoque hacia atrás de manera limpia.
+- **Teclas de Dirección y Navegación**: Use `ArrowLeft`, `ArrowRight`, `Home` y `End` para navegar entre las celdas sin problemas.
+- **Pegado Robusto**: Pegue códigos de múltiples caracteres desde el portapapeles; se dividen, se limpian de espacios en blanco adicionales, se validan y se rellenan automáticamente.
+- **Envío Automático**: Cuando se establece `autoSubmit`, el componente activa el envío del formulario inmediatamente después de completarse.
+
+## Ejemplos
+
+### Código de Verificación Personalizado
+
+Puede configurar fácilmente la cantidad de dígitos de entrada y utilizar una lógica de validación personalizada.
+
+<DemoPreview>
+  <div style={{ width: "100%", maxWidth: "320px" }}>
+    <PinField
+      label="Código de Verificación"
+      helperText="Ingrese el código de verificación de 6 dígitos que le enviamos"
+      count={6}
+      otp
+      autoFocus
+      interactive
+    />
+  </div>
+</DemoPreview>
+
+```tsx
+import { PinField } from "../components/ui";
+
+export default function VerifyForm() {
+  return (
+    <PinField
+      label="Código de Verificación"
+      helperText="Ingrese el código de verificación de 6 dígitos que le enviamos"
+      count={6}
+      otp
+    />
+  );
+}
+```
+
+### Enmascarar Contraseña/Pin
+
+Establezca `mask` en `true` para ocultar los caracteres ingresados.
+
+```tsx
+<PinField
+  label="PIN de Seguridad"
+  count={4}
+  mask
+/>
+```
+
+### Envío Automático de Formulario
+
+Establezca `autoSubmit` para enviar automáticamente el formulario HTML contenedor.
+
+```tsx
+<form onSubmit={(e) => { e.preventDefault(); console.log("Enviado!"); }}>
+  <PinField
+    label="OTP de Envío Rápido"
+    count={4}
+    autoSubmit
+    onValueComplete={({ valueAsString }) => console.log("Listo!", valueAsString)}
+  />
+</form>
+```
+
+# Propiedades (Props)
+
+| Prop | Tipo | Descripción |
+| --- | --- | --- |
+| `count` | `number` | Número de celdas de entrada (por defecto `4`). |
+| `type` | `"numeric" \| "alphanumeric" \| "alphabetic" \| "alpha" \| "none"` | El tipo de caracteres permitidos (por defecto `"numeric"`). |
+| `placeholder` | `string` | Carácter de marcador de posición para celdas vacías (por defecto `"○"`). |
+| `mask` | `boolean` | Enmascara los caracteres ingresados como puntos de contraseña segura. |
+| `otp` | `boolean` | Indica al agente de usuario que este es un código de un solo uso para soporte de autocompletado. |
+| `blurOnComplete` | `boolean` | Elimina el enfoque automáticamente cuando el código se ha completado. |
+| `autoFocus` | `boolean` | Enfoca automáticamente la primera celda al montar. |
+| `selectOnFocus` | `boolean` | Selecciona automáticamente el contenido de la celda al enfocar. |
+| `autoComplete` | `string` | Valor de autocompletado personalizado para elementos de entrada. |
+| `autoSubmit` | `boolean` | Envía automáticamente el formulario contenedor más cercano al completarse. |
+| `onAutoSubmit` | `(val: string) => void` | Devolución de llamada activada justo antes del envío automático. |
+| `disabled` | `boolean` | Desactiva todo el grupo de campos. |
+| `readOnly` | `boolean` | Establece el grupo de campos en modo de solo lectura. |
+| `invalid` | `boolean` | Fuerza el estado visual no válido. |
+| `value` | `string[]` | Matriz controlada de valores de celda. |
+| `defaultValue` | `string[]` | Matriz inicial no controlada de valores de celda. |
+| `onValueChange` | `(details: { value: string[], valueAsString: string }) => void` | Devolución de llamada activada cuando el valor cambia. |
+| `onValueComplete` | `(details: { value: string[], valueAsString: string }) => void` | Devolución de llamada activada cuando se completan todas las celdas. |
+| `onValueInvalid` | `(details: { index: number, value: string }) => void` | Devolución de llamada activada cuando falla la validación en una celda. |
