@@ -6,7 +6,7 @@
 # Internationalization (i18n)
 i18n:
   structure: multiple_files
-  locales: [en, zh, pt]
+  locales: [en, zh, es, pt, de]
   default_locale: en
   omit_default_locale_from_file_path: true
 
