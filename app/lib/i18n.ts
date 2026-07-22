@@ -26,7 +26,7 @@ export const LOCALE_NAMES: Record<string, string> = {
 /** Route collections that support locale-scoped sub-paths. */
 const COLLECTIONS = ["docs", "blog", "pages"] as const;
 
-function isLocale(value: string | undefined): value is string {
+export function isLocale(value: string | undefined): value is string {
 	return !!value && (TRANSLATED_LOCALES as readonly string[]).includes(value);
 }
 
@@ -40,8 +40,19 @@ function isLocale(value: string | undefined): value is string {
  */
 export function detectLocale(path: string): string {
 	const segments = path.split("/").filter(Boolean);
+	// Old format: /<locale>/<collection>/...
+	if (
+		segments.length >= 2 &&
+		isLocale(segments[0]) &&
+		(COLLECTIONS as readonly string[]).includes(segments[1]!)
+	) {
+		return segments[0];
+	}
 	// Collection route: /<collection>/<locale?>/...
-	if (segments.length >= 1 && (COLLECTIONS as readonly string[]).includes(segments[0]!)) {
+	if (
+		segments.length >= 1 &&
+		(COLLECTIONS as readonly string[]).includes(segments[0]!)
+	) {
 		if (isLocale(segments[1])) return segments[1];
 		return "en";
 	}
@@ -65,12 +76,27 @@ export function localiseHref(href: string, locale: string): string {
 
 	const segments = href.split("/").filter(Boolean);
 
+	// Already localized in the old format? Let's convert it to the new format!
+	if (
+		segments.length >= 2 &&
+		isLocale(segments[0]) &&
+		(COLLECTIONS as readonly string[]).includes(segments[1]!)
+	) {
+		const lang = segments[0];
+		const collection = segments[1]!;
+		const rest = segments.slice(2).join("/");
+		return rest ? `/${collection}/${lang}/${rest}` : `/${collection}/${lang}`;
+	}
+
 	// Already localized? Don't double-prefix.
-	if (isLocale(segments[0])) return href; // e.g. /fr/docs/...
+	if (isLocale(segments[0])) return href; // e.g. /fr (homepage)
 	if (isLocale(segments[1])) return href; // e.g. /docs/fr/...
 
 	// Collection route: insert locale after the collection segment.
-	if (segments.length >= 1 && (COLLECTIONS as readonly string[]).includes(segments[0]!)) {
+	if (
+		segments.length >= 1 &&
+		(COLLECTIONS as readonly string[]).includes(segments[0]!)
+	) {
 		const collection = segments[0]!;
 		const rest = segments.slice(1).join("/");
 		return rest
@@ -93,6 +119,17 @@ export function localiseHref(href: string, locale: string): string {
 export function stripLocale(path: string, locale: string): string {
 	if (locale === "en") return path;
 	const segments = path.split("/").filter(Boolean);
+
+	// Old format: /<locale>/<collection>/<...>
+	if (
+		segments.length >= 2 &&
+		segments[0] === locale &&
+		(COLLECTIONS as readonly string[]).includes(segments[1]!)
+	) {
+		const collection = segments[1]!;
+		const rest = segments.slice(2).join("/");
+		return rest ? `/${collection}/${rest}` : `/${collection}`;
+	}
 
 	// Collection route: /<collection>/<locale>/<...>
 	if (

@@ -19,38 +19,54 @@ import pandaConfig from "./panda.config";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// After SSG build, for any route X where both X.html and X/ directory exist,
-// move X.html → X/index.html so the static server can serve /X as X/index.html
-// and /X/slug as X/slug.html without conflict.
+// After SSG build, recursively move any X.html to X/index.html if X/ directory exists,
+// or if X.html is a root-level or nested locale index page (e.g., zh.html, es.html, pt.html, fr.html).
+// This prevents static routing conflicts and 404 errors on static hosts.
 function fixSsgRoutingPlugin() {
 	return {
 		name: "fix-ssg-routing",
 		closeBundle: async () => {
 			const distDir = path.resolve(__dirname, "dist");
+			const locales = ["zh", "es", "pt", "fr"];
 
-			// Read top-level entries in dist/
-			const entries = readdirSync(distDir, { withFileTypes: true });
+			function traverse(currentDir: string) {
+				const entries = readdirSync(currentDir, { withFileTypes: true });
 
-			for (const entry of entries) {
-				// Skip if not a .html file at the top level
-				if (!entry.isFile() || !entry.name.endsWith(".html")) {
-					continue;
+				for (const entry of entries) {
+					const fullPath = path.join(currentDir, entry.name);
+
+					if (entry.isDirectory()) {
+						traverse(fullPath);
+					} else if (entry.isFile() && entry.name.endsWith(".html")) {
+						if (entry.name === "index.html" || entry.name === "404.html") {
+							continue;
+						}
+
+						const routeName = entry.name.replace(/\.html$/, "");
+						const dirPath = path.join(currentDir, routeName);
+						const indexPath = path.join(dirPath, "index.html");
+
+						const isLocaleRoute = locales.includes(routeName);
+						const dirExists =
+							existsSync(dirPath) && statSync(dirPath).isDirectory();
+
+						if (dirExists || isLocaleRoute) {
+							if (!existsSync(dirPath)) {
+								mkdirSync(dirPath, { recursive: true });
+							}
+							renameSync(fullPath, indexPath);
+							const relHtml = path.relative(distDir, fullPath);
+							const relIndex = path.relative(distDir, indexPath);
+							console.log(
+								`[fix-ssg-routing] ✓ dist/${relHtml} → dist/${relIndex}`,
+							);
+						}
+					}
 				}
+			}
 
-				const htmlFile = entry.name; // e.g., "blog.html"
-				const routeName = htmlFile.replace(/\.html$/, ""); // e.g., "blog"
-				const htmlPath = path.join(distDir, htmlFile); // e.g., "dist/blog.html"
-				const dirPath = path.join(distDir, routeName); // e.g., "dist/blog"
-				const indexPath = path.join(dirPath, "index.html"); // e.g., "dist/blog/index.html"
-
-				// Check if a directory with the same name exists
-				if (existsSync(dirPath) && statSync(dirPath).isDirectory()) {
-					mkdirSync(dirPath, { recursive: true });
-					renameSync(htmlPath, indexPath);
-					console.log(
-						`[fix-ssg-routing] ✓ dist/${htmlFile} → dist/${routeName}/index.html`,
-					);
-				}
+			if (existsSync(distDir)) {
+				traverse(distDir);
 			}
 
 		// Locale homepages (zh/es/pt/fr) are emitted as a flat dist/<lang>.html

@@ -18,8 +18,8 @@ import { ArrowRightIcon } from "../../icons/arrow-right";
 import { FilterIcon } from "../../icons/filter";
 import { MailIcon } from "../../icons/mail";
 import { SearchIcon } from "../../icons/search";
-import { detectLocale, localiseHref } from "../../lib/i18n";
 import { type DocsNavLinkConfig, loadDocsConfig } from "../../lib/configs";
+import { detectLocale, localiseHref } from "../../lib/i18n";
 import { loadPosts } from "../../lib/posts";
 import { filterEntries } from "../../utils/search";
 

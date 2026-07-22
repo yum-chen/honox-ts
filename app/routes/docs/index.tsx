@@ -20,8 +20,8 @@ import {
 	type DocsNavLinkConfig,
 	loadDocsConfig,
 } from "../../lib/configs";
-import { detectLocale, localiseHref } from "../../lib/i18n";
 import { type DocSummary, loadDocs } from "../../lib/docs";
+import { detectLocale, localiseHref } from "../../lib/i18n";
 
 // ---------------------------------------------------------------------------
 // Inlined docs nav shell.

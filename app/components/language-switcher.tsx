@@ -1,10 +1,6 @@
 import { css } from "design-system/css";
+import { ALL_LOCALES, LOCALE_NAMES, localeToggleUrl } from "../lib/i18n";
 import { Button, Dropdown } from "./ui";
-import {
-	ALL_LOCALES,
-	LOCALE_NAMES,
-	localeToggleUrl,
-} from "../lib/i18n";
 
 const GlobeIcon = () => (
 	<svg

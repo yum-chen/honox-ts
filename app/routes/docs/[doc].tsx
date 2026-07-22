@@ -21,12 +21,8 @@ import {
 	type DocsNavLinkConfig,
 	loadDocsConfig,
 } from "../../lib/configs";
+import { type DocSummary, loadDocBySlug, loadDocs } from "../../lib/docs";
 import { detectLocale, localiseHref } from "../../lib/i18n";
-import {
-	type DocSummary,
-	loadDocBySlug,
-	loadDocs,
-} from "../../lib/docs";
 import { markdownContentClass } from "../../utils/markdown-content-style";
 
 // Page-chrome strings that aren't part of translated doc content or the

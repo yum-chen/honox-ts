@@ -1,7 +1,6 @@
 import { css } from "design-system/css";
 import { createRoute } from "honox/factory";
 import { LanguageSwitcher } from "../components/language-switcher";
-import { detectLocale, localiseHref } from "../lib/i18n";
 import {
 	AbsoluteCenter,
 	Alert,
@@ -61,6 +60,7 @@ import {
 	ToggleGroup,
 	Tooltip,
 } from "../components/ui";
+import { detectLocale, localiseHref } from "../lib/i18n";
 
 const items = [
 	{ label: "React", value: "react" },
