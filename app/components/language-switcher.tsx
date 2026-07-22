@@ -1,17 +1,39 @@
 import { css, cx } from "design-system/css";
 import { Button, Dropdown } from "./ui";
 
-const ALL_LOCALES = ["en", "zh", "es", "pt"] as const;
+const ALL_LOCALES = ["en", "zh", "es", "pt", "fr"] as const;
 
 const LOCALE_NAMES: Record<string, string> = {
 	en: "English",
 	zh: "中文",
 	es: "Español",
 	pt: "Português",
+	fr: "Français",
 };
 
 function stripLocalePrefix(path: string, locale: string): string {
 	if (locale === "en") return path;
+	if (locale === "fr") {
+		if (path.startsWith("/docs/fr/")) {
+			return `/docs/${path.slice(9)}`;
+		}
+		if (path === "/docs/fr") {
+			return "/docs";
+		}
+		if (path.startsWith("/blog/fr/")) {
+			return `/blog/${path.slice(9)}`;
+		}
+		if (path === "/blog/fr") {
+			return "/blog";
+		}
+		if (path.startsWith("/pages/fr/")) {
+			return `/pages/${path.slice(10)}`;
+		}
+		if (path === "/fr") {
+			return "/";
+		}
+		return path;
+	}
 	const prefix = `/${locale}`;
 	if (path === prefix) return "/";
 	if (path.startsWith(`${prefix}/`)) return path.slice(prefix.length);
@@ -25,6 +47,27 @@ function getLocaleToggleUrl(
 ): string {
 	const bare = stripLocalePrefix(currentPath, currentLocale);
 	if (targetLocale === "en") return bare;
+	if (targetLocale === "fr") {
+		if (bare.startsWith("/docs/")) {
+			return `/docs/fr/${bare.slice(6)}`;
+		}
+		if (bare === "/docs") {
+			return "/docs/fr";
+		}
+		if (bare.startsWith("/blog/")) {
+			return `/blog/fr/${bare.slice(6)}`;
+		}
+		if (bare === "/blog") {
+			return "/blog/fr";
+		}
+		if (bare.startsWith("/pages/")) {
+			return `/pages/fr/${bare.slice(7)}`;
+		}
+		if (bare === "/") {
+			return "/fr";
+		}
+		return `/fr${bare}`;
+	}
 	return bare === "/" ? `/${targetLocale}` : `/${targetLocale}${bare}`;
 }
 

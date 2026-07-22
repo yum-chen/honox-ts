@@ -6,12 +6,15 @@ export const __importing_islands = true;
 export default jsxRenderer(({ children }, c) => {
 	const currentPath = c.req.path;
 	let currentLocale = "en";
-	if (currentPath.startsWith("/zh")) {
+	const pathSegments = currentPath.split("/");
+	if (pathSegments.includes("zh")) {
 		currentLocale = "zh";
-	} else if (currentPath.startsWith("/es")) {
+	} else if (pathSegments.includes("es")) {
 		currentLocale = "es";
-	} else if (currentPath.startsWith("/pt")) {
+	} else if (pathSegments.includes("pt")) {
 		currentLocale = "pt";
+	} else if (pathSegments.includes("fr")) {
+		currentLocale = "fr";
 	}
 	return (
 		<html lang={currentLocale}>

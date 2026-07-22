@@ -121,29 +121,59 @@ function BlogHeader({
 	);
 }
 
+function localizeHref(href: string, locale: string): string {
+	if (locale === "en" || !href.startsWith("/")) {
+		return href;
+	}
+	if (locale === "fr") {
+		if (href.startsWith("/docs/")) {
+			return `/docs/fr/${href.slice(6)}`;
+		}
+		if (href === "/docs") {
+			return "/docs/fr";
+		}
+		if (href.startsWith("/blog/")) {
+			return `/blog/fr/${href.slice(6)}`;
+		}
+		if (href === "/blog") {
+			return "/blog/fr";
+		}
+		if (href.startsWith("/pages/")) {
+			return `/pages/fr/${href.slice(7)}`;
+		}
+		if (href === "/") {
+			return "/fr";
+		}
+		if (href.startsWith("/fr/")) {
+			return href;
+		}
+		return `/fr${href}`;
+	}
+	if (href.startsWith(`/${locale}`)) {
+		return href;
+	}
+	return `/${locale}${href}`;
+}
+
 export default createRoute(async (c) => {
 	const currentPath = c.req.path;
 	let currentLocale = "en";
-	if (currentPath.startsWith("/zh")) {
+	const pathSegments = currentPath.split("/");
+	if (pathSegments.includes("zh")) {
 		currentLocale = "zh";
-	} else if (currentPath.startsWith("/es")) {
+	} else if (pathSegments.includes("es")) {
 		currentLocale = "es";
-	} else if (currentPath.startsWith("/pt")) {
+	} else if (pathSegments.includes("pt")) {
 		currentLocale = "pt";
+	} else if (pathSegments.includes("fr")) {
+		currentLocale = "fr";
 	}
 	const [{ posts: blogPosts, searchEntries, tags }, config] = await Promise.all(
 		[loadPosts(currentLocale), loadDocsConfig()],
 	);
 
 	const localiseLink = (href: string) => {
-		if (
-			currentLocale !== "en" &&
-			!href.startsWith(`/${currentLocale}`) &&
-			href.startsWith("/")
-		) {
-			return `/${currentLocale}${href}`;
-		}
-		return href;
+		return localizeHref(href, currentLocale);
 	};
 
 	// Get URL parameters for searching

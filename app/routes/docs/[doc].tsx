@@ -64,17 +64,46 @@ const UI_STRINGS: Record<
 		edit: "Editar",
 		admin: "Administrar",
 	},
+	fr: {
+		searchPlaceholder: "Rechercher...",
+		searchItemLabel: "documents",
+		edit: "Modifier",
+		admin: "Admin",
+	},
 };
 
 /** Prefixes an absolute in-app href with the current locale, e.g.
  * `/docs/Button` → `/es/docs/Button`. No-op for the default locale, for
  * external hrefs, or if already prefixed. */
 function localizeHref(href: string, locale: string): string {
-	if (
-		locale === "en" ||
-		!href.startsWith("/") ||
-		href.startsWith(`/${locale}`)
-	) {
+	if (locale === "en" || !href.startsWith("/")) {
+		return href;
+	}
+	if (locale === "fr") {
+		if (href.startsWith("/docs/")) {
+			return `/docs/fr/${href.slice(6)}`;
+		}
+		if (href === "/docs") {
+			return "/docs/fr";
+		}
+		if (href.startsWith("/blog/")) {
+			return `/blog/fr/${href.slice(6)}`;
+		}
+		if (href === "/blog") {
+			return "/blog/fr";
+		}
+		if (href.startsWith("/pages/")) {
+			return `/pages/fr/${href.slice(7)}`;
+		}
+		if (href === "/") {
+			return "/fr";
+		}
+		if (href.startsWith("/fr/")) {
+			return href;
+		}
+		return `/fr${href}`;
+	}
+	if (href.startsWith(`/${locale}`)) {
 		return href;
 	}
 	return `/${locale}${href}`;
@@ -553,13 +582,17 @@ export default createRoute(
 		// Content locale drives loadDocs/loadDocBySlug/loadDocsConfig and the
 		// header/sidenav chrome (search placeholder, Edit/Admin, link labels,
 		// locale switcher) uniformly for every entry in LOCALES.
-		const currentLocale = currentPath.startsWith("/zh")
-			? "zh"
-			: currentPath.startsWith("/es")
-				? "es"
-				: currentPath.startsWith("/pt")
-					? "pt"
-					: "en";
+		let currentLocale = "en";
+		const pathSegments = currentPath.split("/");
+		if (pathSegments.includes("zh")) {
+			currentLocale = "zh";
+		} else if (pathSegments.includes("es")) {
+			currentLocale = "es";
+		} else if (pathSegments.includes("pt")) {
+			currentLocale = "pt";
+		} else if (pathSegments.includes("fr")) {
+			currentLocale = "fr";
+		}
 		const [doc, docs, config] = await Promise.all([
 			loadDocBySlug(slug, currentLocale),
 			loadDocs(currentLocale),

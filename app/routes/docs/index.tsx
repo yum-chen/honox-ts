@@ -46,6 +46,40 @@ const ExternalLinkIcon = () => (
 	<ExternalLinkIconImport width="16" height="16" />
 );
 
+function localizeHref(href: string, locale: string): string {
+	if (locale === "en" || !href.startsWith("/")) {
+		return href;
+	}
+	if (locale === "fr") {
+		if (href.startsWith("/docs/")) {
+			return `/docs/fr/${href.slice(6)}`;
+		}
+		if (href === "/docs") {
+			return "/docs/fr";
+		}
+		if (href.startsWith("/blog/")) {
+			return `/blog/fr/${href.slice(6)}`;
+		}
+		if (href === "/blog") {
+			return "/blog/fr";
+		}
+		if (href.startsWith("/pages/")) {
+			return `/pages/fr/${href.slice(7)}`;
+		}
+		if (href === "/") {
+			return "/fr";
+		}
+		if (href.startsWith("/fr/")) {
+			return href;
+		}
+		return `/fr${href}`;
+	}
+	if (href.startsWith(`/${locale}`)) {
+		return href;
+	}
+	return `/${locale}${href}`;
+}
+
 interface DocGroup {
 	label: string;
 	items: DocSummary[];
@@ -100,14 +134,7 @@ function DocsSidenav({
 	currentLocale = "en",
 }: DocsSidenavProps) {
 	const localiseLink = (href: string) => {
-		if (
-			currentLocale === "zh" &&
-			!href.startsWith("/zh") &&
-			href.startsWith("/")
-		) {
-			return `/zh${href}`;
-		}
-		return href;
+		return localizeHref(href, currentLocale);
 	};
 
 	return (
@@ -293,14 +320,7 @@ function DocsHeader({
 }: DocsHeaderProps) {
 	const githubLink = links?.find(isGithubLink);
 	const localiseLink = (href: string) => {
-		if (
-			currentLocale === "zh" &&
-			!href.startsWith("/zh") &&
-			href.startsWith("/")
-		) {
-			return `/zh${href}`;
-		}
-		return href;
+		return localizeHref(href, currentLocale);
 	};
 
 	return (
@@ -462,7 +482,17 @@ const docsShellProps = {
 
 export default createRoute(async (c) => {
 	const currentPath = c.req.path;
-	const currentLocale = currentPath.startsWith("/zh") ? "zh" : "en";
+	let currentLocale = "en";
+	const pathSegments = currentPath.split("/");
+	if (pathSegments.includes("zh")) {
+		currentLocale = "zh";
+	} else if (pathSegments.includes("es")) {
+		currentLocale = "es";
+	} else if (pathSegments.includes("pt")) {
+		currentLocale = "pt";
+	} else if (pathSegments.includes("fr")) {
+		currentLocale = "fr";
+	}
 	const [docs, config] = await Promise.all([
 		loadDocs(currentLocale),
 		loadDocsConfig(),
@@ -470,14 +500,7 @@ export default createRoute(async (c) => {
 	const groups = buildDocGroups(docs, config);
 
 	const localiseLink = (href: string) => {
-		if (
-			currentLocale === "zh" &&
-			!href.startsWith("/zh") &&
-			href.startsWith("/")
-		) {
-			return `/zh${href}`;
-		}
-		return href;
+		return localizeHref(href, currentLocale);
 	};
 
 	return c.render(

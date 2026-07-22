@@ -186,27 +186,57 @@ const customShowcaseSlides = [
 	</div>,
 ];
 
+function localizeHref(href: string, locale: string): string {
+	if (locale === "en" || !href.startsWith("/")) {
+		return href;
+	}
+	if (locale === "fr") {
+		if (href.startsWith("/docs/")) {
+			return `/docs/fr/${href.slice(6)}`;
+		}
+		if (href === "/docs") {
+			return "/docs/fr";
+		}
+		if (href.startsWith("/blog/")) {
+			return `/blog/fr/${href.slice(6)}`;
+		}
+		if (href === "/blog") {
+			return "/blog/fr";
+		}
+		if (href.startsWith("/pages/")) {
+			return `/pages/fr/${href.slice(7)}`;
+		}
+		if (href === "/") {
+			return "/fr";
+		}
+		if (href.startsWith("/fr/")) {
+			return href;
+		}
+		return `/fr${href}`;
+	}
+	if (href.startsWith(`/${locale}`)) {
+		return href;
+	}
+	return `/${locale}${href}`;
+}
+
 export default createRoute((c) => {
 	const currentPath = c.req.path;
 	let currentLocale = "en";
-	if (currentPath.startsWith("/zh")) {
+	const pathSegments = currentPath.split("/");
+	if (pathSegments.includes("zh")) {
 		currentLocale = "zh";
-	} else if (currentPath.startsWith("/es")) {
+	} else if (pathSegments.includes("es")) {
 		currentLocale = "es";
-	} else if (currentPath.startsWith("/pt")) {
+	} else if (pathSegments.includes("pt")) {
 		currentLocale = "pt";
+	} else if (pathSegments.includes("fr")) {
+		currentLocale = "fr";
 	}
 	const name = c.req.query("name") ?? "Design System";
 
 	const localiseLink = (href: string) => {
-		if (
-			currentLocale === "zh" &&
-			!href.startsWith("/zh") &&
-			href.startsWith("/")
-		) {
-			return `/zh${href}`;
-		}
-		return href;
+		return localizeHref(href, currentLocale);
 	};
 
 	return c.render(
@@ -277,7 +307,11 @@ export default createRoute((c) => {
 								fontWeight: "medium",
 							})}
 						>
-							{currentLocale === "zh" ? "博客" : "Blog"}
+							{currentLocale === "zh"
+								? "博客"
+								: currentLocale === "fr"
+									? "Blog"
+									: "Blog"}
 						</Anchor>
 						<Anchor
 							href={localiseLink("/docs")}
@@ -288,7 +322,11 @@ export default createRoute((c) => {
 								fontWeight: "medium",
 							})}
 						>
-							{currentLocale === "zh" ? "文档" : "Docs"}
+							{currentLocale === "zh"
+								? "文档"
+								: currentLocale === "fr"
+									? "Docs"
+									: "Docs"}
 						</Anchor>
 						<Anchor
 							href={localiseLink("/pages/product-landing")}
@@ -299,7 +337,11 @@ export default createRoute((c) => {
 								fontWeight: "medium",
 							})}
 						>
-							{currentLocale === "zh" ? "产品着陆页" : "Pulse Landing Page"}
+							{currentLocale === "zh"
+								? "产品着陆页"
+								: currentLocale === "fr"
+									? "Page de destination"
+									: "Pulse Landing Page"}
 						</Anchor>
 						<Anchor
 							href="/admin"
@@ -310,7 +352,11 @@ export default createRoute((c) => {
 								fontWeight: "medium",
 							})}
 						>
-							{currentLocale === "zh" ? "内容管理" : "Sveltia CMS"}
+							{currentLocale === "zh"
+								? "内容管理"
+								: currentLocale === "fr"
+									? "Admin"
+									: "Sveltia CMS"}
 						</Anchor>
 						<LanguageSwitcher
 							currentPath={currentPath}
@@ -323,7 +369,11 @@ export default createRoute((c) => {
 							interactive
 							onclick="window.scrollTo({top: document.getElementById('hub').offsetTop - 80, behavior: 'smooth'})"
 						>
-							{currentLocale === "zh" ? "探索中心" : "Explore Hub"}
+							{currentLocale === "zh"
+								? "探索中心"
+								: currentLocale === "fr"
+									? "Explorer le Hub"
+									: "Explore Hub"}
 						</Button>
 					</nav>
 				</div>
@@ -359,7 +409,9 @@ export default createRoute((c) => {
 					>
 						{currentLocale === "zh"
 							? "精美设计、完全无障碍的组件套件"
-							: "A beautifully engineered, accessible component suite."}
+							: currentLocale === "fr"
+								? "Une suite de composants magnifiquement conçus et accessibles."
+								: "A beautifully engineered, accessible component suite."}
 					</Heading>
 					<Text
 						size="lg"
@@ -367,7 +419,9 @@ export default createRoute((c) => {
 					>
 						{currentLocale === "zh"
 							? "一个专为 HonoX、PandaCSS 和 Sveltia CMS 构建的完整三层设计系统。快速、轻量且完全符合无障碍标准。"
-							: "A complete 3-tier design system built for HonoX, PandaCSS, and Sveltia CMS. Fast, lightweight, and fully accessible, following standard user habits."}
+							: currentLocale === "fr"
+								? "Un système de conception complet à 3 niveaux conçu pour HonoX, PandaCSS et Sveltia CMS. Rapide, léger et entièrement accessible."
+								: "A complete 3-tier design system built for HonoX, PandaCSS, and Sveltia CMS. Fast, lightweight, and fully accessible, following standard user habits."}
 					</Text>
 
 					<div
