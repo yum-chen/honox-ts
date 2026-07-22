@@ -1,0 +1,111 @@
+---
+title: PinField
+hydration: 2
+category: Forms
+---
+
+import { PinField } from "../../app/components/ui";
+import { DemoPreview } from "../../app/components/demo-preview";
+
+# Introduction
+
+An elegant and highly accessible input component designed for entering one-time passwords (OTP), verification codes, or PIN numbers. It manages focus states, keyboard navigation, pasting, and validation, automatically hydrating as an interactive island when behavioral signals are present.
+
+# Usage
+
+## Smart Auto-Hydration
+
+The `PinField` component automatically hydrates as an interactive island if any of the following props are provided: `interactive`, `onValueChange`, `onValueComplete`, `onValueInvalid`, `value`, `defaultValue`, or `validator`.
+
+## Core Features
+
+- **Overwrite by default**: Typing into a filled cell automatically replaces the current character and moves focus to the next cell.
+- **Natural Deletion**: Pressing `Backspace` deletes characters and moves focus backwards cleanly.
+- **Arrow and Navigation Keys**: Use `ArrowLeft`, `ArrowRight`, `Home`, and `End` to navigate between inputs seamlessly.
+- **Robust Pasting**: Paste multi-character codes from clipboard; they are automatically split, stripped of extra whitespace, validated, and filled.
+- **Auto-Submit**: When `autoSubmit` is set, the component triggers form submission immediately upon completion.
+
+## Examples
+
+### Custom Verification Code
+
+You can easily configure the number of input digits and use custom validation logic.
+
+<DemoPreview>
+  <div style={{ width: "100%", maxWidth: "320px" }}>
+    <PinField
+      label="Verification Code"
+      helperText="Enter the 6-digit verification code sent to you"
+      count={6}
+      otp
+      autoFocus
+      interactive
+    />
+  </div>
+</DemoPreview>
+
+```tsx
+import { PinField } from "../components/ui";
+
+export default function VerifyForm() {
+  return (
+    <PinField
+      label="Verification Code"
+      helperText="Enter the 6-digit verification code sent to you"
+      count={6}
+      otp
+    />
+  );
+}
+```
+
+### Password/Pin Masking
+
+Set `mask` to `true` to mask the entered characters.
+
+```tsx
+<PinField
+  label="Security PIN"
+  count={4}
+  mask
+/>
+```
+
+### Form Auto-Submission
+
+Set `autoSubmit` to automatically submit the enclosing HTML form or trigger the callback.
+
+```tsx
+<form onSubmit={(e) => { e.preventDefault(); console.log("Submitted!"); }}>
+  <PinField
+    label="Quick Submit OTP"
+    count={4}
+    autoSubmit
+    onValueComplete={({ valueAsString }) => console.log("Done!", valueAsString)}
+  />
+</form>
+```
+
+# Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `count` | `number` | Number of input cells (defaults to `4`). |
+| `type` | `"numeric" \| "alphanumeric" \| "alphabetic" \| "alpha" \| "none"` | The type of characters allowed (defaults to `"numeric"`). |
+| `placeholder` | `string` | Placeholder character for empty cells (defaults to `"○"`). |
+| `mask` | `boolean` | Masks the entered characters as secure password dots. |
+| `otp` | `boolean` | Instructs the user-agent that this is a one-time code for autocomplete support. |
+| `blurOnComplete` | `boolean` | Automatically blur the active element when the code is fully entered. |
+| `autoFocus` | `boolean` | Focuses the first cell automatically on mount. |
+| `selectOnFocus` | `boolean` | Automatically selects cell content on focus. |
+| `autoComplete` | `string` | Custom autocomplete value for input elements. |
+| `autoSubmit` | `boolean` | Automatically submits the nearest parent form on completion. |
+| `onAutoSubmit` | `(val: string) => void` | Callback triggered right before automatic submission. |
+| `disabled` | `boolean` | Disables the entire field group. |
+| `readOnly` | `boolean` | Sets the field group to read-only mode. |
+| `invalid` | `boolean` | Forces the invalid visual state. |
+| `value` | `string[]` | Controlled array of cell values. |
+| `defaultValue` | `string[]` | Initial uncontrolled array of cell values. |
+| `onValueChange` | `(details: { value: string[], valueAsString: string }) => void` | Callback triggered when the value changes. |
+| `onValueComplete` | `(details: { value: string[], valueAsString: string }) => void` | Callback triggered when all cells are filled. |
+| `onValueInvalid` | `(details: { index: number, value: string }) => void` | Callback triggered when validation fails on a typed cell. |

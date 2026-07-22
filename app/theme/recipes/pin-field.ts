@@ -3,6 +3,7 @@ import { input } from "./input";
 
 export const pinField = defineSlotRecipe({
 	className: "pin-field",
+	jsx: ["PinField"],
 	slots: ["root", "label", "control", "input", "helperText", "errorText"],
 	base: {
 		root: {

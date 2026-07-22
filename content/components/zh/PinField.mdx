@@ -1,0 +1,111 @@
+---
+title: PinField 验证码输入框
+hydration: 2
+category: Forms
+---
+
+import { PinField } from "../../../app/components/ui";
+import { DemoPreview } from "../../../app/components/demo-preview";
+
+# 简介
+
+一个优雅且完全符合无障碍（Accessibility）标准的输入框组件，专门设计用于输入一次性密码（OTP）、验证码或安全 PIN 码。它自动管理焦点状态、键盘导航、粘贴逻辑和表单校验，并在有交互信号时自动水合为交互式岛屿。
+
+# 用法
+
+## 智能自动水合
+
+如果提供了以下任一属性，`PinField` 组件会自动以交互式岛屿的形式进行水合：`interactive`、`onValueChange`、`onValueComplete`、`onValueInvalid`、`value`、`defaultValue` 或 `validator`。
+
+## 核心功能
+
+- **默认覆盖输入**：在已填充的格子中输入新字符时，会自动替换当前内容并自动将焦点跳转到下一个格子。
+- **自然删除行为**：按下 `Backspace`（退格键）会删除字符并将焦点向后移动。
+- **键盘和导航支持**：使用 `ArrowLeft`、`ArrowRight`、`Home` 和 `End` 键可在格子之间无缝移动焦点。
+- **健壮的粘贴处理**：支持从剪贴板粘贴多字符代码，自动拆分、去除多余空白字符并进行格式验证。
+- **自动提交**：当配置了 `autoSubmit` 时，组件会在所有格子填满后立即自动提交所在的 HTML 表单。
+
+## 示例
+
+### 自定义验证码
+
+你可以轻松调整验证码格子数量和校验逻辑。
+
+<DemoPreview>
+  <div style={{ width: "100%", maxWidth: "320px" }}>
+    <PinField
+      label="验证码"
+      helperText="请输入发送给您的 6 位验证码"
+      count={6}
+      otp
+      autoFocus
+      interactive
+    />
+  </div>
+</DemoPreview>
+
+```tsx
+import { PinField } from "../components/ui";
+
+export default function VerifyForm() {
+  return (
+    <PinField
+      label="验证码"
+      helperText="请输入发送给您的 6 位验证码"
+      count={6}
+      otp
+    />
+  );
+}
+```
+
+### 密码掩码模式
+
+将 `mask` 设为 `true` 可以隐藏输入的敏感数字或字母。
+
+```tsx
+<PinField
+  label="安全 PIN 码"
+  count={4}
+  mask
+/>
+```
+
+### 自动提交表单
+
+将 `autoSubmit` 设为 `true` 可以在输入完成时自动触发最近的 HTML 表单提交。
+
+```tsx
+<form onSubmit={(e) => { e.preventDefault(); console.log("提交了！"); }}>
+  <PinField
+    label="快速提交验证码"
+    count={4}
+    autoSubmit
+    onValueComplete={({ valueAsString }) => console.log("完成!", valueAsString)}
+  />
+</form>
+```
+
+# 属性
+
+| 属性 | 类型 | 说明 |
+| --- | --- | --- |
+| `count` | `number` | 输入格子的数量（默认为 `4`）。 |
+| `type` | `"numeric" \| "alphanumeric" \| "alphabetic" \| "alpha" \| "none"` | 允许输入的字符类型（默认为 `"numeric"`）。 |
+| `placeholder` | `string` | 空格子占位符（默认为 `"○"`）。 |
+| `mask` | `boolean` | 是否像密码输入框一样隐藏输入的字符。 |
+| `otp` | `boolean` | 提示浏览器这是一个一次性代码，以启用自动填充。 |
+| `blurOnComplete` | `boolean` | 填满所有格子后自动使输入框失去焦点。 |
+| `autoFocus` | `boolean` | 组件挂载时自动聚焦到第一个格子。 |
+| `selectOnFocus` | `boolean` | 格子聚焦时自动选定其文本内容。 |
+| `autoComplete` | `string` | 输入元素的原生自动填充自定义值。 |
+| `autoSubmit` | `boolean` | 输入完成后是否自动提交最近的父表单。 |
+| `onAutoSubmit` | `(val: string) => void` | 在自动提交即将触发前的回调。 |
+| `disabled` | `boolean` | 禁用整个验证码输入框。 |
+| `readOnly` | `boolean` | 将输入框组设为只读模式。 |
+| `invalid` | `boolean` | 强制显示无效验证的状态。 |
+| `value` | `string[]` | 受控的值数组。 |
+| `defaultValue` | `string[]` | 非受控的初始值数组。 |
+| `onValueChange` | `(details: { value: string[], valueAsString: string }) => void` | 值发生变化时触发的回调。 |
+| `onValueComplete` | `(details: { value: string[], valueAsString: string }) => void` | 所有格子填满后触发的回调。 |
+| `onValueInvalid` | `(details: { index: number, value: string }) => void` | 校验失败时触发的回调。 |

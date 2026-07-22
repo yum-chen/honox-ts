@@ -11,9 +11,12 @@ function resolvePattern(type: PinFieldType, pattern?: string): RegExp {
 	if (pattern) return new RegExp(pattern);
 	switch (type) {
 		case "alphabetic":
+		case "alpha":
 			return /^[a-zA-Z]$/;
 		case "alphanumeric":
 			return /^[a-zA-Z0-9]$/;
+		case "none":
+			return /^.*$/;
 		default:
 			return /^[0-9]$/;
 	}
@@ -34,6 +37,9 @@ export default function PinFieldIsland(props: PinFieldIslandProps) {
 		onValueChange,
 		onValueComplete,
 		onValueInvalid,
+		autoComplete,
+		autoSubmit,
+		onAutoSubmit,
 		children,
 		id: idProp,
 		...rest
@@ -94,6 +100,13 @@ export default function PinFieldIsland(props: PinFieldIslandProps) {
 				nextValue.length === count && nextValue.every((v) => v !== "");
 			if (complete) {
 				onValueComplete?.({ value: nextValue, valueAsString });
+				if (autoSubmit) {
+					onAutoSubmit?.(valueAsString);
+					const form = root.closest("form");
+					if (form) {
+						form.requestSubmit();
+					}
+				}
 				if (blurOnComplete) {
 					(document.activeElement as HTMLElement | null)?.blur?.();
 				}
@@ -111,11 +124,14 @@ export default function PinFieldIsland(props: PinFieldIslandProps) {
 			let cursor = startIndex;
 			for (const raw of chars) {
 				if (cursor >= count) break;
-				if (!re.test(raw)) {
-					onValueInvalid?.({ index: cursor, value: raw });
+				const cleaned = raw.replace(/\s/g, "");
+				if (!cleaned) continue;
+
+				if (!re.test(cleaned)) {
+					onValueInvalid?.({ index: cursor, value: cleaned });
 					continue;
 				}
-				nextValue[cursor] = raw;
+				nextValue[cursor] = cleaned;
 				cursor += 1;
 			}
 			commit(nextValue);
@@ -135,8 +151,37 @@ export default function PinFieldIsland(props: PinFieldIslandProps) {
 			const raw = target.value;
 
 			if (raw.length > 1) {
-				target.value = valueRef.current[index] ?? "";
-				fillFrom(index, raw.split(""));
+				const oldVal = valueRef.current[index] ?? "";
+				let newChar = raw;
+				if (raw.startsWith(oldVal)) {
+					newChar = raw.slice(oldVal.length);
+				} else if (raw.endsWith(oldVal)) {
+					newChar = raw.slice(0, raw.length - oldVal.length);
+				} else {
+					newChar = raw[raw.length - 1];
+				}
+
+				if (newChar.length > 1) {
+					target.value = oldVal;
+					fillFrom(index, newChar.split(""));
+					return;
+				}
+
+				if (!re.test(newChar)) {
+					target.value = oldVal;
+					onValueInvalid?.({ index, value: newChar });
+					return;
+				}
+
+				const nextValue = [...valueRef.current];
+				nextValue[index] = newChar;
+				commit(nextValue);
+
+				if (index < count - 1) {
+					focusIndex(index + 1);
+				} else if (blurOnComplete) {
+					target.blur();
+				}
 				return;
 			}
 
@@ -169,24 +214,61 @@ export default function PinFieldIsland(props: PinFieldIslandProps) {
 			if (index === null) return;
 			const target = e.target as HTMLInputElement;
 
-			if (e.key === "Backspace" && target.value === "" && index > 0) {
+			if (disabled || readOnly) return;
+
+			if (e.key === "Backspace") {
 				e.preventDefault();
 				const nextValue = [...valueRef.current];
-				nextValue[index - 1] = "";
-				commit(nextValue);
-				focusIndex(index - 1);
+				if (target.value !== "") {
+					nextValue[index] = "";
+					commit(nextValue);
+					if (index > 0) {
+						focusIndex(index - 1);
+					}
+				} else if (index > 0) {
+					nextValue[index - 1] = "";
+					commit(nextValue);
+					focusIndex(index - 1);
+				}
 				return;
 			}
 
-			if (e.key === "ArrowLeft" && index > 0) {
+			if (e.key === "Delete") {
 				e.preventDefault();
-				focusIndex(index - 1);
+				if (target.value !== "") {
+					const nextValue = [...valueRef.current];
+					nextValue[index] = "";
+					commit(nextValue);
+				}
 				return;
 			}
 
-			if (e.key === "ArrowRight" && index < count - 1) {
+			if (e.key === "ArrowLeft") {
 				e.preventDefault();
-				focusIndex(index + 1);
+				if (index > 0) {
+					focusIndex(index - 1);
+				}
+				return;
+			}
+
+			if (e.key === "ArrowRight") {
+				e.preventDefault();
+				if (index < count - 1) {
+					focusIndex(index + 1);
+				}
+				return;
+			}
+
+			if (e.key === "Home") {
+				e.preventDefault();
+				focusIndex(0);
+				return;
+			}
+
+			if (e.key === "End") {
+				e.preventDefault();
+				focusIndex(count - 1);
+				return;
 			}
 		};
 
@@ -226,6 +308,8 @@ export default function PinFieldIsland(props: PinFieldIslandProps) {
 		readOnly,
 		selectOnFocus,
 		blurOnComplete,
+		autoSubmit,
+		onAutoSubmit,
 		onValueChange,
 		onValueComplete,
 		onValueInvalid,
@@ -241,6 +325,9 @@ export default function PinFieldIsland(props: PinFieldIslandProps) {
 			disabled={disabled}
 			readOnly={readOnly}
 			value={value}
+			autoComplete={autoComplete}
+			autoSubmit={autoSubmit}
+			onAutoSubmit={onAutoSubmit}
 			data-interactive="true"
 		>
 			{children}

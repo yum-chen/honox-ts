@@ -7,7 +7,12 @@ import { type ValidatorFn, validateField } from "./field-primitive";
 
 type PinFieldStyles = ReturnType<typeof pinField>;
 
-export type PinFieldType = "numeric" | "alphanumeric" | "alphabetic";
+export type PinFieldType =
+	| "numeric"
+	| "alphanumeric"
+	| "alphabetic"
+	| "alpha"
+	| "none";
 
 interface PinFieldContextValue {
 	id: string;
@@ -18,6 +23,7 @@ interface PinFieldContextValue {
 	placeholder: string;
 	mask?: boolean;
 	otp?: boolean;
+	autoComplete?: string;
 	disabled?: boolean;
 	readOnly?: boolean;
 	required?: boolean;
@@ -60,6 +66,9 @@ export interface RootProps extends PinFieldVariantProps, PropsWithChildren {
 	validator?: ValidatorFn | string;
 	validatorSource?: string;
 	dir?: "ltr" | "rtl";
+	autoComplete?: string;
+	autoSubmit?: boolean;
+	onAutoSubmit?: (value: string) => void;
 	onValueChange?: (details: { value: string[]; valueAsString: string }) => void;
 	onValueComplete?: (details: {
 		value: string[];
@@ -80,6 +89,9 @@ export function Root(props: RootProps) {
 		placeholder = "○",
 		mask,
 		otp,
+		autoComplete,
+		autoSubmit: _autoSubmit,
+		onAutoSubmit: _onAutoSubmit,
 		blurOnComplete: _blurOnComplete,
 		autoFocus: _autoFocus,
 		selectOnFocus: _selectOnFocus,
@@ -126,6 +138,7 @@ export function Root(props: RootProps) {
 		placeholder,
 		mask,
 		otp,
+		autoComplete,
 		disabled,
 		readOnly,
 		required,
@@ -230,6 +243,7 @@ export function Input(props: InputProps) {
 		placeholder,
 		mask,
 		otp,
+		autoComplete: contextAutoComplete,
 		disabled,
 		readOnly,
 		required,
@@ -259,7 +273,7 @@ export function Input(props: InputProps) {
 			data-readonly={readOnly ? "" : undefined}
 			inputMode={type === "numeric" ? "numeric" : "text"}
 			type={mask ? "password" : "text"}
-			autoComplete={otp ? "one-time-code" : "off"}
+			autoComplete={contextAutoComplete ?? (otp ? "one-time-code" : "off")}
 			maxLength={1}
 			placeholder={placeholder}
 			disabled={disabled}
