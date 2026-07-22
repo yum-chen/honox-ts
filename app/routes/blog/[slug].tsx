@@ -28,9 +28,10 @@ export default createRoute(
 	}),
 
 	// Actual route handler
-	async (c, next) => {
+	async function handler(c) {
 		const slug = c.req.param("slug");
 		if (isLocale(slug)) {
+			const next = arguments[1];
 			return next();
 		}
 		const currentPath = c.req.path;

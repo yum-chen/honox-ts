@@ -531,9 +531,10 @@ export default createRoute(
 		return docs.map((doc) => ({ doc: doc.slug }));
 	}),
 
-	async (c, next) => {
+	async function handler(c) {
 		const slug = c.req.param("doc");
 		if (isLocale(slug)) {
+			const next = arguments[1];
 			return next();
 		}
 		const currentPath = c.req.path;
