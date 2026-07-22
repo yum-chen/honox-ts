@@ -74,5 +74,10 @@
     "description": "Insights, updates, and stories from our team.",
     "newsletterHeading": "Stay Updated",
     "newsletterDescription": "Get the latest articles and insights delivered straight to your inbox. No spam, just good content."
-  }
+  },
+  "hydrationTiers": [
+    { "tier": 1, "label": "Auto-interactive" },
+    { "tier": 2, "label": "Smart auto-detect" },
+    { "tier": 3, "label": "Presentational" }
+  ]
 }

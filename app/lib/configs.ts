@@ -36,6 +36,14 @@ export interface BlogSiteConfig {
 	newsletterDescription?: string;
 }
 
+/** One entry in the `hydrationTiers` list: the numeric `tier` is a matching
+ * key (duplicated across every locale file) while `label` is the translated,
+ * locale-specific badge text for a doc's `hydration` value. */
+export interface HydrationTierConfig {
+	tier: number;
+	label: string;
+}
+
 /** Shape of the `DocsConfig` singleton (content/configs.json) — drives
  * collection labeling plus the docs sidenav's grouping/ordering, so none of
  * it is hardcoded to any one collection. */
@@ -51,6 +59,9 @@ export interface DocsConfig {
 	headerLinks?: DocsNavLinkConfig[];
 	/** Site copy for the /blog section. */
 	blog?: BlogSiteConfig;
+	/** Translated badge labels for a doc's numeric `hydration` tier. Falls back
+	 * to "Tier N" when a tier is missing. */
+	hydrationTiers?: HydrationTierConfig[];
 }
 
 const EMPTY_DOCS_CONFIG: DocsConfig = { groups: [] };

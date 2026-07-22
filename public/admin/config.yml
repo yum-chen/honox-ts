@@ -1733,3 +1733,12 @@ singletons:
         fields:
           - { label: Label, name: label, widget: string, i18n: true }
           - { label: URL, name: href, widget: string, i18n: duplicate }
+      - label: Hydration Tier Labels
+        name: hydrationTiers
+        widget: list
+        required: false
+        i18n: true
+        hint: "Translated badge labels for a doc's numeric hydration tier. `Tier` is the matching key (keep identical across locales); `Label` is the translated, locale-specific badge text."
+        fields:
+          - { label: Tier, name: tier, widget: number, i18n: duplicate }
+          - { label: Label, name: label, widget: string, i18n: true }

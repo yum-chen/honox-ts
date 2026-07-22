@@ -19,6 +19,7 @@ import { GitHubIcon as GitHubIconImport } from "../../icons/github";
 import {
 	type DocsConfig,
 	type DocsNavLinkConfig,
+	type HydrationTierConfig,
 	loadDocsConfig,
 } from "../../lib/configs";
 import { type DocSummary, loadDocBySlug, loadDocs } from "../../lib/docs";
@@ -517,11 +518,12 @@ const TIER_COLOR: Record<number, string> = {
 	3: "gray",
 };
 
-const TIER_LABEL: Record<number, string> = {
-	1: "Auto-interactive",
-	2: "Smart auto-detect",
-	3: "Presentational",
-};
+function tierLabel(
+	tiers: HydrationTierConfig[] | undefined,
+	tier: number,
+): string {
+	return tiers?.find((t) => t.tier === tier)?.label ?? `Tier ${tier}`;
+}
 
 export default createRoute(
 	ssgParams(async () => {
@@ -606,7 +608,7 @@ export default createRoute(
 										colorPalette={TIER_COLOR[doc.hydration] ?? "gray"}
 										size="sm"
 									>
-										{TIER_LABEL[doc.hydration] ?? `Tier ${doc.hydration}`}
+										{tierLabel(config.hydrationTiers, doc.hydration)}
 									</Badge>
 								)}
 							</Stack>

@@ -74,5 +74,10 @@
     "description": "来自我们团队的洞察、更新与故事。",
     "newsletterHeading": "保持更新",
     "newsletterDescription": "将最新的文章和洞察直接发送到您的邮箱。没有垃圾邮件，只有优质内容。"
-  }
+  },
+  "hydrationTiers": [
+    { "tier": 1, "label": "自动交互" },
+    { "tier": 2, "label": "智能自动检测" },
+    { "tier": 3, "label": "展示型" }
+  ]
 }

@@ -32,12 +32,12 @@
       "category": "Navigation"
     },
     {
-      "label": "Retours",
+      "label": "Feedback",
       "section": "",
       "category": "Feedback"
     },
     {
-      "label": "Affichage de données",
+      "label": "Affichage des données",
       "section": "",
       "category": "Data Display"
     },
@@ -65,7 +65,7 @@
       "href": "/blog"
     },
     {
-      "label": "Docs",
+      "label": "Documentation",
       "href": "/docs"
     }
   ],

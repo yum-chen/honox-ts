@@ -74,5 +74,10 @@
     "description": "Perspectivas, actualizaciones e historias de nuestro equipo.",
     "newsletterHeading": "Mantente Actualizado",
     "newsletterDescription": "Recibe los últimos artículos y perspectivas directamente en tu bandeja de entrada. Sin spam, solo contenido de calidad."
-  }
+  },
+  "hydrationTiers": [
+    { "tier": 1, "label": "Auto-interactivo" },
+    { "tier": 2, "label": "Detección automática inteligente" },
+    { "tier": 3, "label": "Presentacional" }
+  ]
 }
