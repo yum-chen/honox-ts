@@ -300,8 +300,9 @@ function DocsHeader({
 					px: { base: "4", md: "6", lg: "8" },
 					py: "4",
 					display: "flex",
+					flexWrap: { base: "wrap", md: "nowrap" },
 					alignItems: "center",
-					gap: { base: "4", md: "8" },
+					gap: { base: "3", md: "8" },
 				})}
 			>
 				<Anchor
@@ -342,8 +343,10 @@ function DocsHeader({
 
 				<nav
 					class={css({
-						display: { base: "none", md: "flex" },
-						gap: "6",
+						display: "flex",
+						flexWrap: "wrap",
+						flexBasis: { base: "100%", md: "auto" },
+						gap: { base: "3", md: "6" },
 						alignItems: "center",
 						flexShrink: "0",
 					})}
