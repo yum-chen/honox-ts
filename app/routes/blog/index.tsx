@@ -1,5 +1,6 @@
 import { css } from "design-system/css";
 import { createRoute } from "honox/factory";
+import { LanguageSwitcher } from "../../components/language-switcher";
 import {
 	Anchor,
 	Avatar,
@@ -21,32 +22,6 @@ import { type DocsNavLinkConfig, loadDocsConfig } from "../../lib/configs";
 import { loadPosts } from "../../lib/posts";
 import { filterEntries } from "../../utils/search";
 
-// Site header — same shape/data as the docs section's header (both read the
-// "configs" CMS singleton's `headerLinks`), kept as a local, un-DRY copy
-// rather than a shared component (see app/routes/docs/index.tsx).
-function getLocaleToggleUrl(
-	currentPath: string,
-	targetLocale: "en" | "zh" | "es" | "pt",
-): string {
-	let cleanPath = currentPath;
-	if (cleanPath.startsWith("/zh")) {
-		cleanPath = cleanPath.slice(3);
-	} else if (cleanPath.startsWith("/es")) {
-		cleanPath = cleanPath.slice(3);
-	} else if (cleanPath.startsWith("/pt")) {
-		cleanPath = cleanPath.slice(3);
-	}
-	if (cleanPath === "") {
-		cleanPath = "/";
-	}
-
-	if (targetLocale === "en") {
-		return cleanPath;
-	}
-	return cleanPath === "/"
-		? `/${targetLocale}`
-		: `/${targetLocale}${cleanPath}`;
-}
 
 function BlogHeader({
 	headerLinks,
@@ -137,58 +112,7 @@ function BlogHeader({
 					>
 						{currentLocale === "zh" ? "内容管理" : "Admin"}
 					</Anchor>
-					{currentLocale !== "en" && (
-						<Anchor
-							href={getLocaleToggleUrl(currentPath, "en")}
-							variant="plain"
-							class={css({
-								textStyle: "sm",
-								fontWeight: "medium",
-								color: "blue.11",
-							})}
-						>
-							English
-						</Anchor>
-					)}
-					{currentLocale !== "zh" && (
-						<Anchor
-							href={getLocaleToggleUrl(currentPath, "zh")}
-							variant="plain"
-							class={css({
-								textStyle: "sm",
-								fontWeight: "medium",
-								color: "blue.11",
-							})}
-						>
-							中文
-						</Anchor>
-					)}
-					{currentLocale !== "es" && (
-						<Anchor
-							href={getLocaleToggleUrl(currentPath, "es")}
-							variant="plain"
-							class={css({
-								textStyle: "sm",
-								fontWeight: "medium",
-								color: "blue.11",
-							})}
-						>
-							Español
-						</Anchor>
-					)}
-					{currentLocale !== "pt" && (
-						<Anchor
-							href={getLocaleToggleUrl(currentPath, "pt")}
-							variant="plain"
-							class={css({
-								textStyle: "sm",
-								fontWeight: "medium",
-								color: "blue.11",
-							})}
-						>
-							Português
-						</Anchor>
-					)}
+					<LanguageSwitcher currentPath={currentPath} currentLocale={currentLocale} />
 				</nav>
 			</div>
 		</header>

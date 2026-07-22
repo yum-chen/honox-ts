@@ -1,6 +1,7 @@
 import { css, cx } from "design-system/css";
 import { button } from "design-system/recipes";
 import { createRoute } from "honox/factory";
+import { LanguageSwitcher } from "../../components/language-switcher";
 import {
 	Anchor,
 	Card,
@@ -271,23 +272,6 @@ function MobileNav({ groups, activeSlug, links }: DocsSidenavProps) {
 	);
 }
 
-function getLocaleToggleUrl(
-	currentPath: string,
-	targetLocale: "en" | "zh",
-): string {
-	if (targetLocale === "zh") {
-		if (currentPath.startsWith("/zh")) {
-			return currentPath;
-		}
-		return currentPath === "/" ? "/zh" : `/zh${currentPath}`;
-	} else {
-		if (currentPath.startsWith("/zh")) {
-			const rest = currentPath.slice(3);
-			return rest === "" ? "/" : rest;
-		}
-		return currentPath;
-	}
-}
 
 interface DocsHeaderProps {
 	editUrl?: string;
@@ -413,31 +397,7 @@ function DocsHeader({
 							{currentLocale === "zh" ? "内容管理" : "Admin"}
 						</Anchor>
 					)}
-					{currentLocale === "zh" ? (
-						<Anchor
-							href={getLocaleToggleUrl(currentPath, "en")}
-							variant="plain"
-							class={css({
-								textStyle: "sm",
-								fontWeight: "medium",
-								color: "blue.11",
-							})}
-						>
-							English
-						</Anchor>
-					) : (
-						<Anchor
-							href={getLocaleToggleUrl(currentPath, "zh")}
-							variant="plain"
-							class={css({
-								textStyle: "sm",
-								fontWeight: "medium",
-								color: "blue.11",
-							})}
-						>
-							中文
-						</Anchor>
-					)}
+					<LanguageSwitcher currentPath={currentPath} currentLocale={currentLocale} />
 					{githubLink && (
 						<Anchor
 							href={githubLink.href}

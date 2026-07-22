@@ -1,5 +1,6 @@
 import { css } from "design-system/css";
 import { createRoute } from "honox/factory";
+import { LanguageSwitcher } from "../components/language-switcher";
 import {
 	AbsoluteCenter,
 	Alert,
@@ -185,30 +186,6 @@ const customShowcaseSlides = [
 	</div>,
 ];
 
-function getLocaleToggleUrl(
-	currentPath: string,
-	targetLocale: "en" | "zh" | "es" | "pt",
-): string {
-	let cleanPath = currentPath;
-	if (cleanPath.startsWith("/zh")) {
-		cleanPath = cleanPath.slice(3);
-	} else if (cleanPath.startsWith("/es")) {
-		cleanPath = cleanPath.slice(3);
-	} else if (cleanPath.startsWith("/pt")) {
-		cleanPath = cleanPath.slice(3);
-	}
-	if (cleanPath === "") {
-		cleanPath = "/";
-	}
-
-	if (targetLocale === "en") {
-		return cleanPath;
-	}
-	return cleanPath === "/"
-		? `/${targetLocale}`
-		: `/${targetLocale}${cleanPath}`;
-}
-
 export default createRoute((c) => {
 	const currentPath = c.req.path;
 	let currentLocale = "en";
@@ -335,58 +312,7 @@ export default createRoute((c) => {
 						>
 							{currentLocale === "zh" ? "内容管理" : "Sveltia CMS"}
 						</Anchor>
-						{currentLocale !== "en" && (
-							<Anchor
-								href={getLocaleToggleUrl(currentPath, "en")}
-								variant="plain"
-								class={css({
-									textStyle: "sm",
-									fontWeight: "medium",
-									color: "blue.11",
-								})}
-							>
-								English
-							</Anchor>
-						)}
-						{currentLocale !== "zh" && (
-							<Anchor
-								href={getLocaleToggleUrl(currentPath, "zh")}
-								variant="plain"
-								class={css({
-									textStyle: "sm",
-									fontWeight: "medium",
-									color: "blue.11",
-								})}
-							>
-								中文
-							</Anchor>
-						)}
-						{currentLocale !== "es" && (
-							<Anchor
-								href={getLocaleToggleUrl(currentPath, "es")}
-								variant="plain"
-								class={css({
-									textStyle: "sm",
-									fontWeight: "medium",
-									color: "blue.11",
-								})}
-							>
-								Español
-							</Anchor>
-						)}
-						{currentLocale !== "pt" && (
-							<Anchor
-								href={getLocaleToggleUrl(currentPath, "pt")}
-								variant="plain"
-								class={css({
-									textStyle: "sm",
-									fontWeight: "medium",
-									color: "blue.11",
-								})}
-							>
-								Português
-							</Anchor>
-						)}
+						<LanguageSwitcher currentPath={currentPath} currentLocale={currentLocale} />
 						<Button
 							variant="solid"
 							colorPalette="blue"

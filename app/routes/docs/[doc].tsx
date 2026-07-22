@@ -2,6 +2,7 @@ import { css, cx } from "design-system/css";
 import { button } from "design-system/recipes";
 import { ssgParams } from "hono/ssg";
 import { createRoute } from "honox/factory";
+import { LanguageSwitcher } from "../../components/language-switcher";
 import {
 	Anchor,
 	Badge,
@@ -28,15 +29,6 @@ import {
 } from "../../lib/docs";
 import { markdownContentClass } from "../../utils/markdown-content-style";
 
-// Full locale list (default first) and their display names for the
-// header's locale switcher.
-const ALL_LOCALES: readonly string[] = ["en", ...LOCALES];
-const LOCALE_NAMES: Record<string, string> = {
-	en: "English",
-	zh: "中文",
-	es: "Español",
-	pt: "Português",
-};
 
 // Page-chrome strings that aren't part of translated doc content or the
 // configs.<locale>.json singleton (search box, Edit/Admin button).
@@ -89,14 +81,6 @@ function localizeHref(href: string, locale: string): string {
 	return `/${locale}${href}`;
 }
 
-/** Strips a leading `/<locale>` segment from a path, if present. */
-function stripLocalePrefix(path: string, locale: string): string {
-	if (locale === "en") return path;
-	const prefix = `/${locale}`;
-	if (path === prefix) return "/";
-	if (path.startsWith(`${prefix}/`)) return path.slice(prefix.length);
-	return path;
-}
 
 // ---------------------------------------------------------------------------
 // Inlined docs nav shell.
@@ -358,18 +342,6 @@ function MobileNav({
 	);
 }
 
-/** Builds the URL for switching the current page from `currentLocale` to
- * `targetLocale` — strips whatever locale prefix is active, then applies
- * the target's. Works for any locale pair (en/zh/es), not just en↔zh. */
-function getLocaleToggleUrl(
-	currentPath: string,
-	currentLocale: string,
-	targetLocale: string,
-): string {
-	const bare = stripLocalePrefix(currentPath, currentLocale);
-	if (targetLocale === "en") return bare;
-	return bare === "/" ? `/${targetLocale}` : `/${targetLocale}${bare}`;
-}
 
 interface DocsHeaderProps {
 	editUrl?: string;
@@ -481,22 +453,7 @@ function DocsHeader({
 							{ui.admin}
 						</Anchor>
 					)}
-					{ALL_LOCALES.filter((locale) => locale !== currentLocale).map(
-						(locale) => (
-							<Anchor
-								key={locale}
-								href={getLocaleToggleUrl(currentPath, currentLocale, locale)}
-								variant="plain"
-								class={css({
-									textStyle: "sm",
-									fontWeight: "medium",
-									color: "blue.11",
-								})}
-							>
-								{LOCALE_NAMES[locale] ?? locale}
-							</Anchor>
-						),
-					)}
+					<LanguageSwitcher currentPath={currentPath} currentLocale={currentLocale} />
 					{githubLink && (
 						<Anchor
 							href={githubLink.href}
