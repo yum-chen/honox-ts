@@ -79,7 +79,7 @@ export const switchRecipe = defineSlotRecipe({
 			solid: {
 				control: {
 					borderRadius: "full",
-					bg: "gray.subtle.bg",
+					bg: "gray.8",
 					_peerFocusVisible: {
 						outline: "2px solid",
 						outlineColor: "colorPalette.solid.bg",
