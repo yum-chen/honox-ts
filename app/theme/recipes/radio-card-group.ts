@@ -73,7 +73,7 @@ export const radioCardGroup = defineSlotRecipe({
 					},
 				},
 				itemControl: {
-					borderWidth: "1px",
+					borderWidth: "2px",
 					// The theme's `gray` (slate) palette defines no `subtle.border`
 					// token, so Park UI's upstream reference would resolve to an
 					// undefined CSS variable; `outline.border` is the same hairline.
@@ -97,7 +97,7 @@ export const radioCardGroup = defineSlotRecipe({
 					},
 				},
 				itemControl: {
-					borderWidth: "1px",
+					borderWidth: "2px",
 					borderColor: "gray.outline.border",
 					_checked: {
 						bg: "colorPalette.solid.bg",
@@ -121,7 +121,7 @@ export const radioCardGroup = defineSlotRecipe({
 					},
 				},
 				itemControl: {
-					borderWidth: "1px",
+					borderWidth: "2px",
 					borderColor: "gray.outline.border",
 					_checked: {
 						background: "colorPalette.solid.bg",
@@ -143,7 +143,7 @@ export const radioCardGroup = defineSlotRecipe({
 					},
 				},
 				itemControl: {
-					borderWidth: "1px",
+					borderWidth: "2px",
 					borderColor: "gray.outline.border",
 					_checked: {
 						background: "colorPalette.solid.fg",
