@@ -72,7 +72,7 @@ export default defineConfig({
 			slider: ["*"],
 			spinner: ["*"],
 			splitter: ["*"],
-			switch: ["*"],
+			switchRecipe: ["*"],
 			table: ["*"],
 			tagsField: ["*"],
 			text: ["*"],
