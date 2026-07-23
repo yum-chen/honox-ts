@@ -134,7 +134,9 @@ The repository uses a three-tier hydration classification model, configured via 
 
 ### i18n and Adding a New Translation Locale
 
-Sveltia CMS is configured for internationalization (i18n) under `public/admin/config.yml` supporting locales `en`, `zh`, `es`, `pt`, `fr`, and `de`, with English (`en`) as the default. It uses the `multiple_folders` structure with `omit_default_locale_from_file_path: true`, keeping default locale files in original root paths and placing translations under locale subfolders (for docs/components) or using `.<locale>` suffixes (for configs and posts).
+Sveltia CMS is configured for internationalization (i18n) under `public/admin/config.yml` supporting locales `en`, `zh`, `es`, `pt`, `fr`, and `de`, with English (`en`) as the default. It uses the `multiple_folders` structure with `omit_default_locale_from_file_path: true`, keeping default locale files in original root paths and placing translations under locale subfolders (for docs/components/pages) or using `.<locale>` suffixes (for configs and posts).
+
+`pages` (`content/pages/*.json`) follows the same subfolder convention as docs/components — `content/pages/<locale>/<slug>.json` — loaded by `app/lib/pages.ts`'s `loadPage(slug, locale)`, which falls back to the default-locale file when a translation doesn't exist. This backs both `/pages/<locale>/<slug>` and the locale-aware homepage (`app/routes/index.tsx` loading `content/pages/<locale>/index.json`).
 
 To add a new translation locale to the repository, follow this step-by-step workflow:
 
@@ -143,7 +145,7 @@ To add a new translation locale to the repository, follow this step-by-step work
 3. **Language Switcher Registration:** Register the locale code and its human-readable name in `ALL_LOCALES` and `LOCALE_NAMES` inside `app/components/language-switcher.tsx`.
 4. **Docs Loader Array:** Add the locale code to the `LOCALES` array inside `app/lib/docs.ts`.
 5. **Route Re-export:** Re-export the standard routes by creating a directory `app/routes/<locale>/` matching the root route files structure.
-6. **Translations:** Provide translations for the markdown/MDX docs and component references under `content/docs/<locale>/*.md` and `content/components/<locale>/*.mdx` respectively.
+6. **Translations:** Provide translations for the markdown/MDX docs, component references, and page layouts under `content/docs/<locale>/*.md`, `content/components/<locale>/*.mdx`, and `content/pages/<locale>/*.json` respectively — only for the specific docs/components/pages that actually need translating, since each loader falls back to the default-locale file otherwise.
 
 ***
 

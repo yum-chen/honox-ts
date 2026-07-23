@@ -6,7 +6,7 @@ title: CMS Page Builder
 
 The [Sveltia CMS](https://sveltiacms.app/en/docs/intro) based dynamic Page Builder allows non-technical editors to create complex, recursively nested pages entirely through the CMS user interface (`/admin/`).
 
-Page layouts are saved as JSON files in `content/pages/*.json` and are compiled on demand or statically pre-generated (via Hono SSG) at `/pages/[slug]`.
+Page layouts are saved as JSON files in `content/pages/*.json` and are compiled on demand or statically pre-generated (via Hono SSG) at `/pages/[slug]`. The homepage (`/`) is itself a Page Builder page — `app/routes/index.tsx` renders `content/pages/index.json` through the same `<PageRenderer />` pipeline, with only the header/footer chrome hardcoded around it.
 
 ***
 
@@ -51,7 +51,8 @@ The Page Builder supports a rich palette of over 40 layout, typography, decorati
 * **HoverCard**: Richer hover-triggered content than a Tooltip, with an optional title/description.
 * **Dialog**: Fully focus-trapped modal boxes with custom Confirm/Cancel buttons and custom children list.
 * **Drawer**: Responsive side panels sliding in from the page edge with custom children list.
-* **Dropdown** (block type `menu`): Action menus with custom checkable, selectable, and separator options.
+* **Dropdown** (block type `menu`): Action menus with custom checkable, selectable, separator, and nested-submenu options (one level of `items` nesting, since Sveltia's list widget can't self-reference).
+* **Toast**: Renders the global toast host (`Toast.Toaster`). Has no configurable fields itself — pair it with a `Button` whose advanced "Custom onClick" field dispatches a `park-ui:toast:create` `CustomEvent`; see the homepage's "Clipboard & Toast" card for a working example.
 
 ### 5. Advanced & Data
 
@@ -94,6 +95,15 @@ We utilise advanced **YAML Anchors and Aliases** (`&` and `*`) to work around YA
 
 **Note:** the YAML schema's \~4-level nesting cap only limits what the CMS form lets a non-technical editor _build_. `renderChildren`'s recursion has no depth limit — a hand-edited or programmatically generated `content/pages/*.json` file can nest far deeper than the CMS UI allows, and it will still render correctly.
 
+### 3. Advanced Escape Hatches
+
+A couple of fields exist purely so a non-technical editor can reproduce behaviour that would otherwise need real code:
+
+* **Button → "Custom onClick"**: a raw inline JS string, forwarded verbatim as the DOM `onclick` attribute. Works without client hydration (see `content/components/Toast.mdx`) — used for things like smooth-scrolling to an anchor or dispatching a `park-ui:toast:create` `CustomEvent` to show a toast.
+* **Heading → "Anchor ID"**: sets a DOM `id` on the heading, so a Button's "Custom onClick" can `document.getElementById(...)` scroll to it.
+
+Both are deliberately unsanitised — treat CMS write access the same as code-commit access.
+
 ***
 
 ## Content Build Pipelines
@@ -102,9 +112,10 @@ Page Builder layouts are one of three content types under `content/`, each disco
 
 ### 1. JSON page layouts (`content/pages/*.json`)
 
-* Loaded with `import.meta.glob("/content/pages/*.json", { import: "default" })` in `app/routes/pages/[slug].tsx`.
+* Loaded through `app/lib/pages.ts` (`loadPage`, `listPageSlugs`), used by both `app/routes/index.tsx` (the homepage) and `app/routes/pages/[slug].tsx`.
 * Each file is parsed as plain JSON — no markdown involved — and its `content` array is handed directly to `<PageRenderer />` (see Architecture above), which recursively compiles it into the matching UI components.
 * This is the only pipeline of the three with no separate parse/compile step: the JSON _is_ the render tree.
+* **i18n:** translations live under `content/pages/<locale>/<slug>.json` (e.g. `content/pages/zh/index.json`), same `multiple_folders` convention as docs/components. `loadPage(slug, locale)` falls back to the default-locale file when no translation exists, so a page only needs a translated file for the locales it actually has content for.
 
 ### 2. Plain markdown (`content/posts/*.md`, `content/docs/*.md`)
 
