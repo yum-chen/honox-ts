@@ -230,7 +230,7 @@
           "children": [
             { "type": "stack", "direction": "vertical", "gap": "4", "children": [
               { "type": "slider", "label": "Single Thumb", "defaultValue": 45, "showValueText": true },
-              { "type": "slider", "label": "Range Selection", "defaultValue": 15, "showValueText": true }
+              { "type": "slider", "label": "Range Selection", "defaultValue": [15, 75], "showValueText": true }
             ]}
           ]
         },
