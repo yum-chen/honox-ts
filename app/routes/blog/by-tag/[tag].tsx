@@ -34,7 +34,7 @@ export default createRoute(
 		const searchStrings =
 			BLOG_SEARCH_STRINGS[currentLocale] ?? BLOG_SEARCH_STRINGS.en;
 
-		const { posts, tags } = await loadPosts();
+		const { posts, tags } = await loadPosts(currentLocale);
 		const blogPosts = posts.filter((post) => post.tags.includes(tagFilter));
 
 		return c.render(

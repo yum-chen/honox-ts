@@ -37,7 +37,7 @@ export default createRoute(
 		const searchStrings =
 			BLOG_SEARCH_STRINGS[currentLocale] ?? BLOG_SEARCH_STRINGS.en;
 
-		const { posts } = await loadPosts();
+		const { posts } = await loadPosts(currentLocale);
 		const blogPosts = posts.filter(
 			(post) =>
 				(post.author || "Artefact Team").toLowerCase() ===

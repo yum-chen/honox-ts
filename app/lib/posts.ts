@@ -1,3 +1,4 @@
+import { TRANSLATED_LOCALES } from "./i18n";
 import {
 	markdownToHtml,
 	parseFrontmatter,
@@ -5,11 +6,45 @@ import {
 } from "../utils/markdown";
 import { buildHaystack, type SearchIndexEntry } from "../utils/search";
 
-// Use Vite's import.meta.glob to import all markdown files at build time
-const postFiles = import.meta.glob("/content/posts/*.md", {
-	query: "?raw",
-	import: "default",
-});
+// Default-locale posts live at content/posts/<slug>.md; translations at
+// content/posts/<locale>/<slug>.md — same `multiple_folders` convention as
+// docs/components (see app/lib/docs.ts's parseContentPath), matching what
+// Sveltia CMS actually writes for this collection (public/admin/config.yml's
+// `posts` collection sets `i18n: true` with no `structure` override, so it
+// inherits the global `i18n.structure: multiple_folders`).
+const postFiles = import.meta.glob(
+	["/content/posts/*.md", "/content/posts/*/*.md"],
+	{ query: "?raw", import: "default" },
+);
+
+/** Splits a glob-discovered post path into its base slug and locale. */
+function parsePostPath(path: string): { slug: string; locale: string } {
+	const match = path.match(/^\/content\/posts\/(?:([^/]+)\/)?(.+)\.md$/);
+	if (!match) {
+		throw new Error(`Unexpected post content path: ${path}`);
+	}
+	const [, maybeLocale, slug] = match as unknown as [
+		string,
+		string | undefined,
+		string,
+	];
+	if (maybeLocale && (TRANSLATED_LOCALES as readonly string[]).includes(maybeLocale)) {
+		return { slug, locale: maybeLocale };
+	}
+	return { slug, locale: "en" };
+}
+
+/** Resolves the best available file for `slug`/`locale`, falling back to the
+ * default-locale file when no translation exists. */
+function resolvePostPath(slug: string, locale: string): string | undefined {
+	if (locale !== "en") {
+		const localisedPath = `/content/posts/${locale}/${slug}.md`;
+		if (postFiles[localisedPath]) return localisedPath;
+	}
+	const basePath = `/content/posts/${slug}.md`;
+	if (postFiles[basePath]) return basePath;
+	return undefined;
+}
 
 export interface BlogPost {
 	slug: string;
@@ -47,25 +82,13 @@ export async function loadPosts(locale = "en"): Promise<LoadedPosts> {
 	// Get all unique base slugs
 	const uniqueSlugs = new Set<string>();
 	for (const path of Object.keys(postFiles)) {
-		const filename = path.replace("/content/posts/", "");
-		const baseName = filename
-			.replace(/\.[a-z]{2}\.md$/, "")
-			.replace(/\.md$/, "");
-		uniqueSlugs.add(baseName);
+		uniqueSlugs.add(parsePostPath(path).slug);
 	}
 
 	for (const slug of uniqueSlugs) {
 		try {
-			// Find the best path: prefer localised if locale !== "en", fallback to en
-			let targetPath = `/content/posts/${slug}.md`;
-			if (locale !== "en") {
-				const langPath = `/content/posts/${slug}.${locale}.md`;
-				if (postFiles[langPath]) {
-					targetPath = langPath;
-				}
-			}
-
-			const loader = postFiles[targetPath];
+			const targetPath = resolvePostPath(slug, locale);
+			const loader = targetPath ? postFiles[targetPath] : undefined;
 			if (!loader) continue;
 
 			const markdown = await (loader as () => Promise<string>)();
@@ -136,15 +159,8 @@ export async function loadPostBySlug(
 	slug: string,
 	locale = "en",
 ): Promise<PostDetail | undefined> {
-	let targetPath = `/content/posts/${slug}.md`;
-	if (locale !== "en") {
-		const langPath = `/content/posts/${slug}.${locale}.md`;
-		if (postFiles[langPath]) {
-			targetPath = langPath;
-		}
-	}
-
-	const loader = postFiles[targetPath];
+	const targetPath = resolvePostPath(slug, locale);
+	const loader = targetPath ? postFiles[targetPath] : undefined;
 	if (!loader) {
 		return undefined;
 	}
