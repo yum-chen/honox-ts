@@ -75,19 +75,24 @@ O Construtor de Páginas suporta uma rica paleta de mais de 40 componentes de la
 
 ### 1. Definições de esquema do CMS (`public/admin/config.yml`)
 
-Utilizamos **âncoras e aliases YAML** avançados (`&` e `*`) para resolver o desafio da recursão infinita nas especificações YAML.
+Utilizamos **âncoras e aliases YAML** avançados (`&` e `*`) para contornar a incapacidade do YAML de expressar recursão real.
 
-* As **âncoras base** (`button_fields`, `checkbox_fields`, etc.) são declaradas uma única vez.
-* Os **componentes de Nível 1** definem elementos planos e um contêiner `Stack`/`Collapsible` que suporta **componentes de Nível 2** (`*l2_components`).
-* Os **componentes de Nível 2** permitem recursivamente outra camada de contêineres aninhados (`*l3_components`).
-* Isso permite que os editores aninhem layouts até **4 níveis de profundidade** sem exceder os limites do analisador YAML/CMS.
+* As **âncoras de campos base** (`&button_fields`, `&checkbox_fields`, etc.) são declaradas uma única vez e reutilizadas em todo lugar onde esse tipo de componente pode aparecer, então uma mudança no esquema só precisa ser editada em um lugar.
+* **`&root_components`** —— os tipos de bloco de nível superior (Stack, Grid, Card, Layout, …) oferecidos para o campo `content` da página.
+* **`&nestable_components`** —— o que os filhos de um contêiner de nível raiz podem conter: contêineres novamente, um nível abaixo.
+* **`&leaf_components`** —— o nível mais interno, onde contêineres só podem conter componentes "folha" não contêineres (Button, Badge, Text, …), fazendo o aninhamento parar por aí.
+* Isso desdobra o aninhamento construível no editor até **\~4 níveis de profundidade**, o que é uma restrição apenas da _interface de edição_ do CMS —— veja a nota abaixo.
 
-### 2. Renderizador de layout (`app/components/page-renderer.tsx`)
+### 2. Renderizador de layout (`app/components/page-renderer.tsx` + `app/components/page-registry.tsx`)
 
-O motor de layout importa todos os módulos de componentes públicos de `app/components/ui/` e os mapeia em um compilador JSX de alto desempenho e totalmente seguro em tipos.
+O `PageRenderer` é um ponto de entrada público enxuto; o mapeamento real de bloco para componente e a lógica de renderização recursiva vivem em `page-registry.tsx`.
 
-* Os tipos de entrada são fortemente convertidos em dicionários de registro `unknown` padrão para evitar a coerção de tipos e manter as verificações de lint do Biome totalmente limpas.
-* Os contêineres aninhados são tratados recursivamente usando chamadas aninhadas ao componente `<PageRenderer content={...} />`.
+* Um objeto `registry` mapeia a string `type` de cada bloco (`"stack"`, `"button"`, `"card"`, …) para uma função de renderização que retorna JSX real de `app/components/ui/`.
+* `resolveType()` primeiro passa o type por uma tabela `TYPE_ALIASES` (ex.: `"link"` → `anchor`, `"hover-card"` → `hoverCard`, `"menu"` → `dropdown`), de modo que o conteúdo do CMS e os nomes dos componentes podem divergir ligeiramente sem quebrar nada.
+* `propsOf()` (`app/components/block-types.ts`) remove a chave meta `type` de cada bloco antes de seus campos serem espalhados sobre o componente, garantindo que ela nunca vaze como um atributo DOM indesejado.
+* Renderizadores de contêiner (Stack, Grid, Card, Dialog, Drawer, Collapsible, …) desestruturam seu próprio array `children` e chamam `renderChildren()`, que percorre esse array e invoca recursivamente o renderizador de blocos novamente.
+
+**Nota:** o limite de aninhamento de \~4 níveis do esquema YAML só limita o que o formulário do CMS permite que um editor não técnico _construa_. A recursão de `renderChildren` não tem limite de profundidade —— um arquivo `content/pages/*.json` editado manualmente ou gerado programaticamente pode aninhar muito mais fundo do que a interface do CMS permite, e ainda assim será renderizado corretamente.
 
 ***
 

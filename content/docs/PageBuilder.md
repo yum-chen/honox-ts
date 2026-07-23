@@ -75,19 +75,24 @@ The Page Builder supports a rich palette of over 40 layout, typography, decorati
 
 ### 1. CMS Schema Definitions (`public/admin/config.yml`)
 
-We utilise advanced **YAML Anchors and Aliases** (`&` and `*`) to solve the challenge of infinite recursion in YAML specifications.
+We utilise advanced **YAML Anchors and Aliases** (`&` and `*`) to work around YAML's inability to express true recursion.
 
-* **Base Anchors** (`button_fields`, `checkbox_fields`, etc.) are declared once.
-* **Level 1 Components** define flat elements and a `Stack`/`Collapsible` container that supports **Level 2 Components** (`*l2_components`).
-* **Level 2 Components** recursively allow another layer of nested containers (`*l3_components`).
-* This enables editors to nest layouts up to **4 levels deep** without exceeding YAML parser/CMS limits.
+* **Base field anchors** (`&button_fields`, `&checkbox_fields`, etc.) are declared once and reused everywhere that component type can appear, so a schema change only needs editing in one place.
+* **`&root_components`** — the top-level block types (Stack, Grid, Card, Layout, …) offered for the page's `content` field.
+* **`&nestable_components`** — what a root-level container's children may contain: containers again, one level down.
+* **`&leaf_components`** — the innermost level, where containers can only hold non-container "leaf" components (Button, Badge, Text, …), so the nesting bottoms out.
+* This unrolls editor-buildable nesting to **\~4 levels deep**, which is a constraint of the CMS _editing UI_ only — see the note below.
 
-### 2. Layout Renderer (`app/components/page-renderer.tsx`)
+### 2. Layout Renderer (`app/components/page-renderer.tsx` + `app/components/page-registry.tsx`)
 
-The layout engine imports all public component modules from `app/components/ui/` and maps them in a high-performance, fully type-safe JSX compiler.
+`PageRenderer` is a thin public entry point; the actual block → component mapping and recursive rendering logic live in `page-registry.tsx`.
 
-* Input types are strongly cast into standard `unknown` record dictionaries to prevent type coercion and keep Biome lint checks fully clean.
-* Nested containers are handled recursively using nested calls to the `<PageRenderer content={...} />` component.
+* A `registry` object maps each block's `type` string (`"stack"`, `"button"`, `"card"`, …) to a renderer function that returns real JSX from `app/components/ui/`.
+* `resolveType()` first runs the type through a `TYPE_ALIASES` table (e.g. `"link"` → `anchor`, `"hover-card"` → `hoverCard`, `"menu"` → `dropdown`), so CMS content and component names can drift slightly without breaking.
+* `propsOf()` (`app/components/block-types.ts`) strips the `type` meta-key off every block before its fields are spread onto the component, so it never leaks as a stray DOM attribute.
+* Container renderers (Stack, Grid, Card, Dialog, Drawer, Collapsible, …) destructure their own `children` array and call `renderChildren()`, which maps over it and recursively invokes the block renderer again.
+
+**Note:** the YAML schema's \~4-level nesting cap only limits what the CMS form lets a non-technical editor _build_. `renderChildren`'s recursion has no depth limit — a hand-edited or programmatically generated `content/pages/*.json` file can nest far deeper than the CMS UI allows, and it will still render correctly.
 
 ***
 

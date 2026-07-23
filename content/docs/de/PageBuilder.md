@@ -75,19 +75,24 @@ Der Seitenbaukasten unterstützt eine reichhaltige Palette von über 40 Layout-,
 
 ### 1. CMS-Schemadefinitionen (`public/admin/config.yml`)
 
-Wir nutzen fortgeschrittene **YAML-Anker und -Aliase** (`&` und `*`), um die Herausforderung der unendlichen Rekursion in YAML-Spezifikationen zu lösen.
+Wir nutzen fortgeschrittene **YAML-Anker und -Aliase** (`&` und `*`), um die Tatsache zu umgehen, dass YAML echte Rekursion nicht ausdrücken kann.
 
-* **Basis-Anker** (`button_fields`, `checkbox_fields` usw.) werden einmal deklariert.
-* **Komponenten der Ebene 1** definieren flache Elemente und einen `Stack`/`Collapsible`-Container, der **Komponenten der Ebene 2** unterstützt (`*l2_components`).
-* **Komponenten der Ebene 2** erlauben rekursiv eine weitere Schicht verschachtelter Container (`*l3_components`).
-* Dies ermöglicht es Redakteuren, Layouts bis zu **4 Ebenen tief** zu verschachteln, ohne die Grenzen des YAML-Parsers/CMS zu überschreiten.
+* **Basis-Feldanker** (`&button_fields`, `&checkbox_fields` usw.) werden einmal deklariert und überall wiederverwendet, wo dieser Komponententyp vorkommen kann — eine Schemaänderung muss also nur an einer Stelle bearbeitet werden.
+* **`&root_components`** — die Blocktypen der obersten Ebene (Stack, Grid, Card, Layout, …), die für das `content`-Feld der Seite angeboten werden.
+* **`&nestable_components`** — was die Kinder eines Root-Level-Containers enthalten dürfen: wieder Container, eine Ebene tiefer.
+* **`&leaf_components`** — die innerste Ebene, auf der Container nur nicht-container "Blatt"-Komponenten (Button, Badge, Text, …) enthalten dürfen, wodurch die Verschachtelung dort endet.
+* Dadurch wird die im Editor baubare Verschachtelung auf **\~4 Ebenen tief** entfaltet — eine reine Einschränkung der CMS-_Editieroberfläche_, siehe Hinweis unten.
 
-### 2. Layout-Renderer (`app/components/page-renderer.tsx`)
+### 2. Layout-Renderer (`app/components/page-renderer.tsx` + `app/components/page-registry.tsx`)
 
-Die Layout-Engine importiert alle öffentlichen Komponentenmodule aus `app/components/ui/` und ordnet sie in einem hochperformanten, vollständig typsicheren JSX-Compiler zu.
+`PageRenderer` ist ein bewusst schlanker öffentlicher Einstiegspunkt; die eigentliche Block-zu-Komponente-Zuordnung und die rekursive Rendering-Logik leben in `page-registry.tsx`.
 
-* Eingabetypen werden stark in standardmäßige `unknown`-Record-Dictionaries gecastet, um Typkonvertierung zu verhindern und die Biome-Lint-Prüfungen vollständig sauber zu halten.
-* Verschachtelte Container werden rekursiv über verschachtelte Aufrufe der Komponente `<PageRenderer content={...} />` verarbeitet.
+* Ein `registry`-Objekt ordnet den `type`-String jedes Blocks (`"stack"`, `"button"`, `"card"`, …) einer Renderer-Funktion zu, die echtes JSX aus `app/components/ui/` zurückgibt.
+* `resolveType()` führt den Typ zunächst durch eine `TYPE_ALIASES`-Tabelle (z. B. `"link"` → `anchor`, `"hover-card"` → `hoverCard`, `"menu"` → `dropdown`), sodass CMS-Inhalt und Komponentennamen leicht voneinander abweichen können, ohne dass etwas kaputtgeht.
+* `propsOf()` (`app/components/block-types.ts`) entfernt den Meta-Key `type` aus jedem Block, bevor dessen Felder auf die Komponente gespreadet werden, damit er nie als überflüssiges DOM-Attribut durchsickert.
+* Container-Renderer (Stack, Grid, Card, Dialog, Drawer, Collapsible, …) destrukturieren ihr eigenes `children`-Array und rufen `renderChildren()` auf, das dieses Array durchläuft und rekursiv erneut den Block-Renderer aufruft.
+
+**Hinweis:** Das Verschachtelungslimit von \~4 Ebenen im YAML-Schema begrenzt nur, was das CMS-Formular einer nicht-technischen Redakteurin/einem Redakteur zu _bauen_ erlaubt. Die Rekursion von `renderChildren` selbst hat kein Tiefenlimit — eine von Hand bearbeitete oder programmatisch erzeugte `content/pages/*.json`-Datei kann deutlich tiefer verschachtelt sein, als es die CMS-Oberfläche zulässt, und wird trotzdem korrekt gerendert.
 
 ***
 

@@ -75,19 +75,24 @@ title: CMS 页面构建器
 
 ### 1. CMS Schema 定义（`public/admin/config.yml`）
 
-我们利用高级 **YAML 锚点与别名**（`&` 和 `*`）来解决 YAML 规范中无限递归的挑战。
+我们利用高级 **YAML 锚点与别名**（`&` 和 `*`）来绕过 YAML 无法表达真正递归这一限制。
 
-* **基础锚点**（`button_fields`、`checkbox_fields` 等）只声明一次。
-* **一级组件**定义扁平元素，以及一个支持 **二级组件**（`*l2_components`）的 `Stack`/`Collapsible` 容器。
-* **二级组件**递归地允许再嵌套一层容器（`*l3_components`）。
-* 这使得编辑人员最多可嵌套 **4 层**布局，而不会超出 YAML 解析器 / CMS 的限制。
+* **基础字段锚点**（`&button_fields`、`&checkbox_fields` 等）只声明一次，并在该组件类型可能出现的每处地方复用，因此 schema 变更只需改一处。
+* **`&root_components`** —— 页面 `content` 字段可选用的顶层块类型（Stack、Grid、Card、Layout……）。
+* **`&nestable_components`** —— 根级容器的子项可包含的内容：再次是容器，向下一层。
+* **`&leaf_components`** —— 最内层，容器在此层只能容纳非容器的“叶子”组件（Button、Badge、Text……），嵌套到此为止。
+* 这将编辑器可构建的嵌套展开到约 **4 层深**，这仅仅是 CMS _编辑界面_的限制 —— 详见下方说明。
 
-### 2. 布局渲染器（`app/components/page-renderer.tsx`）
+### 2. 布局渲染器（`app/components/page-renderer.tsx` + `app/components/page-registry.tsx`）
 
-布局引擎从 `app/components/ui/` 导入所有公共组件模块，并映射到一个高性能、完全类型安全的 JSX 编译器中。
+`PageRenderer` 只是一个薄薄的公共入口；真正的“块 → 组件”映射与递归渲染逻辑都在 `page-registry.tsx` 中。
 
-* 输入类型被强转为标准的 `unknown` 记录字典，以防止类型强制转换并保持 Biome lint 检查完全干净。
-* 嵌套容器通过嵌套调用 `<PageRenderer content={...} />` 组件来递归处理。
+* 一个 `registry` 对象将每个块的 `type` 字符串（`"stack"`、`"button"`、`"card"` ……）映射到一个渲染函数，该函数返回来自 `app/components/ui/` 的真实 JSX。
+* `resolveType()` 会先将 type 经过 `TYPE_ALIASES` 表做一次映射（例如 `"link"` → `anchor`，`"hover-card"` → `hoverCard`，`"menu"` → `dropdown`），因此 CMS 内容与组件名可以有些许差异而不会出错。
+* `propsOf()`（`app/components/block-types.ts`）会在把字段展开到组件之前，从每个块中剥离 `type` 这个元信息 key，确保它不会作为多余的 DOM 属性泄漏出去。
+* 容器渲染器（Stack、Grid、Card、Dialog、Drawer、Collapsible……）会从自身解构出 `children` 数组，并调用 `renderChildren()`，后者遍历该数组并递归调用块渲染器本身。
+
+**注意：** YAML schema 约 4 层的嵌套上限，只限制了 CMS 表单能让非技术编辑_构建_出来的内容。`renderChildren` 的递归本身没有深度限制 —— 手写或以程序方式生成的 `content/pages/*.json` 文件可以嵌套得比 CMS UI 允许的更深，并且依然能被正确渲染。
 
 ***
 
