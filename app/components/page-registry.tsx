@@ -7,12 +7,14 @@ import {
 	Alert,
 	AlertIcon,
 	Anchor,
+	Avatar,
 	Badge,
 	Breadcrumb,
 	Button,
 	Card,
 	Carousel,
 	Checkbox,
+	Clipboard,
 	Collapsible,
 	ColorPicker,
 	Combobox,
@@ -38,6 +40,7 @@ import {
 	Progress,
 	RadioCardGroup,
 	RadioGroup,
+	RatingGroup,
 	Search,
 	SegmentGroup,
 	Select,
@@ -740,6 +743,9 @@ const registry: Record<string, BlockRenderer> = {
 	},
 	colorPicker: (b) => <ColorPicker interactive {...propsOf(b)} />,
 	pinField: (b) => <PinField interactive {...propsOf(b)} />,
+	avatar: (b) => <Avatar {...propsOf(b)} />,
+	ratingGroup: (b) => <RatingGroup interactive {...propsOf(b)} />,
+	clipboard: (b) => <Clipboard interactive {...propsOf(b)} />,
 
 	tabs: (b) => {
 		const { items, variant, size, orientation, activationMode, ...rest } =
