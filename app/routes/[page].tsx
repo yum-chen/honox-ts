@@ -1,0 +1,53 @@
+import { css } from "design-system/css";
+import { ssgParams } from "hono/ssg";
+import { createRoute } from "honox/factory";
+import { PageRenderer } from "../components/page-renderer";
+import { detectLocale } from "../lib/i18n";
+import { listPageSlugs, loadPage } from "../lib/pages";
+
+export default createRoute(
+	ssgParams(() =>
+		listPageSlugs()
+			.filter((slug) => slug !== "index")
+			.map((page) => ({ page })),
+	),
+	async (c, next) => {
+		const page = c.req.param("page");
+
+		// "index" already renders at "/" via routes/index.tsx with its own header/footer.
+		if (page === "index") return next();
+
+		const currentLocale = detectLocale(c.req.path);
+
+		try {
+			const data = await loadPage(page, currentLocale);
+
+			// Not a content page — defer to any other route matching this path
+			// (e.g. /de, /blog, /docs), since this file lives at the routing root
+			// and would otherwise shadow them.
+			if (!data) {
+				return next();
+			}
+
+			return c.render(
+				<div
+					class={css({
+						maxWidth: "5xl",
+						mx: "auto",
+						px: "4",
+						py: "12",
+						display: "flex",
+						flexDirection: "column",
+						gap: "10",
+					})}
+				>
+					<title>{data.title}</title>
+					<PageRenderer content={data.content ?? []} />
+				</div>,
+			);
+		} catch (error) {
+			console.error(`Error loading page ${page}:`, error);
+			return next();
+		}
+	},
+);
