@@ -196,6 +196,11 @@ collections:
                         widget: list
                         types: &leaf_components
                           # Level 3: Non-container components (Leaves)
+                          - label: Language Switcher
+                            name: languageSwitcher
+                            widget: object
+                            fields:
+                              - { label: Label, name: label, widget: string, required: false }
                           - label: Button
                             name: button
                             widget: object

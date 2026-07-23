@@ -1,7 +1,10 @@
 import { css } from "design-system/css";
 import { ChevronDownIcon } from "../icons/chevron-down";
 import { extractLayoutStyle } from "./block-style";
-import { type ComponentBlock, propsOf } from "./block-types";
+import { type ComponentBlock, propsOf as rawPropsOf } from "./block-types";
+import { localiseHref } from "../lib/i18n";
+import { LanguageSwitcher } from "./language-switcher";
+import { STYLE_MAP } from "./block-style";
 import {
 	AbsoluteCenter,
 	Alert,
@@ -76,10 +79,30 @@ const TYPE_ALIASES: Record<string, string> = {
 	menu: "dropdown",
 	link: "anchor",
 	tagsInput: "tagsField",
+	languageswitcher: "languageSwitcher",
 };
 
 function resolveType(type: string): string {
 	return TYPE_ALIASES[type] ?? type;
+}
+
+function propsOf(b: ComponentBlock): Record<string, any> {
+	const props = rawPropsOf(b);
+	const { currentLocale, currentPath, ...rest } = props;
+
+	if (rest.class && typeof rest.class === "string") {
+		rest.class = rest.class.split(" ").map((c: string) => STYLE_MAP[c] ?? c).join(" ");
+	}
+	if (rest.headerClass && typeof rest.headerClass === "string") {
+		rest.headerClass = rest.headerClass.split(" ").map((c: string) => STYLE_MAP[c] ?? c).join(" ");
+	}
+	if (rest.footerClass && typeof rest.footerClass === "string") {
+		rest.footerClass = rest.footerClass.split(" ").map((c: string) => STYLE_MAP[c] ?? c).join(" ");
+	}
+	if (rest.contentClass && typeof rest.contentClass === "string") {
+		rest.contentClass = rest.contentClass.split(" ").map((c: string) => STYLE_MAP[c] ?? c).join(" ");
+	}
+	return rest;
 }
 
 // Recursively render a list of nested blocks (used by container renderers).
@@ -233,8 +256,19 @@ const registry: Record<string, BlockRenderer> = {
 	},
 
 	anchor: (b) => {
-		const { text, ...rest } = propsOf(b);
-		return <Anchor {...rest}>{text}</Anchor>;
+		const { text, href, ...rest } = propsOf(b);
+		const currentLocale = b.currentLocale as string || "en";
+		const localised = typeof href === "string" ? localiseHref(href, currentLocale) : href;
+		return <Anchor href={localised} {...rest}>{text}</Anchor>;
+	},
+
+	languageSwitcher: (b) => {
+		return (
+			<LanguageSwitcher
+				currentPath={b.currentPath as string || "/"}
+				currentLocale={b.currentLocale as string || "en"}
+			/>
+		);
 	},
 
 	card: (b) => {

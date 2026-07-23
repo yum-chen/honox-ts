@@ -163,3 +163,96 @@ export function extractLayoutStyle(
 		style,
 	};
 }
+
+export const cmsHeaderClass = css({
+	borderBottomWidth: "1px",
+	borderColor: { _light: "white.a4", _dark: "black.a4" },
+	bg: { _light: "white.a7", _dark: "black.a7" },
+	backdropFilter: "blur(20px) saturate(180%)",
+	boxShadow: {
+		_light:
+			"inset 0 1px 0 0 rgba(255, 255, 255, 0.5), 0 4px 30px rgba(0, 0, 0, 0.03)",
+		_dark:
+			"inset 0 1px 0 0 rgba(255, 255, 255, 0.15), 0 4px 30px rgba(0, 0, 0, 0.2)",
+	},
+	position: "sticky",
+	top: "0",
+	zIndex: "10",
+});
+
+export const cmsHeaderContainerClass = css({
+	maxW: "6xl",
+	mx: "auto",
+	px: "6",
+	py: "4",
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "space-between",
+});
+
+export const cmsNavClass = css({
+	display: "flex",
+	gap: { base: "3", md: "6" },
+	alignItems: "center",
+});
+
+export const cmsNavLinkClass = css({
+	display: { base: "none", md: "block" },
+	textStyle: "sm",
+	fontWeight: "medium",
+});
+
+export const cmsPageContainerClass = css({
+	maxWidth: "5xl",
+	mx: "auto",
+	px: "4",
+	py: "12",
+	display: "flex",
+	flexDirection: "column",
+	gap: "10",
+});
+
+export const cmsFooterClass = css({
+	bg: "bg.canvas",
+	borderTopWidth: "1px",
+	borderColor: "border",
+	py: "12",
+	px: "6",
+});
+
+export const cmsFooterContainerClass = css({
+	maxW: "6xl",
+	mx: "auto",
+	display: "flex",
+	flexDirection: { base: "column", md: "row" },
+	justifyContent: "space-between",
+	alignItems: "center",
+	gap: "6",
+});
+
+export const cmsLogoTitleClass = css({
+	fontSize: "lg",
+	fontWeight: "bold",
+	tracking: "tight",
+});
+
+export const cmsFooterCopyrightClass = css({
+	fontWeight: "semibold",
+});
+
+export const cmsFooterLinkClass = css({
+	textStyle: "sm",
+});
+
+export const STYLE_MAP: Record<string, string> = {
+	"cms-header": cmsHeaderClass,
+	"cms-header-container": cmsHeaderContainerClass,
+	"cms-nav": cmsNavClass,
+	"cms-nav-link": cmsNavLinkClass,
+	"cms-page-container": cmsPageContainerClass,
+	"cms-footer": cmsFooterClass,
+	"cms-footer-container": cmsFooterContainerClass,
+	"cms-logo-title": cmsLogoTitleClass,
+	"cms-footer-copyright": cmsFooterCopyrightClass,
+	"cms-footer-link": cmsFooterLinkClass,
+};
