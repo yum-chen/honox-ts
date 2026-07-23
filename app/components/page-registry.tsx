@@ -1,5 +1,6 @@
 import { css } from "design-system/css";
 import { ChevronDownIcon } from "../icons/chevron-down";
+import { extractLayoutStyle } from "./block-style";
 import { type ComponentBlock, propsOf } from "./block-types";
 import {
 	AbsoluteCenter,
@@ -158,6 +159,7 @@ const registry: Record<string, BlockRenderer> = {
 	grid: (b) => {
 		const { children } = b;
 		const props = propsOf(b);
+		const layoutStyle = extractLayoutStyle(props);
 
 		const resolvedProps: Record<string, unknown> = {};
 		for (const key of Object.keys(props)) {
@@ -165,7 +167,11 @@ const registry: Record<string, BlockRenderer> = {
 		}
 
 		return (
-			<Grid {...resolvedProps}>
+			<Grid
+				{...resolvedProps}
+				class={layoutStyle.class}
+				style={layoutStyle.style}
+			>
 				{renderChildren(children as ComponentBlock[])}
 			</Grid>
 		);
@@ -173,8 +179,10 @@ const registry: Record<string, BlockRenderer> = {
 
 	stack: (b) => {
 		const { children } = b;
+		const props = propsOf(b);
+		const layoutStyle = extractLayoutStyle(props);
 		return (
-			<Stack {...propsOf(b)}>
+			<Stack {...props} class={layoutStyle.class} style={layoutStyle.style}>
 				{renderChildren(children as ComponentBlock[])}
 			</Stack>
 		);
@@ -835,6 +843,7 @@ const registry: Record<string, BlockRenderer> = {
 		for (const key of Object.keys(props)) {
 			if (props[key] === "") delete props[key];
 		}
+		const layoutStyle = extractLayoutStyle(props);
 		const part = (blocks: unknown): JSX.Element | undefined =>
 			Array.isArray(blocks) && blocks.length > 0 ? (
 				<>{renderChildren(blocks as ComponentBlock[])}</>
@@ -846,6 +855,8 @@ const registry: Record<string, BlockRenderer> = {
 				content={part(content)}
 				footer={part(footer)}
 				{...props}
+				class={layoutStyle.class}
+				style={layoutStyle.style}
 			/>
 		);
 	},

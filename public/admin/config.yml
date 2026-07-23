@@ -158,6 +158,16 @@ collections:
               - &stack_align { label: Align, name: align, widget: select, options: [start, center, end, stretch, baseline], required: false }
               - &stack_justify { label: Justify, name: justify, widget: select, options: [start, center, end, between, around, evenly], required: false }
               - &stack_gap { label: Gap, name: gap, widget: select, options: ["0", "0.5", "1", "1.5", "2", "2.5", "3", "4", "5", "6", "7", "8", "9", "10", "12", "14", "16", "20"], default: "2" }
+              - &layout_style_margin { label: Margin, name: margin, widget: string, required: false, hint: "CSS margin shorthand, e.g. \"2rem 0\". 1-4 space-separated values (px/rem/em/%/0/auto)." }
+              - &layout_style_padding { label: Padding, name: padding, widget: string, required: false, hint: "CSS padding shorthand, e.g. \"1rem 2rem\". 1-4 space-separated values (px/rem/em/%/0/auto)." }
+              - &layout_style_max_width { label: Max Width, name: maxWidth, widget: string, required: false, hint: "e.g. \"64rem\", \"1200px\", \"90%\"." }
+              - &layout_style_border_radius { label: Border Radius, name: borderRadius, widget: string, required: false, hint: "e.g. \"1rem\", \"12px\"." }
+              - &layout_style_background_color { label: Background Color, name: backgroundColor, widget: string, required: false, hint: "Hex, rgb()/rgba(), or a CSS color name." }
+              - &layout_style_background_image { label: Background Image URL, name: backgroundImage, widget: string, required: false, hint: "Must be an https:// URL." }
+              - &layout_style_background_fit { label: Background Fit, name: backgroundFit, widget: select, options: [cover, contain, auto], required: false, hint: "Only applies when Background Image is set." }
+              - &layout_style_text_align { label: Text Align, name: textAlign, widget: select, options: [left, center, right, justify, start, end], required: false }
+              - &layout_style_opacity { label: Opacity, name: opacity, widget: number, value_type: float, min: 0, max: 1, step: 0.1, required: false }
+              - &layout_style_box_shadow { label: Box Shadow, name: boxShadow, widget: select, options: [none, "2xs", xs, sm, md, lg, xl, "2xl"], required: false }
               - label: Children
                 name: children
                 widget: list
@@ -171,6 +181,16 @@ collections:
                       - *stack_align
                       - *stack_justify
                       - *stack_gap
+                      - *layout_style_margin
+                      - *layout_style_padding
+                      - *layout_style_max_width
+                      - *layout_style_border_radius
+                      - *layout_style_background_color
+                      - *layout_style_background_image
+                      - *layout_style_background_fit
+                      - *layout_style_text_align
+                      - *layout_style_opacity
+                      - *layout_style_box_shadow
                       - label: Children
                         name: children
                         widget: list
@@ -1209,6 +1229,16 @@ collections:
                       - &grid_rows { label: Rows, name: rows, widget: string, required: false }
                       - &grid_gap { label: Gap, name: gap, widget: select, options: ["0", "0.5", "1", "1.5", "2", "2.5", "3", "4", "5", "6", "7", "8", "9", "10", "12", "14", "16", "20"], default: "2" }
                       - &grid_min_child_width { label: Min Child Width, name: minChildWidth, widget: string, required: false }
+                      - *layout_style_margin
+                      - *layout_style_padding
+                      - *layout_style_max_width
+                      - *layout_style_border_radius
+                      - *layout_style_background_color
+                      - *layout_style_background_image
+                      - *layout_style_background_fit
+                      - *layout_style_text_align
+                      - *layout_style_opacity
+                      - *layout_style_box_shadow
                       - label: Children
                         name: children
                         widget: list
@@ -1257,6 +1287,16 @@ collections:
                         options: [sm, md, lg]
                         required: false
                         hint: "Hide the sider under this breakpoint (small screens should get another nav)."
+                      - *layout_style_margin
+                      - *layout_style_padding
+                      - *layout_style_max_width
+                      - *layout_style_border_radius
+                      - *layout_style_background_color
+                      - *layout_style_background_image
+                      - *layout_style_background_fit
+                      - *layout_style_text_align
+                      - *layout_style_opacity
+                      - *layout_style_box_shadow
                       - { label: Header, name: header, widget: list, types: *leaf_components, required: false }
                       - { label: Sider, name: sider, widget: list, types: *leaf_components, required: false }
                       - { label: Content, name: content, widget: list, types: *leaf_components, required: false }
@@ -1273,6 +1313,16 @@ collections:
               - *grid_rows
               - *grid_gap
               - *grid_min_child_width
+              - *layout_style_margin
+              - *layout_style_padding
+              - *layout_style_max_width
+              - *layout_style_border_radius
+              - *layout_style_background_color
+              - *layout_style_background_image
+              - *layout_style_background_fit
+              - *layout_style_text_align
+              - *layout_style_opacity
+              - *layout_style_box_shadow
               - label: Children
                 name: children
                 widget: list
@@ -1676,6 +1726,16 @@ collections:
               - *layout_sider_width
               - *layout_sticky_sider
               - *layout_sider_hide_below
+              - *layout_style_margin
+              - *layout_style_padding
+              - *layout_style_max_width
+              - *layout_style_border_radius
+              - *layout_style_background_color
+              - *layout_style_background_image
+              - *layout_style_background_fit
+              - *layout_style_text_align
+              - *layout_style_opacity
+              - *layout_style_box_shadow
               - label: Header
                 name: header
                 widget: list
