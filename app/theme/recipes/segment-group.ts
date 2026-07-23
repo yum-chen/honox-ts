@@ -6,7 +6,7 @@ export const segmentGroup = defineSlotRecipe({
 	base: {
 		root: {
 			bg: {
-				_light: "gray.2",
+				_light: "gray.4",
 				_dark: "gray.1",
 			},
 			borderRadius: "l3",
@@ -69,14 +69,23 @@ export const segmentGroup = defineSlotRecipe({
 			},
 		},
 
+		itemText: {
+			color: "fg.muted",
+			transition: "color 0.2s",
+			_checked: {
+				color: "fg.default",
+			},
+		},
+
 		indicator: {
 			bg: {
 				_light: "white",
-				_dark: "gray.2",
+				_dark: "gray.5",
 			},
 			borderWidth: "1px",
 			borderColor: "gray.surface.border",
 			borderRadius: "l3",
+			boxShadow: "xs",
 			height: "var(--height)",
 			left: "var(--left)",
 			pos: "absolute",
