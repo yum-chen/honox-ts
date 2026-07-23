@@ -217,7 +217,7 @@ collections:
                                 options: [xs, sm, md, lg]
                                 default: md
                               - label: Type
-                                name: type
+                                name: buttonType
                                 widget: select
                                 options: [button, submit, reset]
                                 default: button
@@ -494,7 +494,7 @@ collections:
                               - { label: Max, name: max, widget: number, default: 100, required: false }
                               - { label: Show Value Text, name: showValueText, widget: boolean, default: false }
                               - label: Type
-                                name: type
+                                name: progressType
                                 widget: select
                                 options: [linear, circular]
                                 default: linear

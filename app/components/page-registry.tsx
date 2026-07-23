@@ -192,8 +192,15 @@ const registry: Record<string, BlockRenderer> = {
 	},
 
 	button: (b) => {
-		const { text, ...rest } = propsOf(b);
-		return <Button {...rest}>{text}</Button>;
+		// CMS field is "buttonType", not "type" — the HTML button/submit/reset
+		// variant would otherwise collide with the block-type discriminator key,
+		// since both live on the same flat JSON object (propsOf only strips one).
+		const { text, buttonType, ...rest } = propsOf(b);
+		return (
+			<Button type={buttonType as "button" | "submit" | "reset"} {...rest}>
+				{text}
+			</Button>
+		);
 	},
 
 	badge: (b) => {
@@ -654,7 +661,13 @@ const registry: Record<string, BlockRenderer> = {
 
 	paginatedTable: (b) => <PaginatedTable {...propsOf(b)} />,
 	pagination: (b) => <Pagination interactive {...propsOf(b)} />,
-	progress: (b) => <Progress {...propsOf(b)} />,
+	progress: (b) => {
+		// CMS field is "progressType", not "type" — Progress's own linear/circular
+		// variant would otherwise collide with the block-type discriminator key,
+		// since both live on the same flat JSON object (propsOf only strips one).
+		const { progressType, ...rest } = propsOf(b);
+		return <Progress type={progressType as "linear" | "circular"} {...rest} />;
+	},
 	radioGroup: (b) => <RadioGroup interactive {...propsOf(b)} />,
 
 	radioCardGroup: (b) => {

@@ -466,7 +466,7 @@
           "children": [
             { "type": "stack", "direction": "vertical", "gap": "4", "children": [
               { "type": "progress", "label": "Uploading Data", "value": 72, "showValueText": true },
-              { "type": "progress", "label": "Processing", "type": "circular" }
+              { "type": "progress", "label": "Processing", "progressType": "circular" }
             ]}
           ]
         },
