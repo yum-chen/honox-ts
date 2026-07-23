@@ -308,17 +308,17 @@
         {
           "type": "card",
           "title": "Field",
-          "description": "Labeled text input",
+          "description": "Labeled input with live validation",
           "children": [
-            { "type": "field", "label": "Username", "defaultValue": "ab" }
+            { "type": "field", "label": "Username", "defaultValue": "ab", "validator": "(value) => value.length >= 3 || \"Must be at least 3 characters\"" }
           ]
         },
         {
           "type": "card",
           "title": "Textarea",
-          "description": "Multi-line text input",
+          "description": "Multi-line input with live validation",
           "children": [
-            { "type": "textarea", "label": "Bio", "defaultValue": "Too short" }
+            { "type": "textarea", "label": "Bio", "defaultValue": "Too short", "validator": "(value) => value.length >= 20 || \"Tell us a bit more (20 characters min)\"" }
           ]
         }
       ]

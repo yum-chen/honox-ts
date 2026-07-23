@@ -1,5 +1,5 @@
 {
-  "title": "Artefact — Kit d'UI Moderne",
+  "title": "Artefact — Suite d'UI Moderne",
   "content": [
     {
       "type": "stack",
@@ -18,14 +18,14 @@
         {
           "type": "heading",
           "as": "h1",
-          "text": "Un ensemble de composants magnifiquement conçus et accessibles.",
+          "text": "Une suite de composants magnifiquement conçue et accessible.",
           "size": "5xl",
           "style": "text-align:center;max-width:48rem"
         },
         {
           "type": "text",
           "size": "lg",
-          "content": "Un système de design complet à trois couches, construit pour HonoX, PandaCSS et Sveltia CMS. Rapide, léger et totalement accessible, aligné sur les habitudes standards des utilisateurs.",
+          "content": "Un système de conception complet à 3 niveaux conçu pour HonoX, PandaCSS et Sveltia CMS. Rapide, léger et entièrement accessible, respectant les habitudes standard des utilisateurs.",
           "style": "text-align:center;max-width:42rem"
         },
         {
@@ -33,15 +33,39 @@
           "direction": "horizontal",
           "gap": "4",
           "children": [
-            { "type": "button", "text": "Voir la démo", "variant": "solid", "colorPalette": "blue", "size": "lg", "onclick": "window.scrollTo({top: document.getElementById('carousel-showcase').offsetTop - 80, behavior: 'smooth'})" },
-            { "type": "button", "text": "Centre de composants", "variant": "outline", "size": "lg", "onclick": "window.scrollTo({top: document.getElementById('hub').offsetTop - 80, behavior: 'smooth'})" }
+            {
+              "type": "button",
+              "text": "Voir la Vitrine",
+              "variant": "solid",
+              "colorPalette": "blue",
+              "size": "lg",
+              "onclick": "window.scrollTo({top: document.getElementById('carousel-showcase').offsetTop - 80, behavior: 'smooth'})"
+            },
+            {
+              "type": "button",
+              "text": "Hub de Composants",
+              "variant": "outline",
+              "size": "lg",
+              "onclick": "window.scrollTo({top: document.getElementById('hub').offsetTop - 80, behavior: 'smooth'})"
+            }
           ]
         }
       ]
     },
-
-    { "type": "heading", "as": "h2", "text": "Démonstration d'onglets", "size": "3xl", "style": "text-align:center", "id": "tabs-showcase" },
-    { "type": "text", "size": "md", "content": "Entièrement réimplémenté en Hono/JSX pur, avec indicateur glissant, activation de focus manuelle/automatique et prise en charge complète de la navigation au clavier.", "style": "text-align:center;max-width:42rem;margin:0 auto" },
+    {
+      "type": "heading",
+      "as": "h2",
+      "text": "Vitrine des Onglets",
+      "size": "3xl",
+      "style": "text-align:center",
+      "id": "tabs-showcase"
+    },
+    {
+      "type": "text",
+      "size": "md",
+      "content": "Entièrement réimplémenté en Hono/JSX pur avec des indicateurs glissants, une activation du focus manuelle/automatique et une prise en charge complète de la navigation au clavier.",
+      "style": "text-align:center;max-width:42rem;margin:0 auto"
+    },
     {
       "type": "stack",
       "direction": "vertical",
@@ -56,23 +80,59 @@
           "items": [
             {
               "value": "features",
-              "label": "⚡ Fonctionnalités clés",
+              "label": "⚡ Fonctionnalités Clés",
               "content": [
                 {
                   "type": "grid",
                   "columns": "{\"base\": 1, \"md\": 3}",
                   "gap": "6",
                   "children": [
-                    { "type": "card", "title": "Extrêmement rapide", "description": "SSR par défaut avec empreinte statique minimale. Ne s'hydrate que lorsque l'interaction est nécessaire.", "children": [{ "type": "badge", "text": "Option Zero JS", "colorPalette": "green", "variant": "subtle" }] },
-                    { "type": "card", "title": "Totalement accessible", "description": "Suit strictement les normes WAI-ARIA. Entièrement navigable au clavier grâce au roving tabIndex et aux états aria.", "children": [{ "type": "badge", "text": "Conforme A11y", "colorPalette": "blue", "variant": "subtle" }] },
-                    { "type": "card", "title": "Design époustouflant", "description": "Transitions à indicateur glissant et mises en page pixel-perfect alignées sur les habitudes modernes.", "children": [{ "type": "badge", "text": "Panda CSS", "colorPalette": "purple", "variant": "subtle" }] }
+                    {
+                      "type": "card",
+                      "title": "Ultra Rapide",
+                      "description": "SSR par défaut avec une empreinte statique minimale. Ne s'hydrate que lorsque l'interaction est nécessaire.",
+                      "children": [
+                        {
+                          "type": "badge",
+                          "text": "Option Zéro JS",
+                          "colorPalette": "green",
+                          "variant": "subtle"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "card",
+                      "title": "Entièrement Accessible",
+                      "description": "Suivant exactement les normes WAI-ARIA. Entièrement navigable au clavier avec un tabIndex itinérant et des états aria.",
+                      "children": [
+                        {
+                          "type": "badge",
+                          "text": "Conforme A11y",
+                          "colorPalette": "blue",
+                          "variant": "subtle"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "card",
+                      "title": "Design Époustouflant",
+                      "description": "Transitions d'indicateur glissant et mises en page au pixel près adaptées aux habitudes modernes des utilisateurs.",
+                      "children": [
+                        {
+                          "type": "badge",
+                          "text": "Panda CSS",
+                          "colorPalette": "purple",
+                          "variant": "subtle"
+                        }
+                      ]
+                    }
                   ]
                 }
               ]
             },
             {
               "value": "pricing",
-              "label": "💎 Grilles tarifaires",
+              "label": "💎 Plans Tarifaires",
               "content": [
                 {
                   "type": "grid",
@@ -81,26 +141,68 @@
                   "children": [
                     {
                       "type": "card",
-                      "title": "Démarrage",
-                      "description": "Parfait pour les développeurs individuels et les projets perso qui souhaitent prototyper rapidement.",
+                      "title": "Débutant",
+                      "description": "Parfait pour les projets personnels et les développeurs individuels souhaitant prototyper rapidement.",
                       "children": [
-                        { "type": "stack", "direction": "horizontal", "align": "baseline", "gap": "1", "children": [
-                          { "type": "heading", "as": "p", "text": "$0", "size": "3xl" },
-                          { "type": "text", "size": "sm", "content": "/mois" }
-                        ]},
-                        { "type": "button", "text": "Commencer", "variant": "outline", "colorPalette": "blue", "size": "sm" }
+                        {
+                          "type": "stack",
+                          "direction": "horizontal",
+                          "align": "baseline",
+                          "gap": "1",
+                          "children": [
+                            {
+                              "type": "heading",
+                              "as": "p",
+                              "text": "$0",
+                              "size": "3xl"
+                            },
+                            {
+                              "type": "text",
+                              "size": "sm",
+                              "content": "/mois"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "button",
+                          "text": "Commencer",
+                          "variant": "outline",
+                          "colorPalette": "blue",
+                          "size": "sm"
+                        }
                       ]
                     },
                     {
                       "type": "card",
                       "title": "Pro",
-                      "description": "Fonctionnalités complètes, pages illimitées, intégration d'analytique et support prioritaire dédié.",
+                      "description": "Fonctionnalités complètes, pages illimitées, intégration analytique et support prioritaire dédié.",
                       "children": [
-                        { "type": "stack", "direction": "horizontal", "align": "baseline", "gap": "1", "children": [
-                          { "type": "heading", "as": "p", "text": "$29", "size": "3xl" },
-                          { "type": "text", "size": "sm", "content": "/mois" }
-                        ]},
-                        { "type": "button", "text": "Passer au Pro", "variant": "solid", "colorPalette": "blue", "size": "sm" }
+                        {
+                          "type": "stack",
+                          "direction": "horizontal",
+                          "align": "baseline",
+                          "gap": "1",
+                          "children": [
+                            {
+                              "type": "heading",
+                              "as": "p",
+                              "text": "$29",
+                              "size": "3xl"
+                            },
+                            {
+                              "type": "text",
+                              "size": "sm",
+                              "content": "/mois"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "button",
+                          "text": "Passer à Pro",
+                          "variant": "solid",
+                          "colorPalette": "blue",
+                          "size": "sm"
+                        }
                       ]
                     }
                   ]
@@ -109,27 +211,77 @@
             },
             {
               "value": "tech-stack",
-              "label": "🛠️ Pile technologique",
+              "label": "🛠️ Stack Technologique",
               "content": [
                 {
                   "type": "card",
-                  "title": "Pile Web moderne",
-                  "description": "Conçue de zéro pour une production prête au déploiement et une vitesse maximales.",
+                  "title": "Stack Web Moderne",
+                  "description": "Conçu de A à Z pour une préparation maximale à la production et une vitesse optimale.",
                   "children": [
-                    { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-                      { "type": "stack", "direction": "horizontal", "justify": "between", "align": "center", "children": [
-                        { "type": "text", "size": "sm", "content": "Méta-framework HonoX", "style": "font-weight:bold" },
-                        { "type": "badge", "text": "Rapide et Server-First", "colorPalette": "orange" }
-                      ]},
-                      { "type": "stack", "direction": "horizontal", "justify": "between", "align": "center", "children": [
-                        { "type": "text", "size": "sm", "content": "Panda CSS", "style": "font-weight:bold" },
-                        { "type": "badge", "text": "CSS-in-JS sans runtime", "colorPalette": "amber" }
-                      ]},
-                      { "type": "stack", "direction": "horizontal", "justify": "between", "align": "center", "children": [
-                        { "type": "text", "size": "sm", "content": "Outils Bun", "style": "font-weight:bold" },
-                        { "type": "badge", "text": "Vitesse de nouvelle génération", "colorPalette": "red" }
-                      ]}
-                    ]}
+                    {
+                      "type": "stack",
+                      "direction": "vertical",
+                      "gap": "4",
+                      "children": [
+                        {
+                          "type": "stack",
+                          "direction": "horizontal",
+                          "justify": "between",
+                          "align": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "size": "sm",
+                              "content": "Méta-Framework HonoX",
+                              "style": "font-weight:bold"
+                            },
+                            {
+                              "type": "badge",
+                              "text": "Rapide et Server-First",
+                              "colorPalette": "orange"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "stack",
+                          "direction": "horizontal",
+                          "justify": "between",
+                          "align": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "size": "sm",
+                              "content": "Panda CSS",
+                              "style": "font-weight:bold"
+                            },
+                            {
+                              "type": "badge",
+                              "text": "CSS-in-JS Sans Exécution",
+                              "colorPalette": "amber"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "stack",
+                          "direction": "horizontal",
+                          "justify": "between",
+                          "align": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "size": "sm",
+                              "content": "Outillage Bun",
+                              "style": "font-weight:bold"
+                            },
+                            {
+                              "type": "badge",
+                              "text": "Vitesse Nouvelle Génération",
+                              "colorPalette": "red"
+                            }
+                          ]
+                        }
+                      ]
+                    }
                   ]
                 }
               ]
@@ -138,9 +290,20 @@
         }
       ]
     },
-
-    { "type": "heading", "as": "h2", "text": "Implémentation de carrousel en vedette", "size": "3xl", "style": "text-align:center", "id": "carousel-showcase" },
-    { "type": "text", "size": "md", "content": "Présentant notre implémentation Hono/JSX robuste du Slider Carousel d'Ark UI. Glissable, avec lecture automatique et totalement accessible.", "style": "text-align:center;max-width:42rem;margin:0 auto" },
+    {
+      "type": "heading",
+      "as": "h2",
+      "text": "Implémentation Vedette du Carrousel",
+      "size": "3xl",
+      "style": "text-align:center",
+      "id": "carousel-showcase"
+    },
+    {
+      "type": "text",
+      "size": "md",
+      "content": "Démonstration de notre implémentation robuste en Hono/JSX du Slider Carousel d'Ark UI. Balayable, prêt pour la lecture automatique et entièrement accessible.",
+      "style": "text-align:center;max-width:42rem;margin:0 auto"
+    },
     {
       "type": "grid",
       "columns": "{\"base\": 1, \"md\": 2}",
@@ -148,8 +311,8 @@
       "children": [
         {
           "type": "card",
-          "title": "Carrousel interactif avec lecture auto",
-          "description": "Déclencheurs de lecture auto, points personnalisés et pause au survol.",
+          "title": "Carrousel Interactif à Lecture Automatique",
+          "description": "Déclencheurs de lecture automatique, points personnalisés et pause au survol.",
           "children": [
             {
               "type": "carousel",
@@ -158,17 +321,26 @@
               "pauseOnHover": true,
               "autoplayDelay": 3000,
               "slides": [
-                { "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80", "caption": "Analyses en temps réel — Pulse fournit des données et tableaux de bord en direct avec une latence de streaming sous la seconde." },
-                { "image": "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=800&q=80", "caption": "Détection par IA — la détection intelligente d'anomalies avertit votre équipe avant les pannes de production." },
-                { "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80", "caption": "Espace de travail d'équipe unifié — partagez facilement des graphiques annotés et créez des espaces personnalisés." }
+                {
+                  "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
+                  "caption": "Analytique en Temps Réel — Pulse fournit des données en direct et des tableaux de bord avec une latence de streaming inférieure à la seconde."
+                },
+                {
+                  "image": "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=800&q=80",
+                  "caption": "Détection Alimentée par l'IA — La détection intelligente d'anomalies avertit votre équipe avant que la production ne tombe en panne."
+                },
+                {
+                  "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80",
+                  "caption": "Espaces de Travail d'Équipe Unifiés — Partagez des graphiques annotés et créez facilement des espaces de travail personnalisés."
+                }
               ]
             }
           ]
         },
         {
           "type": "card",
-          "title": "Carrousel multi-diapositives en boucle",
-          "description": "Affiche 2 diapositives par page dans une grille réactive riche.",
+          "title": "Carrousel en Boucle Multi-Diapositives",
+          "description": "Affichage de 2 diapositives par page avec une grille riche et responsive.",
           "children": [
             {
               "type": "carousel",
@@ -177,23 +349,57 @@
               "slidesPerPage": 2,
               "spacing": "12px",
               "slides": [
-                { "image": "https://images.unsplash.com/photo-1557683316-973673baf926?w=600&q=80", "caption": "Diapositive 1" },
-                { "image": "https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=600&q=80", "caption": "Diapositive 2" },
-                { "image": "https://images.unsplash.com/photo-1557683311-eac922347aa1?w=600&q=80", "caption": "Diapositive 3" },
-                { "image": "https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?w=600&q=80", "caption": "Diapositive 4" },
-                { "image": "https://images.unsplash.com/photo-1557683316-c31a9d3d0f27?w=600&q=80", "caption": "Diapositive 5" },
-                { "image": "https://images.unsplash.com/photo-1557682257-2f9c37a3a5f3?w=600&q=80", "caption": "Diapositive 6" }
+                {
+                  "image": "https://images.unsplash.com/photo-1557683316-973673baf926?w=600&q=80",
+                  "caption": "Diapositive 1"
+                },
+                {
+                  "image": "https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=600&q=80",
+                  "caption": "Diapositive 2"
+                },
+                {
+                  "image": "https://images.unsplash.com/photo-1557683311-eac922347aa1?w=600&q=80",
+                  "caption": "Diapositive 3"
+                },
+                {
+                  "image": "https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?w=600&q=80",
+                  "caption": "Diapositive 4"
+                },
+                {
+                  "image": "https://images.unsplash.com/photo-1557683316-c31a9d3d0f27?w=600&q=80",
+                  "caption": "Diapositive 5"
+                },
+                {
+                  "image": "https://images.unsplash.com/photo-1557682257-2f9c37a3a5f3?w=600&q=80",
+                  "caption": "Diapositive 6"
+                }
               ]
             }
           ]
         }
       ]
     },
-
-    { "type": "heading", "as": "h2", "text": "Centre de composants interactif", "size": "3xl", "style": "text-align:center", "id": "hub" },
-    { "type": "text", "size": "md", "content": "Explorez les fonctionnalités riches du système de composants Artefact UI, regroupées par catégorie d'usage.", "style": "text-align:center;max-width:42rem;margin:0 auto" },
-
-    { "type": "heading", "as": "h3", "text": "Contrôles de formulaire", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
+    {
+      "type": "heading",
+      "as": "h2",
+      "text": "Hub Interactif de Composants",
+      "size": "3xl",
+      "style": "text-align:center",
+      "id": "hub"
+    },
+    {
+      "type": "text",
+      "size": "md",
+      "content": "Explorez les riches fonctionnalités du système de composants Artefact UI regroupées par catégorie d'utilisation.",
+      "style": "text-align:center;max-width:42rem;margin:0 auto"
+    },
+    {
+      "type": "heading",
+      "as": "h3",
+      "text": "Contrôles de Formulaire",
+      "size": "xl",
+      "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem"
+    },
     {
       "type": "grid",
       "columns": "{\"base\": 1, \"md\": 2, \"lg\": 3}",
@@ -201,26 +407,67 @@
       "children": [
         {
           "type": "card",
-          "title": "Contrôle à bascule",
+          "title": "Contrôle Switch",
           "description": "Boutons bascule élégants",
           "children": [
-            { "type": "stack", "direction": "vertical", "align": "start", "gap": "4", "children": [
-              { "type": "switch", "label": "Bascule petite", "size": "sm" },
-              { "type": "switch", "label": "Interaction moyenne", "size": "md", "checked": true },
-              { "type": "switch", "label": "Grande avec accent bleu", "size": "lg", "colorPalette": "blue" }
-            ]}
+            {
+              "type": "stack",
+              "direction": "vertical",
+              "align": "start",
+              "gap": "4",
+              "children": [
+                {
+                  "type": "switch",
+                  "label": "Bascule Petite",
+                  "size": "sm"
+                },
+                {
+                  "type": "switch",
+                  "label": "Moyen Interactif",
+                  "size": "md",
+                  "checked": true
+                },
+                {
+                  "type": "switch",
+                  "label": "Grand Accent Bleu",
+                  "size": "lg",
+                  "colorPalette": "blue"
+                }
+              ]
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Groupe de cases à cocher",
-          "description": "Prend en charge les états normal et indéterminé",
+          "title": "Groupe de Cases à Cocher",
+          "description": "Prise en charge des états normal et indéterminé",
           "children": [
-            { "type": "stack", "direction": "vertical", "align": "start", "gap": "4", "children": [
-              { "type": "checkbox", "label": "Case petite", "size": "sm" },
-              { "type": "checkbox", "label": "État indéterminé", "size": "md", "checked": "indeterminate" },
-              { "type": "checkbox", "label": "Grande interactive", "size": "lg", "colorPalette": "green", "checked": true }
-            ]}
+            {
+              "type": "stack",
+              "direction": "vertical",
+              "align": "start",
+              "gap": "4",
+              "children": [
+                {
+                  "type": "checkbox",
+                  "label": "Case Petite",
+                  "size": "sm"
+                },
+                {
+                  "type": "checkbox",
+                  "label": "État Indéterminé",
+                  "size": "md",
+                  "checked": "indeterminate"
+                },
+                {
+                  "type": "checkbox",
+                  "label": "Grand Interactif",
+                  "size": "lg",
+                  "colorPalette": "green",
+                  "checked": true
+                }
+              ]
+            }
           ]
         },
         {
@@ -228,103 +475,274 @@
           "title": "Curseur",
           "description": "Valeurs numériques ajustables",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-              { "type": "slider", "label": "Curseur simple", "defaultValue": 45, "showValueText": true },
-              { "type": "slider", "label": "Sélection d'intervalle", "defaultValue": [15, 75], "showValueText": true }
-            ]}
+            {
+              "type": "stack",
+              "direction": "vertical",
+              "gap": "4",
+              "children": [
+                {
+                  "type": "slider",
+                  "label": "Curseur Unique",
+                  "defaultValue": 45,
+                  "showValueText": true
+                },
+                {
+                  "type": "slider",
+                  "label": "Sélection de Plage",
+                  "defaultValue": [
+                    15,
+                    75
+                  ],
+                  "showValueText": true
+                }
+              ]
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Groupe radio",
+          "title": "Groupe de Boutons Radio",
           "description": "Choix mutuellement exclusifs",
           "children": [
-            { "type": "radioGroup", "defaultValue": "solid", "items": [
-              { "label": "Solide", "value": "solid" },
-              { "label": "Liquide", "value": "liquid" },
-              { "label": "Gazeux", "value": "gas" }
-            ]}
+            {
+              "type": "radioGroup",
+              "defaultValue": "solid",
+              "items": [
+                {
+                  "label": "Solide",
+                  "value": "solid"
+                },
+                {
+                  "label": "Liquide",
+                  "value": "liquid"
+                },
+                {
+                  "label": "Gaz",
+                  "value": "gas"
+                }
+              ]
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Groupe de cartes radio",
-          "description": "Choix exclusifs en style carte",
+          "title": "Groupe de Cartes Radio",
+          "description": "Choix exclusifs façon carte",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "6", "children": [
-              { "type": "radioCardGroup", "label": "Outline", "defaultValue": "pro", "items": [
-                { "label": "Hobby", "value": "hobby" }, { "label": "Pro", "value": "pro" }, { "label": "Entreprise", "value": "enterprise" }
-              ]},
-              { "type": "radioCardGroup", "label": "Subtle", "variant": "subtle", "defaultValue": "monthly", "items": [
-                { "label": "Mensuel", "value": "monthly" }, { "label": "Annuel", "value": "yearly" }
-              ]},
-              { "type": "radioCardGroup", "label": "Surface", "variant": "surface", "defaultValue": "standard", "items": [
-                { "label": "Standard", "value": "standard" }, { "label": "Express", "value": "express" }, { "label": "Le lendemain", "value": "overnight", "disabled": true }
-              ]},
-              { "type": "radioCardGroup", "label": "Solid", "variant": "solid", "defaultValue": "dark", "items": [
-                { "label": "Clair", "value": "light" }, { "label": "Sombre", "value": "dark" }, { "label": "Système", "value": "system" }
-              ]}
-            ]}
+            {
+              "type": "stack",
+              "direction": "vertical",
+              "gap": "6",
+              "children": [
+                {
+                  "type": "radioCardGroup",
+                  "label": "Contour",
+                  "defaultValue": "pro",
+                  "items": [
+                    {
+                      "label": "Loisir",
+                      "value": "hobby"
+                    },
+                    {
+                      "label": "Pro",
+                      "value": "pro"
+                    },
+                    {
+                      "label": "Entreprise",
+                      "value": "enterprise"
+                    }
+                  ]
+                },
+                {
+                  "type": "radioCardGroup",
+                  "label": "Subtil",
+                  "variant": "subtle",
+                  "defaultValue": "monthly",
+                  "items": [
+                    {
+                      "label": "Mensuel",
+                      "value": "monthly"
+                    },
+                    {
+                      "label": "Annuel",
+                      "value": "yearly"
+                    }
+                  ]
+                },
+                {
+                  "type": "radioCardGroup",
+                  "label": "Surface",
+                  "variant": "surface",
+                  "defaultValue": "standard",
+                  "items": [
+                    {
+                      "label": "Standard",
+                      "value": "standard"
+                    },
+                    {
+                      "label": "Express",
+                      "value": "express"
+                    },
+                    {
+                      "label": "Nuit",
+                      "value": "overnight",
+                      "disabled": true
+                    }
+                  ]
+                },
+                {
+                  "type": "radioCardGroup",
+                  "label": "Plein",
+                  "variant": "solid",
+                  "defaultValue": "dark",
+                  "items": [
+                    {
+                      "label": "Clair",
+                      "value": "light"
+                    },
+                    {
+                      "label": "Sombre",
+                      "value": "dark"
+                    },
+                    {
+                      "label": "Système",
+                      "value": "system"
+                    }
+                  ]
+                }
+              ]
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Groupe segmenté",
-          "description": "Contrôle de sélection glissant",
+          "title": "Groupe Segmenté",
+          "description": "Contrôles de sélection glissants",
           "children": [
-            { "type": "segmentGroup", "fitted": true, "defaultValue": "weekly", "items": [
-              { "label": "Hebdomadaire", "value": "weekly" }, { "label": "Mensuel", "value": "monthly" }, { "label": "Annuel", "value": "yearly" }
-            ]}
+            {
+              "type": "segmentGroup",
+              "fitted": true,
+              "defaultValue": "weekly",
+              "items": [
+                {
+                  "label": "Hebdomadaire",
+                  "value": "weekly"
+                },
+                {
+                  "label": "Mensuel",
+                  "value": "monthly"
+                },
+                {
+                  "label": "Annuel",
+                  "value": "yearly"
+                }
+              ]
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Champ d'étiquettes",
-          "description": "Ajouter et retirer des étiquettes de mots-clés",
+          "title": "Champ de Tags",
+          "description": "Ajoutez et supprimez des tags de mots-clés",
           "children": [
-            { "type": "tagsField", "label": "Centres d'intérêt", "helperText": "Appuyez sur Entrée pour ajouter une étiquette", "defaultValue": ["Hono", "Vite", "Panda"] }
+            {
+              "type": "tagsField",
+              "label": "Centres d'intérêt",
+              "helperText": "Appuyez sur Entrée pour ajouter un tag",
+              "defaultValue": [
+                "Hono",
+                "Vite",
+                "Panda"
+              ]
+            }
           ]
         },
         {
           "type": "card",
           "title": "Champ PIN",
-          "description": "Saisie de code à usage unique avec collage et avance automatique",
+          "description": "Saisie de code à usage unique avec collage et avancement automatique",
           "children": [
-            { "type": "pinField", "label": "Code de vérification", "helperText": "Consultez votre e-mail pour le code à 6 chiffres", "count": 6, "otp": true, "blurOnComplete": true }
+            {
+              "type": "pinField",
+              "label": "Code de vérification",
+              "helperText": "Consultez votre e-mail pour le code à 6 chiffres",
+              "count": 6,
+              "otp": true,
+              "blurOnComplete": true
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Groupe de notation",
-          "description": "Notations par étoiles avec précision à demi-étoile",
+          "title": "Groupe de Notation",
+          "description": "Notation par étoiles avec précision au demi-point",
           "children": [
-            { "type": "stack", "direction": "vertical", "align": "start", "gap": "4", "children": [
-              { "type": "ratingGroup", "label": "Évaluez votre expérience", "defaultValue": 3 },
-              { "type": "ratingGroup", "label": "Précision à demi-étoile", "allowHalf": true, "defaultValue": 3.5, "colorPalette": "blue" },
-              { "type": "ratingGroup", "label": "Note moyenne", "readOnly": true, "allowHalf": true, "defaultValue": 4.5, "colorPalette": "orange", "size": "sm" }
-            ]}
+            {
+              "type": "stack",
+              "direction": "vertical",
+              "align": "start",
+              "gap": "4",
+              "children": [
+                {
+                  "type": "ratingGroup",
+                  "label": "Évaluez votre expérience",
+                  "defaultValue": 3
+                },
+                {
+                  "type": "ratingGroup",
+                  "label": "Précision au demi-étoile",
+                  "allowHalf": true,
+                  "defaultValue": 3.5,
+                  "colorPalette": "blue"
+                },
+                {
+                  "type": "ratingGroup",
+                  "label": "Note moyenne",
+                  "readOnly": true,
+                  "allowHalf": true,
+                  "defaultValue": 4.5,
+                  "colorPalette": "orange",
+                  "size": "sm"
+                }
+              ]
+            }
           ]
         },
         {
           "type": "card",
           "title": "Champ",
-          "description": "Saisie de texte avec libellé",
+          "description": "Champ étiqueté avec validation en direct",
           "children": [
-            { "type": "field", "label": "Nom d'utilisateur", "defaultValue": "ab" }
+            {
+              "type": "field",
+              "label": "Nom d'utilisateur",
+              "defaultValue": "ab",
+              "validator": "(value) => value.length >= 3 || \"Doit contenir au moins 3 caractères\""
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Zone de texte",
-          "description": "Saisie de texte multiligne",
+          "title": "Zone de Texte",
+          "description": "Champ multiligne avec validation en direct",
           "children": [
-            { "type": "textarea", "label": "Bio", "defaultValue": "Trop court" }
+            {
+              "type": "textarea",
+              "label": "Bio",
+              "defaultValue": "Trop court",
+              "validator": "(value) => value.length >= 20 || \"Dites-nous en un peu plus (20 caractères minimum)\""
+            }
           ]
         }
       ]
     },
-
-    { "type": "heading", "as": "h3", "text": "Sélecteurs complexes", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
+    {
+      "type": "heading",
+      "as": "h3",
+      "text": "Sélecteurs Complexes",
+      "size": "xl",
+      "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem"
+    },
     {
       "type": "grid",
       "columns": "{\"base\": 1, \"md\": 2}",
@@ -332,50 +750,134 @@
       "children": [
         {
           "type": "card",
-          "title": "Sélecteur de date",
-          "description": "Sélecteurs avancés de date et d'intervalle",
+          "title": "Sélecteur de Date",
+          "description": "Sélecteurs avancés de date et de plage",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-              { "type": "datePicker", "label": "Choisir une date", "selectionMode": "single" },
-              { "type": "datePicker", "label": "Choisir un intervalle de dates", "selectionMode": "range", "colorPalette": "purple" }
-            ]}
+            {
+              "type": "stack",
+              "direction": "vertical",
+              "gap": "4",
+              "children": [
+                {
+                  "type": "datePicker",
+                  "label": "Choisissez une seule date",
+                  "selectionMode": "single"
+                },
+                {
+                  "type": "datePicker",
+                  "label": "Choisissez une plage de dates",
+                  "selectionMode": "range",
+                  "colorPalette": "purple"
+                }
+              ]
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Sélection déroulante",
-          "description": "Selects accessibles et comboboxes à autocomplétion",
+          "title": "Sélection Déroulante",
+          "description": "Listes déroulantes accessibles et zones de saisie avec autocomplétion",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-              { "type": "select", "label": "Sélection de framework", "placeholder": "Choisir un framework", "items": [
-                { "label": "React", "value": "react" }, { "label": "Solid", "value": "solid" }, { "label": "Svelte", "value": "svelte" }, { "label": "Vue", "value": "vue" }, { "label": "Hono", "value": "hono" }
-              ]},
-              { "type": "combobox", "label": "Combobox recherchable", "placeholder": "Tapez pour rechercher...", "items": [
-                { "label": "React", "value": "react" }, { "label": "Solid", "value": "solid" }, { "label": "Svelte", "value": "svelte" }, { "label": "Vue", "value": "vue" }, { "label": "Hono", "value": "hono" }
-              ]}
-            ]}
+            {
+              "type": "stack",
+              "direction": "vertical",
+              "gap": "4",
+              "children": [
+                {
+                  "type": "select",
+                  "label": "Sélection de Framework",
+                  "placeholder": "Sélectionnez un framework",
+                  "items": [
+                    {
+                      "label": "React",
+                      "value": "react"
+                    },
+                    {
+                      "label": "Solid",
+                      "value": "solid"
+                    },
+                    {
+                      "label": "Svelte",
+                      "value": "svelte"
+                    },
+                    {
+                      "label": "Vue",
+                      "value": "vue"
+                    },
+                    {
+                      "label": "Hono",
+                      "value": "hono"
+                    }
+                  ]
+                },
+                {
+                  "type": "combobox",
+                  "label": "Combobox Consultable",
+                  "placeholder": "Tapez pour rechercher...",
+                  "items": [
+                    {
+                      "label": "React",
+                      "value": "react"
+                    },
+                    {
+                      "label": "Solid",
+                      "value": "solid"
+                    },
+                    {
+                      "label": "Svelte",
+                      "value": "svelte"
+                    },
+                    {
+                      "label": "Vue",
+                      "value": "vue"
+                    },
+                    {
+                      "label": "Hono",
+                      "value": "hono"
+                    }
+                  ]
+                }
+              ]
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Sélecteur de couleur",
-          "description": "Sélecteur de spectre de couleur complet",
+          "title": "Sélecteur de Couleur",
+          "description": "Sélecteur de spectre de couleurs complet",
           "children": [
-            { "type": "colorPicker", "trigger": true, "defaultValue": "#3b82f6", "label": "Choisir la couleur du thème" }
+            {
+              "type": "colorPicker",
+              "trigger": true,
+              "defaultValue": "#3b82f6",
+              "label": "Choisissez la Couleur du Thème"
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Téléversement de fichiers",
-          "description": "Zone glisser-déposer avec règles de validation",
+          "title": "Téléversement de Fichiers",
+          "description": "Zone de glisser-déposer avec règles de validation",
           "children": [
-            { "type": "fileUpload", "label": "Téléverser des images", "name": "images", "accept": "image/*", "maxFiles": 2, "dropzoneText": "Glissez-déposez ou parcourez les fichiers" }
+            {
+              "type": "fileUpload",
+              "label": "Téléverser des Images",
+              "name": "images",
+              "accept": "image/*",
+              "maxFiles": 2,
+              "dropzoneText": "Glissez-déposez ou parcourez les fichiers"
+            }
           ]
         }
       ]
     },
-
-    { "type": "heading", "as": "h3", "text": "Superpositions & navigation", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
+    {
+      "type": "heading",
+      "as": "h3",
+      "text": "Superpositions et Navigation",
+      "size": "xl",
+      "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem"
+    },
     {
       "type": "grid",
       "columns": "{\"base\": 1, \"md\": 2, \"lg\": 3}",
@@ -383,63 +885,183 @@
       "children": [
         {
           "type": "card",
-          "title": "Popover & infobulle",
-          "description": "Fenêtres d'information contextuelle",
+          "title": "Popover et Infobulle",
+          "description": "Boîtes d'information contextuelles",
           "children": [
-            { "type": "stack", "direction": "horizontal", "align": "start", "gap": "4", "children": [
-              { "type": "popover", "triggerText": "Déclencher le popover", "title": "Info rapide", "body": "Les popovers sont parfaits pour afficher un contexte riche détaillé au clic.", "showArrow": true },
-              { "type": "tooltip", "triggerText": "Infobulle au survol", "content": "Agréable et accessible !", "showArrow": true }
-            ]}
+            {
+              "type": "stack",
+              "direction": "horizontal",
+              "align": "start",
+              "gap": "4",
+              "children": [
+                {
+                  "type": "popover",
+                  "triggerText": "Déclencher le Popover",
+                  "title": "Info Rapide",
+                  "body": "Les popovers sont parfaits pour afficher un contexte détaillé au clic.",
+                  "showArrow": true
+                },
+                {
+                  "type": "tooltip",
+                  "triggerText": "Infobulle au Survol",
+                  "content": "Agréable et accessible !",
+                  "showArrow": true
+                }
+              ]
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Modales & tiroirs",
-          "description": "Panneaux superposés avec piège de focus",
+          "title": "Modales et Tiroirs",
+          "description": "Panneaux superposés avec piégeage du focus",
           "children": [
-            { "type": "stack", "direction": "horizontal", "align": "start", "gap": "4", "children": [
-              { "type": "dialog", "trigger": [{ "type": "button", "variant": "solid", "colorPalette": "blue", "text": "Ouvrir la modale" }], "title": "Supprimer l'espace de travail", "description": "Êtes-vous absolument sûr de vouloir supprimer cet espace de travail ?", "body": "Cette action est irréversible et toutes vos données seront définitivement effacées.", "confirmText": "Supprimer", "cancelText": "Annuler" },
-              { "type": "drawer", "trigger": [{ "type": "button", "variant": "outline", "text": "Ouvrir le tiroir des paramètres" }], "title": "Paramètres du projet", "description": "Configurer les propriétés de l'espace de travail", "confirmText": "Enregistrer les modifications", "cancelText": "Fermer", "children": [
-                { "type": "text", "size": "sm", "content": "Gérez ici directement vos connexions de base de données, niveaux d'accès des membres et préférences de facturation." },
-                { "type": "paginatedTable", "url": "/api/posts/index.json", "dataKey": "posts", "pageSize": 3, "columns": [
-                  { "header": "Titre", "key": "title" }, { "header": "Auteur", "key": "author" }, { "header": "Date", "key": "date" }
-                ]}
-              ]}
-            ]}
+            {
+              "type": "stack",
+              "direction": "horizontal",
+              "align": "start",
+              "gap": "4",
+              "children": [
+                {
+                  "type": "dialog",
+                  "trigger": [
+                    {
+                      "type": "button",
+                      "variant": "solid",
+                      "colorPalette": "blue",
+                      "text": "Ouvrir la Modale"
+                    }
+                  ],
+                  "title": "Supprimer l'Espace de Travail",
+                  "description": "Êtes-vous absolument certain de vouloir supprimer cet espace de travail ?",
+                  "body": "Cette action est irréversible et toutes vos données seront définitivement effacées.",
+                  "confirmText": "Supprimer",
+                  "cancelText": "Annuler"
+                },
+                {
+                  "type": "drawer",
+                  "trigger": [
+                    {
+                      "type": "button",
+                      "variant": "outline",
+                      "text": "Ouvrir le Tiroir des Paramètres"
+                    }
+                  ],
+                  "title": "Paramètres du Projet",
+                  "description": "Configurez les propriétés de l'espace de travail",
+                  "confirmText": "Enregistrer les Modifications",
+                  "cancelText": "Ignorer",
+                  "children": [
+                    {
+                      "type": "text",
+                      "size": "sm",
+                      "content": "Gérez directement ici vos connexions à la base de données, les niveaux d'accès des membres et vos préférences de facturation."
+                    },
+                    {
+                      "type": "paginatedTable",
+                      "url": "/api/posts/index.json",
+                      "dataKey": "posts",
+                      "pageSize": 3,
+                      "columns": [
+                        {
+                          "header": "Titre",
+                          "key": "title"
+                        },
+                        {
+                          "header": "Auteur",
+                          "key": "author"
+                        },
+                        {
+                          "header": "Date",
+                          "key": "date"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Menus d'actions",
+          "title": "Menus Déroulants d'Action",
           "description": "Déclencheurs de listes d'actions imbricables",
           "children": [
-            { "type": "dropdown", "triggerText": "Actions de l'espace de travail", "items": [
-              { "type": "item", "label": "Voir le profil", "value": "profile" },
-              { "type": "item", "label": "Facturation", "value": "billing" },
-              { "type": "separator" },
-              { "type": "submenu", "label": "Inviter des membres", "items": [
-                { "type": "item", "label": "Par e-mail", "value": "email" },
-                { "type": "item", "label": "Par lien secret", "value": "link" }
-              ]}
-            ]}
+            {
+              "type": "dropdown",
+              "triggerText": "Actions de l'Espace de Travail",
+              "items": [
+                {
+                  "type": "item",
+                  "label": "Voir le Profil",
+                  "value": "profile"
+                },
+                {
+                  "type": "item",
+                  "label": "Facturation",
+                  "value": "billing"
+                },
+                {
+                  "type": "separator"
+                },
+                {
+                  "type": "submenu",
+                  "label": "Inviter des Membres",
+                  "items": [
+                    {
+                      "type": "item",
+                      "label": "par E-mail",
+                      "value": "email"
+                    },
+                    {
+                      "type": "item",
+                      "label": "par Lien Secret",
+                      "value": "link"
+                    }
+                  ]
+                }
+              ]
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Carte au survol",
-          "description": "Fenêtre contextuelle d'informations au survol",
+          "title": "Carte au Survol",
+          "description": "Fenêtre d'information contextuelle au survol",
           "children": [
-            { "type": "hoverCard", "triggerText": "Survolez pour les détails de l'auteur", "showArrow": true, "title": "À propos de Jules", "description": "Conceptrice UI senior et architecte front-end spécialisée dans les suites HonoX." }
+            {
+              "type": "hoverCard",
+              "triggerText": "Survolez pour voir les détails de l'auteur",
+              "showArrow": true,
+              "title": "À propos de Jules",
+              "description": "Designer UI senior et architecte front-end spécialisé dans les suites HonoX."
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Contenu repliable",
+          "title": "Contenu Rétractable",
           "description": "Sections accordéon fluides",
           "children": [
-            { "type": "collapsible", "trigger": [{ "type": "button", "variant": "outline", "size": "sm", "text": "Basculer les détails" }], "children": [
-              { "type": "text", "size": "sm", "content": "Notre piège de focus accessible et la navigation au clavier fonctionnent parfaitement sur tous les appareils." }
-            ]}
+            {
+              "type": "collapsible",
+              "trigger": [
+                {
+                  "type": "button",
+                  "variant": "outline",
+                  "size": "sm",
+                  "text": "Basculer les Détails"
+                }
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "size": "sm",
+                  "content": "Notre piégeage du focus accessible et notre navigation au clavier fonctionnent parfaitement sur tous les appareils."
+                }
+              ]
+            }
           ]
         },
         {
@@ -447,15 +1069,33 @@
           "title": "Fil d'Ariane",
           "description": "Hiérarchies de navigation",
           "children": [
-            { "type": "breadcrumb", "items": [
-              { "label": "Accueil", "href": "/" }, { "label": "Bibliothèque", "href": "/library" }, { "label": "Démonstration" }
-            ]}
+            {
+              "type": "breadcrumb",
+              "items": [
+                {
+                  "label": "Accueil",
+                  "href": "/"
+                },
+                {
+                  "label": "Bibliothèque",
+                  "href": "/library"
+                },
+                {
+                  "label": "Vitrine"
+                }
+              ]
+            }
           ]
         }
       ]
     },
-
-    { "type": "heading", "as": "h3", "text": "Retours & utilitaires", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
+    {
+      "type": "heading",
+      "as": "h3",
+      "text": "Retour et Utilitaires",
+      "size": "xl",
+      "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem"
+    },
     {
       "type": "grid",
       "columns": "{\"base\": 1, \"md\": 2, \"lg\": 3}",
@@ -463,36 +1103,82 @@
       "children": [
         {
           "type": "card",
-          "title": "Barres de progression",
-          "description": "Chargeurs de progression linéaires et circulaires",
+          "title": "Barres de Progression",
+          "description": "Indicateurs de progression linéaires et circulaires",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-              { "type": "progress", "label": "Téléversement des données", "value": 72, "showValueText": true },
-              { "type": "progress", "label": "Traitement", "progressType": "circular" }
-            ]}
+            {
+              "type": "stack",
+              "direction": "vertical",
+              "gap": "4",
+              "children": [
+                {
+                  "type": "progress",
+                  "label": "Téléversement des Données",
+                  "value": 72,
+                  "showValueText": true
+                },
+                {
+                  "type": "progress",
+                  "label": "Traitement en Cours",
+                  "progressType": "circular"
+                }
+              ]
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Squelettes & alertes",
+          "title": "Squelettes et Alertes",
           "description": "Widgets de retour et d'espace réservé",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-              { "type": "skeleton", "shape": "text", "noOfLines": 2 },
-              { "type": "alert", "status": "success", "variant": "surface", "title": "Synchronisé avec succès", "description": "Toutes les modifications sont entièrement persistantes dans le stockage local." }
-            ]}
+            {
+              "type": "stack",
+              "direction": "vertical",
+              "gap": "4",
+              "children": [
+                {
+                  "type": "skeleton",
+                  "shape": "text",
+                  "noOfLines": 2
+                },
+                {
+                  "type": "alert",
+                  "status": "success",
+                  "variant": "surface",
+                  "title": "Synchronisation réussie",
+                  "description": "Toutes les modifications sont entièrement conservées dans le stockage local."
+                }
+              ]
+            }
           ]
         },
         {
           "type": "card",
-          "title": "Presse-papiers & toast",
-          "description": "Utilitaires de retour interactifs pour l'utilisateur",
+          "title": "Presse-papiers et Toast",
+          "description": "Utilitaires interactifs de retour utilisateur",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-              { "type": "clipboard", "label": "Commande de clonage", "value": "git clone https://github.com/honojs/honox" },
-              { "type": "toast" },
-              { "type": "button", "variant": "outline", "size": "sm", "text": "Déclencher un toast", "onclick": "window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Tâche envoyée', description: 'Action de composant interactive enregistrée.', closable: true, type: 'success' } }))" }
-            ]}
+            {
+              "type": "stack",
+              "direction": "vertical",
+              "gap": "4",
+              "children": [
+                {
+                  "type": "clipboard",
+                  "label": "Commande de Clonage",
+                  "value": "git clone https://github.com/honojs/honox"
+                },
+                {
+                  "type": "toast"
+                },
+                {
+                  "type": "button",
+                  "variant": "outline",
+                  "size": "sm",
+                  "text": "Envoyer un Toast",
+                  "onclick": "window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Tâche Envoyée', description: 'Action du composant interactif enregistrée.', closable: true, type: 'success' } }))"
+                }
+              ]
+            }
           ]
         },
         {
@@ -500,10 +1186,23 @@
           "title": "Éditable",
           "description": "Cliquez pour éditer en ligne, sur place",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-              { "type": "editable", "label": "Nom du projet", "defaultValue": "Artefact UI Suite" },
-              { "type": "editable", "label": "Description", "placeholder": "Ajouter une description…" }
-            ]}
+            {
+              "type": "stack",
+              "direction": "vertical",
+              "gap": "4",
+              "children": [
+                {
+                  "type": "editable",
+                  "label": "Nom du projet",
+                  "defaultValue": "Artefact UI Suite"
+                },
+                {
+                  "type": "editable",
+                  "label": "Description",
+                  "placeholder": "Ajoutez une description…"
+                }
+              ]
+            }
           ]
         }
       ]

@@ -308,17 +308,17 @@
         {
           "type": "card",
           "title": "输入框",
-          "description": "带标签的文本输入",
+          "description": "带实时校验的带标签输入框",
           "children": [
-            { "type": "field", "label": "用户名", "defaultValue": "ab" }
+            { "type": "field", "label": "用户名", "defaultValue": "ab", "validator": "(value) => value.length >= 3 || \"至少需要 3 个字符\"" }
           ]
         },
         {
           "type": "card",
           "title": "多行文本",
-          "description": "多行文本输入",
+          "description": "带实时校验的多行文本输入",
           "children": [
-            { "type": "textarea", "label": "个人简介", "defaultValue": "太短了" }
+            { "type": "textarea", "label": "个人简介", "defaultValue": "太短了", "validator": "(value) => value.length >= 20 || \"请再多写一些（至少 20 个字符）\"" }
           ]
         }
       ]
