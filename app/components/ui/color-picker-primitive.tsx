@@ -20,6 +20,17 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
+import {
+	getPlacementStyle,
+	type OverlayPlacementConfig,
+	positionOverlay,
+} from "./overlay-position";
+
+// Same trigger-anchored floating-surface contract Popover uses (see
+// overlay-position.ts): "start" alignment lets the (relatively wide) picker
+// content hang off the trigger's leading edge rather than being centered
+// over the small swatch trigger.
+const PLACEMENT_CONFIG: OverlayPlacementConfig = { align: "start" };
 
 export type ColorFormat = "hex" | "rgba" | "hsla";
 
@@ -312,6 +323,7 @@ export function Root(props: RootProps) {
 				id={id}
 				data-scope="colorPicker"
 				data-part="root"
+				data-overlay-root=""
 				data-disabled={disabled ? "" : undefined}
 				data-readonly={readOnly ? "" : undefined}
 				class={cx(styles.root, classProp)}
@@ -884,16 +896,26 @@ export function HiddenInput(props: { name?: string; value: string }) {
 export function Positioner(
 	props: PropsWithChildren<{
 		class?: string;
+		placement?: "top" | "bottom" | "left" | "right";
 		style?: Record<string, string | number>;
 	}>,
 ) {
-	const { children, class: classProp, style, ...rest } = props;
+	const { children, class: classProp, placement = "bottom", style, ...rest } =
+		props;
 	const ctx = useColorPickerContext();
 	return (
 		<div
 			data-part="positioner"
+			data-placement={placement}
 			class={cx(ctx?.styles.positioner, classProp)}
-			style={style as Record<string, string>}
+			style={
+				{
+					position: "absolute",
+					zIndex: "var(--z-index-dropdown)",
+					...getPlacementStyle(placement, PLACEMENT_CONFIG),
+					...style,
+				} as unknown as Record<string, string>
+			}
 			{...rest}
 		>
 			{children}
@@ -1521,6 +1543,21 @@ export function InteractiveColorPicker(props: InteractiveColorPickerProps) {
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [id, interactive, open, trigger]);
+
+	// Float the open picker as a proper trigger-anchored overlay (same
+	// mechanism Popover uses — see overlay-position.ts): flips to the
+	// opposite side if it would overflow the viewport, and re-clamps on
+	// resize while open. The Positioner's own inline style already gives it
+	// a reasonable un-positioned default, so this only refines it.
+	useEffect(() => {
+		if (!trigger || !open) return;
+		const root = document.getElementById(id);
+		if (!root) return;
+		positionOverlay(root, PLACEMENT_CONFIG);
+		const onResize = () => positionOverlay(root, PLACEMENT_CONFIG);
+		window.addEventListener("resize", onResize);
+		return () => window.removeEventListener("resize", onResize);
+	}, [id, trigger, open]);
 
 	// Sync the hidden <input>/thumb positions when colour changes (covers
 	// hydration + controlled updates).

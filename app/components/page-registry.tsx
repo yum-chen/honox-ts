@@ -104,6 +104,12 @@ function footerFromBlocks(footer: unknown): JSX.Element | undefined {
 
 function tryParseJSON(val: unknown): unknown {
 	if (typeof val === "string") {
+		// An untouched optional CMS field (e.g. Grid's Rows/Min Child Width)
+		// arrives as "", not omitted. `Number("")` is 0, not NaN, so without
+		// this the fallback below would silently coerce "unset" to the literal
+		// number 0 — same empty-string gotcha documented on the radioCardGroup/
+		// editable/layout renderers, just for this JSON-or-number field type.
+		if (val.trim() === "") return undefined;
 		try {
 			return JSON.parse(val);
 		} catch (_) {

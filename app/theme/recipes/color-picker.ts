@@ -43,6 +43,14 @@ export const colorPicker = defineSlotRecipe({
 			flexDirection: "column",
 			gap: "1.5",
 			minWidth: "0",
+			// The trigger-mode Positioner is `position: absolute` (see
+			// color-picker-primitive.tsx), which resolves relative to the
+			// nearest positioned ancestor. Without this, that's whatever
+			// happens to wrap the picker (e.g. a Card, which is `position:
+			// relative` for its own image-clipping reasons) instead of the
+			// picker itself — same fix Popover applies via its own
+			// `data-overlay-root` wrapper.
+			position: "relative",
 		},
 		label: {
 			color: "fg.default",
