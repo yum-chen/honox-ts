@@ -1,7 +1,7 @@
 ---
 title: TagsField
-hydration: 2
 category: Forms
+hydration: 2
 ---
 
 import { TagsField } from "../../app/components/ui";
@@ -22,6 +22,57 @@ label / helper text / error text conventions as `Field`.
   </div>
 </DemoPreview>
 
+```tsx
+import { TagsField } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <TagsField
+      label="Skills"
+      helperText="Press Enter to add a tag"
+      defaultValue={["React", "Hono"]}
+      onValueChange={(details) => console.log(details.value)}
+    />
+  );
+}
+```
+
+## Behaviour
+
+- **Enter** commits the current input text as a new tag (duplicates are ignored) and clears the input.
+- **Backspace** on an empty input removes the last tag.
+- Clicking a tag's delete trigger (rendered by `Items`) removes that specific tag.
+- Clicking anywhere in the control that isn't a tag focuses the input.
+
+## Variants and sizes
+
+`variant` (`"outline"` | `"subtle"` | `"surface"`, default `"outline"`) and `size`
+(`"xs"` | `"sm"` | `"md"` | `"lg"`, default `"md"`) control appearance, matching
+the conventions used by `Field`/`Input`.
+
+```tsx
+<TagsField variant="subtle" size="lg" defaultValue={["React"]} />
+```
+
+## Composition
+
+The default `label`/`helperText`/`errorText` props cover most cases, but the
+underlying parts are also exported for custom layouts:
+
+```tsx
+import { TagsField } from "../components/ui";
+
+<TagsField.Root defaultValue={["React", "Hono"]}>
+  <TagsField.Label>Skills</TagsField.Label>
+  <TagsField.Control>
+    <TagsField.Items />
+    <TagsField.Input placeholder="Add a skill…" />
+  </TagsField.Control>
+  <TagsField.ClearTrigger>Clear all</TagsField.ClearTrigger>
+  <TagsField.HiddenInput name="skills" />
+</TagsField.Root>;
+```
+
 ### CMS Page Builder
 
 This component is available as a `tagsField` block in the [Page Builder](/docs/PageBuilder) (`content/pages/*.json`):
@@ -38,12 +89,28 @@ This component is available as a `tagsField` block in the [Page Builder](/docs/P
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `value` | `string[]` | - | Current tags. |
+| `value` | `string[]` | - | Controlled tags (forces interactive mode). |
 | `defaultValue` | `string[]` | - | Initial tags. |
+| `inputValue` | `string` | - | Controlled text-input value (forces interactive mode). |
+| `defaultInputValue` | `string` | - | Initial text-input value. |
 | `label` | `Child` | - | The field's label. |
 | `helperText` | `Child` | - | Helper text shown below the tags. |
 | `errorText` | `Child` | - | Error text shown when `invalid` is set. |
 | `invalid` | `boolean` | - | Forces the invalid state, showing `errorText`. |
+| `disabled` | `boolean` | - | Disables the input and delete/clear triggers. |
+| `readOnly` | `boolean` | - | Hides the text input, preventing new tags from being added. |
+
+| `variant` | \`"outline" \ | "subtle" \ | "surface"\` | `"outline"` | Visual style. |
+
+| `size` | \`"xs" \ | "sm" \ | "md" \ | "lg"\` | `"md"` | Control size. |
+
+| `name` | `string` | - | Form field name for the hidden submit input (comma-joined tags). |
+
+| `dir` | \`"ltr" \ | "rtl"\` | - | Text direction. |
+
+| `onValueChange` | `(details: { value: string[] }) => void` | - | Fires when a tag is added or removed (forces interactive mode). |
+| `onInputValueChange` | `(details: { inputValue: string }) => void` | - | Fires as the text input changes (forces interactive mode). |
+| `interactive` | `boolean` | - | Forces or forbids hydration as an island. |
 
 ## CMS Configuration
 
@@ -60,4 +127,4 @@ This component is available as a `tagsField` block in the [Page Builder](/docs/P
 
 ## Hydration
 
-Tier-2: Hydrates when `value`, `defaultValue`, `onValueChange`, or input state is present.
+Tier-2: Hydrates when `value`, `inputValue`, `defaultValue`, `defaultInputValue`, `onValueChange`, or `onInputValueChange` is present.

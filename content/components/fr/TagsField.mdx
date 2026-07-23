@@ -1,7 +1,7 @@
 ---
 title: TagsField Champ de Tags
-hydration: 2
 category: Forms
+hydration: 2
 ---
 
 import { TagsField } from "../../../app/components/ui";
@@ -21,6 +21,57 @@ Un composant qui permet aux utilisateurs de saisir plusieurs balises sous forme 
   </div>
 </DemoPreview>
 
+```tsx
+import { TagsField } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <TagsField
+      label="Skills"
+      helperText="Appuyez sur Entrée pour ajouter une balise"
+      defaultValue={["React", "Hono"]}
+      onValueChange={(details) => console.log(details.value)}
+    />
+  );
+}
+```
+
+## Comportement
+
+- **Entrée** valide le texte saisi comme nouvelle balise (les doublons sont ignorés) et vide le champ.
+- **Retour arrière** sur un champ vide supprime la dernière balise.
+- Cliquer sur le déclencheur de suppression d'une balise (rendu par `Items`) supprime cette balise précise.
+- Cliquer n'importe où dans le contrôle qui n'est pas une balise donne le focus au champ de saisie.
+
+## Variantes et tailles
+
+`variant` (`"outline"` | `"subtle"` | `"surface"`, par défaut `"outline"`) et `size`
+(`"xs"` | `"sm"` | `"md"` | `"lg"`, par défaut `"md"`) contrôlent l'apparence, selon
+les mêmes conventions que `Field`/`Input`.
+
+```tsx
+<TagsField variant="subtle" size="lg" defaultValue={["React"]} />
+```
+
+## Composition
+
+Les props par défaut `label`/`helperText`/`errorText` couvrent la plupart des cas,
+mais les parties sous-jacentes sont aussi exportées pour des mises en page personnalisées :
+
+```tsx
+import { TagsField } from "../components/ui";
+
+<TagsField.Root defaultValue={["React", "Hono"]}>
+  <TagsField.Label>Skills</TagsField.Label>
+  <TagsField.Control>
+    <TagsField.Items />
+    <TagsField.Input placeholder="Add a skill…" />
+  </TagsField.Control>
+  <TagsField.ClearTrigger>Clear all</TagsField.ClearTrigger>
+  <TagsField.HiddenInput name="skills" />
+</TagsField.Root>;
+```
+
 ### Constructeur de pages CMS
 
 Ce composant est disponible sous forme de bloc `tagsField` dans [Page Builder](/docs/PageBuilder) (`content/pages/*.json`) :
@@ -37,12 +88,23 @@ Ce composant est disponible sous forme de bloc `tagsField` dans [Page Builder](/
 
 | Propriété | Type | Défaut | Description |
 | --- | --- | --- | --- |
-| `value` | `string[]` | - | Balises actuelles. |
+| `value` | `string[]` | - | Balises contrôlées (force le mode interactif). |
 | `defaultValue` | `string[]` | - | Balises initiales. |
+| `inputValue` | `string` | - | Valeur contrôlée du champ de texte (force le mode interactif). |
+| `defaultInputValue` | `string` | - | Valeur initiale du champ de texte. |
 | `label` | `Child` | - | Libellé du champ. |
 | `helperText` | `Child` | - | Texte d'aide affiché sous les balises. |
 | `errorText` | `Child` | - | Texte d'erreur affiché quand `invalid` est défini. |
 | `invalid` | `boolean` | - | Force l'état invalide, affichant `errorText`. |
+| `disabled` | `boolean` | - | Désactive le champ de saisie et les déclencheurs de suppression/effacement. |
+| `readOnly` | `boolean` | - | Masque le champ de texte, empêchant l'ajout de nouvelles balises. |
+| `variant` | `"outline" \| "subtle" \| "surface"` | `"outline"` | Style visuel. |
+| `size` | `"xs" \| "sm" \| "md" \| "lg"` | `"md"` | Taille du contrôle. |
+| `name` | `string` | - | Nom du champ de formulaire pour l'entrée cachée (balises jointes par des virgules). |
+| `dir` | `"ltr" \| "rtl"` | - | Direction du texte. |
+| `onValueChange` | `(details: { value: string[] }) => void` | - | Se déclenche à l'ajout ou à la suppression d'une balise (force le mode interactif). |
+| `onInputValueChange` | `(details: { inputValue: string }) => void` | - | Se déclenche à chaque changement du champ de texte (force le mode interactif). |
+| `interactive` | `boolean` | - | Force ou empêche l'hydratation en tant qu'île. |
 
 ## Configuration du CMS
 
@@ -59,4 +121,4 @@ Ce composant est disponible sous forme de bloc `tagsField` dans [Page Builder](/
 
 ## Hydratation
 
-Niveau 2 : s'hydrate lorsque « value », « defaultValue », « onValueChange » ou un état d'entrée est présent.
+Niveau 2 : s'hydrate lorsque « value », « inputValue », « defaultValue », « defaultInputValue », « onValueChange » ou « onInputValueChange » est présent.

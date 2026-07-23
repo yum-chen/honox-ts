@@ -1,7 +1,7 @@
 ---
 title: TagsField 标签字段
-hydration: 2
 category: Forms
+hydration: 2
 ---
 
 import { TagsField } from "../../../app/components/ui";
@@ -21,6 +21,56 @@ import { DemoPreview } from "../../../app/components/demo-preview";
   </div>
 </DemoPreview>
 
+```tsx
+import { TagsField } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <TagsField
+      label="Skills"
+      helperText="按 Enter 添加标签"
+      defaultValue={["React", "Hono"]}
+      onValueChange={(details) => console.log(details.value)}
+    />
+  );
+}
+```
+
+## 行为
+
+- **Enter** 会将当前输入的文本提交为一个新标签（重复项会被忽略），并清空输入框。
+- 输入框为空时按 **Backspace** 会删除最后一个标签。
+- 点击某个标签的删除按钮（由 `Items` 渲染）会删除该标签。
+- 点击控件内非标签的区域会聚焦到输入框。
+
+## 变体与尺寸
+
+`variant`（`"outline"` | `"subtle"` | `"surface"`，默认 `"outline"`）和 `size`
+（`"xs"` | `"sm"` | `"md"` | `"lg"`，默认 `"md"`）控制外观，与 `Field`/`Input`
+使用相同的约定。
+
+```tsx
+<TagsField variant="subtle" size="lg" defaultValue={["React"]} />
+```
+
+## 组合使用
+
+默认的 `label`/`helperText`/`errorText` 属性已覆盖大多数场景，但底层组成部分也可导出用于自定义布局：
+
+```tsx
+import { TagsField } from "../components/ui";
+
+<TagsField.Root defaultValue={["React", "Hono"]}>
+  <TagsField.Label>Skills</TagsField.Label>
+  <TagsField.Control>
+    <TagsField.Items />
+    <TagsField.Input placeholder="Add a skill…" />
+  </TagsField.Control>
+  <TagsField.ClearTrigger>Clear all</TagsField.ClearTrigger>
+  <TagsField.HiddenInput name="skills" />
+</TagsField.Root>;
+```
+
 ### CMS 页面构建器
 
 该组件可作为 `tagsField` 区块在 [页面构建器](/docs/PageBuilder)（`content/pages/*.json`）中使用：
@@ -37,12 +87,23 @@ import { DemoPreview } from "../../../app/components/demo-preview";
 
 | 属性 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
-| `value` | `string[]` | - | 当前标签。 |
+| `value` | `string[]` | - | 受控标签（会强制启用交互模式）。 |
 | `defaultValue` | `string[]` | - | 初始标签。 |
+| `inputValue` | `string` | - | 受控的文本输入值（会强制启用交互模式）。 |
+| `defaultInputValue` | `string` | - | 初始文本输入值。 |
 | `label` | `Child` | - | 字段标签。 |
 | `helperText` | `Child` | - | 标签下方显示的帮助文本。 |
 | `errorText` | `Child` | - | `invalid` 为真时显示的错误文本。 |
 | `invalid` | `boolean` | - | 强制无效状态，显示 `errorText`。 |
+| `disabled` | `boolean` | - | 禁用输入框及删除/清除按钮。 |
+| `readOnly` | `boolean` | - | 隐藏文本输入框，阻止添加新标签。 |
+| `variant` | `"outline" \| "subtle" \| "surface"` | `"outline"` | 视觉样式。 |
+| `size` | `"xs" \| "sm" \| "md" \| "lg"` | `"md"` | 控件尺寸。 |
+| `name` | `string` | - | 隐藏提交输入框的表单字段名（逗号连接的标签）。 |
+| `dir` | `"ltr" \| "rtl"` | - | 文本方向。 |
+| `onValueChange` | `(details: { value: string[] }) => void` | - | 添加或删除标签时触发（会强制启用交互模式）。 |
+| `onInputValueChange` | `(details: { inputValue: string }) => void` | - | 文本输入变化时触发（会强制启用交互模式）。 |
+| `interactive` | `boolean` | - | 强制启用或禁用水合。 |
 
 ## CMS 配置
 
@@ -59,4 +120,4 @@ import { DemoPreview } from "../../../app/components/demo-preview";
 
 ## 水合
 
-第二级：当存在 `value`、`defaultValue`、`onValueChange` 或输入状态时进行水合。
+第二级：当存在 `value`、`inputValue`、`defaultValue`、`defaultInputValue`、`onValueChange` 或 `onInputValueChange` 时进行水合。

@@ -1,7 +1,7 @@
 ---
 title: TagsField Campo de Etiquetas
-hydration: 2
 category: Forms
+hydration: 2
 ---
 
 import { TagsField } from "../../../app/components/ui";
@@ -21,6 +21,57 @@ Un componente que permite a los usuarios introducir varias etiquetas en forma de
   </div>
 </DemoPreview>
 
+```tsx
+import { TagsField } from "../components/ui";
+
+export default function MyPage() {
+  return (
+    <TagsField
+      label="Skills"
+      helperText="Presiona Enter para añadir una etiqueta"
+      defaultValue={["React", "Hono"]}
+      onValueChange={(details) => console.log(details.value)}
+    />
+  );
+}
+```
+
+## Comportamiento
+
+- **Enter** confirma el texto escrito como una nueva etiqueta (los duplicados se ignoran) y limpia el campo.
+- **Retroceso** con el campo vacío elimina la última etiqueta.
+- Hacer clic en el disparador de eliminar de una etiqueta (renderizado por `Items`) elimina esa etiqueta específica.
+- Hacer clic en cualquier parte del control que no sea una etiqueta enfoca el campo de entrada.
+
+## Variantes y tamaños
+
+`variant` (`"outline"` | `"subtle"` | `"surface"`, por defecto `"outline"`) y `size`
+(`"xs"` | `"sm"` | `"md"` | `"lg"`, por defecto `"md"`) controlan la apariencia,
+siguiendo las mismas convenciones que `Field`/`Input`.
+
+```tsx
+<TagsField variant="subtle" size="lg" defaultValue={["React"]} />
+```
+
+## Composición
+
+Las props predeterminadas `label`/`helperText`/`errorText` cubren la mayoría de los
+casos, pero las partes internas también se exportan para diseños personalizados:
+
+```tsx
+import { TagsField } from "../components/ui";
+
+<TagsField.Root defaultValue={["React", "Hono"]}>
+  <TagsField.Label>Skills</TagsField.Label>
+  <TagsField.Control>
+    <TagsField.Items />
+    <TagsField.Input placeholder="Add a skill…" />
+  </TagsField.Control>
+  <TagsField.ClearTrigger>Clear all</TagsField.ClearTrigger>
+  <TagsField.HiddenInput name="skills" />
+</TagsField.Root>;
+```
+
 ### Constructor de páginas CMS
 
 Este componente está disponible como un bloque `tagsField` en el [Constructor de páginas](/docs/PageBuilder) (`content/pages/*.json`):
@@ -37,12 +88,23 @@ Este componente está disponible como un bloque `tagsField` en el [Constructor d
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `value` | `string[]` | - | Etiquetas actuales. |
+| `value` | `string[]` | - | Etiquetas controladas (fuerza el modo interactivo). |
 | `defaultValue` | `string[]` | - | Etiquetas iniciales. |
+| `inputValue` | `string` | - | Valor controlado del campo de texto (fuerza el modo interactivo). |
+| `defaultInputValue` | `string` | - | Valor inicial del campo de texto. |
 | `label` | `Child` | - | Etiqueta del campo. |
 | `helperText` | `Child` | - | Texto de ayuda mostrado debajo de las etiquetas. |
 | `errorText` | `Child` | - | Texto de error mostrado cuando `invalid` está definido. |
 | `invalid` | `boolean` | - | Fuerza el estado inválido, mostrando `errorText`. |
+| `disabled` | `boolean` | - | Desactiva el campo de entrada y los disparadores de eliminar/limpiar. |
+| `readOnly` | `boolean` | - | Oculta el campo de texto, impidiendo añadir nuevas etiquetas. |
+| `variant` | `"outline" \| "subtle" \| "surface"` | `"outline"` | Estilo visual. |
+| `size` | `"xs" \| "sm" \| "md" \| "lg"` | `"md"` | Tamaño del control. |
+| `name` | `string` | - | Nombre del campo de formulario para la entrada oculta (etiquetas unidas por comas). |
+| `dir` | `"ltr" \| "rtl"` | - | Dirección del texto. |
+| `onValueChange` | `(details: { value: string[] }) => void` | - | Se dispara al añadir o eliminar una etiqueta (fuerza el modo interactivo). |
+| `onInputValueChange` | `(details: { inputValue: string }) => void` | - | Se dispara al cambiar el campo de texto (fuerza el modo interactivo). |
+| `interactive` | `boolean` | - | Fuerza o impide la hidratación como isla. |
 
 ## Configuración del CMS
 
@@ -59,4 +121,4 @@ Este componente está disponible como un bloque `tagsField` en el [Constructor d
 
 ## Hidratación
 
-Nivel 2: Se hidrata cuando está presente `value`, `defaultValue`, `onValueChange`, o el estado de entrada.
+Nivel 2: Se hidrata cuando está presente `value`, `inputValue`, `defaultValue`, `defaultInputValue`, `onValueChange`, o `onInputValueChange`.
