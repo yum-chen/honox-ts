@@ -936,7 +936,15 @@
                   "description": "Tem certeza absoluta de que deseja excluir este espaço de trabalho?",
                   "body": "Esta ação é irreversível e todos os seus dados serão apagados permanentemente.",
                   "confirmText": "Excluir",
-                  "cancelText": "Cancelar"
+                  "cancelText": "Cancelar",
+                  "footer": [
+                    {
+                      "type": "button",
+                      "variant": "outline",
+                      "text": "Notificar Equipe",
+                      "onclick": "window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Equipe Notificada', description: 'Sua equipe foi alertada sobre esta exclusão.', closable: true, type: 'info' } }))"
+                    }
+                  ]
                 },
                 {
                   "type": "drawer",

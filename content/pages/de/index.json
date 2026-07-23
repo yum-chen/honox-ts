@@ -936,7 +936,15 @@
                   "description": "Sind Sie absolut sicher, dass Sie diesen Arbeitsbereich löschen möchten?",
                   "body": "Diese Aktion ist unwiderruflich und alle Ihre Daten werden dauerhaft gelöscht.",
                   "confirmText": "Löschen",
-                  "cancelText": "Abbrechen"
+                  "cancelText": "Abbrechen",
+                  "footer": [
+                    {
+                      "type": "button",
+                      "variant": "outline",
+                      "text": "Team benachrichtigen",
+                      "onclick": "window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Team benachrichtigt', description: 'Ihr Team wurde über diese Löschung informiert.', closable: true, type: 'info' } }))"
+                    }
+                  ]
                 },
                 {
                   "type": "drawer",

@@ -936,7 +936,15 @@
                   "description": "Êtes-vous absolument certain de vouloir supprimer cet espace de travail ?",
                   "body": "Cette action est irréversible et toutes vos données seront définitivement effacées.",
                   "confirmText": "Supprimer",
-                  "cancelText": "Annuler"
+                  "cancelText": "Annuler",
+                  "footer": [
+                    {
+                      "type": "button",
+                      "variant": "outline",
+                      "text": "Notifier l'Équipe",
+                      "onclick": "window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Équipe Notifiée', description: 'Votre équipe a été alertée de cette suppression.', closable: true, type: 'info' } }))"
+                    }
+                  ]
                 },
                 {
                   "type": "drawer",

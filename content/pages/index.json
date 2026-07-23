@@ -398,7 +398,9 @@
           "description": "Overlay focus-trapped panels",
           "children": [
             { "type": "stack", "direction": "horizontal", "align": "start", "gap": "4", "children": [
-              { "type": "dialog", "trigger": [{ "type": "button", "variant": "solid", "colorPalette": "blue", "text": "Open Modal" }], "title": "Delete Workspace", "description": "Are you absolutely sure you want to delete this workspace?", "body": "This action is irreversible and all your data will be permanently wiped.", "confirmText": "Delete", "cancelText": "Cancel" },
+              { "type": "dialog", "trigger": [{ "type": "button", "variant": "solid", "colorPalette": "blue", "text": "Open Modal" }], "title": "Delete Workspace", "description": "Are you absolutely sure you want to delete this workspace?", "body": "This action is irreversible and all your data will be permanently wiped.", "confirmText": "Delete", "cancelText": "Cancel", "footer": [
+                { "type": "button", "variant": "outline", "text": "Notify Team", "onclick": "window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Team Notified', description: 'Your team has been alerted about this deletion.', closable: true, type: 'info' } }))" }
+              ] },
               { "type": "drawer", "trigger": [{ "type": "button", "variant": "outline", "text": "Open Settings Drawer" }], "title": "Project Settings", "description": "Configure workspace properties", "confirmText": "Save Changes", "cancelText": "Dismiss", "footer": [
                 { "type": "button", "variant": "outline", "colorPalette": "blue", "text": "Reload Table", "onclick": "window.dispatchEvent(new CustomEvent('paginated-table:reload'))" }
               ], "children": [

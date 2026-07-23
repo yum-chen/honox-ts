@@ -398,7 +398,9 @@
           "description": "带焦点陷阱的浮层面板",
           "children": [
             { "type": "stack", "direction": "horizontal", "align": "start", "gap": "4", "children": [
-              { "type": "dialog", "trigger": [{ "type": "button", "variant": "solid", "colorPalette": "blue", "text": "打开模态框" }], "title": "删除工作区", "description": "您确定要删除此工作区吗？", "body": "此操作不可撤销，您的所有数据将被永久删除。", "confirmText": "删除", "cancelText": "取消" },
+              { "type": "dialog", "trigger": [{ "type": "button", "variant": "solid", "colorPalette": "blue", "text": "打开模态框" }], "title": "删除工作区", "description": "您确定要删除此工作区吗？", "body": "此操作不可撤销，您的所有数据将被永久删除。", "confirmText": "删除", "cancelText": "取消", "footer": [
+                { "type": "button", "variant": "outline", "text": "通知团队", "onclick": "window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: '团队已通知', description: '您的团队已收到此删除操作的提醒。', closable: true, type: 'info' } }))" }
+              ] },
               { "type": "drawer", "trigger": [{ "type": "button", "variant": "outline", "text": "打开设置抽屉" }], "title": "项目设置", "description": "配置工作区属性", "confirmText": "保存更改", "cancelText": "关闭", "footer": [
                 { "type": "button", "variant": "outline", "colorPalette": "blue", "text": "重新加载表格", "onclick": "window.dispatchEvent(new CustomEvent('paginated-table:reload'))" }
               ], "children": [
