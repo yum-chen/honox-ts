@@ -1,0 +1,506 @@
+{
+  "title": "Artefact — Modern UI Suite",
+  "content": [
+    {
+      "type": "stack",
+      "direction": "vertical",
+      "align": "center",
+      "gap": "4",
+      "padding": "3rem 1.5rem",
+      "children": [
+        {
+          "type": "badge",
+          "text": "HonoX Hono/JSX Components",
+          "size": "lg",
+          "colorPalette": "blue",
+          "variant": "surface"
+        },
+        {
+          "type": "heading",
+          "as": "h1",
+          "text": "A beautifully engineered, accessible component suite.",
+          "size": "5xl",
+          "style": "text-align:center;max-width:48rem"
+        },
+        {
+          "type": "text",
+          "size": "lg",
+          "content": "A complete 3-tier design system built for HonoX, PandaCSS, and Sveltia CMS. Fast, lightweight, and fully accessible, following standard user habits.",
+          "style": "text-align:center;max-width:42rem"
+        },
+        {
+          "type": "stack",
+          "direction": "horizontal",
+          "gap": "4",
+          "children": [
+            { "type": "button", "text": "View Showcase", "variant": "solid", "colorPalette": "blue", "size": "lg" },
+            { "type": "button", "text": "Component Hub", "variant": "outline", "size": "lg" }
+          ]
+        }
+      ]
+    },
+
+    { "type": "heading", "as": "h2", "text": "Tabs Showcase", "size": "3xl", "style": "text-align:center" },
+    { "type": "text", "size": "md", "content": "Re-implemented completely in pure Hono/JSX with sliding indicators, manual/automatic focus activation, and full keyboard navigation support.", "style": "text-align:center;max-width:42rem;margin:0 auto" },
+    {
+      "type": "stack",
+      "direction": "vertical",
+      "padding": "1.5rem",
+      "borderRadius": "1rem",
+      "boxShadow": "sm",
+      "children": [
+        {
+          "type": "tabs",
+          "variant": "enclosed",
+          "size": "md",
+          "items": [
+            {
+              "value": "features",
+              "label": "⚡ Key Features",
+              "content": [
+                {
+                  "type": "grid",
+                  "columns": "{\"base\": 1, \"md\": 3}",
+                  "gap": "6",
+                  "children": [
+                    { "type": "card", "title": "Lightning Fast", "description": "SSR by default with minimal static footprint. Hydrates only when interaction is required.", "children": [{ "type": "badge", "text": "Zero JS Option", "colorPalette": "green", "variant": "subtle" }] },
+                    { "type": "card", "title": "Completely Accessible", "description": "Following WAI-ARIA standards exactly. Fully keyboard navigable with roving tabIndex and aria states.", "children": [{ "type": "badge", "text": "A11y Compliant", "colorPalette": "blue", "variant": "subtle" }] },
+                    { "type": "card", "title": "Stunning Design", "description": "Sliding indicator transitions and pixel-perfect layouts mapped to modern user habits.", "children": [{ "type": "badge", "text": "Panda CSS", "colorPalette": "purple", "variant": "subtle" }] }
+                  ]
+                }
+              ]
+            },
+            {
+              "value": "pricing",
+              "label": "💎 Pricing Plans",
+              "content": [
+                {
+                  "type": "grid",
+                  "columns": "{\"base\": 1, \"md\": 2}",
+                  "gap": "6",
+                  "children": [
+                    {
+                      "type": "card",
+                      "title": "Starter",
+                      "description": "Perfect for side projects and individual developers looking to prototype fast.",
+                      "children": [
+                        { "type": "stack", "direction": "horizontal", "align": "baseline", "gap": "1", "children": [
+                          { "type": "heading", "as": "p", "text": "$0", "size": "3xl" },
+                          { "type": "text", "size": "sm", "content": "/month" }
+                        ]},
+                        { "type": "button", "text": "Get Started", "variant": "outline", "colorPalette": "blue", "size": "sm" }
+                      ]
+                    },
+                    {
+                      "type": "card",
+                      "title": "Pro",
+                      "description": "Comprehensive features, unlimited pages, analytics integration, and dedicated priority support.",
+                      "children": [
+                        { "type": "stack", "direction": "horizontal", "align": "baseline", "gap": "1", "children": [
+                          { "type": "heading", "as": "p", "text": "$29", "size": "3xl" },
+                          { "type": "text", "size": "sm", "content": "/month" }
+                        ]},
+                        { "type": "button", "text": "Upgrade to Pro", "variant": "solid", "colorPalette": "blue", "size": "sm" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "value": "tech-stack",
+              "label": "🛠️ Technology Stack",
+              "content": [
+                {
+                  "type": "card",
+                  "title": "Modern Web Stack",
+                  "description": "Engineered from the ground up for maximum production readiness and speed.",
+                  "children": [
+                    { "type": "stack", "direction": "vertical", "gap": "4", "children": [
+                      { "type": "stack", "direction": "horizontal", "justify": "between", "align": "center", "children": [
+                        { "type": "text", "size": "sm", "content": "HonoX Meta-Framework", "style": "font-weight:bold" },
+                        { "type": "badge", "text": "Fast & Server-First", "colorPalette": "orange" }
+                      ]},
+                      { "type": "stack", "direction": "horizontal", "justify": "between", "align": "center", "children": [
+                        { "type": "text", "size": "sm", "content": "Panda CSS", "style": "font-weight:bold" },
+                        { "type": "badge", "text": "Zero Runtime CSS-in-JS", "colorPalette": "amber" }
+                      ]},
+                      { "type": "stack", "direction": "horizontal", "justify": "between", "align": "center", "children": [
+                        { "type": "text", "size": "sm", "content": "Bun Tooling", "style": "font-weight:bold" },
+                        { "type": "badge", "text": "Next-Gen Speed", "colorPalette": "red" }
+                      ]}
+                    ]}
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    { "type": "heading", "as": "h2", "text": "Featured Carousel Implementation", "size": "3xl", "style": "text-align:center" },
+    { "type": "text", "size": "md", "content": "Demonstrating our robust Hono/JSX implementation of Ark UI's Slider Carousel. Swipeable, autoplay-ready, and fully accessible.", "style": "text-align:center;max-width:42rem;margin:0 auto" },
+    {
+      "type": "grid",
+      "columns": "{\"base\": 1, \"md\": 2}",
+      "gap": "8",
+      "children": [
+        {
+          "type": "card",
+          "title": "Interactive Autoplay Carousel",
+          "description": "Autoplay triggers, custom dots, and hover-to-pause.",
+          "children": [
+            {
+              "type": "carousel",
+              "colorPalette": "blue",
+              "loop": true,
+              "pauseOnHover": true,
+              "autoplayDelay": 3000,
+              "slides": [
+                { "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80", "caption": "Real-Time Analytics — Pulse delivers live data and dashboards with sub-second streaming latency." },
+                { "image": "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=800&q=80", "caption": "AI-Powered Detection — Smart anomaly detection notifies your team before production breaks." },
+                { "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80", "caption": "Unified Team Workspaces — Share annotated charts and build custom workspaces with ease." }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Multi-Slide Looping Carousel",
+          "description": "Displaying 2 slides per page with a rich, responsive grid.",
+          "children": [
+            {
+              "type": "carousel",
+              "colorPalette": "purple",
+              "loop": true,
+              "slidesPerPage": 2,
+              "spacing": "12px",
+              "slides": [
+                { "image": "https://images.unsplash.com/photo-1557683316-973673baf926?w=600&q=80", "caption": "Slide 1" },
+                { "image": "https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=600&q=80", "caption": "Slide 2" },
+                { "image": "https://images.unsplash.com/photo-1557683311-eac922347aa1?w=600&q=80", "caption": "Slide 3" },
+                { "image": "https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?w=600&q=80", "caption": "Slide 4" },
+                { "image": "https://images.unsplash.com/photo-1557683316-c31a9d3d0f27?w=600&q=80", "caption": "Slide 5" },
+                { "image": "https://images.unsplash.com/photo-1557682257-2f9c37a3a5f3?w=600&q=80", "caption": "Slide 6" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    { "type": "heading", "as": "h2", "text": "Interactive Component Hub", "size": "3xl", "style": "text-align:center" },
+    { "type": "text", "size": "md", "content": "Explore the rich features of the Artefact UI component system grouped by usage category.", "style": "text-align:center;max-width:42rem;margin:0 auto" },
+
+    { "type": "heading", "as": "h3", "text": "Form Controls", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
+    {
+      "type": "grid",
+      "columns": "{\"base\": 1, \"md\": 2, \"lg\": 3}",
+      "gap": "6",
+      "children": [
+        {
+          "type": "card",
+          "title": "Switch Control",
+          "description": "Sleek toggle buttons",
+          "children": [
+            { "type": "stack", "direction": "vertical", "align": "start", "gap": "4", "children": [
+              { "type": "switch", "label": "Small Toggle", "size": "sm" },
+              { "type": "switch", "label": "Medium Interactive", "size": "md", "checked": true },
+              { "type": "switch", "label": "Large Blue Accent", "size": "lg", "colorPalette": "blue" }
+            ]}
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Checkbox Group",
+          "description": "Support for normal and indeterminate states",
+          "children": [
+            { "type": "stack", "direction": "vertical", "align": "start", "gap": "4", "children": [
+              { "type": "checkbox", "label": "Small Checkbox", "size": "sm" },
+              { "type": "checkbox", "label": "Indeterminate State", "size": "md", "checked": "indeterminate" },
+              { "type": "checkbox", "label": "Large Interactive", "size": "lg", "colorPalette": "green", "checked": true }
+            ]}
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Slider",
+          "description": "Adjustable numeric values",
+          "children": [
+            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
+              { "type": "slider", "label": "Single Thumb", "defaultValue": 45, "showValueText": true },
+              { "type": "slider", "label": "Range Selection", "defaultValue": [15, 75], "showValueText": true }
+            ]}
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Radio Group",
+          "description": "Mutually exclusive choices",
+          "children": [
+            { "type": "radioGroup", "defaultValue": "solid", "items": [
+              { "label": "Solid", "value": "solid" },
+              { "label": "Liquid", "value": "liquid" },
+              { "label": "Gas", "value": "gas" }
+            ]}
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Radio Card Group",
+          "description": "Card-style exclusive choices",
+          "children": [
+            { "type": "stack", "direction": "vertical", "gap": "6", "children": [
+              { "type": "radioCardGroup", "label": "Outline", "defaultValue": "pro", "items": [
+                { "label": "Hobby", "value": "hobby" }, { "label": "Pro", "value": "pro" }, { "label": "Enterprise", "value": "enterprise" }
+              ]},
+              { "type": "radioCardGroup", "label": "Subtle", "variant": "subtle", "defaultValue": "monthly", "items": [
+                { "label": "Monthly", "value": "monthly" }, { "label": "Yearly", "value": "yearly" }
+              ]},
+              { "type": "radioCardGroup", "label": "Surface", "variant": "surface", "defaultValue": "standard", "items": [
+                { "label": "Standard", "value": "standard" }, { "label": "Express", "value": "express" }, { "label": "Overnight", "value": "overnight", "disabled": true }
+              ]},
+              { "type": "radioCardGroup", "label": "Solid", "variant": "solid", "defaultValue": "dark", "items": [
+                { "label": "Light", "value": "light" }, { "label": "Dark", "value": "dark" }, { "label": "System", "value": "system" }
+              ]}
+            ]}
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Segment Group",
+          "description": "Sliding selection controls",
+          "children": [
+            { "type": "segmentGroup", "fitted": true, "defaultValue": "weekly", "items": [
+              { "label": "Weekly", "value": "weekly" }, { "label": "Monthly", "value": "monthly" }, { "label": "Yearly", "value": "yearly" }
+            ]}
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Tags Field",
+          "description": "Add and remove keyword tags",
+          "children": [
+            { "type": "tagsField", "label": "Interests", "helperText": "Press Enter to add a tag", "defaultValue": ["Hono", "Vite", "Panda"] }
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Pin Field",
+          "description": "One-time code entry with paste & auto-advance",
+          "children": [
+            { "type": "pinField", "label": "Verification code", "helperText": "Check your email for the 6-digit code", "count": 6, "otp": true, "blurOnComplete": true }
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Rating Group",
+          "description": "Star ratings with half-value precision",
+          "children": [
+            { "type": "stack", "direction": "vertical", "align": "start", "gap": "4", "children": [
+              { "type": "ratingGroup", "label": "Rate your experience", "defaultValue": 3 },
+              { "type": "ratingGroup", "label": "Half-star precision", "allowHalf": true, "defaultValue": 3.5, "colorPalette": "blue" },
+              { "type": "ratingGroup", "label": "Average rating", "readOnly": true, "allowHalf": true, "defaultValue": 4.5, "colorPalette": "orange", "size": "sm" }
+            ]}
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Field",
+          "description": "Labeled text input",
+          "children": [
+            { "type": "field", "label": "Username", "defaultValue": "ab" }
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Textarea",
+          "description": "Multi-line text input",
+          "children": [
+            { "type": "textarea", "label": "Bio", "defaultValue": "Too short" }
+          ]
+        }
+      ]
+    },
+
+    { "type": "heading", "as": "h3", "text": "Complex Pickers", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
+    {
+      "type": "grid",
+      "columns": "{\"base\": 1, \"md\": 2}",
+      "gap": "6",
+      "children": [
+        {
+          "type": "card",
+          "title": "Date Picker",
+          "description": "Advanced date and range pickers",
+          "children": [
+            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
+              { "type": "datePicker", "label": "Pick a single date", "selectionMode": "single" },
+              { "type": "datePicker", "label": "Pick a date range", "selectionMode": "range", "colorPalette": "purple" }
+            ]}
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Dropdown Selection",
+          "description": "Accessible selects & autocomplete comboboxes",
+          "children": [
+            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
+              { "type": "select", "label": "Framework Selection", "placeholder": "Select a framework", "items": [
+                { "label": "React", "value": "react" }, { "label": "Solid", "value": "solid" }, { "label": "Svelte", "value": "svelte" }, { "label": "Vue", "value": "vue" }, { "label": "Hono", "value": "hono" }
+              ]},
+              { "type": "combobox", "label": "Searchable Combobox", "placeholder": "Type to search...", "items": [
+                { "label": "React", "value": "react" }, { "label": "Solid", "value": "solid" }, { "label": "Svelte", "value": "svelte" }, { "label": "Vue", "value": "vue" }, { "label": "Hono", "value": "hono" }
+              ]}
+            ]}
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Color Picker",
+          "description": "Full color spectrum selector",
+          "children": [
+            { "type": "colorPicker", "trigger": true, "defaultValue": "#3b82f6", "label": "Pick Theme Color" }
+          ]
+        },
+        {
+          "type": "card",
+          "title": "File Upload",
+          "description": "Drag-and-drop zone with validation rules",
+          "children": [
+            { "type": "fileUpload", "label": "Upload Images", "name": "images", "accept": "image/*", "maxFiles": 2, "dropzoneText": "Drag and drop or browse files" }
+          ]
+        }
+      ]
+    },
+
+    { "type": "heading", "as": "h3", "text": "Overlays & Navigation", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
+    {
+      "type": "grid",
+      "columns": "{\"base\": 1, \"md\": 2, \"lg\": 3}",
+      "gap": "6",
+      "children": [
+        {
+          "type": "card",
+          "title": "Popover & Tooltip",
+          "description": "Contextual info boxes",
+          "children": [
+            { "type": "stack", "direction": "horizontal", "align": "start", "gap": "4", "children": [
+              { "type": "popover", "triggerText": "Trigger Popover", "title": "Quick Info", "body": "Popovers are perfect for showing detailed rich context on-click.", "showArrow": true },
+              { "type": "tooltip", "triggerText": "Hover Tooltip", "content": "Nice and accessible!", "showArrow": true }
+            ]}
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Modals & Drawers",
+          "description": "Overlay focus-trapped panels",
+          "children": [
+            { "type": "stack", "direction": "horizontal", "align": "start", "gap": "4", "children": [
+              { "type": "dialog", "trigger": [{ "type": "button", "variant": "solid", "colorPalette": "blue", "text": "Open Modal" }], "title": "Delete Workspace", "description": "Are you absolutely sure you want to delete this workspace?", "body": "This action is irreversible and all your data will be permanently wiped.", "confirmText": "Delete", "cancelText": "Cancel" },
+              { "type": "drawer", "trigger": [{ "type": "button", "variant": "outline", "text": "Open Settings Drawer" }], "title": "Project Settings", "description": "Configure workspace properties", "confirmText": "Save Changes", "cancelText": "Dismiss", "children": [
+                { "type": "text", "size": "sm", "content": "Manage your database connections, member access levels, and billing preferences directly here." },
+                { "type": "paginatedTable", "url": "/api/posts/index.json", "dataKey": "posts", "pageSize": 3, "columns": [
+                  { "header": "Title", "key": "title" }, { "header": "Author", "key": "author" }, { "header": "Date", "key": "date" }
+                ]}
+              ]}
+            ]}
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Action Dropdowns",
+          "description": "Nestable action list triggers",
+          "children": [
+            { "type": "dropdown", "triggerText": "Workspace Actions", "items": [
+              { "type": "item", "label": "View Profile", "value": "profile" },
+              { "type": "item", "label": "Billing", "value": "billing" },
+              { "type": "separator" },
+              { "type": "item", "label": "Invite via Email", "value": "invite-email" },
+              { "type": "item", "label": "Invite via Secret Link", "value": "invite-link" }
+            ]}
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Hover Card",
+          "description": "Information popup on hover",
+          "children": [
+            { "type": "hoverCard", "triggerText": "Hover for Author Details", "showArrow": true, "title": "About Jules", "description": "Senior UI designer and front-end architect specializing in HonoX suites." }
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Collapsible Content",
+          "description": "Smooth accordion sections",
+          "children": [
+            { "type": "collapsible", "trigger": [{ "type": "button", "variant": "outline", "size": "sm", "text": "Toggle Details" }], "children": [
+              { "type": "text", "size": "sm", "content": "Our accessible focus trap and keyboard navigation works cleanly across all devices." }
+            ]}
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Breadcrumb",
+          "description": "Navigational hierarchies",
+          "children": [
+            { "type": "breadcrumb", "items": [
+              { "label": "Home", "href": "/" }, { "label": "Library", "href": "/library" }, { "label": "Showcase" }
+            ]}
+          ]
+        }
+      ]
+    },
+
+    { "type": "heading", "as": "h3", "text": "Feedback & Utilities", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
+    {
+      "type": "grid",
+      "columns": "{\"base\": 1, \"md\": 2, \"lg\": 3}",
+      "gap": "6",
+      "children": [
+        {
+          "type": "card",
+          "title": "Progress Bars",
+          "description": "Linear and circular progress loaders",
+          "children": [
+            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
+              { "type": "progress", "label": "Uploading Data", "value": 72, "showValueText": true },
+              { "type": "progress", "label": "Processing", "progressType": "circular" }
+            ]}
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Skeletons & Alerts",
+          "description": "Feedback and placeholder widgets",
+          "children": [
+            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
+              { "type": "skeleton", "shape": "text", "noOfLines": 2 },
+              { "type": "alert", "status": "success", "variant": "surface", "title": "Successfully synchronized", "description": "All changes are fully persistent in local store." }
+            ]}
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Clipboard",
+          "description": "Copy-to-clipboard utility",
+          "children": [
+            { "type": "clipboard", "label": "Clone Command", "value": "git clone https://github.com/honojs/honox" }
+          ]
+        },
+        {
+          "type": "card",
+          "title": "Editable",
+          "description": "Click to edit inline, in place",
+          "children": [
+            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
+              { "type": "editable", "label": "Project name", "defaultValue": "Artefact UI Suite" },
+              { "type": "editable", "label": "Description", "placeholder": "Add a description…" }
+            ]}
+          ]
+        }
+      ]
+    }
+  ]
+}
