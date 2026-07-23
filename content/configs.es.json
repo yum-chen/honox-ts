@@ -76,8 +76,8 @@
       "href": "/docs"
     },
     {
-      "label": "Product Landing",
-      "href": "/pages/product-landing"
+      "label": "Product",
+      "href": "/product-landing"
     }
   ],
   "blog": {
@@ -101,8 +101,6 @@
   "home": {
     "brandName": "Artefact UI",
     "titleFallback": "Artefact — Suite de UI Moderna",
-    "adminLabel": "Sveltia CMS",
-    "exploreLabel": "Explore Hub",
     "footerCopyright": "© 2025 Artefact UI Suite. All rights reserved.",
     "footerLinks": [
       { "label": "HonoX Docs", "href": "https://honox.dev", "colorPalette": "blue" },

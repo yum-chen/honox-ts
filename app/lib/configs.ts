@@ -65,12 +65,13 @@ export interface HomeFooterLinkConfig {
 
 /** Home page chrome copy: brand name, <title> fallback, and footer content —
  * not part of any collection's content, so it lives on the configs singleton
- * instead. Every field is fully translated per locale. */
+ * instead. Every field is fully translated per locale.
+ * The header itself (brand lockup, nav links, Explore Hub button) is CMS page-
+ * builder content instead — see headerBrand/headerNav/headerActions on the
+ * `pages` collection's `index` entry (content/pages/index.json). */
 export interface HomeSiteConfig {
 	brandName?: string;
 	titleFallback?: string;
-	adminLabel?: string;
-	exploreLabel?: string;
 	footerCopyright?: string;
 	footerLinks?: HomeFooterLinkConfig[];
 }

@@ -1,5 +1,34 @@
 {
   "title": "Artefact — 现代 UI 套件",
+  "headerBrand": [
+    {
+      "type": "stack",
+      "direction": "horizontal",
+      "gap": "3",
+      "align": "center",
+      "children": [
+        { "type": "avatar", "name": "Artefact UI", "size": "sm", "variant": "solid", "colorPalette": "blue" },
+        { "type": "heading", "as": "h1", "text": "Artefact UI", "size": "sm" }
+      ]
+    }
+  ],
+  "headerNav": [
+    {
+      "type": "stack",
+      "direction": "horizontal",
+      "gap": "6",
+      "align": "center",
+      "children": [
+        { "type": "link", "text": "博客", "href": "/blog/zh", "variant": "plain", "colorPalette": "blue" },
+        { "type": "link", "text": "文档", "href": "/docs/zh", "variant": "plain", "colorPalette": "blue" },
+        { "type": "link", "text": "产品", "href": "/pages/zh/product-landing", "variant": "plain", "colorPalette": "blue" },
+        { "type": "link", "text": "内容管理", "href": "/admin", "variant": "plain", "colorPalette": "blue" }
+      ]
+    }
+  ],
+  "headerActions": [
+    { "type": "button", "text": "探索中心", "variant": "solid", "colorPalette": "blue", "size": "sm", "onclick": "window.scrollTo({top: document.getElementById('hub').offsetTop - 80, behavior: 'smooth'})" }
+  ],
   "content": [
     {
       "type": "stack",

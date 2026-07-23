@@ -76,8 +76,8 @@
       "href": "/docs"
     },
     {
-      "label": "产品着陆页",
-      "href": "/pages/product-landing"
+      "label": "产品",
+      "href": "/product-landing"
     }
   ],
   "blog": {
@@ -101,8 +101,6 @@
   "home": {
     "brandName": "Artefact UI",
     "titleFallback": "Artefact — 现代 UI 套件",
-    "adminLabel": "内容管理",
-    "exploreLabel": "探索中心",
     "footerCopyright": "© 2025 Artefact UI Suite. All rights reserved.",
     "footerLinks": [
       { "label": "HonoX Docs", "href": "https://honox.dev", "colorPalette": "blue" },
