@@ -28,10 +28,12 @@ export interface DocsCollectionConfig {
 	cmsCollection?: string;
 }
 
-/** Site copy for the /blog section (configs singleton's `blog` field). */
+/** Site copy for the /blog section (configs singleton's `blog` field).
+ * `title`/`description` moved to CMS page-builder content instead — see
+ * content/pages/blog.json (mirrors `home` below for the homepage). Only the
+ * bespoke newsletter widget's copy is still config-driven, since it isn't
+ * page-builder content. */
 export interface BlogSiteConfig {
-	title?: string;
-	description?: string;
 	newsletterHeading?: string;
 	newsletterDescription?: string;
 }

@@ -81,15 +81,22 @@
     }
   ],
   "blog": {
-    "title": "Blog - Artefact",
-    "description": "Einblicke, Updates und Geschichten aus unserem Team.",
     "newsletterHeading": "Bleiben Sie auf dem Laufenden",
     "newsletterDescription": "Erhalten Sie die neuesten Artikel und Einblicke direkt in Ihr Postfach. Kein Spam, nur hochwertige Inhalte."
   },
   "hydrationTiers": [
-    { "tier": 1, "label": "Automatisch interaktiv" },
-    { "tier": 2, "label": "Intelligente Auto-Erkennung" },
-    { "tier": 3, "label": "Rein darstellend" }
+    {
+      "tier": 1,
+      "label": "Automatisch interaktiv"
+    },
+    {
+      "tier": 2,
+      "label": "Intelligente Auto-Erkennung"
+    },
+    {
+      "tier": 3,
+      "label": "Rein darstellend"
+    }
   ],
   "docsUi": {
     "searchPlaceholder": "Dokumente durchsuchen...",
@@ -103,9 +110,21 @@
     "titleFallback": "Artefact — Modernes UI-Kit",
     "footerCopyright": "© 2025 Artefact UI Suite. All rights reserved.",
     "footerLinks": [
-      { "label": "HonoX Docs", "href": "https://honox.dev", "colorPalette": "blue" },
-      { "label": "PandaCSS Docs", "href": "https://panda-css.com", "colorPalette": "purple" },
-      { "label": "Park UI", "href": "https://park-ui.com", "colorPalette": "green" }
+      {
+        "label": "HonoX Docs",
+        "href": "https://honox.dev",
+        "colorPalette": "blue"
+      },
+      {
+        "label": "PandaCSS Docs",
+        "href": "https://panda-css.com",
+        "colorPalette": "purple"
+      },
+      {
+        "label": "Park UI",
+        "href": "https://park-ui.com",
+        "colorPalette": "green"
+      }
     ]
   }
 }

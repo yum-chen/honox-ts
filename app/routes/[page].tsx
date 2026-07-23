@@ -4,18 +4,18 @@ import { createRoute } from "honox/factory";
 import { PageRenderer } from "../components/page-renderer";
 import { detectLocale } from "../lib/i18n";
 import { listPageSlugs, loadPage } from "../lib/pages";
+import { RESERVED_PAGE_SLUGS } from "../lib/reserved-page-slugs";
 
 export default createRoute(
 	ssgParams(() =>
 		listPageSlugs()
-			.filter((slug) => slug !== "index")
+			.filter((slug) => !RESERVED_PAGE_SLUGS.has(slug))
 			.map((page) => ({ page })),
 	),
 	async (c, next) => {
 		const page = c.req.param("page");
 
-		// "index" already renders at "/" via routes/index.tsx with its own header/footer.
-		if (page === "index") return next();
+		if (RESERVED_PAGE_SLUGS.has(page)) return next();
 
 		const currentLocale = detectLocale(c.req.path);
 
@@ -23,8 +23,8 @@ export default createRoute(
 			const data = await loadPage(page, currentLocale);
 
 			// Not a content page — defer to any other route matching this path
-			// (e.g. /de, /blog, /docs), since this file lives at the routing root
-			// and would otherwise shadow them.
+			// (e.g. /de), since this file lives at the routing root and would
+			// otherwise shadow it.
 			if (!data) {
 				return next();
 			}

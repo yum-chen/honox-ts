@@ -1,5 +1,6 @@
 import { css } from "design-system/css";
 import { createRoute } from "honox/factory";
+import { PageRenderer } from "../../components/page-renderer";
 import { LanguageSwitcher } from "../../components/language-switcher";
 import {
 	Anchor,
@@ -18,111 +19,25 @@ import { ArrowRightIcon } from "../../icons/arrow-right";
 import { FilterIcon } from "../../icons/filter";
 import { MailIcon } from "../../icons/mail";
 import { SearchIcon } from "../../icons/search";
-import { type DocsNavLinkConfig, loadDocsConfig } from "../../lib/configs";
+import { loadDocsConfig } from "../../lib/configs";
 import {
 	BLOG_SEARCH_STRINGS,
 	detectLocale,
 	localiseHref,
 } from "../../lib/i18n";
+import { loadPage } from "../../lib/pages";
 import { loadPosts } from "../../lib/posts";
 import { filterEntries } from "../../utils/search";
-
-function BlogHeader({
-	headerLinks,
-	currentPath,
-	currentLocale,
-}: {
-	headerLinks?: DocsNavLinkConfig[];
-	currentPath: string;
-	currentLocale: string;
-}) {
-	const localiseLink = (href: string) => localiseHref(href, currentLocale);
-
-	return (
-		<header
-			class={css({
-				borderBottomWidth: "1px",
-				borderColor: { _light: "white.a4", _dark: "black.a4" },
-				bg: { _light: "white.a7", _dark: "black.a7" },
-				backdropFilter: "blur(20px) saturate(180%)",
-				position: "sticky",
-				top: "0",
-				zIndex: "10",
-			})}
-		>
-			<div
-				class={css({
-					maxWidth: "7xl",
-					mx: "auto",
-					px: { base: "4", md: "6", lg: "8" },
-					py: "4",
-					display: "flex",
-					alignItems: "center",
-					justifyContent: "space-between",
-					gap: "4",
-				})}
-			>
-				<Anchor
-					href={localiseLink("/")}
-					variant="plain"
-					class={css({ textDecoration: "none", flexShrink: "0" })}
-				>
-					<Heading
-						as="h1"
-						class={css({
-							fontSize: "lg",
-							fontWeight: "bold",
-							tracking: "tight",
-						})}
-					>
-						Artefact UI
-					</Heading>
-				</Anchor>
-
-				<nav
-					class={css({
-						display: "flex",
-						gap: { base: "3", md: "6" },
-						alignItems: "center",
-					})}
-				>
-					{headerLinks?.map((link) => (
-						<Anchor
-							key={link.href}
-							href={localiseLink(link.href)}
-							variant="plain"
-							class={css({ textStyle: "sm", fontWeight: "medium" })}
-						>
-							{currentLocale === "zh" && link.label === "Blog"
-								? "博客"
-								: currentLocale === "zh" && link.label === "Docs"
-									? "文档"
-									: link.label}
-						</Anchor>
-					))}
-					<Anchor
-						href="/admin"
-						variant="plain"
-						class={css({ textStyle: "sm", fontWeight: "medium" })}
-					>
-						{currentLocale === "zh" ? "内容管理" : "Admin"}
-					</Anchor>
-					<LanguageSwitcher
-						currentPath={currentPath}
-						currentLocale={currentLocale}
-					/>
-				</nav>
-			</div>
-		</header>
-	);
-}
 
 export default createRoute(async (c) => {
 	const currentPath = c.req.path;
 	const currentLocale = detectLocale(currentPath);
-	const [{ posts: blogPosts, searchEntries, tags }, config] = await Promise.all(
-		[loadPosts(currentLocale), loadDocsConfig(currentLocale)],
-	);
+	const [{ posts: blogPosts, searchEntries, tags }, config, data] =
+		await Promise.all([
+			loadPosts(currentLocale),
+			loadDocsConfig(currentLocale),
+			loadPage("blog", currentLocale).then((page) => page ?? { content: [] }),
+		]);
 
 	const localiseLink = (href: string) => localiseHref(href, currentLocale);
 	const searchStrings =
@@ -145,17 +60,51 @@ export default createRoute(async (c) => {
 
 	return c.render(
 		<>
-			<title>
-				{currentLocale === "zh"
-					? "博客 - Artefact"
-					: (config.blog?.title ?? "Blog - Artefact")}
-			</title>
+			<title>{data.title ?? "Blog - Artefact"}</title>
 
-			<BlogHeader
-				headerLinks={config.headerLinks}
-				currentPath={currentPath}
-				currentLocale={currentLocale}
-			/>
+			{/* Header — brand/nav/actions are CMS page-builder content
+			    (content/pages/blog.json), edit via /admin. Mirrors app/routes/index.tsx. */}
+			<header
+				class={css({
+					borderBottomWidth: "1px",
+					borderColor: { _light: "white.a4", _dark: "black.a4" },
+					bg: { _light: "white.a7", _dark: "black.a7" },
+					backdropFilter: "blur(20px) saturate(180%)",
+					position: "sticky",
+					top: "0",
+					zIndex: "10",
+				})}
+			>
+				<div
+					class={css({
+						maxWidth: "7xl",
+						mx: "auto",
+						px: { base: "4", md: "6", lg: "8" },
+						py: "4",
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "space-between",
+						gap: "4",
+					})}
+				>
+					<PageRenderer content={data.headerBrand ?? []} />
+
+					<nav
+						class={css({
+							display: "flex",
+							gap: { base: "3", md: "6" },
+							alignItems: "center",
+						})}
+					>
+						<PageRenderer content={data.headerNav ?? []} />
+						<LanguageSwitcher
+							currentPath={currentPath}
+							currentLocale={currentLocale}
+						/>
+						<PageRenderer content={data.headerActions ?? []} />
+					</nav>
+				</div>
+			</header>
 
 			<div
 				class={css({
@@ -165,11 +114,7 @@ export default createRoute(async (c) => {
 					mx: "auto",
 				})}
 			>
-				{config.blog?.description && (
-					<Text class={css({ color: "fg.muted", mb: "8", maxWidth: "2xl" })}>
-						{config.blog.description}
-					</Text>
-				)}
+				<PageRenderer content={data.content ?? []} />
 
 				{/* Featured Posts (latest posts with a cover image) */}
 				{featuredPosts.length > 0 && (

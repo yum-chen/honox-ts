@@ -16,6 +16,7 @@ import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import { defineConfig } from "vite";
+import { RESERVED_PAGE_SLUGS } from "./app/lib/reserved-page-slugs";
 import pandaConfig from "./panda.config";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -113,7 +114,7 @@ function copyContentPagesToRootPlugin() {
 			const slugs = readdirSync(pagesDir, { withFileTypes: true })
 				.filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
 				.map((entry) => entry.name.replace(/\.json$/, ""))
-				.filter((slug) => slug !== "index");
+				.filter((slug) => !RESERVED_PAGE_SLUGS.has(slug));
 
 			for (const slug of slugs) {
 				const source = path.join(pagesDistDir, `${slug}.html`);
