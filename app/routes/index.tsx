@@ -4,10 +4,7 @@ import { PageRenderer } from "../components/page-renderer";
 import { Anchor, Avatar, Button, Heading, Stack, Text } from "../components/ui";
 import { LanguageSwitcher } from "../components/language-switcher";
 import { detectLocale, localiseHref } from "../lib/i18n";
-
-const pages = import.meta.glob("/content/pages/*.json", {
-	import: "default",
-});
+import { loadPage } from "../lib/pages";
 
 export default createRoute(async (c) => {
 	const currentPath = c.req.path;
@@ -15,8 +12,7 @@ export default createRoute(async (c) => {
 
 	const localiseLink = (href: string) => localiseHref(href, currentLocale);
 
-	const loader = pages["/content/pages/index.json"];
-	const data = loader ? ((await loader()) as any) : { content: [] };
+	const data = (await loadPage("index", currentLocale)) ?? { content: [] };
 
 	return c.render(
 		<div class={css({ bg: "bg.canvas", minH: "screen", color: "fg.default" })}>
@@ -125,7 +121,13 @@ export default createRoute(async (c) => {
 							currentPath={currentPath}
 							currentLocale={currentLocale}
 						/>
-						<Button variant="solid" colorPalette="blue" size="sm">
+						<Button
+							variant="solid"
+							colorPalette="blue"
+							size="sm"
+							interactive
+							onclick="window.scrollTo({top: document.getElementById('hub').offsetTop - 80, behavior: 'smooth'})"
+						>
 							{currentLocale === "zh" ? "探索中心" : "Explore Hub"}
 						</Button>
 					</nav>

@@ -222,6 +222,7 @@ collections:
                                 options: [button, submit, reset]
                                 default: button
                                 hint: "Use \"submit\" for a button inside a Fieldset that should submit its form."
+                              - { label: "Custom onClick (advanced)", name: onclick, widget: string, required: false, hint: "Raw inline JS, e.g. for smooth-scroll or dispatching a CustomEvent. Runs without client hydration — see the Toast demo." }
                           - label: Badge
                             name: badge
                             widget: object
@@ -273,6 +274,7 @@ collections:
                                 widget: select
                                 options: [xs, sm, md, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, 7xl]
                                 default: xl
+                              - { label: "Anchor ID (advanced)", name: id, widget: string, required: false, hint: "Optional DOM id for deep-linking/anchor scrolling, e.g. \"hub\"." }
                           - label: Text
                             name: text
                             widget: object
@@ -428,11 +430,22 @@ collections:
                                 name: items
                                 widget: list
                                 fields:
-                                  - { label: Type, name: type, widget: select, options: [item, separator, checkbox, radio], default: item }
+                                  - { label: Type, name: type, widget: select, options: [item, separator, checkbox, radio, submenu], default: item }
                                   - { label: Label, name: label, widget: string, required: false }
                                   - { label: Value, name: value, widget: string, required: false }
                                   - { label: Disabled, name: disabled, widget: boolean, default: false }
                                   - { label: Checked, name: checked, widget: boolean, default: false }
+                                  - label: Submenu Items
+                                    name: items
+                                    widget: list
+                                    required: false
+                                    hint: "Only used when Type is \"submenu\"."
+                                    fields:
+                                      - { label: Type, name: type, widget: select, options: [item, separator, checkbox, radio], default: item }
+                                      - { label: Label, name: label, widget: string, required: false }
+                                      - { label: Value, name: value, widget: string, required: false }
+                                      - { label: Disabled, name: disabled, widget: boolean, default: false }
+                                      - { label: Checked, name: checked, widget: boolean, default: false }
                           - label: Popover
                             name: popover
                             widget: object
@@ -721,6 +734,11 @@ collections:
                                 widget: select
                                 options: [sm, md, lg]
                                 default: md
+                          - label: Toast Host
+                            name: toast
+                            widget: object
+                            fields: &toast_fields
+                              - { label: Note, name: note, widget: hidden, default: "Renders the global toast host. Pair with a Button whose Custom onClick dispatches a `park-ui:toast:create` CustomEvent to show a toast." }
                           - label: File Upload
                             name: fileUpload
                             widget: object
@@ -1251,6 +1269,10 @@ collections:
                     name: clipboard
                     widget: object
                     fields: *clipboard_fields
+                  - label: Toast Host
+                    name: toast
+                    widget: object
+                    fields: *toast_fields
                   - label: File Upload
                     name: fileUpload
                     widget: object
@@ -1793,6 +1815,10 @@ collections:
             name: clipboard
             widget: object
             fields: *clipboard_fields
+          - label: Toast Host
+            name: toast
+            widget: object
+            fields: *toast_fields
           - label: File Upload
             name: fileUpload
             widget: object

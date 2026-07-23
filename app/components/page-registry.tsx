@@ -284,10 +284,14 @@ const registry: Record<string, BlockRenderer> = {
 	checkbox: (b) => {
 		const { label, checked, disabled, invalid, size, colorPalette, ...rest } =
 			propsOf(b);
+		// CMS field is "Checked", but forwarded as `defaultChecked` (uncontrolled
+		// initial state) rather than `checked` — a controlled value with no
+		// `onCheckedChange` handler (which CMS content can never supply) locks
+		// the toggle so clicks stop doing anything. See switch below, same fix.
 		return (
 			<Checkbox
 				interactive
-				checked={checked}
+				defaultChecked={checked}
 				disabled={disabled}
 				invalid={invalid}
 				size={size}
@@ -748,9 +752,11 @@ const registry: Record<string, BlockRenderer> = {
 
 	slider: (b) => <Slider interactive {...propsOf(b)} />,
 	switch: (b) => {
-		const { label, ...rest } = propsOf(b);
+		// Same controlled-vs-uncontrolled fix as checkbox above: CMS "Checked"
+		// must land as `defaultChecked`, not `checked`, or the toggle locks.
+		const { label, checked, ...rest } = propsOf(b);
 		return (
-			<Switch interactive {...rest}>
+			<Switch interactive defaultChecked={checked} {...rest}>
 				{label}
 			</Switch>
 		);

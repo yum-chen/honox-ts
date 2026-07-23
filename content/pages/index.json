@@ -33,14 +33,14 @@
           "direction": "horizontal",
           "gap": "4",
           "children": [
-            { "type": "button", "text": "View Showcase", "variant": "solid", "colorPalette": "blue", "size": "lg" },
-            { "type": "button", "text": "Component Hub", "variant": "outline", "size": "lg" }
+            { "type": "button", "text": "View Showcase", "variant": "solid", "colorPalette": "blue", "size": "lg", "onclick": "window.scrollTo({top: document.getElementById('carousel-showcase').offsetTop - 80, behavior: 'smooth'})" },
+            { "type": "button", "text": "Component Hub", "variant": "outline", "size": "lg", "onclick": "window.scrollTo({top: document.getElementById('hub').offsetTop - 80, behavior: 'smooth'})" }
           ]
         }
       ]
     },
 
-    { "type": "heading", "as": "h2", "text": "Tabs Showcase", "size": "3xl", "style": "text-align:center" },
+    { "type": "heading", "as": "h2", "text": "Tabs Showcase", "size": "3xl", "style": "text-align:center", "id": "tabs-showcase" },
     { "type": "text", "size": "md", "content": "Re-implemented completely in pure Hono/JSX with sliding indicators, manual/automatic focus activation, and full keyboard navigation support.", "style": "text-align:center;max-width:42rem;margin:0 auto" },
     {
       "type": "stack",
@@ -139,7 +139,7 @@
       ]
     },
 
-    { "type": "heading", "as": "h2", "text": "Featured Carousel Implementation", "size": "3xl", "style": "text-align:center" },
+    { "type": "heading", "as": "h2", "text": "Featured Carousel Implementation", "size": "3xl", "style": "text-align:center", "id": "carousel-showcase" },
     { "type": "text", "size": "md", "content": "Demonstrating our robust Hono/JSX implementation of Ark UI's Slider Carousel. Swipeable, autoplay-ready, and fully accessible.", "style": "text-align:center;max-width:42rem;margin:0 auto" },
     {
       "type": "grid",
@@ -190,7 +190,7 @@
       ]
     },
 
-    { "type": "heading", "as": "h2", "text": "Interactive Component Hub", "size": "3xl", "style": "text-align:center" },
+    { "type": "heading", "as": "h2", "text": "Interactive Component Hub", "size": "3xl", "style": "text-align:center", "id": "hub" },
     { "type": "text", "size": "md", "content": "Explore the rich features of the Artefact UI component system grouped by usage category.", "style": "text-align:center;max-width:42rem;margin:0 auto" },
 
     { "type": "heading", "as": "h3", "text": "Form Controls", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
@@ -417,8 +417,10 @@
               { "type": "item", "label": "View Profile", "value": "profile" },
               { "type": "item", "label": "Billing", "value": "billing" },
               { "type": "separator" },
-              { "type": "item", "label": "Invite via Email", "value": "invite-email" },
-              { "type": "item", "label": "Invite via Secret Link", "value": "invite-link" }
+              { "type": "submenu", "label": "Invite Members", "items": [
+                { "type": "item", "label": "via Email", "value": "email" },
+                { "type": "item", "label": "via Secret Link", "value": "link" }
+              ]}
             ]}
           ]
         },
@@ -483,10 +485,14 @@
         },
         {
           "type": "card",
-          "title": "Clipboard",
-          "description": "Copy-to-clipboard utility",
+          "title": "Clipboard & Toast",
+          "description": "Interactive user feedback utilities",
           "children": [
-            { "type": "clipboard", "label": "Clone Command", "value": "git clone https://github.com/honojs/honox" }
+            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
+              { "type": "clipboard", "label": "Clone Command", "value": "git clone https://github.com/honojs/honox" },
+              { "type": "toast" },
+              { "type": "button", "variant": "outline", "size": "sm", "text": "Dispatch Toast", "onclick": "window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: 'Task Dispatched', description: 'Interactive component action logged.', closable: true, type: 'success' } }))" }
+            ]}
           ]
         },
         {

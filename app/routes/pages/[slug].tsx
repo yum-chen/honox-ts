@@ -2,29 +2,21 @@ import { css } from "design-system/css";
 import { ssgParams } from "hono/ssg";
 import { createRoute } from "honox/factory";
 import { PageRenderer } from "../../components/page-renderer";
-
-const pages = import.meta.glob("/content/pages/*.json", {
-	import: "default",
-});
+import { detectLocale } from "../../lib/i18n";
+import { listPageSlugs, loadPage } from "../../lib/pages";
 
 export default createRoute(
-	ssgParams(async () => {
-		const pages = import.meta.glob("/content/pages/*.json");
-		return Object.keys(pages).map((path) => ({
-			slug: path.replace("/content/pages/", "").replace(".json", ""),
-		}));
-	}),
+	ssgParams(() => listPageSlugs().map((slug) => ({ slug }))),
 	async (c) => {
 		const slug = c.req.param("slug");
-		const pagePath = `/content/pages/${slug}.json`;
-		const loader = pages[pagePath];
-
-		if (!loader) {
-			return c.notFound();
-		}
+		const currentLocale = detectLocale(c.req.path);
 
 		try {
-			const data = (await loader()) as any;
+			const data = await loadPage(slug, currentLocale);
+
+			if (!data) {
+				return c.notFound();
+			}
 
 			return c.render(
 				<div
@@ -39,7 +31,7 @@ export default createRoute(
 					})}
 				>
 					<title>{data.title}</title>
-					<PageRenderer content={data.content} />
+					<PageRenderer content={data.content ?? []} />
 				</div>,
 			);
 		} catch (error) {
