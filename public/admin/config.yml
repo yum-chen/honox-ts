@@ -463,7 +463,18 @@ collections:
                           - label: Paginated Table
                             name: paginatedTable
                             widget: object
-                            fields: &paginatedtable_fields []
+                            fields: &paginatedtable_fields
+                              - { label: URL, name: url, widget: string, required: false, hint: "JSON API endpoint returning { [dataKey]: [...] }. Leave blank to use built-in demo data." }
+                              - { label: Data Key, name: dataKey, widget: string, required: false, hint: "Key in the response holding the row array, e.g. \"posts\"." }
+                              - label: Columns
+                                name: columns
+                                widget: list
+                                required: false
+                                fields:
+                                  - { label: Header, name: header, widget: string }
+                                  - { label: Key, name: key, widget: string, hint: "Row property to display in this column." }
+                              - { label: Page Size, name: pageSize, widget: number, default: 5, required: false }
+                              - { label: Initial Page, name: initialPage, widget: number, default: 1, required: false }
                           - label: Pagination
                             name: pagination
                             widget: object
@@ -743,6 +754,7 @@ collections:
                                   - { label: Caption, name: caption, widget: string, required: false }
                                   - { label: Link (Href), name: href, widget: string, required: false }
                               - { label: Slides Per Page, name: slidesPerPage, widget: number, default: 1, required: false }
+                              - { label: Spacing Between Slides, name: spacing, widget: string, required: false, hint: "e.g. \"12px\"" }
                               - { label: Loop, name: loop, widget: boolean, default: false }
                               - label: Autoplay Delay (ms)
                                 name: autoplayDelay
