@@ -73,6 +73,7 @@ export const popover = defineSlotRecipe({
 			display: "flex",
 			flex: "1",
 			flexDirection: "column",
+			gap: "4",
 		},
 		footer: {
 			display: "flex",
