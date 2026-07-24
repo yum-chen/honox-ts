@@ -52,6 +52,10 @@ interface DropdownItemItem extends BaseDropdownItem {
 	/** Renders the item as a link (`asChild` onto an `<a>`) instead of a
 	 * plain select-on-click menu item — e.g. a language switcher entry. */
 	href?: string;
+	/** Raw `onclick` attribute string, same literal-JS convention as the
+	 * `button` block's `onclick` — runs without depending on `onSelect`,
+	 * which can't be expressed in CMS JSON. */
+	onclick?: string;
 }
 
 interface DropdownSeparatorItem extends BaseDropdownItem {
@@ -275,6 +279,7 @@ function renderDropdownItem(
 					value={menuItem.value}
 					disabled={menuItem.disabled}
 					class={menuItem.class}
+					onclick={menuItem.onclick}
 				>
 					{content}
 				</Item>

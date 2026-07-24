@@ -89,12 +89,42 @@
       "triggerText": "ES",
       "placement": "bottom-end",
       "items": [
-        { "type": "item", "label": "English", "value": "en", "toggleLocale": "en" },
-        { "type": "item", "label": "中文", "value": "zh", "toggleLocale": "zh" },
-        { "type": "item", "label": "Español", "value": "es", "toggleLocale": "es" },
-        { "type": "item", "label": "Português", "value": "pt", "toggleLocale": "pt" },
-        { "type": "item", "label": "Français", "value": "fr", "toggleLocale": "fr" },
-        { "type": "item", "label": "Deutsch", "value": "de", "toggleLocale": "de" }
+        {
+          "type": "item",
+          "label": "English",
+          "value": "en",
+          "toggleLocale": "en"
+        },
+        {
+          "type": "item",
+          "label": "中文",
+          "value": "zh",
+          "toggleLocale": "zh"
+        },
+        {
+          "type": "item",
+          "label": "Español",
+          "value": "es",
+          "toggleLocale": "es"
+        },
+        {
+          "type": "item",
+          "label": "Português",
+          "value": "pt",
+          "toggleLocale": "pt"
+        },
+        {
+          "type": "item",
+          "label": "Français",
+          "value": "fr",
+          "toggleLocale": "fr"
+        },
+        {
+          "type": "item",
+          "label": "Deutsch",
+          "value": "de",
+          "toggleLocale": "de"
+        }
       ]
     },
     {
@@ -107,28 +137,73 @@
         {
           "blockType": "stack",
           "direction": "vertical",
-          "gap": "0.5",
+          "gap": "3",
           "children": [
             {
-              "blockType": "button",
-              "text": "Claro",
-              "variant": "plain",
-              "size": "sm",
-              "onclick": "localStorage.setItem('theme','light');document.documentElement.dataset.theme='light';"
+              "blockType": "switch",
+              "id": "theme-switch",
+              "label": "Modo oscuro",
+              "onchange": "var d=event.target.checked?'dark':'light';localStorage.setItem('theme',d);document.documentElement.dataset.theme=d;"
             },
             {
-              "blockType": "button",
-              "text": "Oscuro",
-              "variant": "plain",
-              "size": "sm",
-              "onclick": "localStorage.setItem('theme','dark');document.documentElement.dataset.theme='dark';"
+              "blockType": "script",
+              "code": "(function(){var el=document.getElementById('theme-switch');if(el)el.checked=document.documentElement.dataset.theme==='dark';})();"
             },
             {
-              "blockType": "button",
-              "text": "Sistema",
-              "variant": "plain",
-              "size": "sm",
-              "onclick": "localStorage.setItem('theme','system');document.documentElement.dataset.theme=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';"
+              "blockType": "dropdown",
+              "triggerText": "Color",
+              "triggerAriaLabel": "Paleta de colores",
+              "placement": "bottom-end",
+              "items": [
+                {
+                  "type": "item",
+                  "label": "Gris",
+                  "value": "gray",
+                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_gray');localStorage.setItem('colorPalette','gray');"
+                },
+                {
+                  "type": "item",
+                  "label": "Azul",
+                  "value": "blue",
+                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_blue');localStorage.setItem('colorPalette','blue');"
+                },
+                {
+                  "type": "item",
+                  "label": "Verde",
+                  "value": "green",
+                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_green');localStorage.setItem('colorPalette','green');"
+                },
+                {
+                  "type": "item",
+                  "label": "Rojo",
+                  "value": "red",
+                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_red');localStorage.setItem('colorPalette','red');"
+                },
+                {
+                  "type": "item",
+                  "label": "Naranja",
+                  "value": "orange",
+                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_orange');localStorage.setItem('colorPalette','orange');"
+                },
+                {
+                  "type": "item",
+                  "label": "Morado",
+                  "value": "purple",
+                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_purple');localStorage.setItem('colorPalette','purple');"
+                },
+                {
+                  "type": "item",
+                  "label": "Cian",
+                  "value": "cyan",
+                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_cyan');localStorage.setItem('colorPalette','cyan');"
+                },
+                {
+                  "type": "item",
+                  "label": "Ámbar",
+                  "value": "amber",
+                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_amber');localStorage.setItem('colorPalette','amber');"
+                }
+              ]
             }
           ]
         }

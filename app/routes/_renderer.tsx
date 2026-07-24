@@ -13,14 +13,15 @@ export default jsxRenderer(({ children }, c) => {
 				<meta charset="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 				{/* Blocking (no async/defer) and first in <head>, so the
-				`data-theme` attribute is set before the stylesheet paints —
-				avoids a flash of the wrong color scheme. Mirrors the onclick
-				logic on the Light/Dark/System buttons in the "Appearance"
-				header popover (content/configs*.json's `headerItems`). */}
+				`data-theme` attribute and accent `color-palette_*` class are set
+				before the stylesheet paints — avoids a flash of the wrong color
+				scheme/accent. Mirrors the onchange/onclick logic on the Dark mode
+				Switch and color-palette dropdown in the "Appearance" header
+				popover (content/configs*.json's `headerItems`). */}
 				<script
 					// biome-ignore lint/security/noDangerouslySetInnerHtml: static, non-user-controlled boot script
 					dangerouslySetInnerHTML={{
-						__html: `(function(){try{var s=localStorage.getItem('theme');var m=window.matchMedia('(prefers-color-scheme: dark)');var d=s==='light'||s==='dark'?s:(m.matches?'dark':'light');document.documentElement.dataset.theme=d;m.addEventListener('change',function(e){if((localStorage.getItem('theme')||'system')==='system'){document.documentElement.dataset.theme=e.matches?'dark':'light';}});}catch(e){}})();`,
+						__html: `(function(){try{var s=localStorage.getItem('theme');var m=window.matchMedia('(prefers-color-scheme: dark)');var d=s==='light'||s==='dark'?s:(m.matches?'dark':'light');document.documentElement.dataset.theme=d;m.addEventListener('change',function(e){if((localStorage.getItem('theme')||'system')==='system'){document.documentElement.dataset.theme=e.matches?'dark':'light';}});var p=localStorage.getItem('colorPalette');if(p)document.documentElement.classList.add('color-palette_'+p);}catch(e){}})();`,
 					}}
 				/>
 				<link rel="icon" href="/favicon.ico" />

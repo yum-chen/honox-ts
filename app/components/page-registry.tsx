@@ -823,6 +823,19 @@ const registry: Record<string, BlockRenderer> = {
 		);
 	},
 
+	// Inline boot-time script, e.g. syncing a control's rendered state (a
+	// Switch's `checked`) to a `localStorage`/`data-*` value that only exists
+	// client-side and can't be known at SSR time. Same `dangerouslySetInnerHTML`
+	// convention as `icon`'s raw `svg`, just for JS instead of markup.
+	script: (b) => {
+		const { code } = propsOf(b);
+		return typeof code === "string" ? (
+			<script dangerouslySetInnerHTML={{ __html: code }} />
+		) : (
+			<></>
+		);
+	},
+
 	paginatedTable: (b) => <PaginatedTable {...propsOf(b)} />,
 	pagination: (b) => <Pagination interactive {...propsOf(b)} />,
 	progress: (b) => <Progress {...propsOf(b)} />,
