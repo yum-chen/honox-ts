@@ -617,10 +617,13 @@ function InteractivePopoverRoot(props: InteractivePopoverProps) {
 				"[data-part]",
 			) as HTMLElement;
 			if (!target) return;
-			// A click inside a nested popover (e.g. a "more options" trigger
+			// A click inside a nested overlay (e.g. a Dropdown/Select trigger
 			// rendered within this popover's content) belongs to that nested
-			// popover's own root — ignore it here so it isn't double-handled.
-			const owner = target.closest("[data-popover-root]");
+			// overlay's own root — ignore it here so it isn't double-handled.
+			// `data-overlay-root` is the generic marker every overlay primitive
+			// sets (Popover included), not just `data-popover-root`, so this also
+			// catches non-Popover overlays nested inside a Popover.
+			const owner = target.closest("[data-overlay-root]");
 			if (owner && owner !== root) return;
 			const dataPart = target.getAttribute("data-part");
 

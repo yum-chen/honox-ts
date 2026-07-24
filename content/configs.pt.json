@@ -150,57 +150,48 @@
               "code": "(function(){var el=document.getElementById('theme-switch');if(el)el.checked=document.documentElement.dataset.theme==='dark';})();"
             },
             {
-              "blockType": "dropdown",
-              "triggerText": "Cor",
-              "triggerAriaLabel": "Paleta de cores",
-              "placement": "bottom-end",
+              "blockType": "radioCardGroup",
+              "label": "Paleta de cores",
+              "style": "display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem",
               "items": [
                 {
-                  "type": "item",
-                  "label": "Cinza",
                   "value": "gray",
+                  "label": "Cinza",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_gray');localStorage.setItem('colorPalette','gray');"
                 },
                 {
-                  "type": "item",
-                  "label": "Azul",
                   "value": "blue",
+                  "label": "Azul",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_blue');localStorage.setItem('colorPalette','blue');"
                 },
                 {
-                  "type": "item",
-                  "label": "Verde",
                   "value": "green",
+                  "label": "Verde",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_green');localStorage.setItem('colorPalette','green');"
                 },
                 {
-                  "type": "item",
-                  "label": "Vermelho",
                   "value": "red",
+                  "label": "Vermelho",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_red');localStorage.setItem('colorPalette','red');"
                 },
                 {
-                  "type": "item",
-                  "label": "Laranja",
                   "value": "orange",
+                  "label": "Laranja",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_orange');localStorage.setItem('colorPalette','orange');"
                 },
                 {
-                  "type": "item",
-                  "label": "Roxo",
                   "value": "purple",
+                  "label": "Roxo",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_purple');localStorage.setItem('colorPalette','purple');"
                 },
                 {
-                  "type": "item",
-                  "label": "Ciano",
                   "value": "cyan",
+                  "label": "Ciano",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_cyan');localStorage.setItem('colorPalette','cyan');"
                 },
                 {
-                  "type": "item",
-                  "label": "Âmbar",
                   "value": "amber",
+                  "label": "Âmbar",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_amber');localStorage.setItem('colorPalette','amber');"
                 }
               ]

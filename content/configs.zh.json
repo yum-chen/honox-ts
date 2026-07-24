@@ -150,57 +150,48 @@
               "code": "(function(){var el=document.getElementById('theme-switch');if(el)el.checked=document.documentElement.dataset.theme==='dark';})();"
             },
             {
-              "blockType": "dropdown",
-              "triggerText": "颜色",
-              "triggerAriaLabel": "配色方案",
-              "placement": "bottom-end",
+              "blockType": "radioCardGroup",
+              "label": "配色方案",
+              "style": "display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem",
               "items": [
                 {
-                  "type": "item",
-                  "label": "灰色",
                   "value": "gray",
+                  "label": "灰色",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_gray');localStorage.setItem('colorPalette','gray');"
                 },
                 {
-                  "type": "item",
-                  "label": "蓝色",
                   "value": "blue",
+                  "label": "蓝色",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_blue');localStorage.setItem('colorPalette','blue');"
                 },
                 {
-                  "type": "item",
-                  "label": "绿色",
                   "value": "green",
+                  "label": "绿色",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_green');localStorage.setItem('colorPalette','green');"
                 },
                 {
-                  "type": "item",
-                  "label": "红色",
                   "value": "red",
+                  "label": "红色",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_red');localStorage.setItem('colorPalette','red');"
                 },
                 {
-                  "type": "item",
-                  "label": "橙色",
                   "value": "orange",
+                  "label": "橙色",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_orange');localStorage.setItem('colorPalette','orange');"
                 },
                 {
-                  "type": "item",
-                  "label": "紫色",
                   "value": "purple",
+                  "label": "紫色",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_purple');localStorage.setItem('colorPalette','purple');"
                 },
                 {
-                  "type": "item",
-                  "label": "青色",
                   "value": "cyan",
+                  "label": "青色",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_cyan');localStorage.setItem('colorPalette','cyan');"
                 },
                 {
-                  "type": "item",
-                  "label": "琥珀色",
                   "value": "amber",
+                  "label": "琥珀色",
                   "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_amber');localStorage.setItem('colorPalette','amber');"
                 }
               ]
