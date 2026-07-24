@@ -33,7 +33,7 @@ interface PopoverProps extends InteractivePopoverProps {
 	footer?: string | JSX.Element;
 	closable?: boolean; // render CloseTrigger (default true)
 	closeIcon?: JSX.Element; // custom close icon; defaults to built-in X
-	children?: JSX.Element; // extra content after body
+	children?: JSX.Element; // extra content, rendered alongside `body` inside the padded Body slot
 }
 
 function Root(props: PopoverProps) {
@@ -105,8 +105,12 @@ function Popover(props: PopoverProps) {
 							)}
 						</Header>
 					)}
-					{body && <Body>{body}</Body>}
-					{children}
+					{(body || children) && (
+						<Body>
+							{body}
+							{children}
+						</Body>
+					)}
 					{footer && <Footer>{footer}</Footer>}
 				</Content>
 			</Positioner>
