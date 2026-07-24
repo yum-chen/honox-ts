@@ -9,6 +9,8 @@ export const hoverCard = defineSlotRecipe({
 
 			bg: "var(--hovercard-bg)",
 			borderRadius: "l3",
+			borderWidth: "1px",
+			borderColor: "gray.surface.border",
 			boxShadow: "lg",
 			display: "flex",
 			flexDirection: "column",
@@ -31,10 +33,21 @@ export const hoverCard = defineSlotRecipe({
 		arrow: {
 			"--arrow-size": "sizes.3",
 			"--arrow-background": "var(--hovercard-bg)",
+			position: "absolute",
+			width: "var(--arrow-size)",
+			height: "var(--arrow-size)",
+			zIndex: "1",
 		},
 		arrowTip: {
+			position: "absolute",
+			inset: "0",
+			width: "var(--arrow-size)",
+			height: "var(--arrow-size)",
+			background: "var(--arrow-background)",
+			transform: "rotate(45deg)",
 			borderTopWidth: "0.5px",
 			borderInlineStartWidth: "0.5px",
+			borderColor: "border",
 		},
 	},
 });

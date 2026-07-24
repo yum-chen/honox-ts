@@ -10,8 +10,14 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
+import { getArrowRotation, getArrowStyle } from "./overlay-position";
 
 type HoverCardStyles = ReturnType<typeof hoverCard>;
+
+// Positioner always renders below-left of the trigger (see Positioner below),
+// so the arrow is fixed to "bottom" placement — there's no dynamic flipping.
+const ARROW_OFFSET = "16px";
+const PLACEMENT_CONFIG = { align: "start", arrowOffset: ARROW_OFFSET } as const;
 
 export interface HoverCardContextValue {
 	id: string;
@@ -206,6 +212,7 @@ export function Arrow(props: PropsWithChildren<{ class?: string }>) {
 			class={cx(styles.arrow, classProp)}
 			data-scope="hover-card"
 			data-part="arrow"
+			style={getArrowStyle("bottom", PLACEMENT_CONFIG)}
 			{...restProps}
 		>
 			{children || <ArrowTip />}
@@ -222,6 +229,7 @@ export function ArrowTip(props: { class?: string }) {
 			class={cx(styles.arrowTip, classProp)}
 			data-scope="hover-card"
 			data-part="arrow-tip"
+			style={{ transform: `rotate(${getArrowRotation("bottom")}deg)` }}
 			{...restProps}
 		/>
 	);
