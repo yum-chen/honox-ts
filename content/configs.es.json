@@ -135,90 +135,69 @@
       "showArrow": false,
       "children": [
         {
-          "blockType": "stack",
-          "direction": "vertical",
-          "gap": "5",
-          "children": [
+          "blockType": "segmentGroup",
+          "items": [
             {
-              "blockType": "stack",
-              "direction": "vertical",
-              "gap": "2",
-              "children": [
-                {
-                  "blockType": "segmentGroup",
-                  "items": [
-                    {
-                      "value": "light",
-                      "label": "Claro",
-                      "onclick": "localStorage.setItem('theme','light');document.documentElement.dataset.theme='light';"
-                    },
-                    {
-                      "value": "dark",
-                      "label": "Oscuro",
-                      "onclick": "localStorage.setItem('theme','dark');document.documentElement.dataset.theme='dark';"
-                    },
-                    {
-                      "value": "system",
-                      "label": "Sistema",
-                      "onclick": "localStorage.setItem('theme','system');document.documentElement.dataset.theme=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';"
-                    }
-                  ]
-                }
-              ]
+              "value": "light",
+              "label": "Claro",
+              "onclick": "localStorage.setItem('theme','light');document.documentElement.dataset.theme='light';"
             },
             {
-              "blockType": "stack",
-              "direction": "vertical",
-              "gap": "2",
-              "children": [
-                {
-                  "blockType": "radioCardGroup",
-                  "label": "Paleta de colores",
-                  "style": "display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem",
-                  "items": [
-                    {
-                      "value": "gray",
-                      "label": "Gris",
-                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_gray');localStorage.setItem('colorPalette','gray');"
-                    },
-                    {
-                      "value": "blue",
-                      "label": "Azul",
-                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_blue');localStorage.setItem('colorPalette','blue');"
-                    },
-                    {
-                      "value": "green",
-                      "label": "Verde",
-                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_green');localStorage.setItem('colorPalette','green');"
-                    },
-                    {
-                      "value": "red",
-                      "label": "Rojo",
-                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_red');localStorage.setItem('colorPalette','red');"
-                    },
-                    {
-                      "value": "orange",
-                      "label": "Naranja",
-                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_orange');localStorage.setItem('colorPalette','orange');"
-                    },
-                    {
-                      "value": "purple",
-                      "label": "Morado",
-                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_purple');localStorage.setItem('colorPalette','purple');"
-                    },
-                    {
-                      "value": "cyan",
-                      "label": "Cian",
-                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_cyan');localStorage.setItem('colorPalette','cyan');"
-                    },
-                    {
-                      "value": "amber",
-                      "label": "Ámbar",
-                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_amber');localStorage.setItem('colorPalette','amber');"
-                    }
-                  ]
-                }
-              ]
+              "value": "dark",
+              "label": "Oscuro",
+              "onclick": "localStorage.setItem('theme','dark');document.documentElement.dataset.theme='dark';"
+            },
+            {
+              "value": "system",
+              "label": "Sistema",
+              "onclick": "localStorage.setItem('theme','system');document.documentElement.dataset.theme=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';"
+            }
+          ]
+        },
+        {
+          "blockType": "radioCardGroup",
+          "label": "Paleta de colores",
+          "style": "display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem",
+          "items": [
+            {
+              "value": "gray",
+              "label": "Gris",
+              "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_gray');localStorage.setItem('colorPalette','gray');"
+            },
+            {
+              "value": "blue",
+              "label": "Azul",
+              "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_blue');localStorage.setItem('colorPalette','blue');"
+            },
+            {
+              "value": "green",
+              "label": "Verde",
+              "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_green');localStorage.setItem('colorPalette','green');"
+            },
+            {
+              "value": "red",
+              "label": "Rojo",
+              "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_red');localStorage.setItem('colorPalette','red');"
+            },
+            {
+              "value": "orange",
+              "label": "Naranja",
+              "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_orange');localStorage.setItem('colorPalette','orange');"
+            },
+            {
+              "value": "purple",
+              "label": "Morado",
+              "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_purple');localStorage.setItem('colorPalette','purple');"
+            },
+            {
+              "value": "cyan",
+              "label": "Cian",
+              "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_cyan');localStorage.setItem('colorPalette','cyan');"
+            },
+            {
+              "value": "amber",
+              "label": "Ámbar",
+              "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_amber');localStorage.setItem('colorPalette','amber');"
             }
           ]
         }
