@@ -43,6 +43,8 @@ export const combobox = defineSlotRecipe({
 		content: {
 			background: "gray.surface.bg",
 			borderRadius: "l2",
+			borderWidth: "1px",
+			borderColor: "gray.surface.border",
 			boxShadow: "md",
 			display: "flex",
 			flexDirection: "column",

@@ -25,6 +25,8 @@ export const dropdown = defineSlotRecipe({
 
 			background: "var(--dropdown-bg)",
 			borderRadius: "l3",
+			borderWidth: "1px",
+			borderColor: "gray.surface.border",
 			boxShadow: "md",
 			display: "flex",
 			flexDirection: "column",
