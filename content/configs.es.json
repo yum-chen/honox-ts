@@ -145,14 +145,24 @@
               "gap": "2",
               "children": [
                 {
-                  "blockType": "switch",
-                  "id": "theme-switch",
-                  "label": "Modo oscuro",
-                  "onchange": "var d=event.target.checked?'dark':'light';localStorage.setItem('theme',d);document.documentElement.dataset.theme=d;"
-                },
-                {
-                  "blockType": "script",
-                  "code": "(function(){var el=document.getElementById('theme-switch');if(el)el.checked=document.documentElement.dataset.theme==='dark';})();"
+                  "blockType": "segmentGroup",
+                  "items": [
+                    {
+                      "value": "light",
+                      "label": "Claro",
+                      "onclick": "localStorage.setItem('theme','light');document.documentElement.dataset.theme='light';"
+                    },
+                    {
+                      "value": "dark",
+                      "label": "Oscuro",
+                      "onclick": "localStorage.setItem('theme','dark');document.documentElement.dataset.theme='dark';"
+                    },
+                    {
+                      "value": "system",
+                      "label": "Sistema",
+                      "onclick": "localStorage.setItem('theme','system');document.documentElement.dataset.theme=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';"
+                    }
+                  ]
                 }
               ]
             },

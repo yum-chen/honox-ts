@@ -149,6 +149,11 @@ export interface ItemProps extends PropsWithChildren {
 	disabled?: boolean;
 	invalid?: boolean;
 	class?: string;
+	/** Raw `onclick` attribute string, same literal-JS convention as the
+	 * `button` block's `onclick` — for CMS-driven side effects (e.g. switching
+	 * `data-theme`) that can't be expressed as an `onValueChange` JS callback
+	 * in JSON. */
+	onclick?: string;
 }
 
 const ItemContext = createContext<{ value: string; disabled?: boolean } | null>(
@@ -259,6 +264,8 @@ export interface SegmentGroupItem {
 	label: string | JSX.Element;
 	disabled?: boolean;
 	invalid?: boolean;
+	/** See `ItemProps.onclick`. */
+	onclick?: string;
 }
 
 export interface SegmentGroupStructureProps {
@@ -280,6 +287,7 @@ export const SegmentGroupStructure = (props: SegmentGroupStructureProps) => {
 						value={normalisedItem.value}
 						disabled={normalisedItem.disabled}
 						invalid={normalisedItem.invalid}
+						onclick={normalisedItem.onclick}
 					>
 						<ItemText>{normalisedItem.label}</ItemText>
 						<ItemHiddenInput />
