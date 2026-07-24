@@ -137,62 +137,76 @@
         {
           "blockType": "stack",
           "direction": "vertical",
-          "gap": "3",
+          "gap": "5",
           "children": [
             {
-              "blockType": "switch",
-              "id": "theme-switch",
-              "label": "Modo oscuro",
-              "onchange": "var d=event.target.checked?'dark':'light';localStorage.setItem('theme',d);document.documentElement.dataset.theme=d;"
+              "blockType": "stack",
+              "direction": "vertical",
+              "gap": "2",
+              "children": [
+                {
+                  "blockType": "switch",
+                  "id": "theme-switch",
+                  "label": "Modo oscuro",
+                  "onchange": "var d=event.target.checked?'dark':'light';localStorage.setItem('theme',d);document.documentElement.dataset.theme=d;"
+                },
+                {
+                  "blockType": "script",
+                  "code": "(function(){var el=document.getElementById('theme-switch');if(el)el.checked=document.documentElement.dataset.theme==='dark';})();"
+                }
+              ]
             },
             {
-              "blockType": "script",
-              "code": "(function(){var el=document.getElementById('theme-switch');if(el)el.checked=document.documentElement.dataset.theme==='dark';})();"
-            },
-            {
-              "blockType": "radioCardGroup",
-              "label": "Paleta de colores",
-              "style": "display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem",
-              "items": [
+              "blockType": "stack",
+              "direction": "vertical",
+              "gap": "2",
+              "children": [
                 {
-                  "value": "gray",
-                  "label": "Gris",
-                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_gray');localStorage.setItem('colorPalette','gray');"
-                },
-                {
-                  "value": "blue",
-                  "label": "Azul",
-                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_blue');localStorage.setItem('colorPalette','blue');"
-                },
-                {
-                  "value": "green",
-                  "label": "Verde",
-                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_green');localStorage.setItem('colorPalette','green');"
-                },
-                {
-                  "value": "red",
-                  "label": "Rojo",
-                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_red');localStorage.setItem('colorPalette','red');"
-                },
-                {
-                  "value": "orange",
-                  "label": "Naranja",
-                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_orange');localStorage.setItem('colorPalette','orange');"
-                },
-                {
-                  "value": "purple",
-                  "label": "Morado",
-                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_purple');localStorage.setItem('colorPalette','purple');"
-                },
-                {
-                  "value": "cyan",
-                  "label": "Cian",
-                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_cyan');localStorage.setItem('colorPalette','cyan');"
-                },
-                {
-                  "value": "amber",
-                  "label": "Ámbar",
-                  "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_amber');localStorage.setItem('colorPalette','amber');"
+                  "blockType": "radioCardGroup",
+                  "label": "Paleta de colores",
+                  "style": "display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem",
+                  "items": [
+                    {
+                      "value": "gray",
+                      "label": "Gris",
+                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_gray');localStorage.setItem('colorPalette','gray');"
+                    },
+                    {
+                      "value": "blue",
+                      "label": "Azul",
+                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_blue');localStorage.setItem('colorPalette','blue');"
+                    },
+                    {
+                      "value": "green",
+                      "label": "Verde",
+                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_green');localStorage.setItem('colorPalette','green');"
+                    },
+                    {
+                      "value": "red",
+                      "label": "Rojo",
+                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_red');localStorage.setItem('colorPalette','red');"
+                    },
+                    {
+                      "value": "orange",
+                      "label": "Naranja",
+                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_orange');localStorage.setItem('colorPalette','orange');"
+                    },
+                    {
+                      "value": "purple",
+                      "label": "Morado",
+                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_purple');localStorage.setItem('colorPalette','purple');"
+                    },
+                    {
+                      "value": "cyan",
+                      "label": "Cian",
+                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_cyan');localStorage.setItem('colorPalette','cyan');"
+                    },
+                    {
+                      "value": "amber",
+                      "label": "Ámbar",
+                      "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_amber');localStorage.setItem('colorPalette','amber');"
+                    }
+                  ]
                 }
               ]
             }
