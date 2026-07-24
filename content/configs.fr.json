@@ -136,6 +136,7 @@
       "children": [
         {
           "blockType": "segmentGroup",
+          "defaultValue": "system",
           "items": [
             {
               "value": "light",
@@ -156,6 +157,7 @@
         },
         {
           "blockType": "radioCardGroup",
+          "defaultValue": "gray",
           "label": "Palette de couleurs",
           "style": "display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem",
           "items": [
@@ -200,6 +202,10 @@
               "onclick": "Array.from(document.documentElement.classList).forEach(function(c){if(c.indexOf('color-palette_')===0)document.documentElement.classList.remove(c)});document.documentElement.classList.add('color-palette_amber');localStorage.setItem('colorPalette','amber');"
             }
           ]
+        },
+        {
+          "blockType": "script",
+          "code": "(function(){var root=document.currentScript.closest('[data-popover-root]');if(!root)return;var trigger=root.querySelector('[data-part=\"trigger\"]');if(!trigger)return;var applied=false;trigger.addEventListener('click',function(){if(applied)return;applied=true;var theme=localStorage.getItem('theme');if(theme){var seg=root.querySelector('[data-scope=\"segment-group\"] [data-part=\"item\"][data-value=\"'+theme+'\"]');if(seg)seg.click();}var palette=localStorage.getItem('colorPalette');if(palette){var card=root.querySelector('[data-scope=\"radio-card-group\"] [data-part=\"item\"][data-value=\"'+palette+'\"]');if(card)card.click();}});})();"
         }
       ]
     }
