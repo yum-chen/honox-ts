@@ -2,26 +2,26 @@
   "title": "Contact Us",
   "content": [
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "align": "center",
       "gap": "4",
       "children": [
         {
-          "type": "badge",
+          "blockType": "badge",
           "variant": "subtle",
           "text": "Get in touch",
           "colorPalette": "purple"
         },
         {
-          "type": "heading",
+          "blockType": "heading",
           "text": "We'd love to hear from you",
           "size": "6xl",
           "as": "h1",
           "style": "text-align:center;max-width:40rem"
         },
         {
-          "type": "text",
+          "blockType": "text",
           "size": "lg",
           "content": "Questions about pricing, a bug to report, or just want to say hi — send us a message and we'll get back to you.",
           "style": "text-align:center;max-width:34rem"
@@ -29,34 +29,34 @@
       ]
     },
     {
-      "type": "grid",
+      "blockType": "grid",
       "gap": "8",
       "children": [
         {
-          "type": "stack",
+          "blockType": "stack",
           "direction": "vertical",
           "gap": "6",
           "children": [
             {
-              "type": "heading",
+              "blockType": "heading",
               "text": "Other ways to reach us",
               "size": "xl",
               "as": "h2"
             },
             {
-              "type": "card",
+              "blockType": "card",
               "title": "Email",
               "description": "hello@artefact.dev",
               "body": "Our default channel — we read every message and reply within one business day."
             },
             {
-              "type": "card",
+              "blockType": "card",
               "title": "Support",
               "description": "support@artefact.dev",
               "body": "Already a customer? Use this address so your account details are attached automatically."
             },
             {
-              "type": "card",
+              "blockType": "card",
               "title": "Office",
               "description": "San Francisco, CA",
               "body": "We're a remote-first team, but happy to meet in person if you're in the Bay Area — just ask."
@@ -64,15 +64,15 @@
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "children": [
             {
-              "type": "fieldset",
+              "blockType": "fieldset",
               "helperText": "We typically respond within 1 business day.",
               "id": "contact-form",
               "children": [
                 {
-                  "type": "field",
+                  "blockType": "field",
                   "id": "contact-name",
                   "label": "Full Name",
                   "name": "name",
@@ -80,7 +80,7 @@
                   "required": true
                 },
                 {
-                  "type": "field",
+                  "blockType": "field",
                   "id": "contact-email",
                   "label": "Email",
                   "name": "email",
@@ -88,14 +88,14 @@
                   "required": true
                 },
                 {
-                  "type": "field",
+                  "blockType": "field",
                   "id": "contact-subject",
                   "label": "Subject",
                   "name": "subject",
                   "placeholder": "How can we help?"
                 },
                 {
-                  "type": "textarea",
+                  "blockType": "textarea",
                   "id": "contact-message",
                   "label": "Message",
                   "name": "message",
@@ -104,7 +104,7 @@
                   "required": true
                 },
                 {
-                  "type": "button",
+                  "blockType": "button",
                   "text": "Send Message",
                   "variant": "solid",
                   "colorPalette": "blue",
@@ -119,41 +119,41 @@
       "columns": "{\"base\": 1, \"md\": 2}"
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "align": "center",
       "gap": "4",
       "children": [
         {
-          "type": "heading",
+          "blockType": "heading",
           "text": "Looking for something else?",
           "size": "2xl",
           "as": "h2",
           "style": "text-align:center"
         },
         {
-          "type": "stack",
+          "blockType": "stack",
           "direction": "horizontal",
           "align": "center",
           "justify": "center",
           "gap": "6",
           "children": [
             {
-              "type": "link",
+              "blockType": "link",
               "text": "Read the docs",
               "variant": "underline",
               "colorPalette": "blue",
               "href": "/docs"
             },
             {
-              "type": "link",
+              "blockType": "link",
               "text": "Support center",
               "variant": "underline",
               "colorPalette": "purple",
               "href": "/support"
             },
             {
-              "type": "link",
+              "blockType": "link",
               "text": "System status",
               "variant": "plain",
               "colorPalette": "slate",

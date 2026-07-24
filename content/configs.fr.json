@@ -68,22 +68,22 @@
   ],
   "headerItems": [
     {
-      "type": "link",
+      "blockType": "link",
       "text": "Blog",
       "href": "/blog"
     },
     {
-      "type": "link",
+      "blockType": "link",
       "text": "Documentation",
       "href": "/docs"
     },
     {
-      "type": "link",
+      "blockType": "link",
       "text": "Product",
       "href": "/product-landing"
     },
     {
-      "type": "dropdown",
+      "blockType": "dropdown",
       "triggerIcon": "<circle cx=\"12\" cy=\"12\" r=\"10\"></circle><line x1=\"2\" y1=\"12\" x2=\"22\" y2=\"12\"></line><path d=\"M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z\"></path>",
       "triggerAriaLabel": "Langue",
       "triggerText": "FR",
@@ -98,33 +98,33 @@
       ]
     },
     {
-      "type": "popover",
+      "blockType": "popover",
       "triggerIcon": "<circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z\"></path>",
       "triggerAriaLabel": "Paramètres",
       "title": "Apparence",
       "showArrow": false,
       "children": [
         {
-          "type": "stack",
+          "blockType": "stack",
           "direction": "vertical",
           "gap": "0.5",
           "children": [
             {
-              "type": "button",
+              "blockType": "button",
               "text": "Clair",
               "variant": "plain",
               "size": "sm",
               "onclick": "localStorage.setItem('theme','light');document.documentElement.dataset.theme='light';"
             },
             {
-              "type": "button",
+              "blockType": "button",
               "text": "Sombre",
               "variant": "plain",
               "size": "sm",
               "onclick": "localStorage.setItem('theme','dark');document.documentElement.dataset.theme='dark';"
             },
             {
-              "type": "button",
+              "blockType": "button",
               "text": "Système",
               "variant": "plain",
               "size": "sm",

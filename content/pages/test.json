@@ -2,38 +2,38 @@
   "title": "Test Page",
   "content": [
     {
-      "type": "heading",
+      "blockType": "heading",
       "size": "4xl",
       "text": "CMS Component Page Demo",
       "as": "h1"
     },
     {
-      "type": "text",
+      "blockType": "text",
       "size": "lg",
       "content": "This page demonstrates the power of our sveltiacms-backed nested component renderer."
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "gap": "6",
       "children": [
         {
-          "type": "heading",
+          "blockType": "heading",
           "size": "2xl",
           "text": "1. Nested Card & Leaves",
           "as": "h2"
         },
         {
-          "type": "card",
+          "blockType": "card",
           "children": [
             {
-              "type": "checkbox",
+              "blockType": "checkbox",
               "colorPalette": "blue",
               "label": "I agree to the Cabin Terms & Conditions",
               "checked": true
             },
             {
-              "type": "button",
+              "blockType": "button",
               "text": "Book Cabin Now",
               "variant": "solid",
               "colorPalette": "green",
@@ -48,16 +48,16 @@
           "footer": ""
         },
         {
-          "type": "heading",
+          "blockType": "heading",
           "size": "2xl",
           "text": "2. Collapsible Container",
           "as": "h2"
         },
         {
-          "type": "collapsible",
+          "blockType": "collapsible",
           "children": [
             {
-              "type": "alert",
+              "blockType": "alert",
               "variant": "subtle",
               "title": "Limited Spots",
               "description": "Cabins are filling up fast for the winter season!",
@@ -71,13 +71,13 @@
           "content": "Content"
         },
         {
-          "type": "heading",
+          "blockType": "heading",
           "size": "2xl",
           "text": "3. Interactive Combobox",
           "as": "h2"
         },
         {
-          "type": "combobox",
+          "blockType": "combobox",
           "label": "Choose Your Favorite Framework",
           "placeholder": "Select a framework...",
           "items": [
@@ -100,25 +100,25 @@
           ]
         },
         {
-          "type": "heading",
+          "blockType": "heading",
           "size": "2xl",
           "text": "4. Modals & Overlays",
           "as": "h2"
         },
         {
-          "type": "stack",
+          "blockType": "stack",
           "direction": "horizontal",
           "gap": "4",
           "children": [
             {
-              "type": "dialog",
+              "blockType": "dialog",
               "title": "Terms of Service",
               "description": "Please read our terms before proceeding.",
               "body": "",
               "footer": "",
               "trigger": [
                 {
-                  "type": "button",
+                  "blockType": "button",
                   "text": "View Terms (Dialog)",
                   "variant": "outline"
                 }
@@ -130,14 +130,14 @@
               "role": "dialog"
             },
             {
-              "type": "drawer",
+              "blockType": "drawer",
               "title": "Feedback Panel",
               "description": "We would love to hear from you.",
               "body": "",
               "footer": "",
               "trigger": [
                 {
-                  "type": "button",
+                  "blockType": "button",
                   "text": "Give Feedback (Drawer)",
                   "variant": "outline"
                 }
@@ -152,13 +152,13 @@
       ]
     },
     {
-      "type": "drawer",
+      "blockType": "drawer",
       "title": "TitleDrawer",
       "description": "Description",
       "body": "Body",
       "trigger": [
         {
-          "type": "button",
+          "blockType": "button",
           "variant": "solid",
           "text": "TriggerDrawer"
         }
@@ -172,10 +172,10 @@
       "confirm": ""
     },
     {
-      "type": "hoverCard",
+      "blockType": "hoverCard",
       "children": [
         {
-          "type": "alert",
+          "blockType": "alert",
           "title": "alert",
           "description": "desc",
           "variant": "subtle",
@@ -188,7 +188,7 @@
       "showArrow": true
     },
     {
-      "type": "field",
+      "blockType": "field",
       "children": [],
       "disabled": false,
       "label": "label",
@@ -200,7 +200,7 @@
       "readOnly": false
     },
     {
-      "type": "radioGroup",
+      "blockType": "radioGroup",
       "label": "label",
       "defaultValue": "",
       "items": [
@@ -219,7 +219,7 @@
       "colorPalette": ""
     },
     {
-      "type": "radioCardGroup",
+      "blockType": "radioCardGroup",
       "label": "Plan",
       "defaultValue": "pro",
       "variant": "surface",
@@ -243,7 +243,7 @@
       "colorPalette": "blue"
     },
     {
-      "type": "editable",
+      "blockType": "editable",
       "label": "Project name",
       "placeholder": "",
       "defaultValue": "Mountain Cabin Adventure",
@@ -252,13 +252,13 @@
       "submitMode": "both"
     },
     {
-      "type": "heading",
+      "blockType": "heading",
       "size": "2xl",
       "text": "5. New Component Bindings",
       "as": "h2"
     },
     {
-      "type": "breadcrumb",
+      "blockType": "breadcrumb",
       "variant": "underline",
       "items": [
         {
@@ -276,14 +276,14 @@
       "size": "md"
     },
     {
-      "type": "datePicker",
+      "blockType": "datePicker",
       "label": "Check-in Date",
       "placeholder": "YYYY-MM-DD",
       "selectionMode": "single",
       "colorPalette": "blue"
     },
     {
-      "type": "tagsField",
+      "blockType": "tagsField",
       "label": "Amenities",
       "defaultValue": [
         "WiFi",
@@ -292,7 +292,7 @@
       ]
     },
     {
-      "type": "search",
+      "blockType": "search",
       "placeholder": "Search posts...",
       "src": "/api/posts/search.json",
       "debounceMs": 150,
@@ -300,23 +300,23 @@
       "itemLabel": "posts"
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "horizontal",
       "gap": "4",
       "children": [
         {
-          "type": "loader",
+          "blockType": "loader",
           "text": "Checking availability..."
         },
         {
-          "type": "spinner",
+          "blockType": "spinner",
           "label": "Loading",
           "size": "lg"
         }
       ]
     },
     {
-      "type": "table",
+      "blockType": "table",
       "rows": "[{\"room\": \"Cabin Loft\", \"price\": \"$180/night\"}, {\"room\": \"Cabin Suite\", \"price\": \"$240/night\"}]",
       "variant": "plain",
       "columns": [
@@ -333,17 +333,17 @@
       "striped": true
     },
     {
-      "type": "tooltip",
+      "blockType": "tooltip",
       "triggerText": "Cancellation Policy",
       "showArrow": true,
       "content": "Free cancellation up to 24 hours before check-in.",
       "placement": "top"
     },
     {
-      "type": "absoluteCenter",
+      "blockType": "absoluteCenter",
       "children": [
         {
-          "type": "badge",
+          "blockType": "badge",
           "variant": "solid",
           "colorPalette": "purple",
           "text": "Centered Badge"
@@ -352,14 +352,14 @@
       "axis": "both"
     },
     {
-      "type": "splitter",
+      "blockType": "splitter",
       "orientation": "horizontal",
       "panels": [
         {
           "id": "left",
           "content": [
             {
-              "type": "text",
+              "blockType": "text",
               "content": "Left panel"
             }
           ]
@@ -368,7 +368,7 @@
           "id": "right",
           "content": [
             {
-              "type": "text",
+              "blockType": "text",
               "content": "Right panel"
             }
           ]
@@ -376,35 +376,35 @@
       ]
     },
     {
-      "type": "heading",
+      "blockType": "heading",
       "size": "2xl",
       "text": "6. Layout Component",
       "as": "h2"
     },
     {
-      "type": "text",
+      "blockType": "text",
       "content": "A full page shell: header, sider, content and footer are each a list of arbitrary components. The sider + content row appears automatically when the Sider field is filled, and hides below the md breakpoint here."
     },
     {
-      "type": "layout",
+      "blockType": "layout",
       "siderWidth": "sm",
       "siderHideBelow": "md",
       "header": [
         {
-          "type": "stack",
+          "blockType": "stack",
           "direction": "horizontal",
           "align": "center",
           "justify": "between",
           "gap": "4",
           "children": [
             {
-              "type": "heading",
+              "blockType": "heading",
               "text": "Cabin Booking Portal",
               "size": "lg",
               "as": "h3"
             },
             {
-              "type": "badge",
+              "blockType": "badge",
               "text": "3 cabins free",
               "variant": "subtle",
               "colorPalette": "green"
@@ -414,22 +414,22 @@
       ],
       "sider": [
         {
-          "type": "stack",
+          "blockType": "stack",
           "direction": "vertical",
           "gap": "2",
           "children": [
             {
-              "type": "link",
+              "blockType": "link",
               "text": "Availability",
               "href": "#"
             },
             {
-              "type": "link",
+              "blockType": "link",
               "text": "Rates",
               "href": "#"
             },
             {
-              "type": "link",
+              "blockType": "link",
               "text": "House Rules",
               "href": "#"
             }
@@ -438,17 +438,17 @@
       ],
       "content": [
         {
-          "type": "heading",
+          "blockType": "heading",
           "size": "xl",
           "text": "Winter Season Bookings",
           "as": "h4"
         },
         {
-          "type": "text",
+          "blockType": "text",
           "content": "Pick a cabin from the rail on the left. On a phone the rail hides (Sider Hide Below: md) and you would pair it with a disclosure menu instead."
         },
         {
-          "type": "button",
+          "blockType": "button",
           "variant": "solid",
           "colorPalette": "blue",
           "text": "Check Availability"
@@ -456,21 +456,21 @@
       ],
       "footer": [
         {
-          "type": "text",
+          "blockType": "text",
           "size": "sm",
           "content": "Cabin Booking Portal — a Layout block with all four parts filled."
         }
       ]
     },
     {
-      "type": "text",
+      "blockType": "text",
       "content": "Every part is optional: the same block with only header, content and footer stacks vertically — no sider, no row."
     },
     {
-      "type": "layout",
+      "blockType": "layout",
       "header": [
         {
-          "type": "alert",
+          "blockType": "alert",
           "title": "Header slot",
           "description": "Any component works here — this one is an Alert.",
           "variant": "subtle",
@@ -479,7 +479,7 @@
       ],
       "content": [
         {
-          "type": "card",
+          "blockType": "card",
           "title": "Content slot",
           "description": "A Card inside the Layout's content field.",
           "body": "With no Sider filled in, the Layout is a simple header → content → footer column."
@@ -487,7 +487,7 @@
       ],
       "footer": [
         {
-          "type": "badge",
+          "blockType": "badge",
           "variant": "outline",
           "colorPalette": "purple",
           "text": "Footer slot"
@@ -495,13 +495,13 @@
       ]
     },
     {
-      "type": "heading",
+      "blockType": "heading",
       "size": "2xl",
       "text": "7. Nested Tabs Component",
       "as": "h2"
     },
     {
-      "type": "tabs",
+      "blockType": "tabs",
       "variant": "enclosed",
       "items": [
         {
@@ -509,26 +509,26 @@
           "value": "amenities",
           "content": [
             {
-              "type": "text",
+              "blockType": "text",
               "content": "Our high-end mountain cabin offers a full array of resort-level comforts."
             },
             {
-              "type": "stack",
+              "blockType": "stack",
               "direction": "horizontal",
               "gap": "2",
               "children": [
                 {
-                  "type": "badge",
+                  "blockType": "badge",
                   "colorPalette": "green",
                   "text": "WiFi 6"
                 },
                 {
-                  "type": "badge",
+                  "blockType": "badge",
                   "colorPalette": "blue",
                   "text": "Hot Tub"
                 },
                 {
-                  "type": "badge",
+                  "blockType": "badge",
                   "colorPalette": "orange",
                   "text": "Fireplace"
                 }
@@ -541,11 +541,11 @@
           "value": "rates",
           "content": [
             {
-              "type": "text",
+              "blockType": "text",
               "content": "Select the reservation tier that best matches your vacation plans."
             },
             {
-              "type": "radioCardGroup",
+              "blockType": "radioCardGroup",
               "variant": "outline",
               "label": "Reservation Class",
               "items": [
@@ -566,30 +566,30 @@
       "size": "md"
     },
     {
-      "type": "heading",
+      "blockType": "heading",
       "size": "2xl",
       "text": "8. Remaining Component Bindings",
       "as": "h2"
     },
     {
-      "type": "text",
+      "blockType": "text",
       "content": "Every remaining CMS-bound leaf component gets a live example here, so each renderer is exercised at least once."
     },
     {
-      "type": "group",
+      "blockType": "group",
       "children": [
         {
-          "type": "button",
+          "blockType": "button",
           "variant": "outline",
           "text": "Weekday"
         },
         {
-          "type": "button",
+          "blockType": "button",
           "variant": "outline",
           "text": "Weekend"
         },
         {
-          "type": "button",
+          "blockType": "button",
           "variant": "outline",
           "text": "Holiday"
         }
@@ -598,19 +598,19 @@
       "orientation": "horizontal"
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "horizontal",
       "align": "center",
       "gap": "6",
       "children": [
         {
-          "type": "icon",
+          "blockType": "icon",
           "size": "lg",
           "svg": "<path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z\" />",
           "ariaLabel": "Featured cabin"
         },
         {
-          "type": "select",
+          "blockType": "select",
           "label": "Cabin Size",
           "placeholder": "Choose a size",
           "items": [
@@ -629,7 +629,7 @@
           ]
         },
         {
-          "type": "segmentGroup",
+          "blockType": "segmentGroup",
           "label": "Stay Length",
           "defaultValue": "weekend",
           "items": [
@@ -650,18 +650,18 @@
       ]
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "horizontal",
       "align": "center",
       "gap": "6",
       "children": [
         {
-          "type": "switch",
+          "blockType": "switch",
           "label": "Pet friendly only",
           "colorPalette": "green"
         },
         {
-          "type": "slider",
+          "blockType": "slider",
           "label": "Max Budget ($/night)",
           "defaultValue": 220,
           "colorPalette": "blue",
@@ -671,7 +671,7 @@
           "step": 10
         },
         {
-          "type": "progress",
+          "blockType": "progress",
           "label": "Cabins Booked",
           "colorPalette": "purple",
           "value": 65,
@@ -680,7 +680,7 @@
       ]
     },
     {
-      "type": "pinField",
+      "blockType": "pinField",
       "label": "Booking Confirmation Code",
       "helperText": "Enter the 6-digit code we texted you.",
       "variant": "outline",
@@ -690,7 +690,7 @@
       "otp": true
     },
     {
-      "type": "pinField",
+      "blockType": "pinField",
       "label": "Staff Access Key",
       "helperText": "Case-insensitive, 4 characters.",
       "variant": "subtle",
@@ -700,18 +700,18 @@
       "mask": true
     },
     {
-      "type": "skeleton",
+      "blockType": "skeleton",
       "shape": "text",
       "noOfLines": 3,
       "loaded": false
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "horizontal",
       "gap": "4",
       "children": [
         {
-          "type": "popover",
+          "blockType": "popover",
           "title": "Flexible Cancellation",
           "description": "Free cancellation up to 48 hours before check-in.",
           "triggerText": "Cancellation Info",
@@ -719,7 +719,7 @@
           "closable": true
         },
         {
-          "type": "menu",
+          "blockType": "menu",
           "triggerText": "Manage Booking",
           "items": [
             {
@@ -738,7 +738,7 @@
           ]
         },
         {
-          "type": "colorPicker",
+          "blockType": "colorPicker",
           "trigger": true,
           "label": "Accent Color",
           "defaultValue": "#3b82f6"
@@ -746,7 +746,7 @@
       ]
     },
     {
-      "type": "carousel",
+      "blockType": "carousel",
       "orientation": "horizontal",
       "slides": [
         {
@@ -771,7 +771,7 @@
       "pauseOnHover": true
     },
     {
-      "type": "fileUpload",
+      "blockType": "fileUpload",
       "label": "Upload ID Document",
       "name": "idDocument",
       "triggerText": "browse files",
@@ -780,16 +780,16 @@
       "dropzoneText": "Drag your ID here, or"
     },
     {
-      "type": "heading",
+      "blockType": "heading",
       "size": "2xl",
       "text": "9. Data & Pagination",
       "as": "h2"
     },
     {
-      "type": "paginatedTable"
+      "blockType": "paginatedTable"
     },
     {
-      "type": "pagination",
+      "blockType": "pagination",
       "count": 120,
       "pageSize": 10,
       "defaultPage": 1,
@@ -797,22 +797,22 @@
       "boundaryCount": 1
     },
     {
-      "type": "heading",
+      "blockType": "heading",
       "size": "2xl",
       "text": "10. Form Layout: Fieldset, Grid & Textarea",
       "as": "h2"
     },
     {
-      "type": "fieldset",
+      "blockType": "fieldset",
       "children": [
         {
-          "type": "field",
+          "blockType": "field",
           "label": "Arrival Time",
           "name": "arrivalTime",
           "placeholder": "e.g. 3:00 PM"
         },
         {
-          "type": "textarea",
+          "blockType": "textarea",
           "label": "Notes",
           "name": "notes",
           "placeholder": "Anything else we should know?",
@@ -823,23 +823,23 @@
       "legend": "Special Requests"
     },
     {
-      "type": "grid",
+      "blockType": "grid",
       "gap": "4",
       "children": [
         {
-          "type": "badge",
+          "blockType": "badge",
           "variant": "solid",
           "colorPalette": "green",
           "text": "WiFi"
         },
         {
-          "type": "badge",
+          "blockType": "badge",
           "variant": "solid",
           "colorPalette": "blue",
           "text": "Hot Tub"
         },
         {
-          "type": "badge",
+          "blockType": "badge",
           "variant": "solid",
           "colorPalette": "orange",
           "text": "Fireplace"

@@ -5,7 +5,7 @@ import { PageRenderer } from "../page-renderer";
 test("unknown component type renders a safe marker and never dumps JSON", () => {
 	const content = [
 		{
-			type: "totally-unknown",
+			blockType: "totally-unknown",
 			secret: "do-not-leak",
 			nested: { leaked: true },
 		},
@@ -47,7 +47,7 @@ test("every alias target resolves to a registered renderer", () => {
 test("anchor block renders an anchor with text, href and external rel safety", () => {
 	// Plain internal link.
 	const internal = (
-		<PageRenderer content={[{ type: "anchor", text: "Docs", href: "/docs" }]} />
+		<PageRenderer content={[{ blockType: "anchor", text: "Docs", href: "/docs" }]} />
 	).toString();
 	expect(internal).toContain('href="/docs"');
 	expect(internal).toContain("Docs");
@@ -57,7 +57,7 @@ test("anchor block renders an anchor with text, href and external rel safety", (
 		<PageRenderer
 			content={[
 				{
-					type: "anchor",
+					blockType: "anchor",
 					text: "Hono",
 					href: "https://hono.dev",
 					target: "_blank",
@@ -73,7 +73,7 @@ test("anchor block renders an anchor with text, href and external rel safety", (
 	const themed = (
 		<PageRenderer
 			content={[
-				{ type: "anchor", text: "Go", href: "#", colorPalette: "green" },
+				{ blockType: "anchor", text: "Go", href: "#", colorPalette: "green" },
 			]}
 		/>
 	).toString();
@@ -85,7 +85,7 @@ test("fileUpload block renders a hydrated FileUpload with coerced numeric props"
 		<PageRenderer
 			content={[
 				{
-					type: "fileUpload",
+					blockType: "fileUpload",
 					label: "Attachments",
 					name: "attachments",
 					accept: "image/*",
@@ -108,7 +108,7 @@ test("fileUpload block renders a hydrated FileUpload with coerced numeric props"
 
 	// Kebab-case alias resolves to the same renderer.
 	const aliased = (
-		<PageRenderer content={[{ type: "file-upload", label: "Docs" }]} />
+		<PageRenderer content={[{ blockType: "file-upload", label: "Docs" }]} />
 	).toString();
 	expect(aliased).toContain('data-scope="file-upload"');
 	expect(aliased).toContain("Docs");
@@ -119,7 +119,7 @@ test("search block renders a hydrated Search with coerced numeric props", () => 
 		<PageRenderer
 			content={[
 				{
-					type: "search",
+					blockType: "search",
 					placeholder: "Find posts",
 					src: "/api/posts/search.json",
 					// CMS payloads may deliver numbers as strings; the renderer coerces.
@@ -142,7 +142,7 @@ test("carousel block renders slides with captions/links and coerces numeric prop
 		<PageRenderer
 			content={[
 				{
-					type: "carousel",
+					blockType: "carousel",
 					slides: [
 						{ image: "/media/one.jpg", caption: "First slide", href: "/one" },
 						{ image: "/media/two.jpg" },
@@ -172,7 +172,7 @@ test("carousel block renders slides with captions/links and coerces numeric prop
 });
 
 test("carousel block with no slides renders an empty, non-throwing carousel", () => {
-	const html = (<PageRenderer content={[{ type: "carousel" }]} />).toString();
+	const html = (<PageRenderer content={[{ blockType: "carousel" }]} />).toString();
 
 	expect(html).toContain('data-scope="carousel"');
 	expect(html).not.toContain('data-part="item"');
@@ -183,7 +183,7 @@ test("radioCardGroup block renders hydrated variant-styled cards and scrubs empt
 		<PageRenderer
 			content={[
 				{
-					type: "radioCardGroup",
+					blockType: "radioCardGroup",
 					label: "Plan",
 					defaultValue: "pro",
 					variant: "surface",
@@ -212,7 +212,7 @@ test("radioCardGroup block renders hydrated variant-styled cards and scrubs empt
 	const aliased = (
 		<PageRenderer
 			content={[
-				{ type: "radio-card-group", items: ["one"], colorPalette: "purple" },
+				{ blockType: "radio-card-group", items: ["one"], colorPalette: "purple" },
 			]}
 		/>
 	).toString();

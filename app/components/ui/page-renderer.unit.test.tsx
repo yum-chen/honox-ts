@@ -4,13 +4,13 @@ import { PageRenderer } from "../page-renderer";
 test("PageRenderer renders card and its children components correctly", () => {
 	const content = [
 		{
-			type: "card",
+			blockType: "card",
 			title: "Mountain Adventure",
 			description: "Explore nature.",
 			body: "Get ready for a nice trip.",
 			children: [
 				{
-					type: "button",
+					blockType: "button",
 					text: "Book Cabin",
 					variant: "solid",
 					colorPalette: "green",
@@ -30,7 +30,7 @@ test("PageRenderer renders card and its children components correctly", () => {
 test("PageRenderer renders checkbox correctly", () => {
 	const content = [
 		{
-			type: "checkbox",
+			blockType: "checkbox",
 			label: "Accept Terms",
 			checked: true,
 			colorPalette: "blue",
@@ -46,12 +46,12 @@ test("PageRenderer renders checkbox correctly", () => {
 test("PageRenderer renders collapsible correctly", () => {
 	const content = [
 		{
-			type: "collapsible",
+			blockType: "collapsible",
 			trigger: "Click to reveal",
 			showIndicator: true,
 			children: [
 				{
-					type: "text",
+					blockType: "text",
 					content: "Secret content",
 				},
 			],
@@ -67,7 +67,7 @@ test("PageRenderer renders collapsible correctly", () => {
 test("PageRenderer renders combobox correctly", () => {
 	const content = [
 		{
-			type: "combobox",
+			blockType: "combobox",
 			label: "Select Tech",
 			placeholder: "Choose...",
 			items: [
@@ -88,12 +88,12 @@ test("PageRenderer renders combobox correctly", () => {
 test("PageRenderer renders dialog correctly", () => {
 	const content = [
 		{
-			type: "dialog",
+			blockType: "dialog",
 			title: "Confirm Action",
 			description: "Are you sure?",
 			trigger: [
 				{
-					type: "button",
+					blockType: "button",
 					text: "Open Dialog",
 					variant: "outline",
 				},
@@ -115,12 +115,12 @@ test("PageRenderer renders dialog correctly", () => {
 test("PageRenderer renders drawer correctly", () => {
 	const content = [
 		{
-			type: "drawer",
+			blockType: "drawer",
 			title: "Sidebar",
 			description: "Extra options.",
 			trigger: [
 				{
-					type: "button",
+					blockType: "button",
 					text: "Open Drawer",
 					variant: "outline",
 				},
@@ -142,7 +142,7 @@ test("PageRenderer renders drawer correctly", () => {
 test("PageRenderer renders popover correctly", () => {
 	const content = [
 		{
-			type: "popover",
+			blockType: "popover",
 			triggerText: "Click to open popover",
 			title: "Popover Title",
 			description: "Popover Desc",
@@ -163,7 +163,7 @@ test("PageRenderer renders popover correctly", () => {
 test("PageRenderer renders skeleton correctly", () => {
 	const content = [
 		{
-			type: "skeleton",
+			blockType: "skeleton",
 			variant: "text",
 			noOfLines: 2,
 			loaded: false,
@@ -178,10 +178,10 @@ test("PageRenderer renders skeleton correctly", () => {
 test("PageRenderer renders paginatedTable and pagination correctly", () => {
 	const content = [
 		{
-			type: "paginatedTable",
+			blockType: "paginatedTable",
 		},
 		{
-			type: "pagination",
+			blockType: "pagination",
 			count: 50,
 			pageSize: 10,
 			defaultPage: 2,
@@ -197,7 +197,7 @@ test("PageRenderer renders paginatedTable and pagination correctly", () => {
 test("PageRenderer renders progress correctly", () => {
 	const content = [
 		{
-			type: "progress",
+			blockType: "progress",
 			label: "Loading Task",
 			value: 75,
 			showValueText: true,
@@ -213,7 +213,7 @@ test("PageRenderer renders progress correctly", () => {
 test("PageRenderer renders radioGroup and segmentGroup correctly", () => {
 	const content = [
 		{
-			type: "radioGroup",
+			blockType: "radioGroup",
 			label: "Select Option",
 			items: [
 				{ label: "Opt A", value: "a" },
@@ -221,7 +221,7 @@ test("PageRenderer renders radioGroup and segmentGroup correctly", () => {
 			],
 		},
 		{
-			type: "segmentGroup",
+			blockType: "segmentGroup",
 			label: "View Mode",
 			items: [
 				{ label: "Grid", value: "grid" },
@@ -243,13 +243,13 @@ test("PageRenderer renders radioGroup and segmentGroup correctly", () => {
 test("PageRenderer renders slider and switch correctly", () => {
 	const content = [
 		{
-			type: "slider",
+			blockType: "slider",
 			label: "Volume",
 			defaultValue: 40,
 			showValueText: true,
 		},
 		{
-			type: "switch",
+			blockType: "switch",
 			label: "Dark Mode",
 			checked: true,
 		},
@@ -267,7 +267,7 @@ test("PageRenderer renders slider and switch correctly", () => {
 test("PageRenderer renders pinField correctly", () => {
 	const content = [
 		{
-			type: "pinField",
+			blockType: "pinField",
 			label: "Verification Code",
 			helperText: "Check your email",
 			count: 6,
@@ -285,10 +285,10 @@ test("PageRenderer renders pinField correctly", () => {
 test("PageRenderer renders custom triggers for collapsible, dialog, and drawer correctly", () => {
 	const content = [
 		{
-			type: "collapsible",
+			blockType: "collapsible",
 			trigger: [
 				{
-					type: "button",
+					blockType: "button",
 					text: "Custom Collapsible Button Trigger",
 					variant: "outline",
 					colorPalette: "blue",
@@ -296,17 +296,17 @@ test("PageRenderer renders custom triggers for collapsible, dialog, and drawer c
 			],
 			children: [
 				{
-					type: "text",
+					blockType: "text",
 					content: "Secret details inside",
 				},
 			],
 		},
 		{
-			type: "dialog",
+			blockType: "dialog",
 			title: "Custom Title",
 			trigger: [
 				{
-					type: "badge",
+					blockType: "badge",
 					text: "Custom Dialog Badge Trigger",
 					variant: "solid",
 					colorPalette: "green",
@@ -314,11 +314,11 @@ test("PageRenderer renders custom triggers for collapsible, dialog, and drawer c
 			],
 		},
 		{
-			type: "drawer",
+			blockType: "drawer",
 			title: "Custom Drawer",
 			trigger: [
 				{
-					type: "button",
+					blockType: "button",
 					text: "Custom Drawer Button Trigger",
 					variant: "solid",
 				},

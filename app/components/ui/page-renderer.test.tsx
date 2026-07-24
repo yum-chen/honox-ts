@@ -4,18 +4,18 @@ import { PageRenderer } from "../page-renderer";
 test("PageRenderer renders flat grid component correctly", () => {
 	const content = [
 		{
-			type: "grid",
+			blockType: "grid",
 			columns: 3,
 			rows: 2,
 			gap: "4",
 			minChildWidth: "200px",
 			children: [
 				{
-					type: "button",
+					blockType: "button",
 					text: "Grid Button 1",
 				},
 				{
-					type: "button",
+					blockType: "button",
 					text: "Grid Button 2",
 				},
 			],
@@ -38,7 +38,7 @@ test("PageRenderer renders flat grid component correctly", () => {
 test("PageRenderer parses responsive grid columns and gap props", () => {
 	const content = [
 		{
-			type: "grid",
+			blockType: "grid",
 			columns: '{"base": 1, "md": 3}',
 			gap: "6",
 		},

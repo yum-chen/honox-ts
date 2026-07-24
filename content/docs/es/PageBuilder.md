@@ -87,9 +87,9 @@ Utilizamos **anclas y alias YAML** avanzados (`&` y `*`) para sortear la incapac
 
 `PageRenderer` es un punto de entrada público delgado; el mapeo real de bloque a componente y la lógica de renderizado recursivo viven en `page-registry.tsx`.
 
-* Un objeto `registry` mapea la cadena `type` de cada bloque (`"stack"`, `"button"`, `"card"`, …) a una función renderizadora que devuelve JSX real desde `app/components/ui/`.
+* Un objeto `registry` mapea la cadena `blockType` de cada bloque (`"stack"`, `"button"`, `"card"`, …) a una función renderizadora que devuelve JSX real desde `app/components/ui/`.
 * `resolveType()` primero hace pasar el type por una tabla `TYPE_ALIASES` (p. ej. `"link"` → `anchor`, `"hover-card"` → `hoverCard`, `"menu"` → `dropdown`), de modo que el contenido del CMS y los nombres de los componentes pueden diferir ligeramente sin romperse.
-* `propsOf()` (`app/components/block-types.ts`) elimina la clave meta `type` de cada bloque antes de que sus campos se apliquen al componente, de modo que nunca se filtra como un atributo DOM extraño.
+* `propsOf()` (`app/components/block-types.ts`) elimina la clave meta `blockType` de cada bloque antes de que sus campos se apliquen al componente, de modo que nunca se filtra como un atributo DOM extraño.
 * Los renderizadores de contenedores (Stack, Grid, Card, Dialog, Drawer, Collapsible, …) desestructuran su propio arreglo `children` y llaman a `renderChildren()`, que recorre ese arreglo y vuelve a invocar recursivamente al renderizador de bloques.
 
 **Nota:** el límite de anidado de \~4 niveles del esquema YAML solo limita lo que el formulario del CMS permite _construir_ a un editor no técnico. La recursión de `renderChildren` no tiene límite de profundidad —— un archivo `content/pages/*.json` editado a mano o generado programáticamente puede anidarse mucho más de lo que permite la interfaz del CMS, y aun así se renderizará correctamente.
@@ -132,24 +132,24 @@ Aquí hay un archivo de layout de ejemplo que representa una página de panel de
   "title": "Interactive Dashboard",
   "content": [
     {
-      "type": "heading",
+      "blockType": "heading",
       "text": "Dashboard Analytics",
       "as": "h1",
       "size": "3xl"
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "gap": "6",
       "children": [
         {
-          "type": "card",
+          "blockType": "card",
           "title": "Welcome User!",
           "description": "Here is your system status.",
           "variant": "outline",
           "children": [
             {
-              "type": "alert",
+              "blockType": "alert",
               "status": "success",
               "title": "All Systems Operational",
               "variant": "surface"
@@ -157,16 +157,16 @@ Aquí hay un archivo de layout de ejemplo que representa una página de panel de
           ]
         },
         {
-          "type": "fieldset",
+          "blockType": "fieldset",
           "legend": "User Preferences",
           "children": [
             {
-              "type": "switch",
+              "blockType": "switch",
               "defaultChecked": true,
               "text": "Enable Push Notifications"
             },
             {
-              "type": "checkbox",
+              "blockType": "checkbox",
               "text": "Subscribe to Newsletter"
             }
           ]

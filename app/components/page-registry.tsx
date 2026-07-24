@@ -90,7 +90,7 @@ function resolveType(type: string): string {
 function renderChildren(children?: ComponentBlock[]): JSX.Element[] {
 	if (!children || !Array.isArray(children)) return [];
 	return children.map((block, index) => (
-		<RenderBlock key={`${block.type}-${index}`} block={block} />
+		<RenderBlock key={`${block.blockType}-${index}`} block={block} />
 	));
 }
 
@@ -825,13 +825,7 @@ const registry: Record<string, BlockRenderer> = {
 
 	paginatedTable: (b) => <PaginatedTable {...propsOf(b)} />,
 	pagination: (b) => <Pagination interactive {...propsOf(b)} />,
-	progress: (b) => {
-		// CMS field is "progressType", not "type" — Progress's own linear/circular
-		// variant would otherwise collide with the block-type discriminator key,
-		// since both live on the same flat JSON object (propsOf only strips one).
-		const { progressType, ...rest } = propsOf(b);
-		return <Progress type={progressType as "linear" | "circular"} {...rest} />;
-	},
+	progress: (b) => <Progress {...propsOf(b)} />,
 	radioGroup: (b) => <RadioGroup interactive {...propsOf(b)} />,
 
 	radioCardGroup: (b) => {
@@ -1084,9 +1078,9 @@ const registry: Record<string, BlockRenderer> = {
 // still visible during development without leaking data.
 function renderUnknown(block: ComponentBlock): JSX.Element {
 	if (import.meta.env?.DEV) {
-		console.warn(`[PageRenderer] Unknown component type: ${block.type}`);
+		console.warn(`[PageRenderer] Unknown component type: ${block.blockType}`);
 	}
-	return <div data-unknown-component={block.type} />;
+	return <div data-unknown-component={block.blockType} />;
 }
 
 function RenderBlock({
@@ -1096,7 +1090,7 @@ function RenderBlock({
 	block: ComponentBlock;
 	[key: string]: unknown;
 }): JSX.Element {
-	const render = registry[resolveType(block.type)];
+	const render = registry[resolveType(block.blockType)];
 	return render ? render({ ...block, ...extraProps }) : renderUnknown(block);
 }
 
@@ -1106,7 +1100,7 @@ function renderBlocks(
 ): JSX.Element[] {
 	if (!content || !Array.isArray(content)) return [];
 	return content.map((block, index) => (
-		<RenderBlock key={`${block.type}-${index}`} block={block} {...extraProps} />
+		<RenderBlock key={`${block.blockType}-${index}`} block={block} {...extraProps} />
 	));
 }
 

@@ -87,9 +87,9 @@ Utilizamos **âncoras e aliases YAML** avançados (`&` e `*`) para contornar a i
 
 O `PageRenderer` é um ponto de entrada público enxuto; o mapeamento real de bloco para componente e a lógica de renderização recursiva vivem em `page-registry.tsx`.
 
-* Um objeto `registry` mapeia a string `type` de cada bloco (`"stack"`, `"button"`, `"card"`, …) para uma função de renderização que retorna JSX real de `app/components/ui/`.
+* Um objeto `registry` mapeia a string `blockType` de cada bloco (`"stack"`, `"button"`, `"card"`, …) para uma função de renderização que retorna JSX real de `app/components/ui/`.
 * `resolveType()` primeiro passa o type por uma tabela `TYPE_ALIASES` (ex.: `"link"` → `anchor`, `"hover-card"` → `hoverCard`, `"menu"` → `dropdown`), de modo que o conteúdo do CMS e os nomes dos componentes podem divergir ligeiramente sem quebrar nada.
-* `propsOf()` (`app/components/block-types.ts`) remove a chave meta `type` de cada bloco antes de seus campos serem espalhados sobre o componente, garantindo que ela nunca vaze como um atributo DOM indesejado.
+* `propsOf()` (`app/components/block-types.ts`) remove a chave meta `blockType` de cada bloco antes de seus campos serem espalhados sobre o componente, garantindo que ela nunca vaze como um atributo DOM indesejado.
 * Renderizadores de contêiner (Stack, Grid, Card, Dialog, Drawer, Collapsible, …) desestruturam seu próprio array `children` e chamam `renderChildren()`, que percorre esse array e invoca recursivamente o renderizador de blocos novamente.
 
 **Nota:** o limite de aninhamento de \~4 níveis do esquema YAML só limita o que o formulário do CMS permite que um editor não técnico _construa_. A recursão de `renderChildren` não tem limite de profundidade —— um arquivo `content/pages/*.json` editado manualmente ou gerado programaticamente pode aninhar muito mais fundo do que a interface do CMS permite, e ainda assim será renderizado corretamente.
@@ -132,24 +132,24 @@ Aqui está um arquivo de layout de exemplo representando uma página de painel c
   "title": "Interactive Dashboard",
   "content": [
     {
-      "type": "heading",
+      "blockType": "heading",
       "text": "Dashboard Analytics",
       "as": "h1",
       "size": "3xl"
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "gap": "6",
       "children": [
         {
-          "type": "card",
+          "blockType": "card",
           "title": "Welcome User!",
           "description": "Here is your system status.",
           "variant": "outline",
           "children": [
             {
-              "type": "alert",
+              "blockType": "alert",
               "status": "success",
               "title": "All Systems Operational",
               "variant": "surface"
@@ -157,16 +157,16 @@ Aqui está um arquivo de layout de exemplo representando uma página de painel c
           ]
         },
         {
-          "type": "fieldset",
+          "blockType": "fieldset",
           "legend": "User Preferences",
           "children": [
             {
-              "type": "switch",
+              "blockType": "switch",
               "defaultChecked": true,
               "text": "Enable Push Notifications"
             },
             {
-              "type": "checkbox",
+              "blockType": "checkbox",
               "text": "Subscribe to Newsletter"
             }
           ]

@@ -1,6 +1,6 @@
 {
   "title": "Blog - Artefact",
   "content": [
-    { "type": "text", "content": "Perspectives, mises à jour et histoires de notre équipe.", "style": "color:#71717a;max-width:42rem;margin-bottom:2rem" }
+    { "blockType": "text", "content": "Perspectives, mises à jour et histoires de notre équipe.", "style": "color:#71717a;max-width:42rem;margin-bottom:2rem" }
   ]
 }

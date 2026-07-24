@@ -52,9 +52,9 @@ Nous utilisons des **ancres et alias YAML** avancés (`&` et `*`) pour contourne
 
 `PageRenderer` est un point d'entrée public volontairement fin ; le mappage réel bloc → composant et la logique de rendu récursif vivent dans `page-registry.tsx`.
 
-* Un objet `registry` mappe la chaîne `type` de chaque bloc (`"stack"`, `"button"`, `"card"`, …) vers une fonction de rendu qui retourne du vrai JSX depuis `app/components/ui/`.
+* Un objet `registry` mappe la chaîne `blockType` de chaque bloc (`"stack"`, `"button"`, `"card"`, …) vers une fonction de rendu qui retourne du vrai JSX depuis `app/components/ui/`.
 * `resolveType()` fait d'abord passer le type par une table `TYPE_ALIASES` (ex. `"link"` → `anchor`, `"hover-card"` → `hoverCard`, `"menu"` → `dropdown`), de sorte que le contenu du CMS et les noms des composants puissent légèrement diverger sans rien casser.
-* `propsOf()` (`app/components/block-types.ts`) retire la clé méta `type` de chaque bloc avant que ses champs ne soient étalés sur le composant, afin qu'elle ne fuite jamais comme attribut DOM parasite.
+* `propsOf()` (`app/components/block-types.ts`) retire la clé méta `blockType` de chaque bloc avant que ses champs ne soient étalés sur le composant, afin qu'elle ne fuite jamais comme attribut DOM parasite.
 * Les rendus de conteneurs (Stack, Grid, Card, Dialog, Drawer, Collapsible, …) déstructurent leur propre tableau `children` et appellent `renderChildren()`, qui parcourt ce tableau et invoque à nouveau, récursivement, le rendu de bloc.
 
 **À noter :** la limite d'imbrication à \~4 niveaux du schéma YAML ne limite que ce que le formulaire du CMS permet à un éditeur non technique de _construire_. La récursivité de `renderChildren` n'a aucune limite de profondeur — un fichier `content/pages/*.json` édité à la main ou généré par programme peut s'imbriquer bien plus profondément que ce que permet l'interface du CMS, et sera tout de même rendu correctement.
@@ -89,24 +89,24 @@ Voici un exemple de fichier de mise en page représentant une page de tableau de
   "title": "Interactive Dashboard",
   "content": [
     {
-      "type": "heading",
+      "blockType": "heading",
       "text": "Dashboard Analytics",
       "as": "h1",
       "size": "3xl"
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "gap": "6",
       "children": [
         {
-          "type": "card",
+          "blockType": "card",
           "title": "Welcome User!",
           "description": "Here is your system status.",
           "variant": "outline",
           "children": [
             {
-              "type": "alert",
+              "blockType": "alert",
               "status": "success",
               "title": "All Systems Operational",
               "variant": "surface"
@@ -114,16 +114,16 @@ Voici un exemple de fichier de mise en page représentant une page de tableau de
           ]
         },
         {
-          "type": "fieldset",
+          "blockType": "fieldset",
           "legend": "User Preferences",
           "children": [
             {
-              "type": "switch",
+              "blockType": "switch",
               "defaultChecked": true,
               "text": "Enable Push Notifications"
             },
             {
-              "type": "checkbox",
+              "blockType": "checkbox",
               "text": "Subscribe to Newsletter"
             }
           ]

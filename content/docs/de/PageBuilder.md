@@ -87,9 +87,9 @@ Wir nutzen fortgeschrittene **YAML-Anker und -Aliase** (`&` und `*`), um die Tat
 
 `PageRenderer` ist ein bewusst schlanker öffentlicher Einstiegspunkt; die eigentliche Block-zu-Komponente-Zuordnung und die rekursive Rendering-Logik leben in `page-registry.tsx`.
 
-* Ein `registry`-Objekt ordnet den `type`-String jedes Blocks (`"stack"`, `"button"`, `"card"`, …) einer Renderer-Funktion zu, die echtes JSX aus `app/components/ui/` zurückgibt.
+* Ein `registry`-Objekt ordnet den `blockType`-String jedes Blocks (`"stack"`, `"button"`, `"card"`, …) einer Renderer-Funktion zu, die echtes JSX aus `app/components/ui/` zurückgibt.
 * `resolveType()` führt den Typ zunächst durch eine `TYPE_ALIASES`-Tabelle (z. B. `"link"` → `anchor`, `"hover-card"` → `hoverCard`, `"menu"` → `dropdown`), sodass CMS-Inhalt und Komponentennamen leicht voneinander abweichen können, ohne dass etwas kaputtgeht.
-* `propsOf()` (`app/components/block-types.ts`) entfernt den Meta-Key `type` aus jedem Block, bevor dessen Felder auf die Komponente gespreadet werden, damit er nie als überflüssiges DOM-Attribut durchsickert.
+* `propsOf()` (`app/components/block-types.ts`) entfernt den Meta-Key `blockType` aus jedem Block, bevor dessen Felder auf die Komponente gespreadet werden, damit er nie als überflüssiges DOM-Attribut durchsickert.
 * Container-Renderer (Stack, Grid, Card, Dialog, Drawer, Collapsible, …) destrukturieren ihr eigenes `children`-Array und rufen `renderChildren()` auf, das dieses Array durchläuft und rekursiv erneut den Block-Renderer aufruft.
 
 **Hinweis:** Das Verschachtelungslimit von \~4 Ebenen im YAML-Schema begrenzt nur, was das CMS-Formular einer nicht-technischen Redakteurin/einem Redakteur zu _bauen_ erlaubt. Die Rekursion von `renderChildren` selbst hat kein Tiefenlimit — eine von Hand bearbeitete oder programmatisch erzeugte `content/pages/*.json`-Datei kann deutlich tiefer verschachtelt sein, als es die CMS-Oberfläche zulässt, und wird trotzdem korrekt gerendert.
@@ -132,24 +132,24 @@ Hier ist eine Beispiel-Layoutdatei, die eine komplexe Dashboard-Seite darstellt 
   "title": "Interactive Dashboard",
   "content": [
     {
-      "type": "heading",
+      "blockType": "heading",
       "text": "Dashboard Analytics",
       "as": "h1",
       "size": "3xl"
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "gap": "6",
       "children": [
         {
-          "type": "card",
+          "blockType": "card",
           "title": "Welcome User!",
           "description": "Here is your system status.",
           "variant": "outline",
           "children": [
             {
-              "type": "alert",
+              "blockType": "alert",
               "status": "success",
               "title": "All Systems Operational",
               "variant": "surface"
@@ -157,16 +157,16 @@ Hier ist eine Beispiel-Layoutdatei, die eine komplexe Dashboard-Seite darstellt 
           ]
         },
         {
-          "type": "fieldset",
+          "blockType": "fieldset",
           "legend": "User Preferences",
           "children": [
             {
-              "type": "switch",
+              "blockType": "switch",
               "defaultChecked": true,
               "text": "Enable Push Notifications"
             },
             {
-              "type": "checkbox",
+              "blockType": "checkbox",
               "text": "Subscribe to Newsletter"
             }
           ]

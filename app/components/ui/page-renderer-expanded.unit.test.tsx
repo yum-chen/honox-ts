@@ -4,7 +4,7 @@ import { PageRenderer } from "../page-renderer";
 test("PageRenderer renders field correctly with custom children and attributes", () => {
 	const content = [
 		{
-			type: "field",
+			blockType: "field",
 			label: "Username",
 			helperText: "Enter a unique username",
 			errorText: "Username is already taken",
@@ -14,7 +14,7 @@ test("PageRenderer renders field correctly with custom children and attributes",
 			invalid: true,
 			children: [
 				{
-					type: "button",
+					blockType: "button",
 					text: "Check Availability",
 					variant: "outline",
 				},
@@ -35,14 +35,14 @@ test("PageRenderer renders field correctly with custom children and attributes",
 test("PageRenderer renders fieldset correctly with legend and nested content", () => {
 	const content = [
 		{
-			type: "fieldset",
+			blockType: "fieldset",
 			legend: "Contact Information",
 			helperText: "Provide your current contact details",
 			errorText: "Please fill out all required fields",
 			invalid: true,
 			children: [
 				{
-					type: "field",
+					blockType: "field",
 					label: "Email Address",
 					defaultValue: "user@example.com",
 				},
@@ -62,17 +62,17 @@ test("PageRenderer renders fieldset correctly with legend and nested content", (
 test("PageRenderer renders group correctly", () => {
 	const content = [
 		{
-			type: "group",
+			blockType: "group",
 			attached: true,
 			grow: true,
 			orientation: "horizontal",
 			children: [
 				{
-					type: "button",
+					blockType: "button",
 					text: "Left Option",
 				},
 				{
-					type: "button",
+					blockType: "button",
 					text: "Right Option",
 				},
 			],
@@ -88,14 +88,14 @@ test("PageRenderer renders group correctly", () => {
 test("PageRenderer renders hover-card correctly with trigger, title, and description", () => {
 	const content = [
 		{
-			type: "hover-card",
+			blockType: "hover-card",
 			triggerText: "Hover over me",
 			showArrow: true,
 			title: "User Profile",
 			description: "Software Developer from San Francisco",
 			children: [
 				{
-					type: "badge",
+					blockType: "badge",
 					text: "Active",
 					colorPalette: "green",
 				},
@@ -114,7 +114,7 @@ test("PageRenderer renders hover-card correctly with trigger, title, and descrip
 test("PageRenderer renders dropdown correctly with items", () => {
 	const content = [
 		{
-			type: "dropdown",
+			blockType: "dropdown",
 			triggerText: "Options Menu",
 			items: [
 				{

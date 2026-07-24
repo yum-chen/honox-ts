@@ -68,7 +68,8 @@ export default createRoute(async (c) => {
 						covered by `data.headerNav` above. */}
 						{renderBlocks(
 							config.headerItems?.filter(
-								(item) => item.type === "popover" || item.type === "dropdown",
+								(item) =>
+									item.blockType === "popover" || item.blockType === "dropdown",
 							),
 							{ locale: currentLocale, currentPath },
 						)}

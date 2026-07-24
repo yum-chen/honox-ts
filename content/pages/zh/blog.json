@@ -1,6 +1,6 @@
 {
   "title": "博客 - Artefact",
   "content": [
-    { "type": "text", "content": "来自我们团队的洞察、更新与故事。", "style": "color:#71717a;max-width:42rem;margin-bottom:2rem" }
+    { "blockType": "text", "content": "来自我们团队的洞察、更新与故事。", "style": "color:#71717a;max-width:42rem;margin-bottom:2rem" }
   ]
 }

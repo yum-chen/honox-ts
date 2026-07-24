@@ -1,6 +1,6 @@
 {
   "title": "Blog - Artefact",
   "content": [
-    { "type": "text", "content": "Insights, updates, and stories from our team.", "style": "color:#71717a;max-width:42rem;margin-bottom:2rem" }
+    { "blockType": "text", "content": "Insights, updates, and stories from our team.", "style": "color:#71717a;max-width:42rem;margin-bottom:2rem" }
   ]
 }

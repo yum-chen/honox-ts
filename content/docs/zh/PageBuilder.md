@@ -87,9 +87,9 @@ title: CMS 页面构建器
 
 `PageRenderer` 只是一个薄薄的公共入口；真正的“块 → 组件”映射与递归渲染逻辑都在 `page-registry.tsx` 中。
 
-* 一个 `registry` 对象将每个块的 `type` 字符串（`"stack"`、`"button"`、`"card"` ……）映射到一个渲染函数，该函数返回来自 `app/components/ui/` 的真实 JSX。
+* 一个 `registry` 对象将每个块的 `blockType` 字符串（`"stack"`、`"button"`、`"card"` ……）映射到一个渲染函数，该函数返回来自 `app/components/ui/` 的真实 JSX。
 * `resolveType()` 会先将 type 经过 `TYPE_ALIASES` 表做一次映射（例如 `"link"` → `anchor`，`"hover-card"` → `hoverCard`，`"menu"` → `dropdown`），因此 CMS 内容与组件名可以有些许差异而不会出错。
-* `propsOf()`（`app/components/block-types.ts`）会在把字段展开到组件之前，从每个块中剥离 `type` 这个元信息 key，确保它不会作为多余的 DOM 属性泄漏出去。
+* `propsOf()`（`app/components/block-types.ts`）会在把字段展开到组件之前，从每个块中剥离 `blockType` 这个元信息 key，确保它不会作为多余的 DOM 属性泄漏出去。
 * 容器渲染器（Stack、Grid、Card、Dialog、Drawer、Collapsible……）会从自身解构出 `children` 数组，并调用 `renderChildren()`，后者遍历该数组并递归调用块渲染器本身。
 
 **注意：** YAML schema 约 4 层的嵌套上限，只限制了 CMS 表单能让非技术编辑_构建_出来的内容。`renderChildren` 的递归本身没有深度限制 —— 手写或以程序方式生成的 `content/pages/*.json` 文件可以嵌套得比 CMS UI 允许的更深，并且依然能被正确渲染。
@@ -132,24 +132,24 @@ title: CMS 页面构建器
   "title": "Interactive Dashboard",
   "content": [
     {
-      "type": "heading",
+      "blockType": "heading",
       "text": "Dashboard Analytics",
       "as": "h1",
       "size": "3xl"
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "gap": "6",
       "children": [
         {
-          "type": "card",
+          "blockType": "card",
           "title": "Welcome User!",
           "description": "Here is your system status.",
           "variant": "outline",
           "children": [
             {
-              "type": "alert",
+              "blockType": "alert",
               "status": "success",
               "title": "All Systems Operational",
               "variant": "surface"
@@ -157,16 +157,16 @@ title: CMS 页面构建器
           ]
         },
         {
-          "type": "fieldset",
+          "blockType": "fieldset",
           "legend": "User Preferences",
           "children": [
             {
-              "type": "switch",
+              "blockType": "switch",
               "defaultChecked": true,
               "text": "Enable Push Notifications"
             },
             {
-              "type": "checkbox",
+              "blockType": "checkbox",
               "text": "Subscribe to Newsletter"
             }
           ]

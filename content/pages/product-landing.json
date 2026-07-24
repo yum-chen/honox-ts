@@ -2,7 +2,7 @@
   "title": "Pulse — Real-Time Product Analytics",
   "content": [
     {
-      "type": "alert",
+      "blockType": "alert",
       "title": "Limited-time launch offer",
       "description": "Get 3 months free on annual plans — through July 31.",
       "variant": "solid",
@@ -10,45 +10,45 @@
       "size": "lg"
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "align": "center",
       "gap": "4",
       "children": [
         {
-          "type": "badge",
+          "blockType": "badge",
           "variant": "subtle",
           "text": "New · Pulse 2.0",
           "colorPalette": "purple",
           "size": "lg"
         },
         {
-          "type": "heading",
+          "blockType": "heading",
           "text": "Ship faster with real-time product insight",
           "size": "6xl",
           "as": "h1",
           "style": "text-align:center;max-width:44rem"
         },
         {
-          "type": "text",
+          "blockType": "text",
           "size": "lg",
           "content": "Pulse unifies your analytics, alerts, and team collaboration into one live dashboard — so you always know what's happening, the moment it happens.",
           "style": "text-align:center;max-width:38rem"
         },
         {
-          "type": "stack",
+          "blockType": "stack",
           "direction": "horizontal",
           "gap": "4",
           "children": [
             {
-              "type": "button",
+              "blockType": "button",
               "text": "Start Free Trial",
               "variant": "solid",
               "colorPalette": "blue",
               "size": "lg"
             },
             {
-              "type": "button",
+              "blockType": "button",
               "text": "Book a Demo",
               "variant": "outline",
               "colorPalette": "blue",
@@ -57,12 +57,12 @@
           ]
         },
         {
-          "type": "text",
+          "blockType": "text",
           "size": "sm",
           "content": "No credit card required · Free 14-day trial"
         },
         {
-          "type": "link",
+          "blockType": "link",
           "variant": "underline",
           "text": "Watch the 2-minute overview →",
           "colorPalette": "blue",
@@ -72,7 +72,7 @@
       ]
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "align": "center",
       "gap": "4",
@@ -82,46 +82,46 @@
       "margin": "3rem 0",
       "children": [
         {
-          "type": "heading",
+          "blockType": "heading",
           "text": "Trusted by fast-moving teams",
           "size": "xl",
           "as": "h2",
           "style": "text-align:center"
         },
         {
-          "type": "grid",
+          "blockType": "grid",
           "gap": "4",
           "children": [
             {
-              "type": "badge",
+              "blockType": "badge",
               "variant": "outline",
               "text": "Acme Corp",
               "colorPalette": "slate",
               "size": "sm"
             },
             {
-              "type": "badge",
+              "blockType": "badge",
               "variant": "outline",
               "text": "Globex",
               "colorPalette": "slate",
               "size": "sm"
             },
             {
-              "type": "badge",
+              "blockType": "badge",
               "variant": "outline",
               "text": "Umbrella",
               "colorPalette": "slate",
               "size": "sm"
             },
             {
-              "type": "badge",
+              "blockType": "badge",
               "variant": "outline",
               "text": "Initech",
               "colorPalette": "slate",
               "size": "sm"
             },
             {
-              "type": "badge",
+              "blockType": "badge",
               "variant": "outline",
               "text": "Soylent",
               "colorPalette": "slate",
@@ -133,25 +133,25 @@
       ]
     },
     {
-      "type": "heading",
+      "blockType": "heading",
       "text": "Everything you need to move fast",
       "size": "3xl",
       "as": "h2"
     },
     {
-      "type": "text",
+      "blockType": "text",
       "size": "lg",
       "content": "One platform to replace your dashboard sprawl."
     },
     {
-      "type": "grid",
+      "blockType": "grid",
       "gap": "6",
       "children": [
         {
-          "type": "card",
+          "blockType": "card",
           "children": [
             {
-              "type": "badge",
+              "blockType": "badge",
               "text": "Live",
               "variant": "subtle",
               "colorPalette": "green"
@@ -164,10 +164,10 @@
           "variant": "elevated"
         },
         {
-          "type": "card",
+          "blockType": "card",
           "children": [
             {
-              "type": "badge",
+              "blockType": "badge",
               "text": "AI-Powered",
               "variant": "subtle",
               "colorPalette": "purple"
@@ -180,10 +180,10 @@
           "variant": "elevated"
         },
         {
-          "type": "card",
+          "blockType": "card",
           "children": [
             {
-              "type": "badge",
+              "blockType": "badge",
               "text": "Collaborative",
               "variant": "subtle",
               "colorPalette": "blue"
@@ -199,17 +199,17 @@
       "columns": "{\"base\": 1, \"md\": 3}"
     },
     {
-      "type": "card",
+      "blockType": "card",
       "children": [
         {
-          "type": "button",
+          "blockType": "button",
           "variant": "solid",
           "text": "Explore Features",
           "colorPalette": "blue",
           "size": "md"
         },
         {
-          "type": "badge",
+          "blockType": "badge",
           "variant": "outline",
           "text": "2-minute setup",
           "colorPalette": "slate",
@@ -223,7 +223,7 @@
       "imagePosition": "left"
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "gap": "3",
       "backgroundColor": "#eff6ff",
@@ -234,42 +234,42 @@
       "boxShadow": "sm",
       "children": [
         {
-          "type": "heading",
+          "blockType": "heading",
           "text": "“Pulse cut our incident response time by 60%.”",
           "size": "xl",
           "as": "p"
         },
         {
-          "type": "text",
+          "blockType": "text",
           "size": "sm",
           "content": "Jane Cooper — VP Engineering, Acme Corp"
         },
         {
-          "type": "text",
+          "blockType": "text",
           "content": "We used to stitch together five tools to know something was wrong. Now Pulse tells us before our customers do."
         }
       ]
     },
     {
-      "type": "heading",
+      "blockType": "heading",
       "text": "Simple, transparent pricing",
       "size": "3xl",
       "as": "h2"
     },
     {
-      "type": "text",
+      "blockType": "text",
       "size": "lg",
       "content": "Start free. Upgrade when you're ready."
     },
     {
-      "type": "grid",
+      "blockType": "grid",
       "gap": "6",
       "children": [
         {
-          "type": "card",
+          "blockType": "card",
           "children": [
             {
-              "type": "button",
+              "blockType": "button",
               "text": "Get Started",
               "variant": "outline",
               "colorPalette": "blue",
@@ -282,16 +282,16 @@
           "imagePosition": "top"
         },
         {
-          "type": "card",
+          "blockType": "card",
           "children": [
             {
-              "type": "badge",
+              "blockType": "badge",
               "text": "Most Popular",
               "variant": "solid",
               "colorPalette": "blue"
             },
             {
-              "type": "button",
+              "blockType": "button",
               "text": "Choose Pro",
               "variant": "solid",
               "colorPalette": "blue",
@@ -305,10 +305,10 @@
           "variant": "elevated"
         },
         {
-          "type": "card",
+          "blockType": "card",
           "children": [
             {
-              "type": "button",
+              "blockType": "button",
               "text": "Contact Sales",
               "variant": "outline",
               "colorPalette": "blue",
@@ -324,48 +324,48 @@
       "columns": "{\"base\": 1, \"md\": 3}"
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "align": "center",
       "gap": "4",
       "children": [
         {
-          "type": "heading",
+          "blockType": "heading",
           "text": "Helpful links",
           "size": "2xl",
           "as": "h2",
           "style": "text-align:center"
         },
         {
-          "type": "stack",
+          "blockType": "stack",
           "direction": "horizontal",
           "align": "center",
           "justify": "center",
           "gap": "6",
           "children": [
             {
-              "type": "link",
+              "blockType": "link",
               "text": "Read the docs",
               "variant": "underline",
               "colorPalette": "blue",
               "href": "/docs"
             },
             {
-              "type": "link",
+              "blockType": "link",
               "text": "Changelog",
               "variant": "plain",
               "colorPalette": "slate",
               "href": "/changelog"
             },
             {
-              "type": "link",
+              "blockType": "link",
               "text": "API reference",
               "variant": "underline",
               "colorPalette": "purple",
               "href": "/api"
             },
             {
-              "type": "link",
+              "blockType": "link",
               "text": "Follow on X",
               "variant": "underline",
               "colorPalette": "green",
@@ -378,28 +378,28 @@
       ]
     },
     {
-      "type": "heading",
+      "blockType": "heading",
       "text": "Frequently asked questions",
       "size": "3xl",
       "as": "h2"
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "gap": "4",
       "children": [
         {
-          "type": "collapsible",
+          "blockType": "collapsible",
           "children": [
             {
-              "type": "text",
+              "blockType": "text",
               "size": "md",
               "content": "Yes. There are no long-term contracts — cancel or downgrade your plan anytime from account settings."
             }
           ],
           "trigger": [
             {
-              "type": "text",
+              "blockType": "text",
               "size": "md",
               "content": "Can I cancel anytime?"
             }
@@ -409,17 +409,17 @@
           "open": false
         },
         {
-          "type": "collapsible",
+          "blockType": "collapsible",
           "children": [
             {
-              "type": "text",
+              "blockType": "text",
               "size": "md",
               "content": "Enterprise plans include a self-hosted deployment option with full data residency control."
             }
           ],
           "trigger": [
             {
-              "type": "text",
+              "blockType": "text",
               "size": "md",
               "content": "Does Pulse support self-hosting?"
             }
@@ -429,17 +429,17 @@
           "open": false
         },
         {
-          "type": "collapsible",
+          "blockType": "collapsible",
           "children": [
             {
-              "type": "text",
+              "blockType": "text",
               "size": "md",
               "content": "Pulse connects to Postgres, MySQL, Snowflake, BigQuery, Stripe, and 40+ other sources out of the box."
             }
           ],
           "trigger": [
             {
-              "type": "text",
+              "blockType": "text",
               "size": "md",
               "content": "What data sources are supported?"
             }
@@ -449,17 +449,17 @@
           "open": false
         },
         {
-          "type": "collapsible",
+          "blockType": "collapsible",
           "children": [
             {
-              "type": "text",
+              "blockType": "text",
               "size": "md",
               "content": "Every plan starts with a 14-day free trial — no credit card required."
             }
           ],
           "trigger": [
             {
-              "type": "text",
+              "blockType": "text",
               "size": "md",
               "content": "Is there a free trial?"
             }
@@ -471,7 +471,7 @@
       ]
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "align": "center",
       "gap": "4",
@@ -481,32 +481,32 @@
       "margin": "3rem 0 1rem",
       "children": [
         {
-          "type": "heading",
+          "blockType": "heading",
           "text": "Ready to see it for yourself?",
           "size": "3xl",
           "as": "h2",
           "style": "text-align:center"
         },
         {
-          "type": "text",
+          "blockType": "text",
           "size": "lg",
           "content": "Join thousands of teams shipping with confidence.",
           "style": "text-align:center"
         },
         {
-          "type": "stack",
+          "blockType": "stack",
           "direction": "horizontal",
           "gap": "4",
           "children": [
             {
-              "type": "button",
+              "blockType": "button",
               "text": "Start Free Trial",
               "variant": "solid",
               "colorPalette": "blue",
               "size": "lg"
             },
             {
-              "type": "button",
+              "blockType": "button",
               "text": "Talk to Sales",
               "variant": "outline",
               "colorPalette": "blue",
@@ -515,7 +515,7 @@
           ]
         },
         {
-          "type": "link",
+          "blockType": "link",
           "variant": "plain",
           "text": "Read customer stories",
           "colorPalette": "blue",

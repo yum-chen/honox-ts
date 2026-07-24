@@ -89,9 +89,9 @@ We utilise advanced **YAML Anchors and Aliases** (`&` and `*`) to work around YA
 
 `PageRenderer` is a thin public entry point; the actual block → component mapping and recursive rendering logic live in `page-registry.tsx`.
 
-* A `registry` object maps each block's `type` string (`"stack"`, `"button"`, `"card"`, …) to a renderer function that returns real JSX from `app/components/ui/`.
+* A `registry` object maps each block's `blockType` string (`"stack"`, `"button"`, `"card"`, …) to a renderer function that returns real JSX from `app/components/ui/`.
 * `resolveType()` first runs the type through a `TYPE_ALIASES` table (e.g. `"link"` → `anchor`, `"hover-card"` → `hoverCard`, `"menu"` → `dropdown`), so CMS content and component names can drift slightly without breaking.
-* `propsOf()` (`app/components/block-types.ts`) strips the `type` meta-key off every block before its fields are spread onto the component, so it never leaks as a stray DOM attribute.
+* `propsOf()` (`app/components/block-types.ts`) strips the `blockType` meta-key off every block before its fields are spread onto the component, so it never leaks as a stray DOM attribute. It's named `blockType` rather than `type` specifically so a component can still have its own `type` prop (e.g. Progress's linear/circular) without colliding with the discriminator on the same flat JSON object.
 * Container renderers (Stack, Grid, Card, Dialog, Drawer, Collapsible, …) destructure their own `children` array and call `renderChildren()`, which maps over it and recursively invokes the block renderer again.
 
 **Note:** the YAML schema's \~4-level nesting cap only limits what the CMS form lets a non-technical editor _build_. `renderChildren`'s recursion has no depth limit — a hand-edited or programmatically generated `content/pages/*.json` file can nest far deeper than the CMS UI allows, and it will still render correctly.
@@ -154,24 +154,24 @@ Here is a sample layout file representing a complex dashboard page (`content/pag
   "title": "Interactive Dashboard",
   "content": [
     {
-      "type": "heading",
+      "blockType": "heading",
       "text": "Dashboard Analytics",
       "as": "h1",
       "size": "3xl"
     },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "gap": "6",
       "children": [
         {
-          "type": "card",
+          "blockType": "card",
           "title": "Welcome User!",
           "description": "Here is your system status.",
           "variant": "outline",
           "children": [
             {
-              "type": "alert",
+              "blockType": "alert",
               "status": "success",
               "title": "All Systems Operational",
               "variant": "surface"
@@ -179,16 +179,16 @@ Here is a sample layout file representing a complex dashboard page (`content/pag
           ]
         },
         {
-          "type": "fieldset",
+          "blockType": "fieldset",
           "legend": "User Preferences",
           "children": [
             {
-              "type": "switch",
+              "blockType": "switch",
               "defaultChecked": true,
               "text": "Enable Push Notifications"
             },
             {
-              "type": "checkbox",
+              "blockType": "checkbox",
               "text": "Subscribe to Newsletter"
             }
           ]

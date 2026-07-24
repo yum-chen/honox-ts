@@ -2,84 +2,84 @@
   "title": "Artefact — 现代 UI 套件",
   "headerBrand": [
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "horizontal",
       "gap": "3",
       "align": "center",
       "children": [
-        { "type": "avatar", "name": "Artefact UI", "size": "sm", "variant": "solid", "colorPalette": "blue" },
-        { "type": "heading", "as": "h1", "text": "Artefact UI", "size": "sm" }
+        { "blockType": "avatar", "name": "Artefact UI", "size": "sm", "variant": "solid", "colorPalette": "blue" },
+        { "blockType": "heading", "as": "h1", "text": "Artefact UI", "size": "sm" }
       ]
     }
   ],
   "headerNav": [
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "horizontal",
       "gap": "6",
       "align": "center",
       "children": [
-        { "type": "link", "text": "博客", "href": "/blog/zh", "variant": "plain", "colorPalette": "blue" },
-        { "type": "link", "text": "文档", "href": "/docs/zh", "variant": "plain", "colorPalette": "blue" },
-        { "type": "link", "text": "产品", "href": "/pages/zh/product-landing", "variant": "plain", "colorPalette": "blue" },
-        { "type": "link", "text": "内容管理", "href": "/admin", "variant": "plain", "colorPalette": "blue" }
+        { "blockType": "link", "text": "博客", "href": "/blog/zh", "variant": "plain", "colorPalette": "blue" },
+        { "blockType": "link", "text": "文档", "href": "/docs/zh", "variant": "plain", "colorPalette": "blue" },
+        { "blockType": "link", "text": "产品", "href": "/pages/zh/product-landing", "variant": "plain", "colorPalette": "blue" },
+        { "blockType": "link", "text": "内容管理", "href": "/admin", "variant": "plain", "colorPalette": "blue" }
       ]
     }
   ],
   "headerActions": [
-    { "type": "button", "text": "探索中心", "variant": "solid", "colorPalette": "blue", "size": "sm", "onclick": "window.scrollTo({top: document.getElementById('hub').offsetTop - 80, behavior: 'smooth'})" }
+    { "blockType": "button", "text": "探索中心", "variant": "solid", "colorPalette": "blue", "size": "sm", "onclick": "window.scrollTo({top: document.getElementById('hub').offsetTop - 80, behavior: 'smooth'})" }
   ],
   "content": [
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "align": "center",
       "gap": "4",
       "padding": "3rem 1.5rem",
       "children": [
         {
-          "type": "badge",
+          "blockType": "badge",
           "text": "HonoX Hono/JSX 组件",
           "size": "lg",
           "colorPalette": "blue",
           "variant": "surface"
         },
         {
-          "type": "heading",
+          "blockType": "heading",
           "as": "h1",
           "text": "一套精美打造、无障碍的组件套件。",
           "size": "5xl",
           "style": "text-align:center;max-width:48rem"
         },
         {
-          "type": "text",
+          "blockType": "text",
           "size": "lg",
           "content": "专为 HonoX、PandaCSS 与 Sveltia CMS 构建的完整三层设计系统。快速、轻量且完全无障碍，遵循标准用户习惯。",
           "style": "text-align:center;max-width:42rem"
         },
         {
-          "type": "stack",
+          "blockType": "stack",
           "direction": "horizontal",
           "gap": "4",
           "children": [
-            { "type": "button", "text": "查看展示", "variant": "solid", "colorPalette": "blue", "size": "lg", "onclick": "window.scrollTo({top: document.getElementById('carousel-showcase').offsetTop - 80, behavior: 'smooth'})" },
-            { "type": "button", "text": "组件中心", "variant": "outline", "size": "lg", "onclick": "window.scrollTo({top: document.getElementById('hub').offsetTop - 80, behavior: 'smooth'})" }
+            { "blockType": "button", "text": "查看展示", "variant": "solid", "colorPalette": "blue", "size": "lg", "onclick": "window.scrollTo({top: document.getElementById('carousel-showcase').offsetTop - 80, behavior: 'smooth'})" },
+            { "blockType": "button", "text": "组件中心", "variant": "outline", "size": "lg", "onclick": "window.scrollTo({top: document.getElementById('hub').offsetTop - 80, behavior: 'smooth'})" }
           ]
         }
       ]
     },
 
-    { "type": "heading", "as": "h2", "text": "标签页展示", "size": "3xl", "style": "text-align:center", "id": "tabs-showcase" },
-    { "type": "text", "size": "md", "content": "完全使用纯 Hono/JSX 重新实现，带有滑动指示器、手动/自动聚焦激活以及完整的键盘导航支持。", "style": "text-align:center;max-width:42rem;margin:0 auto" },
+    { "blockType": "heading", "as": "h2", "text": "标签页展示", "size": "3xl", "style": "text-align:center", "id": "tabs-showcase" },
+    { "blockType": "text", "size": "md", "content": "完全使用纯 Hono/JSX 重新实现，带有滑动指示器、手动/自动聚焦激活以及完整的键盘导航支持。", "style": "text-align:center;max-width:42rem;margin:0 auto" },
     {
-      "type": "stack",
+      "blockType": "stack",
       "direction": "vertical",
       "padding": "1.5rem",
       "borderRadius": "1rem",
       "boxShadow": "sm",
       "children": [
         {
-          "type": "tabs",
+          "blockType": "tabs",
           "variant": "enclosed",
           "size": "md",
           "items": [
@@ -88,13 +88,13 @@
               "label": "⚡ 核心特性",
               "content": [
                 {
-                  "type": "grid",
+                  "blockType": "grid",
                   "columns": "{\"base\": 1, \"md\": 3}",
                   "gap": "6",
                   "children": [
-                    { "type": "card", "title": "极速响应", "description": "默认开启 SSR，静态体积最小化。仅在需要交互时才进行水合。", "children": [{ "type": "badge", "text": "零 JS 方案", "colorPalette": "green", "variant": "subtle" }] },
-                    { "type": "card", "title": "完全无障碍", "description": "严格遵循 WAI-ARIA 标准。通过漫游 tabIndex 与 aria 状态实现完整的键盘导航。", "children": [{ "type": "badge", "text": "符合 A11y", "colorPalette": "blue", "variant": "subtle" }] },
-                    { "type": "card", "title": "精美设计", "description": "滑动指示器过渡与像素级精准布局，契合现代用户习惯。", "children": [{ "type": "badge", "text": "Panda CSS", "colorPalette": "purple", "variant": "subtle" }] }
+                    { "blockType": "card", "title": "极速响应", "description": "默认开启 SSR，静态体积最小化。仅在需要交互时才进行水合。", "children": [{ "blockType": "badge", "text": "零 JS 方案", "colorPalette": "green", "variant": "subtle" }] },
+                    { "blockType": "card", "title": "完全无障碍", "description": "严格遵循 WAI-ARIA 标准。通过漫游 tabIndex 与 aria 状态实现完整的键盘导航。", "children": [{ "blockType": "badge", "text": "符合 A11y", "colorPalette": "blue", "variant": "subtle" }] },
+                    { "blockType": "card", "title": "精美设计", "description": "滑动指示器过渡与像素级精准布局，契合现代用户习惯。", "children": [{ "blockType": "badge", "text": "Panda CSS", "colorPalette": "purple", "variant": "subtle" }] }
                   ]
                 }
               ]
@@ -104,32 +104,32 @@
               "label": "💎 价格方案",
               "content": [
                 {
-                  "type": "grid",
+                  "blockType": "grid",
                   "columns": "{\"base\": 1, \"md\": 2}",
                   "gap": "6",
                   "children": [
                     {
-                      "type": "card",
+                      "blockType": "card",
                       "title": "入门版",
                       "description": "非常适合想要快速原型开发的个人开发者与副业项目。",
                       "children": [
-                        { "type": "stack", "direction": "horizontal", "align": "baseline", "gap": "1", "children": [
-                          { "type": "heading", "as": "p", "text": "$0", "size": "3xl" },
-                          { "type": "text", "size": "sm", "content": "/月" }
+                        { "blockType": "stack", "direction": "horizontal", "align": "baseline", "gap": "1", "children": [
+                          { "blockType": "heading", "as": "p", "text": "$0", "size": "3xl" },
+                          { "blockType": "text", "size": "sm", "content": "/月" }
                         ]},
-                        { "type": "button", "text": "开始使用", "variant": "outline", "colorPalette": "blue", "size": "sm" }
+                        { "blockType": "button", "text": "开始使用", "variant": "outline", "colorPalette": "blue", "size": "sm" }
                       ]
                     },
                     {
-                      "type": "card",
+                      "blockType": "card",
                       "title": "专业版",
                       "description": "全面的功能、无限页面、分析集成以及专属优先支持。",
                       "children": [
-                        { "type": "stack", "direction": "horizontal", "align": "baseline", "gap": "1", "children": [
-                          { "type": "heading", "as": "p", "text": "$29", "size": "3xl" },
-                          { "type": "text", "size": "sm", "content": "/月" }
+                        { "blockType": "stack", "direction": "horizontal", "align": "baseline", "gap": "1", "children": [
+                          { "blockType": "heading", "as": "p", "text": "$29", "size": "3xl" },
+                          { "blockType": "text", "size": "sm", "content": "/月" }
                         ]},
-                        { "type": "button", "text": "升级到专业版", "variant": "solid", "colorPalette": "blue", "size": "sm" }
+                        { "blockType": "button", "text": "升级到专业版", "variant": "solid", "colorPalette": "blue", "size": "sm" }
                       ]
                     }
                   ]
@@ -141,22 +141,22 @@
               "label": "🛠️ 技术栈",
               "content": [
                 {
-                  "type": "card",
+                  "blockType": "card",
                   "title": "现代 Web 技术栈",
                   "description": "为最高生产就绪度与速度而从头构建。",
                   "children": [
-                    { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-                      { "type": "stack", "direction": "horizontal", "justify": "between", "align": "center", "children": [
-                        { "type": "text", "size": "sm", "content": "HonoX 元框架", "style": "font-weight:bold" },
-                        { "type": "badge", "text": "快速且服务端优先", "colorPalette": "orange" }
+                    { "blockType": "stack", "direction": "vertical", "gap": "4", "children": [
+                      { "blockType": "stack", "direction": "horizontal", "justify": "between", "align": "center", "children": [
+                        { "blockType": "text", "size": "sm", "content": "HonoX 元框架", "style": "font-weight:bold" },
+                        { "blockType": "badge", "text": "快速且服务端优先", "colorPalette": "orange" }
                       ]},
-                      { "type": "stack", "direction": "horizontal", "justify": "between", "align": "center", "children": [
-                        { "type": "text", "size": "sm", "content": "Panda CSS", "style": "font-weight:bold" },
-                        { "type": "badge", "text": "零运行时 CSS-in-JS", "colorPalette": "amber" }
+                      { "blockType": "stack", "direction": "horizontal", "justify": "between", "align": "center", "children": [
+                        { "blockType": "text", "size": "sm", "content": "Panda CSS", "style": "font-weight:bold" },
+                        { "blockType": "badge", "text": "零运行时 CSS-in-JS", "colorPalette": "amber" }
                       ]},
-                      { "type": "stack", "direction": "horizontal", "justify": "between", "align": "center", "children": [
-                        { "type": "text", "size": "sm", "content": "Bun 工具链", "style": "font-weight:bold" },
-                        { "type": "badge", "text": "下一代速度", "colorPalette": "red" }
+                      { "blockType": "stack", "direction": "horizontal", "justify": "between", "align": "center", "children": [
+                        { "blockType": "text", "size": "sm", "content": "Bun 工具链", "style": "font-weight:bold" },
+                        { "blockType": "badge", "text": "下一代速度", "colorPalette": "red" }
                       ]}
                     ]}
                   ]
@@ -168,20 +168,20 @@
       ]
     },
 
-    { "type": "heading", "as": "h2", "text": "特色轮播实现", "size": "3xl", "style": "text-align:center", "id": "carousel-showcase" },
-    { "type": "text", "size": "md", "content": "展示我们基于 Ark UI 的 Slider Carousel 的稳健 Hono/JSX 实现。支持滑动、自动播放且完全无障碍。", "style": "text-align:center;max-width:42rem;margin:0 auto" },
+    { "blockType": "heading", "as": "h2", "text": "特色轮播实现", "size": "3xl", "style": "text-align:center", "id": "carousel-showcase" },
+    { "blockType": "text", "size": "md", "content": "展示我们基于 Ark UI 的 Slider Carousel 的稳健 Hono/JSX 实现。支持滑动、自动播放且完全无障碍。", "style": "text-align:center;max-width:42rem;margin:0 auto" },
     {
-      "type": "grid",
+      "blockType": "grid",
       "columns": "{\"base\": 1, \"md\": 2}",
       "gap": "8",
       "children": [
         {
-          "type": "card",
+          "blockType": "card",
           "title": "交互式自动播放轮播",
           "description": "自动播放触发、自定义圆点以及悬停暂停。",
           "children": [
             {
-              "type": "carousel",
+              "blockType": "carousel",
               "colorPalette": "blue",
               "loop": true,
               "pauseOnHover": true,
@@ -195,12 +195,12 @@
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "多图循环轮播",
           "description": "每页显示 2 张幻灯片，采用丰富的响应式网格。",
           "children": [
             {
-              "type": "carousel",
+              "blockType": "carousel",
               "colorPalette": "purple",
               "loop": true,
               "slidesPerPage": 2,
@@ -219,56 +219,56 @@
       ]
     },
 
-    { "type": "heading", "as": "h2", "text": "交互式组件中心", "size": "3xl", "style": "text-align:center", "id": "hub" },
-    { "type": "text", "size": "md", "content": "按使用类别浏览 Artefact UI 组件系统的丰富功能。", "style": "text-align:center;max-width:42rem;margin:0 auto" },
+    { "blockType": "heading", "as": "h2", "text": "交互式组件中心", "size": "3xl", "style": "text-align:center", "id": "hub" },
+    { "blockType": "text", "size": "md", "content": "按使用类别浏览 Artefact UI 组件系统的丰富功能。", "style": "text-align:center;max-width:42rem;margin:0 auto" },
 
-    { "type": "heading", "as": "h3", "text": "表单控件", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
+    { "blockType": "heading", "as": "h3", "text": "表单控件", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
     {
-      "type": "grid",
+      "blockType": "grid",
       "columns": "{\"base\": 1, \"md\": 2, \"lg\": 3}",
       "gap": "6",
       "children": [
         {
-          "type": "card",
+          "blockType": "card",
           "title": "开关控件",
           "description": "时尚的切换按钮",
           "children": [
-            { "type": "stack", "direction": "vertical", "align": "start", "gap": "4", "children": [
-              { "type": "switch", "label": "小型开关", "size": "sm" },
-              { "type": "switch", "label": "中型交互", "size": "md", "checked": true },
-              { "type": "switch", "label": "大型蓝色强调", "size": "lg", "colorPalette": "blue" }
+            { "blockType": "stack", "direction": "vertical", "align": "start", "gap": "4", "children": [
+              { "blockType": "switch", "label": "小型开关", "size": "sm" },
+              { "blockType": "switch", "label": "中型交互", "size": "md", "checked": true },
+              { "blockType": "switch", "label": "大型蓝色强调", "size": "lg", "colorPalette": "blue" }
             ]}
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "复选框组",
           "description": "支持普通与半选状态",
           "children": [
-            { "type": "stack", "direction": "vertical", "align": "start", "gap": "4", "children": [
-              { "type": "checkbox", "label": "小型复选框", "size": "sm" },
-              { "type": "checkbox", "label": "半选状态", "size": "md", "checked": "indeterminate" },
-              { "type": "checkbox", "label": "大型交互", "size": "lg", "colorPalette": "green", "checked": true }
+            { "blockType": "stack", "direction": "vertical", "align": "start", "gap": "4", "children": [
+              { "blockType": "checkbox", "label": "小型复选框", "size": "sm" },
+              { "blockType": "checkbox", "label": "半选状态", "size": "md", "checked": "indeterminate" },
+              { "blockType": "checkbox", "label": "大型交互", "size": "lg", "colorPalette": "green", "checked": true }
             ]}
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "滑块",
           "description": "可调数值",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-              { "type": "slider", "label": "单滑块", "defaultValue": 45, "showValueText": true },
-              { "type": "slider", "label": "范围选择", "defaultValue": [15, 75], "showValueText": true }
+            { "blockType": "stack", "direction": "vertical", "gap": "4", "children": [
+              { "blockType": "slider", "label": "单滑块", "defaultValue": 45, "showValueText": true },
+              { "blockType": "slider", "label": "范围选择", "defaultValue": [15, 75], "showValueText": true }
             ]}
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "单选组",
           "description": "互斥选择",
           "children": [
-            { "type": "radioGroup", "defaultValue": "solid", "items": [
+            { "blockType": "radioGroup", "defaultValue": "solid", "items": [
               { "label": "固态", "value": "solid" },
               { "label": "液态", "value": "liquid" },
               { "label": "气态", "value": "gas" }
@@ -276,169 +276,169 @@
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "单选卡片组",
           "description": "卡片式互斥选择",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "6", "children": [
-              { "type": "radioCardGroup", "label": "描边", "defaultValue": "pro", "items": [
+            { "blockType": "stack", "direction": "vertical", "gap": "6", "children": [
+              { "blockType": "radioCardGroup", "label": "描边", "defaultValue": "pro", "items": [
                 { "label": "爱好", "value": "hobby" }, { "label": "专业", "value": "pro" }, { "label": "企业", "value": "enterprise" }
               ]},
-              { "type": "radioCardGroup", "label": "柔和", "variant": "subtle", "defaultValue": "monthly", "items": [
+              { "blockType": "radioCardGroup", "label": "柔和", "variant": "subtle", "defaultValue": "monthly", "items": [
                 { "label": "按月", "value": "monthly" }, { "label": "按年", "value": "yearly" }
               ]},
-              { "type": "radioCardGroup", "label": "表面", "variant": "surface", "defaultValue": "standard", "items": [
+              { "blockType": "radioCardGroup", "label": "表面", "variant": "surface", "defaultValue": "standard", "items": [
                 { "label": "标准", "value": "standard" }, { "label": "加急", "value": "express" }, { "label": "次日达", "value": "overnight", "disabled": true }
               ]},
-              { "type": "radioCardGroup", "label": "实心", "variant": "solid", "defaultValue": "dark", "items": [
+              { "blockType": "radioCardGroup", "label": "实心", "variant": "solid", "defaultValue": "dark", "items": [
                 { "label": "浅色", "value": "light" }, { "label": "深色", "value": "dark" }, { "label": "跟随系统", "value": "system" }
               ]}
             ]}
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "分段控件",
           "description": "滑动选择控件",
           "children": [
-            { "type": "segmentGroup", "fitted": true, "defaultValue": "weekly", "items": [
+            { "blockType": "segmentGroup", "fitted": true, "defaultValue": "weekly", "items": [
               { "label": "每周", "value": "weekly" }, { "label": "每月", "value": "monthly" }, { "label": "每年", "value": "yearly" }
             ]}
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "标签输入",
           "description": "添加与移除关键词标签",
           "children": [
-            { "type": "tagsField", "label": "兴趣", "helperText": "按 Enter 添加标签", "defaultValue": ["Hono", "Vite", "Panda"] }
+            { "blockType": "tagsField", "label": "兴趣", "helperText": "按 Enter 添加标签", "defaultValue": ["Hono", "Vite", "Panda"] }
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "验证码输入",
           "description": "支持粘贴与自动前进的一次性代码输入",
           "children": [
-            { "type": "pinField", "label": "验证码", "helperText": "请查看邮件获取 6 位验证码", "count": 6, "otp": true, "blurOnComplete": true }
+            { "blockType": "pinField", "label": "验证码", "helperText": "请查看邮件获取 6 位验证码", "count": 6, "otp": true, "blurOnComplete": true }
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "评分组",
           "description": "支持半星精度的星级评分",
           "children": [
-            { "type": "stack", "direction": "vertical", "align": "start", "gap": "4", "children": [
-              { "type": "ratingGroup", "label": "评价您的体验", "defaultValue": 3 },
-              { "type": "ratingGroup", "label": "半星精度", "allowHalf": true, "defaultValue": 3.5, "colorPalette": "blue" },
-              { "type": "ratingGroup", "label": "平均评分", "readOnly": true, "allowHalf": true, "defaultValue": 4.5, "colorPalette": "orange", "size": "sm" }
+            { "blockType": "stack", "direction": "vertical", "align": "start", "gap": "4", "children": [
+              { "blockType": "ratingGroup", "label": "评价您的体验", "defaultValue": 3 },
+              { "blockType": "ratingGroup", "label": "半星精度", "allowHalf": true, "defaultValue": 3.5, "colorPalette": "blue" },
+              { "blockType": "ratingGroup", "label": "平均评分", "readOnly": true, "allowHalf": true, "defaultValue": 4.5, "colorPalette": "orange", "size": "sm" }
             ]}
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "输入框",
           "description": "带实时校验的带标签输入框",
           "children": [
-            { "type": "field", "label": "用户名", "defaultValue": "ab", "validator": "(value) => value.length >= 3 || \"至少需要 3 个字符\"" }
+            { "blockType": "field", "label": "用户名", "defaultValue": "ab", "validator": "(value) => value.length >= 3 || \"至少需要 3 个字符\"" }
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "多行文本",
           "description": "带实时校验的多行文本输入",
           "children": [
-            { "type": "textarea", "label": "个人简介", "defaultValue": "太短了", "validator": "(value) => value.length >= 20 || \"请再多写一些（至少 20 个字符）\"" }
+            { "blockType": "textarea", "label": "个人简介", "defaultValue": "太短了", "validator": "(value) => value.length >= 20 || \"请再多写一些（至少 20 个字符）\"" }
           ]
         }
       ]
     },
 
-    { "type": "heading", "as": "h3", "text": "复杂选择器", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
+    { "blockType": "heading", "as": "h3", "text": "复杂选择器", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
     {
-      "type": "grid",
+      "blockType": "grid",
       "columns": "{\"base\": 1, \"md\": 2}",
       "gap": "6",
       "children": [
         {
-          "type": "card",
+          "blockType": "card",
           "title": "日期选择器",
           "overflow": "visible",
           "description": "高级日期与范围选择器",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-              { "type": "datePicker", "label": "选择单个日期", "selectionMode": "single" },
-              { "type": "datePicker", "label": "选择日期范围", "selectionMode": "range", "colorPalette": "purple" }
+            { "blockType": "stack", "direction": "vertical", "gap": "4", "children": [
+              { "blockType": "datePicker", "label": "选择单个日期", "selectionMode": "single" },
+              { "blockType": "datePicker", "label": "选择日期范围", "selectionMode": "range", "colorPalette": "purple" }
             ]}
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "下拉选择",
           "overflow": "visible",
           "description": "无障碍的 select 与自动补全组合框",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-              { "type": "select", "label": "框架选择", "placeholder": "请选择框架", "items": [
+            { "blockType": "stack", "direction": "vertical", "gap": "4", "children": [
+              { "blockType": "select", "label": "框架选择", "placeholder": "请选择框架", "items": [
                 { "label": "React", "value": "react" }, { "label": "Solid", "value": "solid" }, { "label": "Svelte", "value": "svelte" }, { "label": "Vue", "value": "vue" }, { "label": "Hono", "value": "hono" }
               ]},
-              { "type": "combobox", "label": "可搜索组合框", "placeholder": "输入以搜索...", "items": [
+              { "blockType": "combobox", "label": "可搜索组合框", "placeholder": "输入以搜索...", "items": [
                 { "label": "React", "value": "react" }, { "label": "Solid", "value": "solid" }, { "label": "Svelte", "value": "svelte" }, { "label": "Vue", "value": "vue" }, { "label": "Hono", "value": "hono" }
               ]}
             ]}
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "颜色选择器",
           "overflow": "visible",
           "description": "全色域选择器",
           "children": [
-            { "type": "colorPicker", "trigger": true, "defaultValue": "#3b82f6", "label": "选择主题颜色" }
+            { "blockType": "colorPicker", "trigger": true, "defaultValue": "#3b82f6", "label": "选择主题颜色" }
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "文件上传",
           "description": "带校验规则的拖放区",
           "children": [
-            { "type": "fileUpload", "label": "上传图片", "name": "images", "accept": "image/*", "maxFiles": 2, "dropzoneText": "拖放文件或点击浏览" }
+            { "blockType": "fileUpload", "label": "上传图片", "name": "images", "accept": "image/*", "maxFiles": 2, "dropzoneText": "拖放文件或点击浏览" }
           ]
         }
       ]
     },
 
-    { "type": "heading", "as": "h3", "text": "浮层与导航", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
+    { "blockType": "heading", "as": "h3", "text": "浮层与导航", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
     {
-      "type": "grid",
+      "blockType": "grid",
       "columns": "{\"base\": 1, \"md\": 2, \"lg\": 3}",
       "gap": "6",
       "children": [
         {
-          "type": "card",
+          "blockType": "card",
           "title": "气泡卡片与提示",
           "overflow": "visible",
           "description": "上下文信息框",
           "children": [
-            { "type": "stack", "direction": "horizontal", "align": "start", "gap": "4", "children": [
-              { "type": "popover", "triggerText": "触发气泡卡片", "title": "快速信息", "body": "气泡卡片非常适合在点击时展示详细的丰富上下文。", "showArrow": true },
-              { "type": "tooltip", "triggerText": "悬停提示", "content": "好用且无障碍！", "showArrow": true }
+            { "blockType": "stack", "direction": "horizontal", "align": "start", "gap": "4", "children": [
+              { "blockType": "popover", "triggerText": "触发气泡卡片", "title": "快速信息", "body": "气泡卡片非常适合在点击时展示详细的丰富上下文。", "showArrow": true },
+              { "blockType": "tooltip", "triggerText": "悬停提示", "content": "好用且无障碍！", "showArrow": true }
             ]}
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "模态框与抽屉",
           "description": "带焦点陷阱的浮层面板",
           "children": [
-            { "type": "stack", "direction": "horizontal", "align": "start", "gap": "4", "children": [
-              { "type": "dialog", "trigger": [{ "type": "button", "variant": "solid", "colorPalette": "blue", "text": "打开模态框" }], "title": "删除工作区", "description": "您确定要删除此工作区吗？", "body": "此操作不可撤销，您的所有数据将被永久删除。", "confirmText": "删除", "cancelText": "取消", "footer": [
-                { "type": "button", "variant": "outline", "text": "通知团队", "onclick": "window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: '团队已通知', description: '您的团队已收到此删除操作的提醒。', closable: true, type: 'info' } }))" }
+            { "blockType": "stack", "direction": "horizontal", "align": "start", "gap": "4", "children": [
+              { "blockType": "dialog", "trigger": [{ "blockType": "button", "variant": "solid", "colorPalette": "blue", "text": "打开模态框" }], "title": "删除工作区", "description": "您确定要删除此工作区吗？", "body": "此操作不可撤销，您的所有数据将被永久删除。", "confirmText": "删除", "cancelText": "取消", "footer": [
+                { "blockType": "button", "variant": "outline", "text": "通知团队", "onclick": "window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: '团队已通知', description: '您的团队已收到此删除操作的提醒。', closable: true, type: 'info' } }))" }
               ] },
-              { "type": "drawer", "trigger": [{ "type": "button", "variant": "outline", "text": "打开设置抽屉" }], "title": "项目设置", "description": "配置工作区属性", "confirmText": "保存更改", "cancelText": "关闭", "footer": [
-                { "type": "button", "variant": "outline", "colorPalette": "blue", "text": "重新加载表格", "onclick": "window.dispatchEvent(new CustomEvent('paginated-table:reload'))" }
+              { "blockType": "drawer", "trigger": [{ "blockType": "button", "variant": "outline", "text": "打开设置抽屉" }], "title": "项目设置", "description": "配置工作区属性", "confirmText": "保存更改", "cancelText": "关闭", "footer": [
+                { "blockType": "button", "variant": "outline", "colorPalette": "blue", "text": "重新加载表格", "onclick": "window.dispatchEvent(new CustomEvent('paginated-table:reload'))" }
               ], "children": [
-                { "type": "text", "size": "sm", "content": "在此直接管理数据库连接、成员访问级别与账单偏好。" },
-                { "type": "paginatedTable", "url": "/api/posts/index.json", "dataKey": "posts", "pageSize": 3, "columns": [
+                { "blockType": "text", "size": "sm", "content": "在此直接管理数据库连接、成员访问级别与账单偏好。" },
+                { "blockType": "paginatedTable", "url": "/api/posts/index.json", "dataKey": "posts", "pageSize": 3, "columns": [
                   { "header": "标题", "key": "title" }, { "header": "作者", "key": "author" }, { "header": "日期", "key": "date" }
                 ]}
               ]}
@@ -446,12 +446,12 @@
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "操作下拉菜单",
           "overflow": "visible",
           "description": "可嵌套的操作列表触发器",
           "children": [
-            { "type": "dropdown", "triggerText": "工作区操作", "items": [
+            { "blockType": "dropdown", "triggerText": "工作区操作", "items": [
               { "type": "item", "label": "查看资料", "value": "profile" },
               { "type": "item", "label": "账单", "value": "billing" },
               { "type": "separator" },
@@ -463,30 +463,30 @@
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "悬停卡片",
           "overflow": "visible",
           "description": "悬停时显示的信息弹窗",
           "children": [
-            { "type": "hoverCard", "triggerText": "悬停查看作者详情", "showArrow": true, "title": "关于 Jules", "description": "资深 UI 设计师与前端架构师，专注于 HonoX 套件。" }
+            { "blockType": "hoverCard", "triggerText": "悬停查看作者详情", "showArrow": true, "title": "关于 Jules", "description": "资深 UI 设计师与前端架构师，专注于 HonoX 套件。" }
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "可折叠内容",
           "description": "流畅的手风琴区块",
           "children": [
-            { "type": "collapsible", "trigger": [{ "type": "button", "variant": "outline", "size": "sm", "text": "展开详情" }], "children": [
-              { "type": "text", "size": "sm", "content": "我们的无障碍焦点陷阱与键盘导航在所有设备上都能顺畅运行。" }
+            { "blockType": "collapsible", "trigger": [{ "blockType": "button", "variant": "outline", "size": "sm", "text": "展开详情" }], "children": [
+              { "blockType": "text", "size": "sm", "content": "我们的无障碍焦点陷阱与键盘导航在所有设备上都能顺畅运行。" }
             ]}
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "面包屑",
           "description": "导航层级",
           "children": [
-            { "type": "breadcrumb", "items": [
+            { "blockType": "breadcrumb", "items": [
               { "label": "首页", "href": "/" }, { "label": "资源库", "href": "/library" }, { "label": "展示" }
             ]}
           ]
@@ -494,54 +494,54 @@
       ]
     },
 
-    { "type": "heading", "as": "h3", "text": "反馈与工具", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
+    { "blockType": "heading", "as": "h3", "text": "反馈与工具", "size": "xl", "style": "border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem" },
     {
-      "type": "grid",
+      "blockType": "grid",
       "columns": "{\"base\": 1, \"md\": 2, \"lg\": 3}",
       "gap": "6",
       "children": [
         {
-          "type": "card",
+          "blockType": "card",
           "title": "进度条",
           "description": "线性与环形进度加载器",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-              { "type": "progress", "label": "正在上传数据", "value": 72, "showValueText": true },
-              { "type": "progress", "label": "处理中", "progressType": "circular" }
+            { "blockType": "stack", "direction": "vertical", "gap": "4", "children": [
+              { "blockType": "progress", "label": "正在上传数据", "value": 72, "showValueText": true },
+              { "blockType": "progress", "label": "处理中", "type": "circular" }
             ]}
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "骨架屏与警告",
           "description": "反馈与占位组件",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-              { "type": "skeleton", "shape": "text", "noOfLines": 2 },
-              { "type": "alert", "status": "success", "variant": "surface", "title": "同步成功", "description": "所有更改已完整保存在本地存储中。" }
+            { "blockType": "stack", "direction": "vertical", "gap": "4", "children": [
+              { "blockType": "skeleton", "shape": "text", "noOfLines": 2 },
+              { "blockType": "alert", "status": "success", "variant": "surface", "title": "同步成功", "description": "所有更改已完整保存在本地存储中。" }
             ]}
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "剪贴板与提示",
           "description": "交互式用户反馈工具",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-              { "type": "clipboard", "label": "克隆命令", "value": "git clone https://github.com/honojs/honox" },
-              { "type": "toast" },
-              { "type": "button", "variant": "outline", "size": "sm", "text": "发送提示", "onclick": "window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: '任务已派发', description: '已记录交互式组件操作。', closable: true, type: 'success' } }))" }
+            { "blockType": "stack", "direction": "vertical", "gap": "4", "children": [
+              { "blockType": "clipboard", "label": "克隆命令", "value": "git clone https://github.com/honojs/honox" },
+              { "blockType": "toast" },
+              { "blockType": "button", "variant": "outline", "size": "sm", "text": "发送提示", "onclick": "window.dispatchEvent(new CustomEvent('park-ui:toast:create', { detail: { id: Math.random().toString(36).substring(2, 9), title: '任务已派发', description: '已记录交互式组件操作。', closable: true, type: 'success' } }))" }
             ]}
           ]
         },
         {
-          "type": "card",
+          "blockType": "card",
           "title": "可编辑",
           "description": "点击就地行内编辑",
           "children": [
-            { "type": "stack", "direction": "vertical", "gap": "4", "children": [
-              { "type": "editable", "label": "项目名称", "defaultValue": "Artefact UI Suite" },
-              { "type": "editable", "label": "描述", "placeholder": "添加描述…" }
+            { "blockType": "stack", "direction": "vertical", "gap": "4", "children": [
+              { "blockType": "editable", "label": "项目名称", "defaultValue": "Artefact UI Suite" },
+              { "blockType": "editable", "label": "描述", "placeholder": "添加描述…" }
             ]}
           ]
         }
