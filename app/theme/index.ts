@@ -75,7 +75,7 @@ const config = {
 
 			canvas: {
 				value: {
-					_light: "{colors.gray.1}",
+					_light: "{colors.gray.2}",
 					_dark: "{colors.gray.1}",
 				},
 			},

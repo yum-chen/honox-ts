@@ -57,7 +57,7 @@ export const slate = defineSemanticTokens.colors({
 	surface: {
 		bg: {
 			DEFAULT: {
-				value: { _light: "{colors.white}", _dark: "{colors.gray.1}" },
+				value: { _light: "{colors.white}", _dark: "{colors.gray.2}" },
 			},
 			hover: { value: { _light: "{colors.gray.2}", _dark: "{colors.gray.2}" } },
 			active: {
