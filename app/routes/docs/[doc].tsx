@@ -243,7 +243,6 @@ function DocsSidenav({
 }
 
 interface HeaderActionsProps {
-	links?: DocsNavLinkConfig[];
 	headerItems?: ComponentBlock[];
 	editUrl?: string;
 	docsUi?: DocsUiConfig;
@@ -256,10 +255,10 @@ interface HeaderActionsProps {
 
 // The actions shared between the desktop header row (`nav`, hidden below
 // `md`) and Layout's built-in mobile disclosure (`mobileNav`, which takes
-// over below `md` via `siderHideBelow`) — headerItems, edit/admin, language
-// switcher, GitHub. Rendered from a single function so both stay in sync.
+// over below `md` via `siderHideBelow`) — headerItems (incl. the GitHub
+// icon link, CMS-authored via `config.headerItems`), edit/admin, language
+// switcher. Rendered from a single function so both stay in sync.
 function HeaderActions({
-	links,
 	headerItems,
 	editUrl,
 	docsUi,
@@ -267,7 +266,6 @@ function HeaderActions({
 	currentLocale,
 	compact,
 }: HeaderActionsProps) {
-	const githubLink = links?.find(isGithubLink);
 	const ui = { ...DEFAULT_DOCS_UI, ...docsUi };
 	const textStyle = compact ? "xs" : "sm";
 
@@ -299,24 +297,12 @@ function HeaderActions({
 					{ui.admin}
 				</Anchor>
 			)}
-			{githubLink && (
-				<Anchor
-					href={githubLink.href}
-					target="_blank"
-					rel="noopener noreferrer"
-					aria-label="View on GitHub"
-					class={cx(button({ variant: "plain", size: "sm" }), css({ px: "0" }))}
-				>
-					<GitHubIcon />
-				</Anchor>
-			)}
 		</>
 	);
 }
 
 interface DocsHeaderProps {
 	editUrl?: string;
-	links?: DocsNavLinkConfig[];
 	headerItems?: ComponentBlock[];
 	docsUi?: DocsUiConfig;
 	currentPath: string;
@@ -328,7 +314,6 @@ interface DocsHeaderProps {
 // `HeaderActions` and `DocsSidenav` instead of duplicating this markup.
 function DocsHeader({
 	editUrl,
-	links,
 	headerItems,
 	docsUi,
 	currentPath,
@@ -394,7 +379,6 @@ function DocsHeader({
 				})}
 			>
 				<HeaderActions
-					links={links}
 					headerItems={headerItems}
 					editUrl={editUrl}
 					docsUi={docsUi}
@@ -506,7 +490,6 @@ export default createRoute(
 				header={
 					<DocsHeader
 						editUrl={docEditUrl(doc, config)}
-						links={config.links}
 						headerItems={config.headerItems}
 						docsUi={config.docsUi}
 						currentPath={currentPath}
@@ -525,7 +508,6 @@ export default createRoute(
 				mobileNavActions={
 					<HeaderActions
 						editUrl={docEditUrl(doc, config)}
-						links={config.links}
 						headerItems={config.headerItems}
 						docsUi={config.docsUi}
 						currentPath={currentPath}

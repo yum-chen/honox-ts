@@ -288,28 +288,6 @@ collections:
                                 widget: select
                                 options: [xs, sm, md, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, 7xl]
                                 default: md
-                          - label: Link
-                            name: link
-                            widget: object
-                            fields: &link_fields
-                              - { label: Text, name: text, widget: string }
-                              - { label: Href, name: href, widget: string }
-                              - label: Variant
-                                name: variant
-                                widget: select
-                                options: [underline, plain]
-                                default: underline
-                              - label: Color Palette
-                                name: colorPalette
-                                widget: select
-                                options: [blue, green, red, purple, orange, amber, cyan, slate]
-                                required: false
-                              - label: Target
-                                name: target
-                                widget: select
-                                options: ["_blank", "_self", "_parent", "_top"]
-                                required: false
-                              - { label: Rel, name: rel, widget: string, required: false }
                           - label: Icon
                             name: icon
                             widget: object
@@ -327,6 +305,41 @@ collections:
                                 options: [2xs, xs, sm, md, lg, xl]
                                 default: md
                               - { label: Accessible Label, name: ariaLabel, widget: string, required: false, hint: "Leave blank for a decorative icon" }
+                          - label: Link
+                            name: link
+                            widget: object
+                            fields: &link_fields
+                              - { label: Href, name: href, widget: string }
+                              - label: Children
+                                name: children
+                                widget: list
+                                typeKey: blockType
+                                hint: "The link's content — usually a single Text block; add an Icon block instead (or alongside) for a brand-mark/icon link like GitHub."
+                                types:
+                                  - label: Text
+                                    name: text
+                                    widget: object
+                                    fields: *text_fields
+                                  - label: Icon
+                                    name: icon
+                                    widget: object
+                                    fields: *icon_fields
+                              - label: Variant
+                                name: variant
+                                widget: select
+                                options: [underline, plain]
+                                default: underline
+                              - label: Color Palette
+                                name: colorPalette
+                                widget: select
+                                options: [blue, green, red, purple, orange, amber, cyan, slate]
+                                required: false
+                              - label: Target
+                                name: target
+                                widget: select
+                                options: ["_blank", "_self", "_parent", "_top"]
+                                required: false
+                              - { label: Rel, name: rel, widget: string, required: false }
                           - label: Checkbox
                             name: checkbox
                             widget: object
@@ -2057,8 +2070,28 @@ singletons:
             name: link
             widget: object
             fields:
-              - { label: Text, name: text, widget: string, i18n: true }
               - { label: Href, name: href, widget: string, i18n: duplicate }
+              - label: Children
+                name: children
+                widget: list
+                typeKey: blockType
+                i18n: true
+                hint: "The link's content — usually a single Text block; add an Icon block instead (or alongside) for a brand-mark/icon link like GitHub."
+                types:
+                  - label: Text
+                    name: text
+                    widget: object
+                    fields:
+                      - { label: Content, name: content, widget: string, i18n: true }
+                  - label: Icon
+                    name: icon
+                    widget: object
+                    fields:
+                      - { label: SVG Markup, name: svg, widget: text, i18n: duplicate, hint: "Raw inner SVG markup, e.g. <path d=\"M12 2 2 7l10 5 10-5-10-5z\" />" }
+                      - { label: View Box, name: viewBox, widget: string, default: "0 0 24 24", i18n: duplicate }
+                      - { label: Fill, name: fill, widget: string, default: "none", required: false, i18n: duplicate }
+                      - { label: Stroke, name: stroke, widget: string, default: "currentColor", required: false, i18n: duplicate }
+                      - { label: Accessible Label, name: ariaLabel, widget: string, required: false, i18n: true, hint: "Leave blank for a decorative icon" }
               - label: Variant
                 name: variant
                 widget: select

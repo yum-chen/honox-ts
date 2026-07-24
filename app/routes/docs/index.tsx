@@ -233,7 +233,6 @@ function DocsSidenav({
 }
 
 interface HeaderActionsProps {
-	links?: DocsNavLinkConfig[];
 	headerItems?: ComponentBlock[];
 	editUrl?: string;
 	currentPath: string;
@@ -245,17 +244,16 @@ interface HeaderActionsProps {
 
 // The actions shared between the desktop header row (`nav`, hidden below
 // `md`) and Layout's built-in mobile disclosure (`mobileNav`, which takes
-// over below `md` via `siderHideBelow`) — headerItems, edit/admin, language
-// switcher, GitHub. Rendered from a single function so both stay in sync.
+// over below `md` via `siderHideBelow`) — headerItems (incl. the GitHub
+// icon link, CMS-authored via `config.headerItems`), edit/admin, language
+// switcher. Rendered from a single function so both stay in sync.
 function HeaderActions({
-	links,
 	headerItems,
 	editUrl,
 	currentPath,
 	currentLocale,
 	compact,
 }: HeaderActionsProps) {
-	const githubLink = links?.find(isGithubLink);
 	const textStyle = compact ? "xs" : "sm";
 
 	return (
@@ -286,24 +284,12 @@ function HeaderActions({
 					{currentLocale === "zh" ? "内容管理" : "Admin"}
 				</Anchor>
 			)}
-			{githubLink && (
-				<Anchor
-					href={githubLink.href}
-					target="_blank"
-					rel="noopener noreferrer"
-					aria-label="View on GitHub"
-					class={cx(button({ variant: "plain", size: "sm" }), css({ px: "0" }))}
-				>
-					<GitHubIcon />
-				</Anchor>
-			)}
 		</>
 	);
 }
 
 interface DocsHeaderProps {
 	editUrl?: string;
-	links?: DocsNavLinkConfig[];
 	headerItems?: ComponentBlock[];
 	docsUi?: DocsUiConfig;
 	currentPath: string;
@@ -315,7 +301,6 @@ interface DocsHeaderProps {
 // `HeaderActions` and `DocsSidenav` instead of duplicating this markup.
 function DocsHeader({
 	editUrl,
-	links,
 	headerItems,
 	docsUi,
 	currentPath,
@@ -381,7 +366,6 @@ function DocsHeader({
 				})}
 			>
 				<HeaderActions
-					links={links}
 					headerItems={headerItems}
 					editUrl={editUrl}
 					currentPath={currentPath}
@@ -450,7 +434,6 @@ export default createRoute(async (c) => {
 			{...docsShellProps}
 			header={
 				<DocsHeader
-					links={config.links}
 					headerItems={config.headerItems}
 					docsUi={config.docsUi}
 					currentPath={currentPath}
@@ -467,7 +450,6 @@ export default createRoute(async (c) => {
 			mobileNavLabel={ui.menu}
 			mobileNavActions={
 				<HeaderActions
-					links={config.links}
 					headerItems={config.headerItems}
 					currentPath={currentPath}
 					currentLocale={currentLocale}

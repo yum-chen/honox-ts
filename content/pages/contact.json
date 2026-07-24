@@ -140,21 +140,36 @@
           "children": [
             {
               "blockType": "link",
-              "text": "Read the docs",
+              "children": [
+                {
+                  "blockType": "text",
+                  "content": "Read the docs"
+                }
+              ],
               "variant": "underline",
               "colorPalette": "blue",
               "href": "/docs"
             },
             {
               "blockType": "link",
-              "text": "Support center",
+              "children": [
+                {
+                  "blockType": "text",
+                  "content": "Support center"
+                }
+              ],
               "variant": "underline",
               "colorPalette": "purple",
               "href": "/support"
             },
             {
               "blockType": "link",
-              "text": "System status",
+              "children": [
+                {
+                  "blockType": "text",
+                  "content": "System status"
+                }
+              ],
               "variant": "plain",
               "colorPalette": "slate",
               "href": "/status"

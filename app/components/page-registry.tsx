@@ -305,8 +305,14 @@ const registry: Record<string, BlockRenderer> = {
 		// actual target is computed from the current request's path (also an
 		// extraProp, see `renderBlocks` call sites) so the switch preserves
 		// whatever page you're on, e.g. `/docs/foo` -> `/docs/de/foo`.
-		const { text, href, locale, currentPath, toggleLocale, ...rest } =
-			propsOf(b);
+		//
+		// Content is `children`-only (no flat `text` field) — a list of nested
+		// blocks rendered via `renderChildren`, same convention as every other
+		// container block (Stack/Card/...): usually a single `text` leaf for a
+		// plain label, or an `icon` leaf (plus optional `text`) for a brand-mark
+		// link like GitHub.
+		const { children } = b;
+		const { href, locale, currentPath, toggleLocale, ...rest } = propsOf(b);
 		let resolvedHref = href;
 		if (
 			typeof toggleLocale === "string" &&
@@ -319,7 +325,7 @@ const registry: Record<string, BlockRenderer> = {
 		}
 		return (
 			<Anchor href={resolvedHref} {...rest}>
-				{text}
+				{renderChildren(children as ComponentBlock[])}
 			</Anchor>
 		);
 	},

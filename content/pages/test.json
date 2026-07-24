@@ -420,17 +420,32 @@
           "children": [
             {
               "blockType": "link",
-              "text": "Availability",
+              "children": [
+                {
+                  "blockType": "text",
+                  "content": "Availability"
+                }
+              ],
               "href": "#"
             },
             {
               "blockType": "link",
-              "text": "Rates",
+              "children": [
+                {
+                  "blockType": "text",
+                  "content": "Rates"
+                }
+              ],
               "href": "#"
             },
             {
               "blockType": "link",
-              "text": "House Rules",
+              "children": [
+                {
+                  "blockType": "text",
+                  "content": "House Rules"
+                }
+              ],
               "href": "#"
             }
           ]

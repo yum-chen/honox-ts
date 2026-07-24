@@ -65,16 +65,19 @@ This component is available as a `link` block in the
 
 ```json
 {
-  "type": "link",
-  "text": "View Pricing",
+  "blockType": "link",
   "href": "/pricing",
   "variant": "underline",
-  "colorPalette": "blue"
+  "colorPalette": "blue",
+  "children": [{ "blockType": "text", "content": "View Pricing" }]
 }
 ```
 
-`text` becomes the anchor's children; every other field passes straight
-through to `Anchor`.
+The link's content comes entirely from `children` — a list of nested blocks,
+same convention as every other container block (Stack, Card, ...). A plain
+label is a single `text` leaf; add an `icon` leaf instead (or alongside) for
+a brand-mark/icon-only link, e.g. a GitHub link in a header. Every other
+field passes straight through to `Anchor`.
 
 # Props
 

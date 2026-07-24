@@ -7,8 +7,19 @@
       "gap": "3",
       "align": "center",
       "children": [
-        { "blockType": "avatar", "name": "Artefact UI", "size": "sm", "variant": "solid", "colorPalette": "blue" },
-        { "blockType": "heading", "as": "h1", "text": "Artefact UI", "size": "sm" }
+        {
+          "blockType": "avatar",
+          "name": "Artefact UI",
+          "size": "sm",
+          "variant": "solid",
+          "colorPalette": "blue"
+        },
+        {
+          "blockType": "heading",
+          "as": "h1",
+          "text": "Artefact UI",
+          "size": "sm"
+        }
       ]
     }
   ],
@@ -19,15 +30,66 @@
       "gap": "6",
       "align": "center",
       "children": [
-        { "blockType": "link", "text": "Blog", "href": "/blog/fr", "variant": "plain", "colorPalette": "blue" },
-        { "blockType": "link", "text": "Documentation", "href": "/docs/fr", "variant": "plain", "colorPalette": "blue" },
-        { "blockType": "link", "text": "Product", "href": "/pages/fr/product-landing", "variant": "plain", "colorPalette": "blue" },
-        { "blockType": "link", "text": "Sveltia CMS", "href": "/admin", "variant": "plain", "colorPalette": "blue" }
+        {
+          "blockType": "link",
+          "children": [
+            {
+              "blockType": "text",
+              "content": "Blog"
+            }
+          ],
+          "href": "/blog/fr",
+          "variant": "plain",
+          "colorPalette": "blue"
+        },
+        {
+          "blockType": "link",
+          "children": [
+            {
+              "blockType": "text",
+              "content": "Documentation"
+            }
+          ],
+          "href": "/docs/fr",
+          "variant": "plain",
+          "colorPalette": "blue"
+        },
+        {
+          "blockType": "link",
+          "children": [
+            {
+              "blockType": "text",
+              "content": "Product"
+            }
+          ],
+          "href": "/pages/fr/product-landing",
+          "variant": "plain",
+          "colorPalette": "blue"
+        },
+        {
+          "blockType": "link",
+          "children": [
+            {
+              "blockType": "text",
+              "content": "Sveltia CMS"
+            }
+          ],
+          "href": "/admin",
+          "variant": "plain",
+          "colorPalette": "blue"
+        }
       ]
     }
   ],
   "headerActions": [
-    { "blockType": "button", "text": "Explore Hub", "variant": "solid", "colorPalette": "blue", "size": "sm", "onclick": "window.scrollTo({top: document.getElementById('hub').offsetTop - 80, behavior: 'smooth'})" }
+    {
+      "blockType": "button",
+      "text": "Explore Hub",
+      "variant": "solid",
+      "colorPalette": "blue",
+      "size": "sm",
+      "onclick": "window.scrollTo({top: document.getElementById('hub').offsetTop - 80, behavior: 'smooth'})"
+    }
   ],
   "content": [
     {

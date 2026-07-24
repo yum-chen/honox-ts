@@ -64,7 +64,12 @@
         {
           "blockType": "link",
           "variant": "underline",
-          "text": "Watch the 2-minute overview →",
+          "children": [
+            {
+              "blockType": "text",
+              "content": "Watch the 2-minute overview →"
+            }
+          ],
           "colorPalette": "blue",
           "href": "https://www.youtube.com/@pulse",
           "target": "_blank"
@@ -345,28 +350,48 @@
           "children": [
             {
               "blockType": "link",
-              "text": "Read the docs",
+              "children": [
+                {
+                  "blockType": "text",
+                  "content": "Read the docs"
+                }
+              ],
               "variant": "underline",
               "colorPalette": "blue",
               "href": "/docs"
             },
             {
               "blockType": "link",
-              "text": "Changelog",
+              "children": [
+                {
+                  "blockType": "text",
+                  "content": "Changelog"
+                }
+              ],
               "variant": "plain",
               "colorPalette": "slate",
               "href": "/changelog"
             },
             {
               "blockType": "link",
-              "text": "API reference",
+              "children": [
+                {
+                  "blockType": "text",
+                  "content": "API reference"
+                }
+              ],
               "variant": "underline",
               "colorPalette": "purple",
               "href": "/api"
             },
             {
               "blockType": "link",
-              "text": "Follow on X",
+              "children": [
+                {
+                  "blockType": "text",
+                  "content": "Follow on X"
+                }
+              ],
               "variant": "underline",
               "colorPalette": "green",
               "href": "https://x.com/pulse",
@@ -517,7 +542,12 @@
         {
           "blockType": "link",
           "variant": "plain",
-          "text": "Read customer stories",
+          "children": [
+            {
+              "blockType": "text",
+              "content": "Read customer stories"
+            }
+          ],
           "colorPalette": "blue",
           "href": "/customers"
         }
