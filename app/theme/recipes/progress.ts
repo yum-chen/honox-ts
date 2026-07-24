@@ -51,6 +51,24 @@ export const progress = defineSlotRecipe({
 			lineHeight: "1",
 			fontWeight: "medium",
 		},
+		circle: {
+			display: "block",
+			transform: "rotate(-90deg)",
+			transformOrigin: "center",
+			_indeterminate: {
+				animation: "spin 2s linear infinite",
+			},
+		},
+		circleTrack: {
+			stroke: "gray.subtle.bg",
+		},
+		circleRange: {
+			stroke: "colorPalette.solid.bg",
+			strokeLinecap: "round",
+			_indeterminate: {
+				strokeDasharray: "62.8px 188.5px",
+			},
+		},
 	},
 
 	variants: {
@@ -113,11 +131,11 @@ export const progress = defineSlotRecipe({
 		},
 
 		size: {
-			xs: { track: { h: "1.5" } },
-			sm: { track: { h: "2" } },
-			md: { track: { h: "2.5" } },
-			lg: { track: { h: "3" } },
-			xl: { track: { h: "3.5" } },
+			xs: { track: { h: "1.5" }, circle: { boxSize: "8" } },
+			sm: { track: { h: "2" }, circle: { boxSize: "10" } },
+			md: { track: { h: "2.5" }, circle: { boxSize: "12" } },
+			lg: { track: { h: "3" }, circle: { boxSize: "16" } },
+			xl: { track: { h: "3.5" }, circle: { boxSize: "20" } },
 		},
 	},
 
