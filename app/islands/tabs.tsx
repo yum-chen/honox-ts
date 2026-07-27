@@ -28,6 +28,7 @@ export default function TabsIsland(props: TabsIslandProps) {
 	const [mountedValues, setMountedValues] = useState<string[]>(
 		mountedValuesProp ?? (initialValue !== undefined ? [initialValue] : []),
 	);
+	const [isMeasured, setIsMeasured] = useState(false);
 
 	useEffect(() => {
 		if (valueProp !== undefined) {
@@ -51,14 +52,16 @@ export default function TabsIsland(props: TabsIslandProps) {
 		const left = `${rect.left - listRect.left}px`;
 		const top = `${rect.top - listRect.top}px`;
 
-		for (const el of [root, list] as unknown[]) {
-			if (el) {
-				const element = el as HTMLElement;
-				element.style.setProperty("--width", width);
-				element.style.setProperty("--height", height);
-				element.style.setProperty("--left", left);
-				element.style.setProperty("--top", top);
-			}
+		const elementsToUpdate: HTMLElement[] = [];
+		if (root) elementsToUpdate.push(root);
+		const listEl = root.querySelector('[data-part="list"]');
+		if (listEl instanceof HTMLElement) elementsToUpdate.push(listEl);
+
+		for (const element of elementsToUpdate) {
+			element.style.setProperty("--width", width);
+			element.style.setProperty("--height", height);
+			element.style.setProperty("--left", left);
+			element.style.setProperty("--top", top);
 		}
 	};
 
@@ -113,6 +116,7 @@ export default function TabsIsland(props: TabsIslandProps) {
 		if (activeTrigger) {
 			requestAnimationFrame(() => {
 				updateIndicator(activeTrigger);
+				setIsMeasured(true);
 			});
 		}
 	}, [value, focusedValue]);
@@ -317,6 +321,7 @@ export default function TabsIsland(props: TabsIslandProps) {
 			onValueChange={handleValueChange}
 			rootRef={rootRef}
 			mountedValues={mountedValues}
+			isMeasured={isMeasured}
 			data-hydrated="true"
 		>
 			{children}

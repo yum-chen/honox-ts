@@ -60,6 +60,15 @@ export const tabs = defineSlotRecipe({
 			width: "var(--width)",
 			height: "var(--height)",
 			zIndex: -1,
+			"&[data-measured=false]": {
+				opacity: 0,
+				transition: "none",
+			},
+			"&[data-measured=true]": {
+				opacity: 1,
+				transition:
+					"left 0.2s, top 0.2s, width 0.2s, height 0.2s, opacity 0.2s",
+			},
 		},
 	},
 
