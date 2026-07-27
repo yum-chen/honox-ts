@@ -36,7 +36,6 @@ export { Dropdown, type DropdownItem, type DropdownProps } from "./dropdown";
 export * as DropdownPrimitive from "./dropdown-primitive";
 export { Editable, type EditableProps } from "./editable";
 export { Field, type FieldProps } from "./field";
-export { Input, type InputProps } from "./input";
 export {
 	Fieldset,
 	FieldsetContent,
@@ -54,6 +53,7 @@ export { Group, type GroupProps } from "./group";
 export { Heading, type HeadingProps } from "./heading";
 export { HoverCard, type HoverCardProps } from "./hover-card";
 export { Icon, type IconProps } from "./icon";
+export { Input, type InputProps } from "./input";
 export { Layout, type LayoutProps } from "./layout";
 export { Loader, type LoaderProps } from "./loader";
 export { PaginatedTable } from "./paginated-table";
