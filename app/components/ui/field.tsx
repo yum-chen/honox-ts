@@ -1,7 +1,13 @@
 import FieldIsland from "../../islands/field";
 import {
 	type FieldProps as BaseFieldProps,
+	FieldErrorText,
+	FieldHelperText,
+	FieldInput,
+	FieldLabel,
+	FieldRequiredIndicator,
 	FieldRoot,
+	FieldTextarea,
 } from "./field-primitive";
 import { shouldHydrate } from "./island-utils";
 
@@ -49,5 +55,13 @@ export function Field(props: FieldProps) {
 
 	return <FieldRoot {...props} />;
 }
+
+// Compound API bindings
+Field.Label = FieldLabel;
+Field.Input = FieldInput;
+Field.Textarea = FieldTextarea;
+Field.HelperText = FieldHelperText;
+Field.ErrorText = FieldErrorText;
+Field.RequiredIndicator = FieldRequiredIndicator;
 
 export default Field;

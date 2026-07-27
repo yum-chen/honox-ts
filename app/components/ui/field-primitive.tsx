@@ -1,6 +1,9 @@
 import { cx } from "design-system/css";
-import type { FieldVariantProps } from "design-system/recipes";
-import { field, input } from "design-system/recipes";
+import type {
+	FieldVariantProps,
+	TextareaVariantProps,
+} from "design-system/recipes";
+import { field, input, textarea } from "design-system/recipes";
 import {
 	type Child,
 	createContext,
@@ -67,7 +70,15 @@ const resolveValidator = (
 	// itself has been dropped — never during SSR, since Workers-style
 	// runtimes disallow dynamic code generation. The source must not close
 	// over any outer variables, since it's rebuilt with no lexical scope.
-	return new Function(`return (${validator})`)() as ValidatorFn;
+	try {
+		return new Function(`return (${validator})`)() as ValidatorFn;
+	} catch (e) {
+		console.warn(
+			"Field: Failed to reconstruct validator function from string due to security policies or environment constraints:",
+			e,
+		);
+		return undefined;
+	}
 };
 
 export const validateField = (
@@ -338,4 +349,120 @@ export function FieldRequiredIndicator(props: {
 
 export function InteractiveField(props: FieldProps) {
 	return <FieldRoot {...props} />;
+}
+
+export interface FieldInputProps {
+	class?: string;
+	type?: string;
+	value?: string;
+	onValueChange?: (value: string) => void;
+	onInput?: (e: any) => void;
+	[key: string]: unknown;
+}
+
+export function FieldInput(props: FieldInputProps) {
+	const context = useFieldContext();
+	const styles = field();
+	const {
+		class: classProp,
+		type,
+		value: valueProp,
+		onValueChange,
+		onInput,
+		...rest
+	} = props;
+
+	const describedBy = [
+		context?.hasHelperText ? context?.helperTextId : null,
+		context?.invalid && context?.hasErrorText ? context?.errorTextId : null,
+	]
+		.filter(Boolean)
+		.join(" ");
+
+	const value = valueProp !== undefined ? valueProp : context?.value;
+
+	const handleInput = (e: any) => {
+		if (onInput) onInput(e);
+		const newValue = e.target.value;
+		if (onValueChange) onValueChange(newValue);
+		if (context?.onValueChange) {
+			context.onValueChange(newValue);
+		}
+	};
+
+	return (
+		<input
+			id={context?.id}
+			type={type || "text"}
+			disabled={context?.disabled}
+			{...((context?.readOnly ? { readOnly: "" } : {}) as Record<
+				string,
+				unknown
+			>)}
+			required={context?.required}
+			aria-invalid={context?.invalid ? "true" : undefined}
+			aria-describedby={describedBy || undefined}
+			value={value}
+			onInput={handleInput}
+			class={cx(input(), styles.input, classProp)}
+			{...(rest as Record<string, unknown>)}
+		/>
+	);
+}
+
+export interface FieldTextareaProps extends TextareaVariantProps {
+	class?: string;
+	value?: string;
+	onValueChange?: (value: string) => void;
+	onInput?: (e: any) => void;
+	[key: string]: unknown;
+}
+
+export function FieldTextarea(props: FieldTextareaProps) {
+	const context = useFieldContext();
+	const [variantProps, localProps] = textarea.splitVariantProps(props);
+	const {
+		class: classProp,
+		value: valueProp,
+		onValueChange,
+		onInput,
+		...restProps
+	} = localProps;
+	const styles = textarea(variantProps);
+
+	const describedBy = [
+		context?.hasHelperText ? context?.helperTextId : null,
+		context?.invalid && context?.hasErrorText ? context?.errorTextId : null,
+	]
+		.filter(Boolean)
+		.join(" ");
+
+	const value = valueProp !== undefined ? valueProp : context?.value;
+
+	const handleInput = (e: any) => {
+		if (onInput) onInput(e);
+		const newValue = e.target.value;
+		if (onValueChange) onValueChange(newValue);
+		if (context?.onValueChange) {
+			context.onValueChange(newValue);
+		}
+	};
+
+	return (
+		<textarea
+			id={context?.id}
+			disabled={context?.disabled}
+			{...((context?.readOnly ? { readOnly: "" } : {}) as Record<
+				string,
+				unknown
+			>)}
+			required={context?.required}
+			aria-invalid={context?.invalid ? "true" : undefined}
+			aria-describedby={describedBy || undefined}
+			value={value}
+			onInput={handleInput}
+			class={cx(styles, classProp)}
+			{...(restProps as Record<string, unknown>)}
+		/>
+	);
 }
