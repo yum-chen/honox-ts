@@ -81,3 +81,51 @@ test("Field - Correctly priorities value over defaultValue on SSR", () => {
 	expect(html).toContain('value="controlled-val"');
 	expect(html).not.toContain('value="default-val"');
 });
+
+test("Field - Compound API propagation (Field.Input & Field.Textarea)", () => {
+	const htmlInput = (
+		<Field
+			id="compound-input"
+			disabled
+			required
+			invalid
+			helperText="Helper info"
+			errorText="Error info"
+		>
+			<Field.Label>Compound Label</Field.Label>
+			<Field.Input value="nested-val" />
+			<Field.HelperText>Helper info</Field.HelperText>
+			<Field.ErrorText>Error info</Field.ErrorText>
+		</Field>
+	).toString();
+
+	// Verify input receives context values
+	expect(htmlInput).toContain('id="compound-input"');
+	expect(htmlInput).toContain('disabled=""');
+	expect(htmlInput).toContain('required=""');
+	expect(htmlInput).toContain('aria-invalid="true"');
+	expect(htmlInput).toContain('value="nested-val"');
+	expect(htmlInput).toContain('aria-describedby="field::compound-input::helper-text field::compound-input::error-text"');
+
+	const htmlTextarea = (
+		<Field
+			id="compound-textarea"
+			disabled
+			required
+			invalid
+			helperText="Helper info"
+			errorText="Error info"
+		>
+			<Field.Label>Compound Textarea Label</Field.Label>
+			<Field.Textarea value="nested-area-val" />
+		</Field>
+	).toString();
+
+	// Verify textarea receives context values
+	expect(htmlTextarea).toContain('id="compound-textarea"');
+	expect(htmlTextarea).toContain('disabled=""');
+	expect(htmlTextarea).toContain('required=""');
+	expect(htmlTextarea).toContain('aria-invalid="true"');
+	expect(htmlTextarea).toContain("nested-area-val");
+	expect(htmlTextarea).toContain('aria-describedby="field::compound-textarea::helper-text field::compound-textarea::error-text"');
+});

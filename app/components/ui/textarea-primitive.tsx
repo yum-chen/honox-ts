@@ -1,6 +1,7 @@
 import { cx } from "design-system/css";
 import type { TextareaVariantProps } from "design-system/recipes";
 import { textarea } from "design-system/recipes";
+import type { Child } from "hono/jsx";
 import {
 	FieldRoot,
 	useFieldContext,
@@ -8,12 +9,12 @@ import {
 } from "./field-primitive";
 
 export interface TextareaPrimitiveProps extends TextareaVariantProps {
-	children?: any;
+	children?: Child;
 	class?: string;
 	value?: string;
 	onValueChange?: (value: string) => void;
 	onInput?: (e: any) => void;
-	[key: string]: any;
+	[key: string]: unknown;
 }
 
 export function TextareaPrimitive(props: TextareaPrimitiveProps) {
@@ -37,7 +38,7 @@ export function TextareaPrimitive(props: TextareaPrimitiveProps) {
 
 	const handleInput = (e: any) => {
 		if (onInput) onInput(e);
-		const newValue = e.target.value;
+		const newValue = (e.target as HTMLTextAreaElement).value;
 		if (onValueChange) onValueChange(newValue);
 		if (field?.onValueChange) {
 			field.onValueChange(newValue);
@@ -57,7 +58,7 @@ export function TextareaPrimitive(props: TextareaPrimitiveProps) {
 			class={cx(styles, classProp)}
 			value={value}
 			onInput={handleInput}
-			{...(restProps as any)}
+			{...(restProps as Record<string, unknown>)}
 		/>
 	);
 }
