@@ -10,12 +10,18 @@ import {
 	useRef,
 	useState,
 } from "hono/jsx";
-import { getArrowRotation, getArrowStyle } from "./overlay-position";
+import { whenAnimationEnds } from "./overlay-a11y";
+import {
+	getArrowRotation,
+	getArrowStyle,
+	getPlacementStyle,
+	type OverlayPlacement,
+	positionOverlay,
+} from "./overlay-position";
 
+export type HoverCardPlacement = OverlayPlacement;
 type HoverCardStyles = ReturnType<typeof hoverCard>;
 
-// Positioner always renders below-left of the trigger (see Positioner below),
-// so the arrow is fixed to "bottom" placement — there's no dynamic flipping.
 const ARROW_OFFSET = "16px";
 const PLACEMENT_CONFIG = { align: "start", arrowOffset: ARROW_OFFSET } as const;
 
@@ -23,6 +29,7 @@ export interface HoverCardContextValue {
 	id: string;
 	open: boolean;
 	styles: HoverCardStyles;
+	placement?: HoverCardPlacement;
 	lazyMount?: boolean;
 	unmountOnExit?: boolean;
 	hasOpenedRef?: { current: boolean };
@@ -38,6 +45,7 @@ export const useHoverCardContext = () => {
 export interface HoverCardRootProps extends PropsWithChildren {
 	id?: string;
 	open?: boolean;
+	placement?: HoverCardPlacement;
 	defaultOpen?: boolean;
 	onOpenChange?: (details: { open: boolean }) => void;
 	openDelay?: number;
@@ -50,6 +58,7 @@ export function Root(props: HoverCardRootProps) {
 	const {
 		id: idProp,
 		open = false,
+		placement = "bottom",
 		children,
 		lazyMount,
 		unmountOnExit,
@@ -64,7 +73,15 @@ export function Root(props: HoverCardRootProps) {
 
 	return (
 		<HoverCardContext.Provider
-			value={{ id, open, styles, lazyMount, unmountOnExit, hasOpenedRef }}
+			value={{
+				id,
+				open,
+				styles,
+				placement,
+				lazyMount,
+				unmountOnExit,
+				hasOpenedRef,
+			}}
 		>
 			{children}
 		</HoverCardContext.Provider>
@@ -116,17 +133,24 @@ export function Trigger(props: HoverCardTriggerProps) {
 
 export interface HoverCardPositionerProps extends PropsWithChildren {
 	class?: string;
+	placement?: HoverCardPlacement;
 	[key: string]: unknown;
 }
 
 export function Positioner(props: HoverCardPositionerProps) {
-	const { children, class: classProp, ...restProps } = props;
+	const {
+		children,
+		class: classProp,
+		placement: placementProp,
+		...restProps
+	} = props;
 	const context = useHoverCardContext();
 	const open = context?.open;
 	const styles = context?.styles || hoverCard();
 	const lazyMount = context?.lazyMount;
 	const unmountOnExit = context?.unmountOnExit;
 	const hasOpenedRef = context?.hasOpenedRef;
+	const placement = placementProp ?? context?.placement ?? "bottom";
 
 	if (open && hasOpenedRef) {
 		hasOpenedRef.current = true;
@@ -149,11 +173,11 @@ export function Positioner(props: HoverCardPositionerProps) {
 			data-state={open ? "open" : "closed"}
 			data-scope="hover-card"
 			data-part="positioner"
+			data-placement={placement}
 			style={{
 				position: "absolute",
-				top: "100%",
-				left: "0",
 				zIndex: 1000,
+				...getPlacementStyle(placement, PLACEMENT_CONFIG),
 			}}
 			{...restProps}
 		>
@@ -203,33 +227,45 @@ export function Content(props: HoverCardContentProps) {
 	);
 }
 
-export function Arrow(props: PropsWithChildren<{ class?: string }>) {
-	const { children, class: classProp, ...restProps } = props;
+export function Arrow(
+	props: PropsWithChildren<{ class?: string; placement?: HoverCardPlacement }>,
+) {
+	const {
+		children,
+		class: classProp,
+		placement: placementProp,
+		...restProps
+	} = props;
 	const context = useHoverCardContext();
 	const styles = context?.styles || hoverCard();
+	const placement = placementProp ?? context?.placement ?? "bottom";
 	return (
 		<div
 			class={cx(styles.arrow, classProp)}
 			data-scope="hover-card"
 			data-part="arrow"
-			style={getArrowStyle("bottom", PLACEMENT_CONFIG)}
+			style={getArrowStyle(placement, PLACEMENT_CONFIG)}
 			{...restProps}
 		>
-			{children || <ArrowTip />}
+			{children || <ArrowTip placement={placement} />}
 		</div>
 	);
 }
 
-export function ArrowTip(props: { class?: string }) {
-	const { class: classProp, ...restProps } = props;
+export function ArrowTip(props: {
+	class?: string;
+	placement?: HoverCardPlacement;
+}) {
+	const { class: classProp, placement: placementProp, ...restProps } = props;
 	const context = useHoverCardContext();
 	const styles = context?.styles || hoverCard();
+	const placement = placementProp ?? context?.placement ?? "bottom";
 	return (
 		<div
 			class={cx(styles.arrowTip, classProp)}
 			data-scope="hover-card"
 			data-part="arrow-tip"
-			style={{ transform: `rotate(${getArrowRotation("bottom")}deg)` }}
+			style={{ transform: `rotate(${getArrowRotation(placement)}deg)` }}
 			{...restProps}
 		/>
 	);
@@ -247,6 +283,7 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 		open: openProp,
 		children,
 		id: idProp,
+		placement = "bottom",
 		openDelay = 600,
 		closeDelay = 300,
 		defaultOpen = false,
@@ -301,6 +338,9 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 		}, closeDelay);
 	};
 
+	const placementRef = useRef(placement);
+	placementRef.current = placement;
+
 	useEffect(() => {
 		if (typeof document === "undefined") return;
 
@@ -312,12 +352,16 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 				root.querySelectorAll<HTMLElement>('[data-part="positioner"]'),
 			);
 
+		let cancelPendingHide = () => {};
+
 		const openHoverCard = () => {
+			cancelPendingHide();
 			root.setAttribute("data-state", "open");
 			getPositioners().forEach((p) => {
 				p.style.setProperty("display", "block", "important");
 				p.setAttribute("data-state", "open");
 			});
+			positionOverlay(root, { align: "start", arrowOffset: ARROW_OFFSET });
 			const content = root.querySelector<HTMLElement>('[data-part="content"]');
 			if (content) {
 				content.setAttribute("data-state", "open");
@@ -332,7 +376,6 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 		const closeHoverCard = () => {
 			root.setAttribute("data-state", "closed");
 			getPositioners().forEach((p) => {
-				p.style.setProperty("display", "none", "important");
 				p.setAttribute("data-state", "closed");
 			});
 			const content = root.querySelector<HTMLElement>('[data-part="content"]');
@@ -344,6 +387,22 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 				trigger.setAttribute("data-state", "closed");
 				trigger.setAttribute("aria-expanded", "false");
 			}
+
+			cancelPendingHide();
+			const animatedEl = content ?? getPositioners()[0];
+			if (animatedEl) {
+				cancelPendingHide = whenAnimationEnds(animatedEl, () => {
+					if (root.getAttribute("data-state") !== "open") {
+						getPositioners().forEach((p) => {
+							p.style.setProperty("display", "none", "important");
+						});
+					}
+				});
+			} else {
+				getPositioners().forEach((p) => {
+					p.style.setProperty("display", "none", "important");
+				});
+			}
 		};
 
 		if (open) {
@@ -351,14 +410,18 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 		} else {
 			closeHoverCard();
 		}
+
+		return () => {
+			cancelPendingHide();
+		};
 	}, [rootId, open]);
 
 	useEffect(() => {
 		const root = rootRef.current;
 		if (!root) return;
 
-		const trigger = root.querySelector('[data-part="trigger"]');
-		const content = root.querySelector('[data-part="content"]');
+		const trigger = root.querySelector<HTMLElement>('[data-part="trigger"]');
+		const content = root.querySelector<HTMLElement>('[data-part="content"]');
 
 		const onMouseEnter = () => {
 			handleOpen();
@@ -366,16 +429,40 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 		const onMouseLeave = () => {
 			handleClose();
 		};
+		const onFocus = () => {
+			handleOpen();
+		};
+		const onBlur = () => {
+			handleClose();
+		};
+		const onKeyDown = (e: KeyboardEvent) => {
+			if (e.key === "Escape") {
+				handleClose();
+			}
+		};
+		const onResize = () => {
+			const isCurrentlyOpen = root.getAttribute("data-state") === "open";
+			if (isCurrentlyOpen) {
+				positionOverlay(root, { align: "start", arrowOffset: ARROW_OFFSET });
+			}
+		};
 
 		if (trigger) {
 			trigger.addEventListener("mouseenter", onMouseEnter);
 			trigger.addEventListener("mouseleave", onMouseLeave);
+			trigger.addEventListener("focus", onFocus);
+			trigger.addEventListener("blur", onBlur);
 		}
 
 		if (content) {
 			content.addEventListener("mouseenter", onMouseEnter);
 			content.addEventListener("mouseleave", onMouseLeave);
+			content.addEventListener("focus", onFocus);
+			content.addEventListener("blur", onBlur);
 		}
+
+		document.addEventListener("keydown", onKeyDown);
+		window.addEventListener("resize", onResize);
 
 		// If the pointer is already over the trigger at hydration time, open.
 		if (trigger?.matches(":hover")) {
@@ -386,11 +473,17 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 			if (trigger) {
 				trigger.removeEventListener("mouseenter", onMouseEnter);
 				trigger.removeEventListener("mouseleave", onMouseLeave);
+				trigger.removeEventListener("focus", onFocus);
+				trigger.removeEventListener("blur", onBlur);
 			}
 			if (content) {
 				content.removeEventListener("mouseenter", onMouseEnter);
 				content.removeEventListener("mouseleave", onMouseLeave);
+				content.removeEventListener("focus", onFocus);
+				content.removeEventListener("blur", onBlur);
 			}
+			document.removeEventListener("keydown", onKeyDown);
+			window.removeEventListener("resize", onResize);
 			if (openTimerRef.current) clearTimeout(openTimerRef.current);
 			if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
 		};
@@ -400,6 +493,8 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 		<div
 			id={rootId}
 			ref={rootRef}
+			data-hover-card-root
+			data-overlay-root
 			data-state={open ? "open" : "closed"}
 			style={{ position: "relative", display: "inline-block" }}
 		>
@@ -407,6 +502,7 @@ export function InteractiveHoverCardRoot(props: HoverCardRootProps) {
 				{...rest}
 				id={idProp}
 				open={open}
+				placement={placement}
 				lazyMount={lazyMount}
 				unmountOnExit={unmountOnExit}
 			>
