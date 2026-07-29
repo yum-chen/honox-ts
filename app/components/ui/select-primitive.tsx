@@ -70,6 +70,8 @@ interface RootProps extends SelectVariantProps, PropsWithChildren {
 interface SelectFlattenedProps extends RootProps {
 	items?: SelectItem[];
 	label?: Child;
+	helperText?: Child;
+	errorText?: Child;
 	placeholder?: string;
 	allowClear?: boolean;
 	defaultValue?: string[];
@@ -122,6 +124,8 @@ function Root(props: RootProps) {
 	// Flattened-API-only props must not leak onto the DOM as attributes.
 	const {
 		label: _label,
+		helperText: _helperText,
+		errorText: _errorText,
 		placeholder: _placeholder,
 		allowClear: _allowClear,
 		defaultValue: _defaultValue,
@@ -171,6 +175,66 @@ function Root(props: RootProps) {
 	);
 }
 
+function RequiredIndicator(props: {
+	children?: Child;
+	class?: string;
+}) {
+	const context = useSelectContext();
+	return (
+		<span
+			aria-hidden="true"
+			data-scope="select"
+			data-part="required-indicator"
+			class={cx(context?.styles.requiredIndicator, props.class)}
+			data-disabled={context?.disabled ? "" : undefined}
+			data-invalid={context?.invalid ? "" : undefined}
+			data-readonly={context?.readOnly ? "" : undefined}
+			data-required={context?.required ? "" : undefined}
+		>
+			{props.children || "*"}
+		</span>
+	);
+}
+
+function HelperText(props: { children?: Child; class?: string }) {
+	const context = useSelectContext();
+	return (
+		<div
+			data-scope="select"
+			data-part="helper-text"
+			class={cx(context?.styles.helperText, props.class)}
+			data-disabled={context?.disabled ? "" : undefined}
+			data-invalid={context?.invalid ? "" : undefined}
+			data-readonly={context?.readOnly ? "" : undefined}
+			data-required={context?.required ? "" : undefined}
+		>
+			{props.children}
+		</div>
+	);
+}
+
+function ErrorText(props: { children?: Child; class?: string }) {
+	const context = useSelectContext();
+	const content = props.children;
+	if (context?.invalid && content) {
+		return (
+			<div
+				data-scope="select"
+				data-part="error-text"
+				aria-live="polite"
+				class={cx(context?.styles.errorText, props.class)}
+				data-disabled={context?.disabled ? "" : undefined}
+				data-invalid={context?.invalid ? "" : undefined}
+				data-readonly={context?.readOnly ? "" : undefined}
+				data-required={context?.required ? "" : undefined}
+			>
+				{content}
+			</div>
+		);
+	}
+	return null;
+}
+
 function Label(props: PropsWithChildren<{ class?: string; htmlFor?: string }>) {
 	const { children, class: classProp, htmlFor, ...rest } = props;
 	const context = useSelectContext();
@@ -189,6 +253,7 @@ function Label(props: PropsWithChildren<{ class?: string; htmlFor?: string }>) {
 			{...rest}
 		>
 			{children}
+			{context?.required && <RequiredIndicator />}
 		</label>
 	);
 }
@@ -552,7 +617,16 @@ function HiddenSelect(props: { items?: SelectItem[] }) {
 }
 
 function SelectStructure(props: SelectFlattenedProps) {
-	const { items = [], label, placeholder, allowClear, children } = props;
+	const {
+		items = [],
+		label,
+		helperText,
+		errorText,
+		placeholder,
+		allowClear,
+		children,
+	} = props;
+	const context = useSelectContext();
 
 	return (
 		<>
@@ -584,6 +658,10 @@ function SelectStructure(props: SelectFlattenedProps) {
 				</Content>
 			</Positioner>
 			<HiddenSelect items={items} />
+			{helperText && <HelperText>{helperText}</HelperText>}
+			{(context?.invalid || props.invalid) && errorText && (
+				<ErrorText>{errorText}</ErrorText>
+			)}
 			{children}
 		</>
 	);
@@ -1034,4 +1112,7 @@ export {
 	Trigger,
 	useSelectContext,
 	ValueText,
+	RequiredIndicator,
+	HelperText,
+	ErrorText,
 };

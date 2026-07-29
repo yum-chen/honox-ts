@@ -104,6 +104,19 @@ export function Root(props: RootProps) {
 		...rest
 	} = localProps;
 
+	// Flattened-API-only props must not leak onto the DOM as attributes.
+	const {
+		label: _label,
+		helperText: _helperText,
+		errorText: _errorText,
+		placeholder: _placeholder,
+		allowClear: _allowClear,
+		closeOnSelect: _closeOnSelect,
+		defaultValue: _defaultValue,
+		onValueChange: _onValueChange,
+		...domProps
+	} = rest;
+
 	const styles = combobox(variantProps);
 	const rootId = id || "combobox";
 
@@ -135,7 +148,7 @@ export function Root(props: RootProps) {
 				data-part="root"
 				class={cx(styles.root, classProp)}
 				style={{ position: "relative", ...style }}
-				{...rest}
+				{...domProps}
 			>
 				{children}
 			</div>
@@ -145,6 +158,66 @@ export function Root(props: RootProps) {
 
 export function RootProvider(props: RootProps) {
 	return <Root {...props} />;
+}
+
+export function RequiredIndicator(props: {
+	children?: Child;
+	class?: string;
+}) {
+	const context = useComboboxContext();
+	return (
+		<span
+			aria-hidden="true"
+			data-scope="combobox"
+			data-part="required-indicator"
+			class={cx(context?.styles.requiredIndicator, props.class)}
+			data-disabled={context?.disabled ? "" : undefined}
+			data-invalid={context?.invalid ? "" : undefined}
+			data-readonly={context?.readOnly ? "" : undefined}
+			data-required={context?.required ? "" : undefined}
+		>
+			{props.children || "*"}
+		</span>
+	);
+}
+
+export function HelperText(props: { children?: Child; class?: string }) {
+	const context = useComboboxContext();
+	return (
+		<div
+			data-scope="combobox"
+			data-part="helper-text"
+			class={cx(context?.styles.helperText, props.class)}
+			data-disabled={context?.disabled ? "" : undefined}
+			data-invalid={context?.invalid ? "" : undefined}
+			data-readonly={context?.readOnly ? "" : undefined}
+			data-required={context?.required ? "" : undefined}
+		>
+			{props.children}
+		</div>
+	);
+}
+
+export function ErrorText(props: { children?: Child; class?: string }) {
+	const context = useComboboxContext();
+	const content = props.children;
+	if (context?.invalid && content) {
+		return (
+			<div
+				data-scope="combobox"
+				data-part="error-text"
+				aria-live="polite"
+				class={cx(context?.styles.errorText, props.class)}
+				data-disabled={context?.disabled ? "" : undefined}
+				data-invalid={context?.invalid ? "" : undefined}
+				data-readonly={context?.readOnly ? "" : undefined}
+				data-required={context?.required ? "" : undefined}
+			>
+				{content}
+			</div>
+		);
+	}
+	return null;
 }
 
 export function Label(
@@ -167,6 +240,7 @@ export function Label(
 			{...rest}
 		>
 			{children}
+			{context?.required && <RequiredIndicator />}
 		</label>
 	);
 }
@@ -518,6 +592,8 @@ export function Context(props: { children: (context: any) => any }) {
 export interface ComboboxFlattenedProps extends RootProps {
 	items?: ComboboxItem[];
 	label?: Child;
+	helperText?: Child;
+	errorText?: Child;
 	placeholder?: string;
 	allowClear?: boolean;
 	closeOnSelect?: boolean;
@@ -528,7 +604,15 @@ export interface ComboboxFlattenedProps extends RootProps {
 }
 
 export function ComboboxStructure(props: ComboboxFlattenedProps) {
-	const { items = [], label, placeholder, allowClear, children } = props;
+	const {
+		items = [],
+		label,
+		helperText,
+		errorText,
+		placeholder,
+		allowClear,
+		children,
+	} = props;
 	const context = useComboboxContext();
 
 	const filterText =
@@ -591,6 +675,10 @@ export function ComboboxStructure(props: ComboboxFlattenedProps) {
 					</List>
 				</Content>
 			</Positioner>
+			{helperText && <HelperText>{helperText}</HelperText>}
+			{(context?.invalid || props.invalid) && errorText && (
+				<ErrorText>{errorText}</ErrorText>
+			)}
 			{children}
 		</>
 	);

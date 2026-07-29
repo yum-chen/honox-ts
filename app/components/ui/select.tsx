@@ -20,6 +20,9 @@ import {
 	SelectStructure,
 	Trigger,
 	ValueText,
+	RequiredIndicator,
+	HelperText,
+	ErrorText,
 } from "./select-primitive";
 
 export interface SelectProps extends SelectFlattenedProps {
@@ -63,6 +66,9 @@ export const Select = Object.assign(SelectRoot, {
 	ItemGroupLabel,
 	ClearTrigger,
 	HiddenSelect,
+	RequiredIndicator,
+	HelperText,
+	ErrorText,
 });
 
 export {
@@ -83,6 +89,9 @@ export {
 	Root,
 	Trigger,
 	ValueText,
+	RequiredIndicator,
+	HelperText,
+	ErrorText,
 };
 
 export default Select;

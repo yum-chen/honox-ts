@@ -60,8 +60,8 @@ describe("Table Unit Tests", () => {
 
 		expect(table).toBeDefined();
 		// Since it has a sortable column and interactive is omitted, shouldHydrate returns true.
-		// It should render TableIsland component.
+		// It should render TableSortIsland component.
 		expect(table.tag).toBeDefined();
-		expect(table.tag.name).toBe("TableIsland");
+		expect(table.tag.name).toBe("TableSortIsland");
 	});
 });

@@ -101,4 +101,42 @@ describe("Combobox Unit Tests", () => {
 		expect(html).toContain('data-disabled=""');
 		expect(html).toContain('data-index="2"');
 	});
+
+	test("should support label, helperText, and errorText with required indicator", () => {
+		const html = (
+			<Combobox
+				interactive={false}
+				label="Select Option"
+				required={true}
+				invalid={true}
+				helperText="This is helper text"
+				errorText="This is error text"
+				items={[{ label: "Option 1", value: "opt1" }]}
+			/>
+		).toString();
+
+		expect(html).toContain("Select Option");
+		expect(html).toContain('data-part="required-indicator"');
+		expect(html).toContain("*");
+		expect(html).toContain("This is helper text");
+		expect(html).toContain('data-part="helper-text"');
+		expect(html).toContain("This is error text");
+		expect(html).toContain('data-part="error-text"');
+	});
+
+	test("should not render errorText when invalid is false", () => {
+		const html = (
+			<Combobox
+				interactive={false}
+				label="Select Option"
+				invalid={false}
+				helperText="This is helper text"
+				errorText="This is error text"
+				items={[{ label: "Option 1", value: "opt1" }]}
+			/>
+		).toString();
+
+		expect(html).toContain("This is helper text");
+		expect(html).not.toContain("This is error text");
+	});
 });

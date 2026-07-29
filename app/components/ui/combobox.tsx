@@ -21,6 +21,9 @@ import {
 	Root,
 	RootProvider,
 	Trigger,
+	RequiredIndicator,
+	HelperText,
+	ErrorText,
 } from "./combobox-primitive";
 import { shouldHydrate } from "./island-utils";
 
@@ -69,6 +72,9 @@ export const Combobox = Object.assign(ComboboxRoot, {
 	Empty,
 	IndicatorGroup,
 	Context,
+	RequiredIndicator,
+	HelperText,
+	ErrorText,
 });
 
 export {
@@ -90,6 +96,9 @@ export {
 	Root,
 	RootProvider,
 	Trigger,
+	RequiredIndicator,
+	HelperText,
+	ErrorText,
 };
 
 export default Combobox;

@@ -13,10 +13,12 @@ import { type DocsConfig, loadDocsConfig } from "./configs";
 // vite.config.ts) so pages can embed live, actually-rendered examples.
 // content/posts is excluded (any locale depth): blog posts have their own
 // loader/route (app/lib/posts.ts).
-const markdownModules = import.meta.glob(
-	["/content/*/*.md", "/content/*/*/*.md", "!/content/posts/**"],
-	{ query: "?raw", import: "default" },
-) as Record<string, () => Promise<string>>;
+const markdownModules = (typeof import.meta.glob === "function"
+	? import.meta.glob(
+			["/content/*/*.md", "/content/*/*/*.md", "!/content/posts/**"],
+			{ query: "?raw", import: "default" },
+		)
+	: {}) as Record<string, () => Promise<string>>;
 
 interface MdxFrontmatter {
 	title?: string;
@@ -27,10 +29,12 @@ type MdxModule = () => Promise<{
 	default: FC;
 	frontmatter?: MdxFrontmatter;
 }>;
-const mdxModules = import.meta.glob([
-	"/content/*/*.mdx",
-	"/content/*/*/*.mdx",
-]) as Record<string, MdxModule>;
+const mdxModules = (typeof import.meta.glob === "function"
+	? import.meta.glob([
+			"/content/*/*.mdx",
+			"/content/*/*/*.mdx",
+		])
+	: {}) as Record<string, MdxModule>;
 
 // Translated-content locale codes — must track public/admin/config.yml's
 // i18n.locales (minus the default) and the app/routes/<locale> dirs.
