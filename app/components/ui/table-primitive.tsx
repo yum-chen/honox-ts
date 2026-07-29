@@ -121,6 +121,22 @@ function Row(props: JSX.IntrinsicElements["tr"] & PropsWithChildren) {
 	);
 }
 
+function HoverActions(
+	props: JSX.IntrinsicElements["span"] & PropsWithChildren,
+) {
+	const styles = useTableContext();
+	const { class: classProp, children, ...restProps } = props;
+	return (
+		<span
+			data-hover-actions
+			class={cx(styles.hoverActions, classProp)}
+			{...restProps}
+		>
+			{children}
+		</span>
+	);
+}
+
 export interface TableColumn<T = Record<string, unknown>> {
 	header: string | JSX.Element;
 	key: string;
@@ -148,6 +164,11 @@ export interface TableProps<T = Record<string, unknown>> {
 	rows?: T[];
 	/** Extra props (e.g. `data-*` attrs, `id`, `hidden`) merged onto each <tr>. */
 	getRowProps?: (row: T, rowIndex: number) => JSX.IntrinsicElements["tr"];
+	/** Renders into a trailing column cell, hidden until the row is hovered
+	 * (or a hover-action itself gains keyboard focus). e.g. a "View Details"
+	 * button. Static markup only — like `column.render`, this function is
+	 * dropped if the table hydrates via `TableIsland` (see that file). */
+	hoverActions?: (row: T, rowIndex: number) => JSX.Element;
 
 	// Sections
 	caption?: string | JSX.Element;
@@ -176,6 +197,7 @@ export function TableBase<T = Record<string, unknown>>(props: TableProps<T>) {
 		columns,
 		rows,
 		getRowProps,
+		hoverActions,
 		caption,
 		footer,
 		variant,
@@ -271,6 +293,7 @@ export function TableBase<T = Record<string, unknown>>(props: TableProps<T>) {
 							)}
 						</Header>
 					))}
+					{hoverActions && <Header key="__hoverActions" class={headerClass} />}
 				</Row>
 			</Head>
 			<Body class={bodyClass}>
@@ -306,6 +329,15 @@ export function TableBase<T = Record<string, unknown>>(props: TableProps<T>) {
 										: (row[column.key] as any)}
 								</Cell>
 							))}
+							{hoverActions && (
+								<Cell
+									key="__hoverActions"
+									class={cellClass}
+									style={{ textAlign: "end" }}
+								>
+									<HoverActions>{hoverActions(row, rowIndex)}</HoverActions>
+								</Cell>
+							)}
 						</Row>
 					);
 				})}
@@ -316,4 +348,4 @@ export function TableBase<T = Record<string, unknown>>(props: TableProps<T>) {
 }
 
 export type { RootProps };
-export { Body, Caption, Cell, Foot, Head, Header, Root, Row };
+export { Body, Caption, Cell, Foot, Head, Header, HoverActions, Root, Row };
