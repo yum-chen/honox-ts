@@ -6,15 +6,18 @@ import { EllipsisIcon } from "../icons/ellipsis";
 import TaskCloneDialog from "./task-clone-dialog";
 import TaskDeleteDialog from "./task-delete-dialog";
 import TaskToProject, { type TaskToProjectProps } from "./task-to-project";
+import TaskToSubtaskDialog from "./task-to-subtask-dialog";
 
 export interface TaskActionsMenuProps
 	extends Omit<TaskToProjectProps, "open" | "onOpenChange"> {
 	editHref: string;
+	tasks?: { label: string; value: string }[];
 }
 
 export default function TaskActionsMenu(props: TaskActionsMenuProps) {
-	const { editHref, ...taskProps } = props;
+	const { editHref, tasks, ...taskProps } = props;
 	const [convertOpen, setConvertOpen] = useState(false);
+	const [convertSubtaskOpen, setConvertSubtaskOpen] = useState(false);
 	const [cloneOpen, setCloneOpen] = useState(false);
 	const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -32,9 +35,20 @@ export default function TaskActionsMenu(props: TaskActionsMenuProps) {
 					{ type: "item", label: "Edit", value: "edit", href: editHref },
 					{ type: "item", label: "Clone", value: "clone" },
 					{
-						type: "item",
-						label: "Convert to Project",
-						value: "convert-to-project",
+						type: "submenu",
+						label: "Convert to...",
+						items: [
+							{
+								type: "item",
+								label: "Project",
+								value: "convert-to-project",
+							},
+							{
+								type: "item",
+								label: "Subtask",
+								value: "convert-to-subtask",
+							},
+						],
 					},
 					{ type: "separator" },
 					{
@@ -46,6 +60,7 @@ export default function TaskActionsMenu(props: TaskActionsMenuProps) {
 				]}
 				onSelect={(value) => {
 					if (value === "convert-to-project") setConvertOpen(true);
+					if (value === "convert-to-subtask") setConvertSubtaskOpen(true);
 					if (value === "clone") setCloneOpen(true);
 					if (value === "delete") setDeleteOpen(true);
 				}}
@@ -54,6 +69,12 @@ export default function TaskActionsMenu(props: TaskActionsMenuProps) {
 				{...taskProps}
 				open={convertOpen}
 				onOpenChange={setConvertOpen}
+			/>
+			<TaskToSubtaskDialog
+				task={{ slug: taskProps.slug, title: taskProps.title }}
+				open={convertSubtaskOpen}
+				onOpenChange={setConvertSubtaskOpen}
+				tasks={tasks}
 			/>
 			<TaskCloneDialog
 				task={{ slug: taskProps.slug, title: taskProps.title }}

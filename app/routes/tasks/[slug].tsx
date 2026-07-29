@@ -146,6 +146,7 @@ export default createRoute(
 								assignee={task.assignee}
 								dueDate={task.dueDate}
 								tags={task.tags}
+							tasks={taskItems}
 							/>
 						</nav>
 					</div>
