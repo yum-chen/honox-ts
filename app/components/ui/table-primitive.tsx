@@ -126,6 +126,8 @@ export interface TableProps<T = Record<string, unknown>> {
 	// Data
 	columns?: TableColumn<T>[];
 	rows?: T[];
+	/** Extra props (e.g. `data-*` attrs, `id`, `hidden`) merged onto each <tr>. */
+	getRowProps?: (row: T, rowIndex: number) => JSX.IntrinsicElements["tr"];
 
 	// Sections
 	caption?: string | JSX.Element;
@@ -153,6 +155,7 @@ export function TableBase<T = Record<string, unknown>>(props: TableProps<T>) {
 	const {
 		columns,
 		rows,
+		getRowProps,
 		caption,
 		footer,
 		variant,
@@ -219,6 +222,7 @@ export function TableBase<T = Record<string, unknown>>(props: TableProps<T>) {
 						class={row.class || rowClass}
 						{...(interactive && row.onClick ? { onClick: row.onClick } : {})}
 						{...(row.disabled ? { "data-disabled": true } : {})}
+						{...(getRowProps ? getRowProps(row, rowIndex) : {})}
 					>
 						{columns.map((column) => (
 							<Cell
