@@ -285,6 +285,7 @@ export default createRoute(
 										{
 											header: "Task",
 											key: "title",
+											class: css({ maxWidth: "sm" }),
 											render: (task: Task) => (
 												<Anchor href={`/tasks/${task.slug}`} variant="plain">
 													{task.title}

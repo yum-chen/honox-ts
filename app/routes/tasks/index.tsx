@@ -11,15 +11,15 @@ import {
 	Table,
 	Text,
 } from "../../components/ui";
-import { type Project, listProjects } from "../../lib/projects";
+import { listProjects, type Project } from "../../lib/projects";
 import {
 	buildTaskSearchEntries,
+	listTasks,
 	TASK_PRIORITIES,
 	TASK_PRIORITY_COLOR,
-	TASK_STATUSES,
 	TASK_STATUS_COLOR,
+	TASK_STATUSES,
 	type Task,
-	listTasks,
 } from "../../lib/tasks";
 import { filterEntries } from "../../utils/search";
 
@@ -340,6 +340,7 @@ export default createRoute(async (c) => {
 								{
 									header: "Task",
 									key: "title",
+									class: css({ maxWidth: "sm" }),
 									render: (task: Task) => (
 										<Anchor href={`/tasks/${task.slug}`} variant="plain">
 											{task.title}
@@ -369,8 +370,7 @@ export default createRoute(async (c) => {
 									header: "Status",
 									key: "status",
 									sortable: true,
-									sortValue: (task: Task) =>
-										TASK_STATUSES.indexOf(task.status),
+									sortValue: (task: Task) => TASK_STATUSES.indexOf(task.status),
 									render: (task: Task) => (
 										<Anchor
 											href={`/tasks/by-status/${encodeURIComponent(task.status)}`}

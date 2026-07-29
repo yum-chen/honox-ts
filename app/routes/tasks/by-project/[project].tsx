@@ -14,12 +14,12 @@ import {
 import { listProjects, loadProjectBySlug } from "../../../lib/projects";
 import {
 	buildTaskSearchEntries,
+	listTasksByProject,
 	TASK_PRIORITIES,
 	TASK_PRIORITY_COLOR,
-	TASK_STATUSES,
 	TASK_STATUS_COLOR,
+	TASK_STATUSES,
 	type Task,
-	listTasksByProject,
 } from "../../../lib/tasks";
 import { filterEntries } from "../../../utils/search";
 
@@ -266,6 +266,7 @@ export default createRoute(
 									{
 										header: "Task",
 										key: "title",
+										class: css({ maxWidth: "sm" }),
 										render: (task: Task) => (
 											<Anchor href={`/tasks/${task.slug}`} variant="plain">
 												{task.title}
