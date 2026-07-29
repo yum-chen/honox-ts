@@ -325,6 +325,14 @@ export function TableBase<T = Record<string, unknown>>(props: TableProps<T>) {
 							{...(row.disabled ? { "data-disabled": true } : {})}
 							{...sortAttrs}
 							{...rowProps}
+							style={
+								hoverActions
+									? {
+											position: "relative",
+											...(rowProps.style as JSX.CSSProperties | undefined),
+										}
+									: (rowProps.style as JSX.CSSProperties | undefined)
+							}
 						>
 							{columns.map((column) => (
 								<Cell
@@ -344,11 +352,15 @@ export function TableBase<T = Record<string, unknown>>(props: TableProps<T>) {
 									style={{
 										width: "0",
 										padding: "0",
-										position: "relative",
 										overflow: "visible",
 										boxShadow: "none",
 									}}
 								>
+									{/* Anchored to the <tr> (position:relative above), not this
+									cell — a zero-width containing block can make some engines
+									treat backdrop-filter as having nothing to sample, since the
+									box itself is degenerate even though its absolutely
+									positioned content escapes it visually. */}
 									<HoverActions>{hoverActions(row, rowIndex)}</HoverActions>
 								</Cell>
 							)}
