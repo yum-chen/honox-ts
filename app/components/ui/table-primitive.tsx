@@ -44,9 +44,14 @@ function Root(props: RootProps) {
 
 	return (
 		<TableContext.Provider value={styles}>
-			<table class={cx(styles.root, classProp)} {...restProps}>
-				{children}
-			</table>
+			{/* Scrolls horizontally instead of the table forcing the page
+			itself wider than the viewport when column content (e.g. a long
+			task title) can't all fit at once. */}
+			<div class={css({ overflowX: "auto" })}>
+				<table class={cx(styles.root, classProp)} {...restProps}>
+					{children}
+				</table>
+			</div>
 		</TableContext.Provider>
 	);
 }
