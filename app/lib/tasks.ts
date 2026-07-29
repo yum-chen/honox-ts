@@ -65,9 +65,11 @@ export interface Task {
 	excerpt: string;
 }
 
-/** `Task` plus the markdown body rendered to HTML, for the detail page. */
+/** `Task` plus the markdown body, for the detail page. */
 export interface TaskDetail extends Task {
 	html: string;
+	/** Raw (untruncated) markdown source of the body — for inline editing. */
+	body: string;
 }
 
 function slugFromPath(path: string): string {
@@ -131,6 +133,7 @@ export async function loadTaskBySlug(
 	return {
 		...buildTask(slug, data, content),
 		html: markdownToHtml(content),
+		body: content,
 	};
 }
 

@@ -12,7 +12,8 @@ import {
 } from "../../components/ui";
 import TaskActionsMenu from "../../islands/task-actions-menu";
 import TaskEditableText from "../../islands/task-editable-text";
-import { loadProjectBySlug } from "../../lib/projects";
+import TaskProjectEditor from "../../islands/task-project-editor";
+import { listProjects, loadProjectBySlug } from "../../lib/projects";
 import {
 	TASK_PRIORITY_COLOR,
 	TASK_STATUS_COLOR,
@@ -39,7 +40,14 @@ export default createRoute(
 		const task = await loadTaskBySlug(slug);
 		if (!task) return c.notFound();
 
-		const project = await loadProjectBySlug(task.project);
+		const [project, projects] = await Promise.all([
+			loadProjectBySlug(task.project),
+			listProjects(),
+		]);
+		const projectItems = projects.map((p) => ({
+			label: p.title,
+			value: p.slug,
+		}));
 
 		return c.render(
 			<>
@@ -172,14 +180,20 @@ export default createRoute(
 						</Badge>
 					</Stack>
 
-					<Stack gap="5" wrap="wrap" class={css({ mb: "6" })}>
+					<Stack gap="5" wrap="wrap" align="center" class={css({ mb: "6" })}>
+						<TaskProjectEditor
+							value={task.project}
+							projects={projectItems}
+							editHref={`/admin/#/collections/tasks/entries/${task.slug}`}
+						/>
 						{project && (
-							<Text size="sm" class={css({ color: "fg.muted" })}>
-								Project{" "}
-								<Anchor href={`/projects/${project.slug}`} variant="plain">
-									{project.title}
-								</Anchor>
-							</Text>
+							<Anchor
+								href={`/projects/${project.slug}`}
+								variant="plain"
+								class={css({ textStyle: "sm" })}
+							>
+								View project →
+							</Anchor>
 						)}
 						{task.assignee && (
 							<Stack gap="2" align="center">

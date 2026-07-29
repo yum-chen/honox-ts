@@ -363,66 +363,86 @@ export function Input(props: InputProps) {
 	const styles = context?.styles ?? editable();
 	const editing = context?.editing ?? false;
 	const autoResize = context?.autoResize;
+	const multiline = context?.multiline;
 	const submitOnEnter =
 		context?.submitMode === "enter" || context?.submitMode === "both";
 	const submitOnBlur =
 		context?.submitMode === "blur" || context?.submitMode === "both";
 
+	const handleChange = (e: Event) => {
+		context?.setValue(
+			(e.currentTarget as HTMLInputElement | HTMLTextAreaElement).value,
+		);
+	};
+
+	const handleKeyDown = (e: KeyboardEvent) => {
+		const isSubmitCombo =
+			(e as unknown as { metaKey?: boolean }).metaKey || e.ctrlKey;
+		if (e.key === "Escape") {
+			context?.cancel({ restoreFocus: true });
+			e.preventDefault();
+		} else if (
+			e.key === "Enter" &&
+			// A plain Enter inserts a newline in a `<textarea>` instead of
+			// submitting — only the Cmd/Ctrl+Enter combo commits multiline text.
+			(multiline ? isSubmitCombo : submitOnEnter && !e.shiftKey && !isSubmitCombo)
+		) {
+			context?.submit({ restoreFocus: true });
+			e.preventDefault();
+		}
+		(onKeyDown as ((e: typeof e) => void) | undefined)?.(e);
+	};
+
+	const handleBlur = (e: FocusEvent) => {
+		if (!submitOnBlur) return;
+		const next = e.relatedTarget as HTMLElement | null;
+		if (
+			next?.closest('[data-part="submit-trigger"]') ||
+			next?.closest('[data-part="cancel-trigger"]')
+		) {
+			return;
+		}
+		context?.submit({ restoreFocus: false });
+	};
+
+	const sharedProps = {
+		id: context?.ids.input,
+		name: context?.name,
+		form: context?.form,
+		"aria-label": context?.translations.input,
+		class: cx(styles.input, classProp),
+		"data-scope": "editable",
+		"data-part": "input",
+		hidden: autoResize ? undefined : !editing,
+		placeholder: context?.placeholder?.edit,
+		maxLength: context?.maxLength,
+		required: context?.required,
+		disabled: context?.disabled,
+		"data-disabled": context?.disabled ? "" : undefined,
+		readOnly: context?.readOnly,
+		"data-readonly": context?.readOnly ? "" : undefined,
+		"aria-invalid": context?.invalid ? "true" : undefined,
+		"data-invalid": context?.invalid ? "" : undefined,
+		"data-autoresize": autoResize ? "" : undefined,
+		// Controlled `value` (not `defaultValue`) — hono/jsx's SSR renderer
+		// serialises `defaultValue` as a dead attribute that never reaches the
+		// live DOM property, so the field would render empty on first paint.
+		value: context?.value ?? "",
+		onChange: handleChange,
+		onKeyDown: handleKeyDown,
+		onBlur: handleBlur,
+		...rest,
+	};
+
+	if (multiline) {
+		return <textarea {...sharedProps} rows={context?.rows ?? 3} />;
+	}
+
 	return (
 		<input
-			id={context?.ids.input}
+			{...sharedProps}
 			type="text"
-			name={context?.name}
-			form={context?.form}
-			aria-label={context?.translations.input}
-			class={cx(styles.input, classProp)}
-			data-scope="editable"
-			data-part="input"
-			hidden={autoResize ? undefined : !editing}
-			placeholder={context?.placeholder?.edit}
-			maxLength={context?.maxLength}
-			required={context?.required}
-			disabled={context?.disabled}
-			data-disabled={context?.disabled ? "" : undefined}
-			readOnly={context?.readOnly}
-			data-readonly={context?.readOnly ? "" : undefined}
-			aria-invalid={context?.invalid ? "true" : undefined}
-			data-invalid={context?.invalid ? "" : undefined}
-			data-autoresize={autoResize ? "" : undefined}
-			// Controlled `value` (not `defaultValue`) — hono/jsx's SSR renderer
-			// serialises `defaultValue` as a dead attribute that never reaches the
-			// live DOM property, so the field would render empty on first paint.
-			value={context?.value ?? ""}
 			size={autoResize ? 1 : undefined}
-			onChange={(e) => {
-				context?.setValue((e.currentTarget as HTMLInputElement).value);
-			}}
-			onKeyDown={(e) => {
-				if (e.key === "Escape") {
-					context?.cancel({ restoreFocus: true });
-					e.preventDefault();
-				} else if (
-					e.key === "Enter" &&
-					submitOnEnter &&
-					!e.shiftKey &&
-					!(e as unknown as { metaKey?: boolean }).metaKey
-				) {
-					context?.submit({ restoreFocus: true });
-					e.preventDefault();
-				}
-				(onKeyDown as ((e: typeof e) => void) | undefined)?.(e);
-			}}
-			onBlur={(e) => {
-				if (!submitOnBlur) return;
-				const next = (e as FocusEvent).relatedTarget as HTMLElement | null;
-				if (
-					next?.closest('[data-part="submit-trigger"]') ||
-					next?.closest('[data-part="cancel-trigger"]')
-				) {
-					return;
-				}
-				context?.submit({ restoreFocus: false });
-			}}
 			style={
 				autoResize
 					? {
@@ -431,7 +451,6 @@ export function Input(props: InputProps) {
 						}
 					: undefined
 			}
-			{...rest}
 		/>
 	);
 }
