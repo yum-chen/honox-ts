@@ -42,7 +42,7 @@ export const table = defineSlotRecipe({
 		},
 		row: {
 			_last: { "& td": { boxShadow: "none" } },
-			"&:hover [data-hover-actions]": { opacity: 1 },
+			"&:hover [data-hover-actions]": { opacity: 1, pointerEvents: "auto" },
 		},
 		header: {
 			textAlign: "left",
@@ -74,12 +74,22 @@ export const table = defineSlotRecipe({
 			},
 		},
 		hoverActions: {
+			position: "absolute",
+			insetBlock: "0",
+			insetInlineEnd: "0",
 			display: "inline-flex",
 			alignItems: "center",
 			gap: "2",
+			paddingInline: "3",
+			bg: "gray.surface.bg",
+			borderInlineStartWidth: "1px",
+			borderColor: "border",
+			boxShadow: "md",
 			opacity: 0,
+			pointerEvents: "none",
 			transition: "opacity 0.15s",
-			_focusWithin: { opacity: 1 },
+			zIndex: 1,
+			_focusWithin: { opacity: 1, pointerEvents: "auto" },
 		},
 	},
 	defaultVariants: {

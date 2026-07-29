@@ -99,7 +99,7 @@ Features shaded alternating row colors with zebra-striping, interactive hover hi
 
 ## 3. Row Hover Actions
 
-Pass `hoverActions` to render extra controls (e.g. a "View Details" button) in a trailing column that stays hidden until its row is hovered or one of its controls receives keyboard focus.
+Pass `hoverActions` to render extra controls (e.g. a "View Details" button) into a zero-width trailing cell that stays hidden until its row is hovered or one of its controls receives keyboard focus. It's absolutely positioned over the row's end, so it never widens the table — it may visually cover the last column(s) while revealed.
 
 <DemoPreview>
   <div style={{ width: "100%" }}>
@@ -133,7 +133,7 @@ Pass `hoverActions` to render extra controls (e.g. a "View Details" button) in a
 | **Row Highlights** (`interactive`) | `boolean` | `false` | Enables full mouse-hover background animations across active cells on desktop machines. |
 | **Column Borders** (`columnBorder`) | `boolean` | `false` | Renders a dividing vertical border line between table columns. |
 | **Sticky Header** (`stickyHeader`) | `boolean` | `false` | Pins the main header row to the top of the table scroll viewport during scrolling. |
-| **Hover Actions** (`hoverActions`) | code-only | - | `(row, rowIndex) => JSX.Element`. Renders into a trailing column cell that's hidden until the row is hovered (or a rendered control gains keyboard focus). Not exposed as a CMS field. |
+| **Hover Actions** (`hoverActions`) | code-only | - | `(row, rowIndex) => JSX.Element`. Renders into a zero-width trailing cell, absolutely positioned over the row's end (may cover the last column(s)), hidden until the row is hovered (or a rendered control gains keyboard focus). Not exposed as a CMS field. |
 
 ### Column List Properties (`columns`)
 

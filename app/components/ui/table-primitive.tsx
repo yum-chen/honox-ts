@@ -164,10 +164,12 @@ export interface TableProps<T = Record<string, unknown>> {
 	rows?: T[];
 	/** Extra props (e.g. `data-*` attrs, `id`, `hidden`) merged onto each <tr>. */
 	getRowProps?: (row: T, rowIndex: number) => JSX.IntrinsicElements["tr"];
-	/** Renders into a trailing column cell, hidden until the row is hovered
-	 * (or a hover-action itself gains keyboard focus). e.g. a "View Details"
-	 * button. Static markup only — like `column.render`, this function is
-	 * dropped if the table hydrates via `TableIsland` (see that file). */
+	/** Renders into a zero-width trailing cell, absolutely positioned over
+	 * the row's end (may cover the last column(s)) so it never affects
+	 * column layout. Hidden until the row is hovered (or a hover-action
+	 * itself gains keyboard focus). e.g. a "View Details" button. Static
+	 * markup only — like `column.render`, this function is dropped if the
+	 * table hydrates via `TableIsland` (see that file). */
 	hoverActions?: (row: T, rowIndex: number) => JSX.Element;
 
 	// Sections
@@ -293,7 +295,13 @@ export function TableBase<T = Record<string, unknown>>(props: TableProps<T>) {
 							)}
 						</Header>
 					))}
-					{hoverActions && <Header key="__hoverActions" class={headerClass} />}
+					{hoverActions && (
+						<Header
+							key="__hoverActions"
+							class={headerClass}
+							style={{ width: "0", padding: "0", boxShadow: "none" }}
+						/>
+					)}
 				</Row>
 			</Head>
 			<Body class={bodyClass}>
@@ -333,7 +341,13 @@ export function TableBase<T = Record<string, unknown>>(props: TableProps<T>) {
 								<Cell
 									key="__hoverActions"
 									class={cellClass}
-									style={{ textAlign: "end" }}
+									style={{
+										width: "0",
+										padding: "0",
+										position: "relative",
+										overflow: "visible",
+										boxShadow: "none",
+									}}
 								>
 									<HoverActions>{hoverActions(row, rowIndex)}</HoverActions>
 								</Cell>
