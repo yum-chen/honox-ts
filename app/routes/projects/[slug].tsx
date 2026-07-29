@@ -19,8 +19,8 @@ import { Toaster } from "../../components/ui/toast";
 import PmsCreateMenu from "../../islands/pms-create-menu";
 import TaskBoard from "../../islands/task-board";
 import {
-	listProjects,
 	listProjectSlugs,
+	listProjects,
 	loadProjectBySlug,
 	PROJECT_STATUS_COLOR,
 } from "../../lib/projects";
