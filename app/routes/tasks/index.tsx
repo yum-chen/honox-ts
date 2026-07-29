@@ -16,6 +16,7 @@ import {
 	buildTaskSearchEntries,
 	TASK_PRIORITIES,
 	TASK_PRIORITY_COLOR,
+	TASK_STATUSES,
 	TASK_STATUS_COLOR,
 	type Task,
 	listTasks,
@@ -243,6 +244,41 @@ export default createRoute(async (c) => {
 					</Stack>
 				)}
 
+				<Stack gap="2" align="center" wrap="wrap" class={css({ mb: "3" })}>
+					<Text
+						size="xs"
+						class={css({
+							fontWeight: "semibold",
+							textTransform: "uppercase",
+							letterSpacing: "wide",
+							color: "fg.muted",
+						})}
+					>
+						Status
+					</Text>
+					{TASK_STATUSES.map((status) => (
+						<Anchor
+							key={status}
+							href={`/tasks/by-status/${encodeURIComponent(status)}`}
+							variant="plain"
+							class={css({ textDecoration: "none" })}
+						>
+							<Badge
+								variant="subtle"
+								colorPalette={TASK_STATUS_COLOR[status]}
+								class={css({
+									px: "3",
+									py: "1",
+									borderRadius: "full",
+									fontSize: "xs",
+								})}
+							>
+								{status}
+							</Badge>
+						</Anchor>
+					))}
+				</Stack>
+
 				<Stack gap="2" align="center" wrap="wrap" class={css({ mb: "8" })}>
 					<Text
 						size="xs"
@@ -332,14 +368,23 @@ export default createRoute(async (c) => {
 								{
 									header: "Status",
 									key: "status",
+									sortable: true,
+									sortValue: (task: Task) =>
+										TASK_STATUSES.indexOf(task.status),
 									render: (task: Task) => (
-										<Badge
-											variant="subtle"
-											size="sm"
-											colorPalette={TASK_STATUS_COLOR[task.status]}
+										<Anchor
+											href={`/tasks/by-status/${encodeURIComponent(task.status)}`}
+											variant="plain"
+											class={css({ textDecoration: "none" })}
 										>
-											{task.status}
-										</Badge>
+											<Badge
+												variant="subtle"
+												size="sm"
+												colorPalette={TASK_STATUS_COLOR[task.status]}
+											>
+												{task.status}
+											</Badge>
+										</Anchor>
 									),
 								},
 								{

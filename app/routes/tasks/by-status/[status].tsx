@@ -11,15 +11,16 @@ import {
 	Table,
 	Text,
 } from "../../../components/ui";
-import { listProjects, loadProjectBySlug } from "../../../lib/projects";
+import { type Project, listProjects } from "../../../lib/projects";
 import {
 	buildTaskSearchEntries,
-	TASK_PRIORITIES,
-	TASK_PRIORITY_COLOR,
 	TASK_STATUSES,
 	TASK_STATUS_COLOR,
+	TASK_PRIORITIES,
+	TASK_PRIORITY_COLOR,
 	type Task,
-	listTasksByProject,
+	type TaskStatus,
+	listTasks,
 } from "../../../lib/tasks";
 import { filterEntries } from "../../../utils/search";
 
@@ -33,20 +34,21 @@ function formatDate(value?: string) {
 }
 
 export default createRoute(
-	ssgParams(async () => {
-		const projects = await listProjects();
-		return projects.map((project) => ({ project: project.slug }));
-	}),
+	ssgParams(() => TASK_STATUSES.map((status) => ({ status }))),
 
 	async (c) => {
-		const projectSlug = c.req.param("project");
-		const [project, allProjects] = await Promise.all([
-			loadProjectBySlug(projectSlug),
+		const statusParam = decodeURIComponent(c.req.param("status") ?? "") as TaskStatus;
+		if (!TASK_STATUSES.includes(statusParam)) return c.notFound();
+
+		const [allTasks, projects] = await Promise.all([
+			listTasks(),
 			listProjects(),
 		]);
-		if (!project) return c.notFound();
+		const projectBySlug = new Map<string, Project>(
+			projects.map((project) => [project.slug, project]),
+		);
 
-		const tasks = await listTasksByProject(projectSlug);
+		const tasks = allTasks.filter((task) => task.status === statusParam);
 
 		// Server-side filtering for the no-JS ?q= fallback, same pattern as
 		// /tasks and /projects/[slug].
@@ -59,7 +61,7 @@ export default createRoute(
 
 		return c.render(
 			<>
-				<title>{project.title} Tasks - Artefact</title>
+				<title>{statusParam} Tasks - Artefact</title>
 
 				<header
 					class={css({
@@ -110,13 +112,13 @@ export default createRoute(
 								<Search
 									size="sm"
 									src="/api/tasks/search.json"
-									action={`/tasks/by-project/${projectSlug}`}
+									action={`/tasks/by-status/${encodeURIComponent(statusParam)}`}
 									initialQuery={searchQuery}
 									placeholder="Search tasks..."
 									itemLabel="tasks"
 									total={tasks.length}
 									filterAttribute="data-task-slug"
-									emptyStateId="project-tasks-search-empty"
+									emptyStateId="status-tasks-search-empty"
 									showCount={false}
 								/>
 							</div>
@@ -184,18 +186,23 @@ export default createRoute(
 						← All Tasks
 					</Anchor>
 
-					<Heading as="h1" size="3xl" class={css({ mb: "2" })}>
-						Tasks · {project.title}
-					</Heading>
+					<Stack align="center" gap="3" class={css({ mb: "2" })}>
+						<Heading as="h1" size="3xl">
+							{statusParam} Status
+						</Heading>
+						<Badge
+							variant="subtle"
+							colorPalette={TASK_STATUS_COLOR[statusParam]}
+						>
+							{tasks.length}
+						</Badge>
+					</Stack>
 					<Text class={css({ color: "fg.muted", mb: "6" })}>
-						{tasks.length} task{tasks.length !== 1 ? "s" : ""} in{" "}
-						<Anchor href={`/projects/${project.slug}`} variant="plain">
-							{project.title}
-						</Anchor>
-						, soonest due date first.
+						{tasks.length} {statusParam.toLowerCase()} task
+						{tasks.length !== 1 ? "s" : ""}, soonest due date first.
 					</Text>
 
-					{/* Project filter chips */}
+					{/* Status filter chips */}
 					<Stack gap="3" align="center" wrap="wrap" class={css({ mb: "8" })}>
 						<Anchor
 							href="/tasks"
@@ -212,19 +219,19 @@ export default createRoute(
 									fontSize: "sm",
 								})}
 							>
-								All Projects
+								All Statuses
 							</Badge>
 						</Anchor>
-						{allProjects.map((p) => (
+						{TASK_STATUSES.map((status) => (
 							<Anchor
-								key={p.slug}
-								href={`/tasks/by-project/${p.slug}`}
+								key={status}
+								href={`/tasks/by-status/${encodeURIComponent(status)}`}
 								variant="plain"
 								class={css({ textDecoration: "none" })}
 							>
 								<Badge
-									variant={p.slug === projectSlug ? "solid" : "subtle"}
-									colorPalette={p.slug === projectSlug ? "blue" : "gray"}
+									variant={status === statusParam ? "solid" : "subtle"}
+									colorPalette={TASK_STATUS_COLOR[status]}
 									class={css({
 										px: "4",
 										py: "2",
@@ -232,7 +239,7 @@ export default createRoute(
 										fontSize: "sm",
 									})}
 								>
-									{p.title}
+									{status}
 								</Badge>
 							</Anchor>
 						))}
@@ -240,13 +247,13 @@ export default createRoute(
 
 					{tasks.length === 0 ? (
 						<Text class={css({ color: "fg.muted" })}>
-							No tasks in this project yet.
+							No {statusParam.toLowerCase()} tasks.
 						</Text>
 					) : (
 						<>
 							{/* Empty state — visibility toggled by the Search island */}
 							<div
-								id="project-tasks-search-empty"
+								id="status-tasks-search-empty"
 								hidden={matchedSlugs.size !== 0}
 								class={css({ textAlign: "center", py: "16", px: "4" })}
 							>
@@ -273,26 +280,23 @@ export default createRoute(
 										),
 									},
 									{
-										header: "Status",
-										key: "status",
-										sortable: true,
-										sortValue: (task: Task) =>
-											TASK_STATUSES.indexOf(task.status),
-										render: (task: Task) => (
-											<Anchor
-												href={`/tasks/by-status/${encodeURIComponent(task.status)}`}
-												variant="plain"
-												class={css({ textDecoration: "none" })}
-											>
-												<Badge
-													variant="subtle"
-													size="sm"
-													colorPalette={TASK_STATUS_COLOR[task.status]}
+										header: "Project",
+										key: "project",
+										render: (task: Task) => {
+											const project = projectBySlug.get(task.project);
+											return project ? (
+												<Anchor
+													href={`/projects/${project.slug}`}
+													variant="plain"
 												>
-													{task.status}
-												</Badge>
-											</Anchor>
-										),
+													{project.title}
+												</Anchor>
+											) : (
+												<Text size="sm" class={css({ color: "fg.muted" })}>
+													—
+												</Text>
+											);
+										},
 									},
 									{
 										header: "Priority",
@@ -321,7 +325,12 @@ export default createRoute(
 										key: "assignee",
 										render: (task: Task) =>
 											task.assignee ? (
-												<Text size="sm">{task.assignee}</Text>
+												<Anchor
+													href={`/tasks/by-assignee/${encodeURIComponent(task.assignee)}`}
+													variant="plain"
+												>
+													{task.assignee}
+												</Anchor>
 											) : (
 												<Text size="sm" class={css({ color: "fg.muted" })}>
 													—
