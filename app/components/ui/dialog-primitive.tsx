@@ -15,17 +15,20 @@ import { hasPart, useOverlay, whenAnimationEnds } from "./overlay-a11y";
 
 type DialogStyles = ReturnType<typeof dialog>;
 
-interface DialogContextValue {
+export interface DialogContextValue {
 	styles: DialogStyles;
-	open?: boolean;
-	onOpenChange?: (open: boolean) => void;
+	open: boolean;
+	setOpen: (open: boolean) => void;
 	id: string;
 	dialogRole?: "dialog" | "alertdialog";
+	lazyMount?: boolean;
+	unmountOnExit?: boolean;
+	hasOpenedRef?: { current: boolean };
 }
 
 const DialogContext = createContext<DialogContextValue | null>(null);
 
-const useDialogContext = () => {
+export const useDialogContext = () => {
 	const context = useContext(DialogContext);
 	return context;
 };
@@ -36,28 +39,42 @@ export interface RootProps extends DialogVariantProps, PropsWithChildren {
 	id?: string;
 	rootRef?: any;
 	dialogRole?: "dialog" | "alertdialog";
+	lazyMount?: boolean;
+	unmountOnExit?: boolean;
 }
 
 export function Root(props: RootProps) {
 	const [variantProps, localProps] = dialog.splitVariantProps(props);
 	const {
 		children,
-		open,
+		open = false,
 		onOpenChange,
 		id: idProp,
 		rootRef,
 		dialogRole,
+		lazyMount = false,
+		unmountOnExit = false,
 	} = localProps;
 	const styles = dialog(variantProps);
 	const generatedId = useId();
 	const id = idProp || generatedId;
 
-	const value = {
+	const hasOpenedRef = useRef(open);
+	if (open) {
+		hasOpenedRef.current = true;
+	}
+
+	const value: DialogContextValue = {
 		styles,
 		open,
-		onOpenChange,
+		setOpen: (nextOpen: boolean) => {
+			onOpenChange?.(nextOpen);
+		},
 		id,
 		dialogRole,
+		lazyMount,
+		unmountOnExit,
+		hasOpenedRef,
 	};
 
 	return (
@@ -65,6 +82,10 @@ export function Root(props: RootProps) {
 			<DialogContext.Provider value={value}>{children}</DialogContext.Provider>
 		</div>
 	);
+}
+
+export function RootProvider(props: RootProps) {
+	return <Root {...props} />;
 }
 
 export interface TriggerProps extends PropsWithChildren {
@@ -107,7 +128,23 @@ export function Backdrop(props: BackdropProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDialogContext();
 	const styles = context?.styles || dialog();
-	const open = context?.open;
+	const open = context?.open || false;
+
+	const lazyMount = context?.lazyMount;
+	const unmountOnExit = context?.unmountOnExit;
+	const hasOpenedRef = context?.hasOpenedRef;
+
+	if (open && hasOpenedRef) {
+		hasOpenedRef.current = true;
+	}
+
+	const shouldRender =
+		!lazyMount || open || (hasOpenedRef?.current && !unmountOnExit);
+
+	if (!shouldRender) {
+		return null;
+	}
+
 	return (
 		<div
 			class={cx(
@@ -133,7 +170,22 @@ export function Positioner(props: PositionerProps) {
 	const { children, class: classProp, ...restProps } = props;
 	const context = useDialogContext();
 	const styles = context?.styles || dialog();
-	const open = context?.open;
+	const open = context?.open || false;
+
+	const lazyMount = context?.lazyMount;
+	const unmountOnExit = context?.unmountOnExit;
+	const hasOpenedRef = context?.hasOpenedRef;
+
+	if (open && hasOpenedRef) {
+		hasOpenedRef.current = true;
+	}
+
+	const shouldRender =
+		!lazyMount || open || (hasOpenedRef?.current && !unmountOnExit);
+
+	if (!shouldRender) {
+		return null;
+	}
 
 	return (
 		<div
@@ -166,12 +218,27 @@ export function Content(props: ContentProps) {
 	} = props;
 	const context = useDialogContext();
 	const styles = context?.styles || dialog();
-	const open = context?.open;
+	const open = context?.open || false;
 	const id = context?.id;
 	const role = context?.dialogRole ?? "dialog";
 
 	const titleId = id ? `${id}-title` : undefined;
 	const descriptionId = id ? `${id}-description` : undefined;
+
+	const lazyMount = context?.lazyMount;
+	const unmountOnExit = context?.unmountOnExit;
+	const hasOpenedRef = context?.hasOpenedRef;
+
+	if (open && hasOpenedRef) {
+		hasOpenedRef.current = true;
+	}
+
+	const shouldRender =
+		!lazyMount || open || (hasOpenedRef?.current && !unmountOnExit);
+
+	if (!shouldRender) {
+		return null;
+	}
 
 	// Accessible name resolution (WAI-ARIA):
 	//  - explicit `aria-label` wins
@@ -387,6 +454,13 @@ export function ActionTrigger(props: ActionTriggerProps) {
 	);
 }
 
+export function Context(props: {
+	children: (context: DialogContextValue | null) => unknown;
+}) {
+	const context = useDialogContext();
+	return props.children(context) as any;
+}
+
 // Interactive version with state management and full a11y behavior
 // (focus trap, Escape, inert background, scroll lock, focus return).
 // The behavior layer itself lives in `./overlay-a11y` (`useOverlay`) and is
@@ -415,6 +489,8 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 		closeOnInteractOutside = true,
 		initialFocusEl,
 		finalFocusEl,
+		lazyMount = false,
+		unmountOnExit = false,
 		...rest
 	} = props;
 	const [isOpen, setIsOpen] = useState(openProp ?? defaultOpen ?? false);
@@ -478,6 +554,8 @@ export function InteractiveDialog(props: InteractiveDialogProps) {
 			onOpenChange={handleOpenChange}
 			rootRef={rootRef}
 			dialogRole={dialogRole}
+			lazyMount={lazyMount}
+			unmountOnExit={unmountOnExit}
 		/>
 	);
 }
