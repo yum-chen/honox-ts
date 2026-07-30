@@ -26,6 +26,7 @@ describe("Dialog Unit Tests", () => {
 
 	test("should expose compound namespace on main export", () => {
 		expect(Dialog.Root).toBeDefined();
+		expect(Dialog.RootProvider).toBeDefined();
 		expect(Dialog.Trigger).toBeDefined();
 		expect(Dialog.Backdrop).toBeDefined();
 		expect(Dialog.Positioner).toBeDefined();
@@ -37,6 +38,7 @@ describe("Dialog Unit Tests", () => {
 		expect(Dialog.Description).toBeDefined();
 		expect(Dialog.CloseTrigger).toBeDefined();
 		expect(Dialog.ActionTrigger).toBeDefined();
+		expect(Dialog.Context).toBeDefined();
 	});
 
 	test("should render compound components correctly", () => {
@@ -133,5 +135,72 @@ describe("Dialog Unit Tests", () => {
 
 			document.body.removeChild(div);
 		}
+	});
+
+	test("should support RootProvider and Context", () => {
+		expect(Dialog.RootProvider).toBeDefined();
+		expect(Dialog.Context).toBeDefined();
+
+		const html = (
+			<Dialog.Root open={true}>
+				<Dialog.Context>
+					{(context) => (
+						<div id="test-context">Open: {context?.open ? "true" : "false"}</div>
+					)}
+				</Dialog.Context>
+			</Dialog.Root>
+		).toString();
+
+		expect(html).toContain("Open: true");
+	});
+
+	test("should respect lazyMount and unmountOnExit", () => {
+		// Initially closed, lazyMount=true
+		const htmlClosedLazy = (
+			<Dialog.Root open={false} lazyMount={true}>
+				<Dialog.Backdrop class="test-backdrop" />
+				<Dialog.Positioner class="test-positioner">
+					<Dialog.Content class="test-content">
+						Content
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Dialog.Root>
+		).toString();
+
+		expect(htmlClosedLazy).not.toContain("test-backdrop");
+		expect(htmlClosedLazy).not.toContain("test-positioner");
+		expect(htmlClosedLazy).not.toContain("test-content");
+
+		// Open with lazyMount=true
+		const htmlOpenLazy = (
+			<Dialog.Root open={true} lazyMount={true}>
+				<Dialog.Backdrop class="test-backdrop" />
+				<Dialog.Positioner class="test-positioner">
+					<Dialog.Content class="test-content">
+						Content
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Dialog.Root>
+		).toString();
+
+		expect(htmlOpenLazy).toContain("test-backdrop");
+		expect(htmlOpenLazy).toContain("test-positioner");
+		expect(htmlOpenLazy).toContain("test-content");
+
+		// Closed after open, unmountOnExit=true
+		const htmlClosedUnmount = (
+			<Dialog.Root open={false} lazyMount={true} unmountOnExit={true}>
+				<Dialog.Backdrop class="test-backdrop" />
+				<Dialog.Positioner class="test-positioner">
+					<Dialog.Content class="test-content">
+						Content
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Dialog.Root>
+		).toString();
+
+		expect(htmlClosedUnmount).not.toContain("test-backdrop");
+		expect(htmlClosedUnmount).not.toContain("test-positioner");
+		expect(htmlClosedUnmount).not.toContain("test-content");
 	});
 });

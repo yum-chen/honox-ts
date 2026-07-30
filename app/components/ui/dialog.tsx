@@ -8,12 +8,14 @@ import {
 	Body,
 	CloseTrigger,
 	Content,
+	Context,
 	Description,
 	Root as DialogPrimitiveRoot,
 	type RootProps as DialogPrimitiveRootProps,
 	Footer,
 	Header,
 	Positioner,
+	RootProvider,
 	Title,
 	Trigger,
 } from "./dialog-primitive";
@@ -70,6 +72,8 @@ function Dialog(props: DialogProps) {
 		rootRef,
 		role,
 		"aria-label": ariaLabel,
+		lazyMount,
+		unmountOnExit,
 		...rest
 	} = props;
 
@@ -78,7 +82,13 @@ function Dialog(props: DialogProps) {
 	// resolves to one, so we don't duplicate that warning here.
 
 	return (
-		<Root {...rest} rootRef={rootRef} dialogRole={role}>
+		<Root
+			{...rest}
+			rootRef={rootRef}
+			dialogRole={role}
+			lazyMount={lazyMount}
+			unmountOnExit={unmountOnExit}
+		>
 			{trigger && <Trigger asChild>{trigger}</Trigger>}
 			<Backdrop />
 			<Positioner>
@@ -115,6 +125,7 @@ function Dialog(props: DialogProps) {
 
 const DialogComponent = Object.assign(Dialog, {
 	Root,
+	RootProvider,
 	Trigger,
 	Backdrop,
 	Positioner,
@@ -126,6 +137,7 @@ const DialogComponent = Object.assign(Dialog, {
 	Description,
 	CloseTrigger,
 	ActionTrigger,
+	Context,
 });
 
 export {
@@ -134,10 +146,12 @@ export {
 	Body,
 	CloseTrigger,
 	Content,
+	Context,
 	DialogComponent as Dialog,
 	Footer,
 	Header,
 	Positioner,
+	RootProvider,
 	Title,
 	Trigger,
 };
