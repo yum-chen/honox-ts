@@ -45,6 +45,23 @@ describe("HoverCard Unit Tests", () => {
 		expect(html).not.toContain("HoverCard Title");
 	});
 
+	test("should render custom placement and apply data-placement and arrow styles", () => {
+		const html = (
+			<HoverCard
+				interactive={false}
+				placement="top"
+				showArrow={true}
+				trigger={<span>Hover me</span>}
+				title="HoverCard Title"
+			/>
+		).toString();
+
+		expect(html).toContain('data-placement="top"');
+		expect(html).toContain('data-part="arrow"');
+		// The top placement should render bottom style for arrow to point at the trigger
+		expect(html).toContain("bottom:calc(var(--arrow-size) * -0.5)");
+	});
+
 	test("should render compound/composable API correctly", () => {
 		const html = (
 			<HoverCard.Root>
