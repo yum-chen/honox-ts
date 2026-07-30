@@ -7,7 +7,10 @@ import { Switch } from "../components/ui/switch";
 import { TagsField } from "../components/ui/tags-field";
 import { Text } from "../components/ui/text";
 import { toaster } from "../components/ui/toast";
+import { Tooltip } from "../components/ui/tooltip";
+import { InfoIcon } from "../icons/info";
 import { saveConfigsFields, SettingsSaveError } from "../utils/settings-save";
+import { useSettingsHighlight } from "../utils/use-settings-highlight";
 import { useGitToken } from "./git-token-banner";
 
 export interface DocsSettingsFormProps {
@@ -35,6 +38,7 @@ export default function DocsSettingsForm({
 	initial,
 	groupsSummary,
 }: DocsSettingsFormProps) {
+	useSettingsHighlight();
 	const [form, setForm] = useState(initial);
 	const [saving, setSaving] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -80,8 +84,13 @@ export default function DocsSettingsForm({
 
 	return (
 		<Stack direction="column" gap="4" class={css({ alignItems: "stretch" })}>
-			<Stack align="center" justify="space-between">
-				<Text size="sm">Show hydration tier badge</Text>
+			<Stack id="showHydrationTierBadge" align="center" justify="space-between" class={css({ p: "2", borderRadius: "md", transition: "all 0.3s" })}>
+				<Stack direction="horizontal" align="center" gap="1.5">
+					<Text size="sm">Show hydration tier badge</Text>
+					<Tooltip content="Show visual badges indicating the hydration tier (e.g. Auto-interactive, Presentational) on documentation pages." placement="top" showArrow>
+						<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+					</Tooltip>
+				</Stack>
 				<Switch
 					checked={form.showHydrationTierBadge}
 					onCheckedChange={(details: { checked: boolean }) =>
@@ -95,7 +104,15 @@ export default function DocsSettingsForm({
 			</Stack>
 
 			<Field
-				label="Fallback group label"
+				id="fallbackLabel"
+				label={
+					<Stack direction="horizontal" align="center" gap="1.5">
+						<span>Fallback group label</span>
+						<Tooltip content="The default group name used in the documentation sidebar for pages without a specified group." placement="top" showArrow>
+							<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+						</Tooltip>
+					</Stack>
+				}
 				value={form.fallbackLabel}
 				onValueChange={(value: string) =>
 					setForm((f) => ({ ...f, fallbackLabel: value }))
@@ -104,7 +121,15 @@ export default function DocsSettingsForm({
 			/>
 
 			<TagsField
-				label="Explicit doc order"
+				id="docOrder"
+				label={
+					<Stack direction="horizontal" align="center" gap="1.5">
+						<span>Explicit doc order</span>
+						<Tooltip content="A list of document slugs defining the precise order of articles in the sidebar." placement="top" showArrow>
+							<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+						</Tooltip>
+					</Stack>
+				}
 				helperText="Doc slugs, in sidenav order — press Enter to add one. Docs not listed keep alphabetical order, appended after these."
 				value={form.docOrder}
 				onValueChange={(details: { value: string[] }) =>
@@ -120,7 +145,15 @@ export default function DocsSettingsForm({
 				<Stack gap="3" wrap="wrap">
 					<div class={css({ flex: "1", minWidth: "24" })}>
 						<Field
-							label="Edit button"
+							id="edit"
+							label={
+								<Stack direction="horizontal" align="center" gap="1.5">
+									<span>Edit button</span>
+									<Tooltip content="Custom translation label for the documentation Edit button in the header." placement="top" showArrow>
+										<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+									</Tooltip>
+								</Stack>
+							}
 							value={form.docsUi.edit}
 							onValueChange={(value: string) => setDocsUi({ edit: value })}
 							disabled={readOnly}
@@ -128,7 +161,15 @@ export default function DocsSettingsForm({
 					</div>
 					<div class={css({ flex: "1", minWidth: "24" })}>
 						<Field
-							label="Admin button"
+							id="admin"
+							label={
+								<Stack direction="horizontal" align="center" gap="1.5">
+									<span>Admin button</span>
+									<Tooltip content="Custom translation label for the documentation Admin button in the header." placement="top" showArrow>
+										<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+									</Tooltip>
+								</Stack>
+							}
 							value={form.docsUi.admin}
 							onValueChange={(value: string) => setDocsUi({ admin: value })}
 							disabled={readOnly}
@@ -136,7 +177,15 @@ export default function DocsSettingsForm({
 					</div>
 					<div class={css({ flex: "1", minWidth: "24" })}>
 						<Field
-							label="Mobile menu toggle"
+							id="menu"
+							label={
+								<Stack direction="horizontal" align="center" gap="1.5">
+									<span>Mobile menu toggle</span>
+									<Tooltip content="Custom translation label for the documentation mobile menu toggle." placement="top" showArrow>
+										<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+									</Tooltip>
+								</Stack>
+							}
 							value={form.docsUi.menu}
 							onValueChange={(value: string) => setDocsUi({ menu: value })}
 							disabled={readOnly}
@@ -144,7 +193,15 @@ export default function DocsSettingsForm({
 					</div>
 					<div class={css({ flex: "1", minWidth: "24" })}>
 						<Field
-							label="Previous doc label"
+							id="previous"
+							label={
+								<Stack direction="horizontal" align="center" gap="1.5">
+									<span>Previous doc label</span>
+									<Tooltip content="Custom translation label prefix for the previous-doc link." placement="top" showArrow>
+										<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+									</Tooltip>
+								</Stack>
+							}
 							value={form.docsUi.previous}
 							onValueChange={(value: string) => setDocsUi({ previous: value })}
 							disabled={readOnly}
@@ -152,7 +209,15 @@ export default function DocsSettingsForm({
 					</div>
 					<div class={css({ flex: "1", minWidth: "24" })}>
 						<Field
-							label="Next doc label"
+							id="next"
+							label={
+								<Stack direction="horizontal" align="center" gap="1.5">
+									<span>Next doc label</span>
+									<Tooltip content="Custom translation label prefix for the next-doc link." placement="top" showArrow>
+										<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+									</Tooltip>
+								</Stack>
+							}
 							value={form.docsUi.next}
 							onValueChange={(value: string) => setDocsUi({ next: value })}
 							disabled={readOnly}

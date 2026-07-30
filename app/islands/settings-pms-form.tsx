@@ -9,9 +9,12 @@ import { Stack } from "../components/ui/stack";
 import { Switch } from "../components/ui/switch";
 import { Text } from "../components/ui/text";
 import { toaster } from "../components/ui/toast";
+import { Tooltip } from "../components/ui/tooltip";
 import { ChevronDownIcon } from "../icons/chevron-down";
+import { InfoIcon } from "../icons/info";
 import { PROJECT_COLOR_PALETTES } from "../lib/projects";
 import { saveConfigsFields, SettingsSaveError } from "../utils/settings-save";
+import { useSettingsHighlight } from "../utils/use-settings-highlight";
 import { useGitToken } from "./git-token-banner";
 
 const colorItems = PROJECT_COLOR_PALETTES.map((c) => ({ label: c, value: c }));
@@ -62,6 +65,7 @@ function ColorMapEditor({
 }
 
 export default function PmsSettingsForm({ initial }: PmsSettingsFormProps) {
+	useSettingsHighlight();
 	const [form, setForm] = useState(initial);
 	const [saving, setSaving] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -100,8 +104,13 @@ export default function PmsSettingsForm({ initial }: PmsSettingsFormProps) {
 
 	return (
 		<Stack direction="column" gap="5" class={css({ alignItems: "stretch" })}>
-			<Stack align="center" justify="space-between">
-				<Text size="sm">Subtasks expanded by default</Text>
+			<Stack id="subtasksExpandedByDefault" align="center" justify="space-between" class={css({ p: "2", borderRadius: "md", transition: "all 0.3s" })}>
+				<Stack direction="horizontal" align="center" gap="1.5">
+					<Text size="sm">Subtasks expanded by default</Text>
+					<Tooltip content="Automatically expand all subtasks when loading a project board or task list." placement="top" showArrow>
+						<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+					</Tooltip>
+				</Stack>
 				<Switch
 					checked={form.subtasksExpandedByDefault}
 					onCheckedChange={(details: { checked: boolean }) =>
@@ -146,10 +155,15 @@ export default function PmsSettingsForm({ initial }: PmsSettingsFormProps) {
 				contentClass={css({ pt: "4" })}
 				content={
 					<Grid columns={{ base: 1, md: 3 }} gap="5">
-						<div>
-							<Text size="sm" class={labelClass}>
-								Task status colors
-							</Text>
+						<div id="statusColors" class={css({ p: "2", borderRadius: "md", transition: "all 0.3s" })}>
+							<Stack direction="horizontal" align="center" gap="1.5" class={css({ mb: "1.5" })}>
+								<Text size="sm" class={css({ fontWeight: "medium" })}>
+									Task status colors
+								</Text>
+								<Tooltip content="Map specific colors to task status labels (To Do, In Progress, In Review, Done)." placement="top" showArrow>
+									<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+								</Tooltip>
+							</Stack>
 							<ColorMapEditor
 								entries={form.statusColors}
 								onChange={(key, colorPalette) =>
@@ -162,10 +176,15 @@ export default function PmsSettingsForm({ initial }: PmsSettingsFormProps) {
 							/>
 						</div>
 
-						<div>
-							<Text size="sm" class={labelClass}>
-								Task priority colors
-							</Text>
+						<div id="priorityColors" class={css({ p: "2", borderRadius: "md", transition: "all 0.3s" })}>
+							<Stack direction="horizontal" align="center" gap="1.5" class={css({ mb: "1.5" })}>
+								<Text size="sm" class={css({ fontWeight: "medium" })}>
+									Task priority colors
+								</Text>
+								<Tooltip content="Map specific colors to task priority levels (Low, Medium, High, Urgent)." placement="top" showArrow>
+									<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+								</Tooltip>
+							</Stack>
 							<ColorMapEditor
 								entries={form.priorityColors}
 								onChange={(key, colorPalette) =>
@@ -181,10 +200,15 @@ export default function PmsSettingsForm({ initial }: PmsSettingsFormProps) {
 							/>
 						</div>
 
-						<div>
-							<Text size="sm" class={labelClass}>
-								Project status colors
-							</Text>
+						<div id="projectStatusColors" class={css({ p: "2", borderRadius: "md", transition: "all 0.3s" })}>
+							<Stack direction="horizontal" align="center" gap="1.5" class={css({ mb: "1.5" })}>
+								<Text size="sm" class={css({ fontWeight: "medium" })}>
+									Project status colors
+								</Text>
+								<Tooltip content="Map specific colors to project status stages (Planning, Active, On Hold, Completed, Archived)." placement="top" showArrow>
+									<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+								</Tooltip>
+							</Stack>
 							<ColorMapEditor
 								entries={form.projectStatusColors}
 								onChange={(key, colorPalette) =>

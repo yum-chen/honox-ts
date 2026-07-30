@@ -9,11 +9,14 @@ import { Switch } from "../components/ui/switch";
 import { TagsField } from "../components/ui/tags-field";
 import { Text } from "../components/ui/text";
 import { toaster } from "../components/ui/toast";
+import { Tooltip } from "../components/ui/tooltip";
+import { InfoIcon } from "../icons/info";
 import {
 	type CmsAdminSettings,
 	CmsConfigSaveError,
 	saveCmsAdminSettings,
 } from "../utils/cms-config-save";
+import { useSettingsHighlight } from "../utils/use-settings-highlight";
 import { useGitToken } from "./git-token-banner";
 
 const backendItems = [
@@ -43,6 +46,7 @@ export interface CmsAdminSettingsFormProps {
 export default function CmsAdminSettingsForm({
 	initial,
 }: CmsAdminSettingsFormProps) {
+	useSettingsHighlight();
 	const [form, setForm] = useState(initial);
 	const [saving, setSaving] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -97,10 +101,15 @@ export default function CmsAdminSettingsForm({
 				description="These control where the CMS admin and every git-backed editor on this site (including this page) read from and commit to. A wrong repo, branch, or malformed value can lock everyone out of /admin until it's fixed directly in git."
 			/>
 
-			<div>
-				<Text size="sm" class={labelClass}>
-					Backend type
-				</Text>
+			<div id="backendType" class={css({ p: "2", borderRadius: "md", transition: "all 0.3s" })}>
+				<Stack direction="horizontal" align="center" gap="1.5" class={css({ mb: "1.5" })}>
+					<Text size="sm" class={css({ fontWeight: "medium" })}>
+						Backend type
+					</Text>
+					<Tooltip content="The git hosting service backend used by Sveltia CMS to manage files." placement="top" showArrow>
+						<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+					</Tooltip>
+				</Stack>
 				<InteractiveCombobox
 					items={backendItems}
 					value={form.backend.name}
@@ -113,7 +122,15 @@ export default function CmsAdminSettingsForm({
 			</div>
 
 			<Field
-				label="Repository (owner/repo)"
+				id="backendRepo"
+				label={
+					<Stack direction="horizontal" align="center" gap="1.5">
+						<span>Repository (owner/repo)</span>
+						<Tooltip content="The GitHub, GitLab, or Gitea repository in 'owner/repository' format." placement="top" showArrow>
+							<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+						</Tooltip>
+					</Stack>
+				}
 				value={form.backend.repo}
 				onValueChange={(value: string) =>
 					setForm((f) => ({ ...f, backend: { ...f.backend, repo: value } }))
@@ -121,7 +138,15 @@ export default function CmsAdminSettingsForm({
 				disabled={readOnly}
 			/>
 			<Field
-				label="Branch"
+				id="backendBranch"
+				label={
+					<Stack direction="horizontal" align="center" gap="1.5">
+						<span>Branch</span>
+						<Tooltip content="The git branch the CMS reads from and commits updates to." placement="top" showArrow>
+							<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+						</Tooltip>
+					</Stack>
+				}
 				value={form.backend.branch}
 				onValueChange={(value: string) =>
 					setForm((f) => ({ ...f, backend: { ...f.backend, branch: value } }))
@@ -129,7 +154,15 @@ export default function CmsAdminSettingsForm({
 				disabled={readOnly}
 			/>
 			<Field
-				label="Base URL (OAuth proxy — required for gitea/forgejo, optional otherwise)"
+				id="backendBaseUrl"
+				label={
+					<Stack direction="horizontal" align="center" gap="1.5">
+						<span>Base URL (OAuth proxy — required for gitea/forgejo, optional otherwise)</span>
+						<Tooltip content="The authentication base URL, required when using self-hosted services like Gitea." placement="top" showArrow>
+							<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+						</Tooltip>
+					</Stack>
+				}
 				value={form.backend.baseUrl}
 				onValueChange={(value: string) =>
 					setForm((f) => ({
@@ -140,10 +173,15 @@ export default function CmsAdminSettingsForm({
 				disabled={readOnly}
 			/>
 
-			<div>
-				<Text size="sm" class={labelClass}>
-					i18n structure
-				</Text>
+			<div id="i18nStructure" class={css({ p: "2", borderRadius: "md", transition: "all 0.3s" })}>
+				<Stack direction="horizontal" align="center" gap="1.5" class={css({ mb: "1.5" })}>
+					<Text size="sm" class={css({ fontWeight: "medium" })}>
+						i18n structure
+					</Text>
+					<Tooltip content="The directory and file organization pattern used for multi-language localization." placement="top" showArrow>
+						<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+					</Tooltip>
+				</Stack>
 				<InteractiveCombobox
 					items={structureItems}
 					value={form.i18n.structure}
@@ -159,7 +197,15 @@ export default function CmsAdminSettingsForm({
 			</div>
 
 			<TagsField
-				label="Locales"
+				id="locales"
+				label={
+					<Stack direction="horizontal" align="center" gap="1.5">
+						<span>Locales</span>
+						<Tooltip content="The list of locale codes supported on the site (e.g. en, zh, es, pt, fr, de)." placement="top" showArrow>
+							<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+						</Tooltip>
+					</Stack>
+				}
 				helperText="Locale codes, e.g. en, zh — press Enter to add one"
 				value={form.i18n.locales}
 				onValueChange={(details: { value: string[] }) =>
@@ -171,10 +217,15 @@ export default function CmsAdminSettingsForm({
 				disabled={readOnly}
 			/>
 
-			<div>
-				<Text size="sm" class={labelClass}>
-					Default locale
-				</Text>
+			<div id="defaultLocale" class={css({ p: "2", borderRadius: "md", transition: "all 0.3s" })}>
+				<Stack direction="horizontal" align="center" gap="1.5" class={css({ mb: "1.5" })}>
+					<Text size="sm" class={css({ fontWeight: "medium" })}>
+						Default locale
+					</Text>
+					<Tooltip content="The primary fallback locale code for untranslated content." placement="top" showArrow>
+						<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+					</Tooltip>
+				</Stack>
 				<InteractiveCombobox
 					items={localeItems}
 					value={form.i18n.defaultLocale}
@@ -189,8 +240,13 @@ export default function CmsAdminSettingsForm({
 				/>
 			</div>
 
-			<Stack align="center" justify="space-between">
-				<Text size="sm">Omit default locale from file path</Text>
+			<Stack id="omitDefaultLocale" align="center" justify="space-between" class={css({ p: "2", borderRadius: "md", transition: "all 0.3s" })}>
+				<Stack direction="horizontal" align="center" gap="1.5">
+					<Text size="sm">Omit default locale from file path</Text>
+					<Tooltip content="If enabled, omits the locale subdirectory prefix from paths of the default language." placement="top" showArrow>
+						<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+					</Tooltip>
+				</Stack>
 				<Switch
 					checked={form.i18n.omitDefaultLocaleFromFilePath}
 					onCheckedChange={(details: { checked: boolean }) =>
@@ -207,7 +263,15 @@ export default function CmsAdminSettingsForm({
 			</Stack>
 
 			<Field
-				label="Media folder"
+				id="mediaFolder"
+				label={
+					<Stack direction="horizontal" align="center" gap="1.5">
+						<span>Media folder</span>
+						<Tooltip content="The physical repository folder path where uploaded media assets are saved." placement="top" showArrow>
+							<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+						</Tooltip>
+					</Stack>
+				}
 				value={form.media.mediaFolder}
 				onValueChange={(value: string) =>
 					setForm((f) => ({
@@ -218,7 +282,15 @@ export default function CmsAdminSettingsForm({
 				disabled={readOnly}
 			/>
 			<Field
-				label="Public folder"
+				id="publicFolder"
+				label={
+					<Stack direction="horizontal" align="center" gap="1.5">
+						<span>Public folder</span>
+						<Tooltip content="The public asset base URL path where media is served in the browser." placement="top" showArrow>
+							<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+						</Tooltip>
+					</Stack>
+				}
 				value={form.media.publicFolder}
 				onValueChange={(value: string) =>
 					setForm((f) => ({

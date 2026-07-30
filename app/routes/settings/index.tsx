@@ -13,6 +13,7 @@ import { Card, Layout, type LayoutProps } from "../../components/ui";
 import { Toaster } from "../../components/ui/toast";
 import AuthStatus from "../../islands/auth-status";
 import SettingsAuthBanner from "../../islands/settings-auth-banner";
+import SettingsSearch from "../../islands/settings-search";
 import { loadPage } from "../../lib/pages";
 import { loadAllSettingsSections } from "../../lib/settings-sections";
 
@@ -132,6 +133,8 @@ export default createRoute(async (c) => {
 					<PageRenderer content={pageData.content ?? []} />
 
 					<SettingsAuthBanner />
+
+					<SettingsSearch currentSection="home" />
 
 					<Card
 						variant="outline"

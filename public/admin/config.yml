@@ -2135,8 +2135,8 @@ collections:
     slug: "{{slug}}"
     summary: "{{title}}"
     fields:
-      - { label: Title, name: title, widget: string }
-      - { label: Description, name: description, widget: string }
+      - { label: Title, name: title, widget: string, hint: "The title of the settings section displayed in the sidenav and form header." }
+      - { label: Description, name: description, widget: string, hint: "A brief description of this settings section, shown below the title to explain its purpose." }
 
 # Singletons - Single-instance config files, edited as one entry (not a list)
 # Docs: https://sveltiacms.app/en/docs/collections/singletons
@@ -2392,6 +2392,7 @@ singletons:
             required: false
             default: "© 2025 Artefact UI Suite. All rights reserved."
             i18n: true
+            hint: "The copyright notice text displayed at the very bottom of every page."
           - label: Footer Links
             name: footerLinks
             widget: list

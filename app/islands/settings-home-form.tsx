@@ -6,8 +6,11 @@ import { Field } from "../components/ui/field";
 import { Stack } from "../components/ui/stack";
 import { Text } from "../components/ui/text";
 import { toaster } from "../components/ui/toast";
+import { Tooltip } from "../components/ui/tooltip";
+import { InfoIcon } from "../icons/info";
 import { PROJECT_COLOR_PALETTES } from "../lib/projects";
 import { saveConfigsFields, SettingsSaveError } from "../utils/settings-save";
+import { useSettingsHighlight } from "../utils/use-settings-highlight";
 import { useGitToken } from "./git-token-banner";
 
 const colorItems = PROJECT_COLOR_PALETTES.map((c) => ({ label: c, value: c }));
@@ -30,6 +33,7 @@ export interface HomeSettingsFormProps {
 const labelClass = css({ fontWeight: "medium", mb: "1.5" });
 
 export default function HomeSettingsForm({ initial }: HomeSettingsFormProps) {
+	useSettingsHighlight();
 	const [form, setForm] = useState(initial);
 	const [saving, setSaving] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -94,7 +98,15 @@ export default function HomeSettingsForm({ initial }: HomeSettingsFormProps) {
 	return (
 		<Stack direction="column" gap="4" class={css({ alignItems: "stretch" })}>
 			<Field
-				label="Brand name"
+				id="brandName"
+				label={
+					<Stack direction="horizontal" align="center" gap="1.5">
+						<span>Brand name</span>
+						<Tooltip content="The name of your brand, displayed in the site header, footer, and navigation." placement="top" showArrow>
+							<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+						</Tooltip>
+					</Stack>
+				}
 				value={form.brandName}
 				onValueChange={(value: string) =>
 					setForm((f) => ({ ...f, brandName: value }))
@@ -102,7 +114,15 @@ export default function HomeSettingsForm({ initial }: HomeSettingsFormProps) {
 				disabled={readOnly}
 			/>
 			<Field
-				label="<title> fallback"
+				id="titleFallback"
+				label={
+					<Stack direction="horizontal" align="center" gap="1.5">
+						<span>&lt;title&gt; fallback</span>
+						<Tooltip content="The default HTML page title used when a specific page title is not defined." placement="top" showArrow>
+							<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+						</Tooltip>
+					</Stack>
+				}
 				value={form.titleFallback}
 				onValueChange={(value: string) =>
 					setForm((f) => ({ ...f, titleFallback: value }))
@@ -110,7 +130,15 @@ export default function HomeSettingsForm({ initial }: HomeSettingsFormProps) {
 				disabled={readOnly}
 			/>
 			<Field
-				label="Footer copyright"
+				id="footerCopyright"
+				label={
+					<Stack direction="horizontal" align="center" gap="1.5">
+						<span>Footer copyright</span>
+						<Tooltip content="The copyright notice text displayed at the very bottom of every page." placement="top" showArrow>
+							<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+						</Tooltip>
+					</Stack>
+				}
 				value={form.footerCopyright}
 				onValueChange={(value: string) =>
 					setForm((f) => ({ ...f, footerCopyright: value }))
@@ -118,10 +146,15 @@ export default function HomeSettingsForm({ initial }: HomeSettingsFormProps) {
 				disabled={readOnly}
 			/>
 
-			<div>
-				<Text size="sm" class={labelClass}>
-					Footer links
-				</Text>
+			<div id="footerLinks">
+				<Stack direction="horizontal" align="center" gap="1.5" class={css({ mb: "1.5" })}>
+					<Text size="sm" class={css({ fontWeight: "medium" })}>
+						Footer links
+					</Text>
+					<Tooltip content="Custom external or internal navigation links displayed in the footer section." placement="top" showArrow>
+						<span class={css({ display: "inline-flex", cursor: "help", color: "fg.muted" })}><InfoIcon width="14" height="14" /></span>
+					</Tooltip>
+				</Stack>
 				<Stack direction="column" gap="3" class={css({ alignItems: "stretch" })}>
 					{form.footerLinks.map((link, index) => (
 						<Stack
