@@ -15,6 +15,7 @@ import { EllipsisIcon } from "../icons/ellipsis";
 import TaskCloneAction from "../islands/task-clone-action";
 import TaskDeleteConfirm from "../islands/task-delete-confirm";
 import TaskDetailsDrawer from "../islands/task-details-drawer";
+import TaskEditAction from "../islands/task-edit-action";
 import TaskRowActionsMenu from "../islands/task-row-actions-menu";
 import TaskTreeDnd from "../islands/task-tree-dnd";
 import TaskTreeToggle from "../islands/task-tree-toggle";
@@ -273,6 +274,18 @@ function TasksTable(data: Partial<TasksTableData>) {
 						<>
 							<button
 								type="button"
+								data-task-edit-trigger
+								data-task-slug={task.slug}
+								aria-label={`Edit "${task.title}"`}
+								class={cx(
+									button({ variant: "outline", size: "sm" }),
+									css({ textStyle: "sm", fontWeight: "medium" }),
+								)}
+							>
+								Edit
+							</button>
+							<button
+								type="button"
 								data-task-clone-trigger
 								data-task-slug={task.slug}
 								aria-label={`Clone "${task.title}"`}
@@ -315,6 +328,7 @@ function TasksTable(data: Partial<TasksTableData>) {
 			<TaskDetailsDrawer tasks={tasks} projectTitleBySlug={projectTitleBySlug} />
 			<TaskDeleteConfirm tasks={tasks} />
 			<TaskCloneAction tasks={tasks} />
+			<TaskEditAction tasks={tasks} projectBySlug={projectBySlug} />
 			<TaskRowActionsMenu tasks={tasks} />
 			<TaskTreeToggle />
 		</>
