@@ -1,7 +1,7 @@
 import { css } from "design-system/css";
 import { createRoute } from "honox/factory";
 import { PageRenderer } from "../../components/page-renderer";
-import { Search } from "../../components/ui";
+import { Grid, Search } from "../../components/ui";
 import { Toaster } from "../../components/ui/toast";
 import AuthStatus from "../../islands/auth-status";
 import PmsCreateMenu from "../../islands/pms-create-menu";
@@ -170,16 +170,25 @@ export default createRoute(async (c) => {
 					mx: "auto",
 				})}
 			>
-				{contentParts.map((part, i) => (
-					<>
-						<PageRenderer content={part} />
-						{foundFilterRows[i] && (
+				<PageRenderer content={contentParts[0]} />
+
+				{foundFilterRows.length > 0 && (
+					<Grid
+						columns={{ base: 1, md: 2 }}
+						gap="6"
+						class={css({
+							marginTop: "1.5rem",
+							marginBottom: "2rem",
+						})}
+					>
+						{foundFilterRows.map((row) => (
 							<div
+								key={row.label}
 								class={css({
 									display: "flex",
-									alignItems: "flex-start",
+									flexDirection: "column",
 									gap: "2",
-									marginBottom: i === foundFilterRows.length - 1 ? "2rem" : "0.75rem",
+									alignItems: "flex-start",
 								})}
 							>
 								<span
@@ -189,16 +198,18 @@ export default createRoute(async (c) => {
 										textTransform: "uppercase",
 										letterSpacing: "0.05em",
 										color: "#71717a",
-										minWidth: "64px",
-										paddingTop: "2",
 									})}
 								>
-									{foundFilterRows[i].label}
+									{row.label}
 								</span>
-								{foundFilterRows[i].render()}
+								{row.render()}
 							</div>
-						)}
-					</>
+						))}
+					</Grid>
+				)}
+
+				{contentParts.slice(1).map((part) => (
+					<PageRenderer content={part} />
 				))}
 			</div>
 		</>,
