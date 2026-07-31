@@ -1,7 +1,7 @@
 import { css } from "design-system/css";
 import { createRoute } from "honox/factory";
 import { PageRenderer } from "../../components/page-renderer";
-import { Search } from "../../components/ui";
+import { Grid, Search } from "../../components/ui";
 import { Toaster } from "../../components/ui/toast";
 import AuthStatus from "../../islands/auth-status";
 import PmsCreateMenu from "../../islands/pms-create-menu";
@@ -171,86 +171,89 @@ export default createRoute(async (c) => {
 			>
 				<PageRenderer content={part1} />
 
-				{assigneeBlockIndex !== -1 && (
-					<div
-						class={css({
-							display: "flex",
-							alignItems: "flex-start",
-							gap: "2",
-							marginBottom: "0.75rem",
-						})}
+				{(assigneeBlockIndex !== -1 || statusBlockIndex !== -1 || priorityBlockIndex !== -1) && (
+					<Grid
+						columns={{ base: 1, md: 3 }}
+						gap="4"
+						class={css({ marginBottom: "2rem" })}
 					>
-						<span
-							class={css({
-								fontSize: "xs",
-								fontWeight: "600",
-								textTransform: "uppercase",
-								letterSpacing: "0.05em",
-								color: "#71717a",
-								minWidth: "64px",
-								paddingTop: "2",
-							})}
-						>
-							Assignee
-						</span>
-						<TaskAssigneeFilter assignees={assignees} />
-					</div>
+						{assigneeBlockIndex !== -1 && (
+							<div
+								class={css({
+									display: "flex",
+									alignItems: "flex-start",
+									gap: "2",
+								})}
+							>
+								<span
+									class={css({
+										fontSize: "xs",
+										fontWeight: "600",
+										textTransform: "uppercase",
+										letterSpacing: "0.05em",
+										color: "#71717a",
+										minWidth: "64px",
+										paddingTop: "2",
+									})}
+								>
+									Assignee
+								</span>
+								<TaskAssigneeFilter assignees={assignees} />
+							</div>
+						)}
+
+						{statusBlockIndex !== -1 && (
+							<div
+								class={css({
+									display: "flex",
+									alignItems: "center",
+									gap: "2",
+								})}
+							>
+								<span
+									class={css({
+										fontSize: "xs",
+										fontWeight: "600",
+										textTransform: "uppercase",
+										letterSpacing: "0.05em",
+										color: "#71717a",
+										minWidth: "64px",
+									})}
+								>
+									Status
+								</span>
+								<TaskStatusFilter />
+							</div>
+						)}
+
+						{priorityBlockIndex !== -1 && (
+							<div
+								class={css({
+									display: "flex",
+									alignItems: "center",
+									gap: "2",
+								})}
+							>
+								<span
+									class={css({
+										fontSize: "xs",
+										fontWeight: "600",
+										textTransform: "uppercase",
+										letterSpacing: "0.05em",
+										color: "#71717a",
+										minWidth: "64px",
+									})}
+								>
+									Priority
+								</span>
+								<TaskPriorityFilter />
+							</div>
+						)}
+					</Grid>
 				)}
 
 				<PageRenderer content={part2} />
-
-				{statusBlockIndex !== -1 && (
-					<div
-						class={css({
-							display: "flex",
-							alignItems: "center",
-							gap: "2",
-							marginBottom: "0.75rem",
-						})}
-					>
-						<span
-							class={css({
-								fontSize: "xs",
-								fontWeight: "600",
-								textTransform: "uppercase",
-								letterSpacing: "0.05em",
-								color: "#71717a",
-								minWidth: "64px",
-							})}
-						>
-							Status
-						</span>
-						<TaskStatusFilter />
-					</div>
-				)}
-
 				<PageRenderer content={part3} />
-
-				{priorityBlockIndex !== -1 && (
-					<div
-						class={css({
-							display: "flex",
-							alignItems: "center",
-							gap: "2",
-							marginBottom: "2rem",
-						})}
-					>
-						<span
-							class={css({
-								fontSize: "xs",
-								fontWeight: "600",
-								textTransform: "uppercase",
-								letterSpacing: "0.05em",
-								color: "#71717a",
-								minWidth: "64px",
-							})}
-						>
-							Priority
-						</span>
-						<TaskPriorityFilter />
-					</div>
-				)}
-
 				<PageRenderer content={part4} />
 			</div>
 		</>,
