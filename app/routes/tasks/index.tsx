@@ -55,28 +55,14 @@ export default createRoute(async (c) => {
 	);
 
 	let part1 = originalContent;
-	let part2: typeof originalContent = [];
-	let part3: typeof originalContent = [];
 	let part4: typeof originalContent = [];
 
-	if (assigneeBlockIndex !== -1 && statusBlockIndex !== -1 && priorityBlockIndex !== -1) {
-		const idxs = [assigneeBlockIndex, statusBlockIndex, priorityBlockIndex].sort((a, b) => a - b);
-		part1 = originalContent.slice(0, idxs[0]);
-		part2 = originalContent.slice(idxs[0] + 1, idxs[1]);
-		part3 = originalContent.slice(idxs[1] + 1, idxs[2]);
-		part4 = originalContent.slice(idxs[2] + 1);
-	} else if (statusBlockIndex !== -1 && priorityBlockIndex !== -1) {
-		const firstIdx = Math.min(statusBlockIndex, priorityBlockIndex);
-		const secondIdx = Math.max(statusBlockIndex, priorityBlockIndex);
-		part1 = originalContent.slice(0, firstIdx);
-		part2 = originalContent.slice(firstIdx + 1, secondIdx);
-		part4 = originalContent.slice(secondIdx + 1);
-	} else if (statusBlockIndex !== -1) {
-		part1 = originalContent.slice(0, statusBlockIndex);
-		part4 = originalContent.slice(statusBlockIndex + 1);
-	} else if (priorityBlockIndex !== -1) {
-		part1 = originalContent.slice(0, priorityBlockIndex);
-		part4 = originalContent.slice(priorityBlockIndex + 1);
+	const filterIndices = [assigneeBlockIndex, statusBlockIndex, priorityBlockIndex].filter(idx => idx !== -1);
+	if (filterIndices.length > 0) {
+		const minIdx = Math.min(...filterIndices);
+		const maxIdx = Math.max(...filterIndices);
+		part1 = originalContent.slice(0, minIdx);
+		part4 = originalContent.slice(maxIdx + 1);
 	}
 
 	return c.render(
@@ -171,10 +157,10 @@ export default createRoute(async (c) => {
 			>
 				<PageRenderer content={part1} />
 
-				{(assigneeBlockIndex !== -1 || statusBlockIndex !== -1 || priorityBlockIndex !== -1) && (
+				{filterIndices.length > 0 && (
 					<Grid
 						columns={{ base: 1, md: 3 }}
-						gap="4"
+						gap="6"
 						class={css({ marginBottom: "2rem" })}
 					>
 						{assigneeBlockIndex !== -1 && (
@@ -252,8 +238,6 @@ export default createRoute(async (c) => {
 					</Grid>
 				)}
 
-				<PageRenderer content={part2} />
-				<PageRenderer content={part3} />
 				<PageRenderer content={part4} />
 			</div>
 		</>,
