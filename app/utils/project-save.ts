@@ -2,8 +2,8 @@
 // fetch/check/write flow as app/utils/task-save.ts, writing
 // frontmatter+markdown (content/projects/*.md, see app/lib/projects.ts) the
 // same way task-save.ts does.
-import { createFile, fileExists, requireToken } from "./git-backend";
-import { stringifyFrontmatter } from "./markdown";
+import { createFile, fileExists, fetchFile, requireToken } from "./git-backend";
+import { stringifyFrontmatter, parseFrontmatter } from "./markdown";
 import { slugify } from "./slug";
 
 export class ProjectSaveError extends Error {}
@@ -54,4 +54,36 @@ export async function createProject(input: NewProjectInput): Promise<string> {
 	const content = stringifyFrontmatter(data, input.description ?? "");
 	await createFile(path, content, `Create project "${input.title}"`, token);
 	return slug;
+}
+
+export async function cloneProject(
+	slug: string,
+	newTitle: string,
+): Promise<string> {
+	const token = requireToken();
+	const title = newTitle.trim();
+	if (!title) {
+		throw new ProjectSaveError("Enter a name for the copy.");
+	}
+
+	const source = await fetchFile(`content/projects/${slug}.md`, token);
+	const { data, content } = parseFrontmatter(source.content);
+	const sourceTitle = (data.title as string) || slug;
+
+	const baseSlug = slugifyProjectTitle(title);
+	let cloneSlug = baseSlug;
+	let attempt = 2;
+	while (await fileExists(`content/projects/${cloneSlug}.md`, token)) {
+		cloneSlug = `${baseSlug}-${attempt}`;
+		attempt += 1;
+	}
+
+	const newContent = stringifyFrontmatter({ ...data, title }, content);
+	await createFile(
+		`content/projects/${cloneSlug}.md`,
+		newContent,
+		`Clone project "${sourceTitle}" as "${title}"`,
+		token,
+	);
+	return cloneSlug;
 }
