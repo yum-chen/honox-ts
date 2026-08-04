@@ -101,6 +101,7 @@ export default defineConfig({
 			splitter: ["*"],
 			switchRecipe: ["*"],
 			table: ["*"],
+			tabs: ["*"],
 			tagsField: ["*"],
 			text: ["*"],
 			textarea: ["*"],
