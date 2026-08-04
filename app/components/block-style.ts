@@ -1,69 +1,30 @@
 import { css } from "design-system/css";
 
-// Validated inline styling for CMS-authored layout blocks (Stack/Grid/Layout).
+// Validated inline styling for CMS-authored layout blocks (Stack/Grid/Layout)
+// and non-layout blocks.
 //
 // PandaCSS's `css()` only extracts values it can see statically in source,
 // so it can't read content/pages/*.json directly. Rather than bypassing
 // Panda with a raw inline `style` string, this follows Panda's own guidance
 // for runtime values (https://panda-css.com/docs/guides/dynamic-styling):
-// a single *static* `css()` call below — visible to Panda's extractor at
-// build time, so it's a real generated/shared/purge-safe class — whose
-// declarations read from `var(--cms-*, initial)` custom properties. The
-// actual per-instance values are then injected only as those custom
-// properties via the `style` prop, which every layout component already
-// spreads onto its root element via `...rest`.
 //
-// Structured fields are validated against an allowlist pattern before
-// reaching the DOM, since (unlike the rest of the CMS schema) these values
-// are free-text and this is the only place they're checked.
+// 1. Categorical properties (small closed sets of values) are registered in
+//    `staticCss.css` in `panda.config.ts`, generating real utility classes at
+//    build-time. At runtime, we resolve them using `cmsCategoricalClass`.
+// 2. Continuous properties (margins, paddings, maxWidths, etc.) map to a single
+//    *static* `layoutStyleClass` whose declarations read from `--cms-*` custom
+//    properties, which we inject in the style attribute.
 
-const layoutStyleClass = css({
-	margin: "var(--cms-margin, initial)",
-	padding: "var(--cms-padding, initial)",
-	maxWidth: "var(--cms-max-width, initial)",
-	borderRadius: "var(--cms-border-radius, initial)",
-	backgroundColor: "var(--cms-bg-color, initial)",
-	backgroundImage: {
-		_dark: "var(--cms-bg-image, initial)",
-		_light: "var(--cms-bg-image-light, var(--cms-bg-image, initial))",
-	},
-	backgroundSize: "var(--cms-bg-fit, initial)",
-	backgroundPosition: "center",
-	backgroundRepeat: "no-repeat",
-	textAlign: "var(--cms-text-align, initial)",
-	opacity: "var(--cms-opacity, initial)",
-	boxShadow: "var(--cms-box-shadow, initial)",
-	// Width defaults to 0 (invisible regardless of style/color) rather than
-	// `initial` — CSS's own initial border-width is "medium" (~3px), which
-	// would draw an unexpected border on any existing block that only ever
-	// set borderColor/borderStyle... but until now no block set any of the
-	// three, so this default only matters once authors start using them.
-	borderWidth: "var(--cms-border-width, 0)",
-	borderStyle: "var(--cms-border-style, solid)",
-	borderColor: "var(--cms-border-color, var(--colors-border))",
-});
-
-const SPACING =
+export const SPACING =
 	/^(-?\d+(\.\d+)?(px|rem|em|%)|0|auto)(\s+(-?\d+(\.\d+)?(px|rem|em|%)|0|auto)){0,3}$/;
-const LENGTH = /^(-?\d+(\.\d+)?(px|rem|em|%|vw|vh)|0|none)$/;
-const COLOR = /^(#[0-9a-fA-F]{3,8}|rgba?\([\d.,%\s]+\)|[a-zA-Z]+)$/;
+export const LENGTH = /^(-?\d+(\.\d+)?(px|rem|em|%|vw|vh)|0|none|100%)$/;
+export const COLOR = /^(#[0-9a-fA-F]{3,8}|rgba?\([\d.,%\s]+\)|[a-zA-Z\-]+)$/;
 // https:// for externally-hosted images, or a root-relative path for ones
 // uploaded through the CMS media picker (media_folder -> public_folder: /media).
-const SAFE_URL = /^(https:\/\/|\/)[^\s"'()]+$/;
-const FIT_VALUES = new Set(["cover", "contain", "auto"]);
-const TEXT_ALIGN_VALUES = new Set([
-	"left",
-	"center",
-	"right",
-	"justify",
-	"start",
-	"end",
-]);
-// Real design-system shadow tokens (design-system/tokens) — a select, not
-// freeform CSS, since box-shadow syntax is too complex to safely allowlist
-// with a regex. This also gets box-shadow the token consistency margin/
-// padding don't have: an editor can only ever pick a real design-system value.
-const SHADOW_TOKENS: Record<string, string> = {
+export const SAFE_URL = /^(https:\/\/|\/)[^\s"'()]+$/;
+export const FIT_VALUES = new Set(["cover", "contain", "auto"]);
+
+export const SHADOW_TOKENS: Record<string, string> = {
 	none: "none",
 	"2xs": "var(--shadows-2xs)",
 	xs: "var(--shadows-xs)",
@@ -73,143 +34,338 @@ const SHADOW_TOKENS: Record<string, string> = {
 	xl: "var(--shadows-xl)",
 	"2xl": "var(--shadows-2xl)",
 };
-const BORDER_STYLE_VALUES = new Set(["solid", "dashed", "dotted"]);
-// Same reasoning as SHADOW_TOKENS: a select of real, theme-aware semantic
-// border tokens rather than a raw color field, so a border set here still
-// looks right in dark mode instead of a CMS editor hardcoding a light-mode hex.
-const BORDER_COLOR_TOKENS: Record<string, string> = {
+
+export const BORDER_STYLE_VALUES = new Set(["solid", "dashed", "dotted", "none"]);
+
+export const BORDER_COLOR_TOKENS: Record<string, string> = {
 	default: "var(--colors-border)",
 	error: "var(--colors-border-error)",
 };
 
-function safe(value: unknown, pattern: RegExp): string | undefined {
+// Categorical property-to-allowed-values mapping
+export const CATEGORICAL_PROPERTIES = {
+	textAlign: new Set(["left", "center", "right", "justify", "start", "end"]),
+	fontWeight: new Set(["bold", "600", "normal", "700"]),
+	textTransform: new Set(["uppercase", "none", "lowercase", "capitalize"]),
+	borderStyle: BORDER_STYLE_VALUES,
+	borderTopStyle: BORDER_STYLE_VALUES,
+	borderBottomStyle: BORDER_STYLE_VALUES,
+	flexWrap: new Set(["wrap", "nowrap", "wrap-reverse"]),
+	justifyContent: new Set(["flex-start", "flex-end", "center", "space-between", "space-around", "space-evenly"]),
+	color: new Set(["var(--colors-fg-muted)"]),
+	borderColor: new Set(["var(--colors-border)", "var(--colors-border-error)"]),
+	borderTopColor: new Set(["var(--colors-border)"]),
+	borderBottomColor: new Set(["var(--colors-border)"]),
+};
+
+// Continuous properties configuration
+export const CONTINUOUS_PROPERTIES = {
+	margin: SPACING,
+	marginTop: SPACING,
+	marginBottom: SPACING,
+	marginLeft: SPACING,
+	marginRight: SPACING,
+	padding: SPACING,
+	paddingTop: SPACING,
+	paddingBottom: SPACING,
+	paddingLeft: SPACING,
+	paddingRight: SPACING,
+	maxWidth: LENGTH,
+	width: LENGTH,
+	minWidth: LENGTH,
+	rowGap: SPACING,
+	letterSpacing: /^(-?\d+(\.\d+)?(px|rem|em|%)|0|normal|0\.05em)$/,
+	opacity: "opacity", // uses safeOpacity
+	backgroundColor: COLOR,
+	backgroundImage: SAFE_URL,
+	backgroundImageLight: SAFE_URL,
+	backgroundFit: FIT_VALUES,
+	boxShadow: "boxShadow", // uses SHADOW_TOKENS
+	flexShrink: /^\d+$/,
+	borderRadius: LENGTH,
+	borderWidth: LENGTH,
+	borderTopWidth: LENGTH,
+	borderBottomWidth: LENGTH,
+};
+
+export const CONTINUOUS_VAR_MAP: Record<string, string> = {
+	margin: "--cms-margin",
+	marginTop: "--cms-margin-top",
+	marginBottom: "--cms-margin-bottom",
+	marginLeft: "--cms-margin-left",
+	marginRight: "--cms-margin-right",
+	padding: "--cms-padding",
+	paddingTop: "--cms-padding-top",
+	paddingBottom: "--cms-padding-bottom",
+	paddingLeft: "--cms-padding-left",
+	paddingRight: "--cms-padding-right",
+	maxWidth: "--cms-max-width",
+	width: "--cms-width",
+	minWidth: "--cms-min-width",
+	rowGap: "--cms-row-gap",
+	letterSpacing: "--cms-letter-spacing",
+	flexShrink: "--cms-flex-shrink",
+	borderRadius: "--cms-border-radius",
+	backgroundColor: "--cms-bg-color",
+	backgroundImage: "--cms-bg-image",
+	backgroundImageLight: "--cms-bg-image-light",
+	backgroundFit: "--cms-bg-fit",
+	opacity: "--cms-opacity",
+	boxShadow: "--cms-box-shadow",
+	borderWidth: "--cms-border-width",
+	borderTopWidth: "--cms-border-top-width",
+	borderBottomWidth: "--cms-border-bottom-width",
+};
+
+export const layoutStyleClass = css({
+	margin: "var(--cms-margin, initial)",
+	marginTop: "var(--cms-margin-top, initial)",
+	marginBottom: "var(--cms-margin-bottom, initial)",
+	marginLeft: "var(--cms-margin-left, initial)",
+	marginRight: "var(--cms-margin-right, initial)",
+	padding: "var(--cms-padding, initial)",
+	paddingTop: "var(--cms-padding-top, initial)",
+	paddingBottom: "var(--cms-padding-bottom, initial)",
+	paddingLeft: "var(--cms-padding-left, initial)",
+	paddingRight: "var(--cms-padding-right, initial)",
+	maxWidth: "var(--cms-max-width, initial)",
+	width: "var(--cms-width, initial)",
+	minWidth: "var(--cms-min-width, initial)",
+	rowGap: "var(--cms-row-gap, initial)",
+	letterSpacing: "var(--cms-letter-spacing, initial)",
+	flexShrink: "var(--cms-flex-shrink, initial)",
+	borderRadius: "var(--cms-border-radius, initial)",
+	backgroundColor: "var(--cms-bg-color, initial)",
+	backgroundImage: {
+		_dark: "var(--cms-bg-image, initial)",
+		_light: "var(--cms-bg-image-light, var(--cms-bg-image, initial))",
+	},
+	backgroundSize: "var(--cms-bg-fit, initial)",
+	backgroundPosition: "center",
+	backgroundRepeat: "no-repeat",
+	opacity: "var(--cms-opacity, initial)",
+	boxShadow: "var(--cms-box-shadow, initial)",
+	borderWidth: "var(--cms-border-width, initial)",
+	borderTopWidth: "var(--cms-border-top-width, initial)",
+	borderBottomWidth: "var(--cms-border-bottom-width, initial)",
+});
+
+export function safe(value: unknown, pattern: RegExp): string | undefined {
 	if (typeof value !== "string") return undefined;
 	const trimmed = value.trim();
 	return trimmed !== "" && pattern.test(trimmed) ? trimmed : undefined;
 }
 
-function safeOpacity(value: unknown): string | undefined {
+export function safeOpacity(value: unknown): string | undefined {
 	const num = typeof value === "number" ? value : Number(value);
 	if (typeof value !== "number" && typeof value !== "string") return undefined;
 	if (Number.isNaN(num) || num < 0 || num > 1) return undefined;
 	return String(num);
 }
 
-const STYLE_KEYS = [
-	"margin",
-	"padding",
-	"maxWidth",
-	"borderRadius",
-	"borderWidth",
-	"borderStyle",
-	"borderColor",
-	"backgroundColor",
-	"backgroundImage",
-	"backgroundImageLight",
-	"backgroundFit",
-	"textAlign",
-	"opacity",
-	"boxShadow",
-] as const;
+export function normalizeColor(val: string): string | undefined {
+	const trimmed = val.trim().toLowerCase();
+	if (trimmed === "#71717a" || trimmed === "#6b7280" || trimmed === "var(--colors-fg-muted)") {
+		return "var(--colors-fg-muted)";
+	}
+	if (trimmed === "#e5e7eb" || trimmed === "var(--colors-border)" || trimmed === "default") {
+		return "var(--colors-border)";
+	}
+	if (trimmed === "error" || trimmed === "var(--colors-border-error)") {
+		return "var(--colors-border-error)";
+	}
+	return undefined;
+}
+
+export function decomposeBorderShorthand(val: string): { width?: string; style?: string; color?: string } {
+	const parts = val.trim().split(/\s+/);
+	let width: string | undefined;
+	let style: string | undefined;
+	let color: string | undefined;
+
+	for (const part of parts) {
+		const trimmedPart = part.trim();
+		if (BORDER_STYLE_VALUES.has(trimmedPart)) {
+			style = trimmedPart;
+		} else if (LENGTH.test(trimmedPart)) {
+			width = trimmedPart;
+		} else if (COLOR.test(trimmedPart) || trimmedPart.startsWith("var(")) {
+			color = trimmedPart;
+		}
+	}
+	return { width, style, color };
+}
+
+export interface ValidatedStyle {
+	type: "categorical" | "continuous";
+	name: string; // camelCase
+	value: string;
+}
+
+export function parseAndValidateStyleProperty(
+	name: string,
+	value: string,
+): ValidatedStyle[] {
+	const camelName = name.trim().replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+
+	// Decompose border shorthands
+	if (camelName === "border" || camelName === "borderTop" || camelName === "borderBottom") {
+		const decomposed = decomposeBorderShorthand(value);
+		const prefix = camelName === "border" ? "border" : camelName;
+		const results: ValidatedStyle[] = [];
+		if (decomposed.width) {
+			results.push(...parseAndValidateStyleProperty(`${prefix}Width`, decomposed.width));
+		}
+		if (decomposed.style) {
+			results.push(...parseAndValidateStyleProperty(`${prefix}Style`, decomposed.style));
+		}
+		if (decomposed.color) {
+			results.push(...parseAndValidateStyleProperty(`${prefix}Color`, decomposed.color));
+		}
+		return results;
+	}
+
+	// Normalize color properties
+	if (
+		camelName === "color" ||
+		camelName === "borderColor" ||
+		camelName === "borderTopColor" ||
+		camelName === "borderBottomColor"
+	) {
+		const normalized = normalizeColor(value);
+		if (normalized) {
+			return [{ type: "categorical", name: camelName, value: normalized }];
+		}
+		return [];
+	}
+
+	// Check if categorical
+	if (camelName in CATEGORICAL_PROPERTIES) {
+		const set = CATEGORICAL_PROPERTIES[camelName as keyof typeof CATEGORICAL_PROPERTIES];
+		const trimmedVal = value.trim();
+		if (set.has(trimmedVal)) {
+			return [{ type: "categorical", name: camelName, value: trimmedVal }];
+		}
+		return [];
+	}
+
+	// Check if continuous
+	if (camelName === "opacity") {
+		const op = safeOpacity(value);
+		if (op) {
+			return [{ type: "continuous", name: "opacity", value: op }];
+		}
+	} else if (camelName === "boxShadow") {
+		const trimmed = value.trim();
+		if (trimmed in SHADOW_TOKENS) {
+			return [{ type: "continuous", name: "boxShadow", value: SHADOW_TOKENS[trimmed] }];
+		}
+	} else if (camelName === "backgroundFit") {
+		const trimmed = value.trim().toLowerCase();
+		if (FIT_VALUES.has(trimmed)) {
+			return [{ type: "continuous", name: "backgroundFit", value: trimmed }];
+		}
+	} else if (camelName in CONTINUOUS_PROPERTIES) {
+		const patternOrRule = CONTINUOUS_PROPERTIES[camelName as keyof typeof CONTINUOUS_PROPERTIES];
+		if (patternOrRule instanceof RegExp) {
+			const validated = safe(value, patternOrRule);
+			if (validated) {
+				return [{ type: "continuous", name: camelName, value: validated }];
+			}
+		}
+	}
+
+	return [];
+}
+
+export function parseStyleString(styleStr: string): ValidatedStyle[] {
+	const results: ValidatedStyle[] = [];
+	const declarations = styleStr.split(";");
+	for (const decl of declarations) {
+		const trimmedDecl = decl.trim();
+		if (!trimmedDecl) continue;
+		const colonIdx = trimmedDecl.indexOf(":");
+		if (colonIdx === -1) continue;
+		const prop = trimmedDecl.slice(0, colonIdx).trim();
+		const val = trimmedDecl.slice(colonIdx + 1).trim();
+		if (prop && val) {
+			results.push(...parseAndValidateStyleProperty(prop, val));
+		}
+	}
+	return results;
+}
+
+export function cmsCategoricalClass(categoricalStyles: Record<string, string>): string | undefined {
+	if (Object.keys(categoricalStyles).length === 0) return undefined;
+	return css(categoricalStyles);
+}
 
 export interface ExtractedLayoutStyle {
 	/** The static Panda class to add — only set when there's a var to back it. */
 	class?: string;
-	/** Inline `--cms-*` custom-property assignments, plus any manual `style`. */
+	/** Inline `--cms-*` custom-property assignments. */
 	style?: string;
 }
 
-/**
- * Pulls the structured style fields out of `props` (so they don't leak onto
- * the DOM as unknown attributes) and returns the shared Panda class plus a
- * validated inline `style` of `--cms-*` custom properties, composed from
- * them, plus any raw hand-authored `style` value. Values that fail
- * validation are silently dropped rather than thrown — a bad CMS entry
- * shouldn't take the page down.
- */
+const EXTENDED_STYLE_KEYS = Array.from(
+	new Set([
+		...Object.keys(CATEGORICAL_PROPERTIES),
+		...Object.keys(CONTINUOUS_PROPERTIES),
+		"style",
+	])
+);
+
 export function extractLayoutStyle(
 	props: Record<string, unknown>,
 ): ExtractedLayoutStyle {
 	const vars: string[] = [];
+	const categorical: Record<string, string> = {};
+	let hasContinuous = false;
 
-	const margin = safe(props.margin, SPACING);
-	if (margin) vars.push(`--cms-margin: ${margin}`);
-
-	const padding = safe(props.padding, SPACING);
-	if (padding) vars.push(`--cms-padding: ${padding}`);
-
-	const maxWidth = safe(props.maxWidth, LENGTH);
-	if (maxWidth) vars.push(`--cms-max-width: ${maxWidth}`);
-
-	const borderRadius = safe(props.borderRadius, LENGTH);
-	if (borderRadius) vars.push(`--cms-border-radius: ${borderRadius}`);
-
-	const borderWidth = safe(props.borderWidth, LENGTH);
-	if (borderWidth) vars.push(`--cms-border-width: ${borderWidth}`);
-
-	if (
-		typeof props.borderStyle === "string" &&
-		BORDER_STYLE_VALUES.has(props.borderStyle)
-	) {
-		vars.push(`--cms-border-style: ${props.borderStyle}`);
-	}
-
-	if (
-		typeof props.borderColor === "string" &&
-		props.borderColor in BORDER_COLOR_TOKENS
-	) {
-		vars.push(`--cms-border-color: ${BORDER_COLOR_TOKENS[props.borderColor]}`);
-	}
-
-	const backgroundColor = safe(props.backgroundColor, COLOR);
-	if (backgroundColor) vars.push(`--cms-bg-color: ${backgroundColor}`);
-
-	const backgroundImage = safe(props.backgroundImage, SAFE_URL);
-	if (backgroundImage) vars.push(`--cms-bg-image: url("${backgroundImage}")`);
-
-	// Optional light-theme override — falls back to `backgroundImage` above
-	// when omitted, so existing content with only one image is unaffected.
-	const backgroundImageLight = safe(props.backgroundImageLight, SAFE_URL);
-	if (backgroundImageLight) {
-		vars.push(`--cms-bg-image-light: url("${backgroundImageLight}")`);
-	}
-
-	if (backgroundImage || backgroundImageLight) {
-		const fit =
-			typeof props.backgroundFit === "string" &&
-			FIT_VALUES.has(props.backgroundFit)
-				? props.backgroundFit
-				: "cover";
-		vars.push(`--cms-bg-fit: ${fit}`);
-	}
-
-	if (
-		typeof props.textAlign === "string" &&
-		TEXT_ALIGN_VALUES.has(props.textAlign)
-	) {
-		vars.push(`--cms-text-align: ${props.textAlign}`);
-	}
-
-	const opacity = safeOpacity(props.opacity);
-	if (opacity) vars.push(`--cms-opacity: ${opacity}`);
-
-	if (typeof props.boxShadow === "string" && props.boxShadow in SHADOW_TOKENS) {
-		vars.push(`--cms-box-shadow: ${SHADOW_TOKENS[props.boxShadow]}`);
-	}
-
-	for (const key of STYLE_KEYS) {
+	// Loop over all potential continuous/categorical style properties in the block's props
+	for (const key of EXTENDED_STYLE_KEYS) {
+		if (!(key in props)) continue;
+		const value = props[key];
+		if (typeof value === "string") {
+			const parsed = parseAndValidateStyleProperty(key, value);
+			for (const p of parsed) {
+				if (p.type === "categorical") {
+					categorical[p.name] = p.value;
+				} else {
+					const varName = CONTINUOUS_VAR_MAP[p.name];
+					if (varName) {
+						let formattedVal = p.value;
+						if (p.name === "backgroundImage" || p.name === "backgroundImageLight") {
+							formattedVal = `url("${p.value}")`;
+						}
+						vars.push(`${varName}: ${formattedVal}`);
+						hasContinuous = true;
+					}
+				}
+			}
+		} else if (typeof value === "number" && key === "opacity") {
+			const op = safeOpacity(value);
+			if (op) {
+				vars.push(`--cms-opacity: ${op}`);
+				hasContinuous = true;
+			}
+		}
 		delete props[key];
 	}
 
-	const manual = typeof props.style === "string" ? props.style : undefined;
-	delete props.style;
-
 	const varsStyle = vars.join("; ");
-	const style =
-		varsStyle && manual ? `${varsStyle}; ${manual}` : varsStyle || manual;
+	const catClass = cmsCategoricalClass(categorical);
+	const layoutClass = hasContinuous ? layoutStyleClass : undefined;
+
+	let finalClass: string | undefined;
+	if (catClass && layoutClass) {
+		finalClass = `${catClass} ${layoutClass}`;
+	} else {
+		finalClass = catClass || layoutClass;
+	}
 
 	return {
-		class: varsStyle ? layoutStyleClass : undefined,
-		style,
+		class: finalClass,
+		style: varsStyle || undefined,
 	};
 }
