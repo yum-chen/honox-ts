@@ -178,6 +178,10 @@ const CATEGORICAL_VALIDATORS: Record<
 	string,
 	(value: string) => CategoricalMatch | undefined
 > = {
+	display: (v) =>
+		v === "inline-flex" ? { prop: "display", value: v } : undefined,
+	"align-items": (v) =>
+		v === "center" ? { prop: "alignItems", value: v } : undefined,
 	"text-align": (v) =>
 		TEXT_ALIGN_VALUES.has(v) ? { prop: "textAlign", value: v } : undefined,
 	"font-weight": (v) =>

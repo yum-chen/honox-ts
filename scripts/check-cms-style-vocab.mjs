@@ -21,6 +21,8 @@ const CONTENT_DIR = "content/pages";
 
 // Mirrors CATEGORICAL_VALIDATORS in app/components/block-style.ts.
 const CATEGORICAL_VALUES = {
+	display: new Set(["inline-flex"]),
+	"align-items": new Set(["center"]),
 	"text-align": new Set(["left", "center", "right", "justify", "start", "end"]),
 	"font-weight": new Set(["600", "bold"]),
 	"text-transform": new Set(["uppercase"]),

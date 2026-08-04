@@ -4,7 +4,6 @@ import { createRoute } from "honox/factory";
 import { renderBlocks } from "../../components/page-registry";
 import {
 	Anchor,
-	Avatar,
 	Badge,
 	Button,
 	Heading,
@@ -19,6 +18,7 @@ import { ShareIcon } from "../../icons/share";
 import AuthStatus from "../../islands/auth-status";
 import { loadDocsConfig } from "../../lib/configs";
 import { detectLocale, isLocale, localiseHref } from "../../lib/i18n";
+import { loadPage } from "../../lib/pages";
 import { loadPostBySlug, loadPosts } from "../../lib/posts";
 import { markdownContentClass } from "../../utils/markdown-content-style";
 
@@ -52,6 +52,10 @@ export default createRoute(
 		if (!post) {
 			return c.notFound();
 		}
+
+		const page = (await loadPage("blog/[slug]", currentLocale, { post })) || {
+			content: [],
+		};
 
 		try {
 			const htmlContent = post.html;
@@ -303,22 +307,10 @@ export default createRoute(
 									{/* Author */}
 									{config.blog?.showAuthor !== false && (
 										<Stack gap="3" align="center">
-											<Anchor
-												href={localiseLink(
-													`/blog/by-author/${post.author || "Artefact Team"}`,
-												)}
-												class={css({
-													display: "inline-flex",
-													alignItems: "center",
-													textDecoration: "none",
-												})}
-											>
-												<Avatar
-													size="md"
-													variant="solid"
-													name={post.author || "Artefact Team"}
-												/>
-											</Anchor>
+											{renderBlocks(page.content, {
+												locale: currentLocale,
+												currentPath,
+											})}
 											<div>
 												<Anchor
 													href={localiseLink(

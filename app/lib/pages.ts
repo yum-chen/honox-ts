@@ -34,10 +34,51 @@ function pagePath(slug: string, locale: string): string {
 		: `/content/pages/${locale}/${slug}.json`;
 }
 
-// A `{{item.foo}}` placeholder, whole-string only (no partial/in-string
-// interpolation — not needed by any current template and keeps this a
-// straight value substitution rather than a template-string parser).
-const ITEM_PLACEHOLDER = /^\{\{item\.(\w+)\}\}$/;
+export function resolvePostValue(key: string, post?: Record<string, any>): any {
+	if (!post) return undefined;
+	if (key === "authorLabel") {
+		return post.authorLabel || post.author || "Artefact Team";
+	}
+	if (key === "author") {
+		return post.author || "Artefact Team";
+	}
+	return post[key];
+}
+
+export function interpolateValue(
+	value: string,
+	item?: Record<string, any>,
+	post?: Record<string, any>,
+): any {
+	const itemMatch = value.match(/^\{\{item\.(\w+)\}\}$/);
+	if (itemMatch) {
+		if (item === undefined) return value;
+		const key = itemMatch[1];
+		return item[key];
+	}
+
+	const postMatch = value.match(/^\{\{post\.(\w+)\}\}$/);
+	if (postMatch) {
+		if (post === undefined) return value;
+		const key = postMatch[1];
+		return resolvePostValue(key, post);
+	}
+
+	let result = value;
+	if (item !== undefined) {
+		result = result.replace(/\{\{item\.(\w+)\}\}/g, (match, key) => {
+			const resolved = item[key];
+			return resolved !== undefined ? String(resolved) : "";
+		});
+	}
+	if (post !== undefined) {
+		result = result.replace(/\{\{post\.(\w+)\}\}/g, (match, key) => {
+			const resolved = resolvePostValue(key, post);
+			return resolved !== undefined ? String(resolved) : "";
+		});
+	}
+	return result;
+}
 
 /** Fills in one `each` block's `template` for one resolved item: any prop
  * value that's exactly `"{{item.foo}}"` becomes `item.foo`, or — if `foo` is
@@ -45,26 +86,24 @@ const ITEM_PLACEHOLDER = /^\{\{item\.(\w+)\}\}$/;
  * dropped from the block entirely so the component's own default applies,
  * rather than passing an explicit `undefined`/empty value. Recurses into
  * `children` so a template can nest (e.g. an `anchor` wrapping a `badge`). */
-function interpolateBlock(
+export function interpolateBlock(
 	block: ComponentBlock,
-	item: Record<string, unknown>,
+	item?: Record<string, unknown>,
+	post?: Record<string, unknown>,
 ): ComponentBlock {
 	const next: ComponentBlock = {};
 	for (const [key, value] of Object.entries(block)) {
 		if (key === "children" && Array.isArray(value)) {
 			next.children = (value as ComponentBlock[]).map((child) =>
-				interpolateBlock(child, item),
+				interpolateBlock(child, item, post),
 			);
 			continue;
 		}
 		if (typeof value === "string") {
-			const match = value.match(ITEM_PLACEHOLDER);
-			if (match) {
-				const resolved = item[match[1]];
-				if (resolved === undefined) continue; // drop the prop
-				next[key] = resolved;
-				continue;
-			}
+			const resolved = interpolateValue(value, item, post);
+			if (resolved === undefined) continue; // drop the prop
+			next[key] = resolved;
+			continue;
 		}
 		next[key] = value;
 	}
@@ -93,20 +132,29 @@ async function resolveBlockDataSources(
 	if (!blocks) return blocks;
 	return Promise.all(
 		blocks.map(async (block) => {
-			const next: ComponentBlock = { ...block };
-			if (block.blockType === "each") {
+			let interpolatedBlock = block;
+			if (ctx.post) {
+				interpolatedBlock = interpolateBlock(block, undefined, ctx.post);
+			}
+
+			const next: ComponentBlock = { ...interpolatedBlock };
+			if (interpolatedBlock.blockType === "each") {
 				const items =
-					typeof block.dataSource === "string"
-						? await resolveDataSource(block.dataSource, ctx)
-						: Array.isArray(block.items)
-							? block.items
+					typeof interpolatedBlock.dataSource === "string"
+						? await resolveDataSource(interpolatedBlock.dataSource, ctx)
+						: Array.isArray(interpolatedBlock.items)
+							? interpolatedBlock.items
 							: [];
-				const template = Array.isArray(block.template)
-					? (block.template as ComponentBlock[])
+				const template = Array.isArray(interpolatedBlock.template)
+					? (interpolatedBlock.template as ComponentBlock[])
 					: [];
 				next.children = items.flatMap((item) =>
 					template.map((tpl) =>
-						interpolateBlock(tpl, item as unknown as Record<string, unknown>),
+						interpolateBlock(
+							tpl,
+							item as unknown as Record<string, unknown>,
+							ctx.post,
+						),
 					),
 				);
 				delete next.dataSource;
@@ -114,10 +162,13 @@ async function resolveBlockDataSources(
 				delete next.template;
 			}
 			if (
-				block.blockType === "table" &&
-				typeof block.customRenderer === "string"
+				interpolatedBlock.blockType === "table" &&
+				typeof interpolatedBlock.customRenderer === "string"
 			) {
-				next.data = await resolveCustomTableData(block.customRenderer, ctx);
+				next.data = await resolveCustomTableData(
+					interpolatedBlock.customRenderer,
+					ctx,
+				);
 			}
 			if (Array.isArray(next.children)) {
 				next.children = await resolveBlockDataSources(
