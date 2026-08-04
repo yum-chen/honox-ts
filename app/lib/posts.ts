@@ -70,6 +70,7 @@ export interface BlogPost {
 	tags: string[];
 	draft: boolean;
 	author?: string;
+	authorLabel?: string;
 	readTime?: string;
 	cover?: string;
 }
@@ -202,6 +203,7 @@ export async function loadPostBySlug(
 	}
 
 	const tags = Array.isArray(data.tags) ? data.tags : [];
+	const author = data.author || "Artefact Team";
 	const post: BlogPost = {
 		slug,
 		title: data.title || "Untitled",
@@ -209,7 +211,8 @@ export async function loadPostBySlug(
 		description: data.description || "",
 		tags,
 		draft: isDraft,
-		author: data.author || "Artefact Team",
+		author,
+		authorLabel: author,
 		readTime: data.readTime || "5 min read",
 		cover: data.cover,
 	};

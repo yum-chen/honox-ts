@@ -38,6 +38,7 @@ function pagePath(slug: string, locale: string): string {
 // interpolation — not needed by any current template and keeps this a
 // straight value substitution rather than a template-string parser).
 const ITEM_PLACEHOLDER = /^\{\{item\.(\w+)\}\}$/;
+const POST_PLACEHOLDER = /^\{\{post\.(\w+)\}\}$/;
 
 /** Fills in one `each` block's `template` for one resolved item: any prop
  * value that's exactly `"{{item.foo}}"` becomes `item.foo`, or — if `foo` is
@@ -45,26 +46,68 @@ const ITEM_PLACEHOLDER = /^\{\{item\.(\w+)\}\}$/;
  * dropped from the block entirely so the component's own default applies,
  * rather than passing an explicit `undefined`/empty value. Recurses into
  * `children` so a template can nest (e.g. an `anchor` wrapping a `badge`). */
-function interpolateBlock(
+export function interpolateBlock(
 	block: ComponentBlock,
-	item: Record<string, unknown>,
+	item?: Record<string, unknown>,
+	post?: Record<string, unknown>,
 ): ComponentBlock {
 	const next: ComponentBlock = {};
 	for (const [key, value] of Object.entries(block)) {
 		if (key === "children" && Array.isArray(value)) {
 			next.children = (value as ComponentBlock[]).map((child) =>
-				interpolateBlock(child, item),
+				interpolateBlock(child, item, post),
 			);
 			continue;
 		}
 		if (typeof value === "string") {
-			const match = value.match(ITEM_PLACEHOLDER);
-			if (match) {
-				const resolved = item[match[1]];
-				if (resolved === undefined) continue; // drop the prop
-				next[key] = resolved;
-				continue;
+			let resolvedValue: unknown = value;
+			if (item) {
+				const match = value.match(ITEM_PLACEHOLDER);
+				if (match) {
+					const resolved = item[match[1]];
+					if (resolved !== undefined) {
+						resolvedValue = resolved;
+					}
+				}
 			}
+			if (post && typeof resolvedValue === "string") {
+				const match = resolvedValue.match(POST_PLACEHOLDER);
+				if (match) {
+					const field = match[1];
+					let resolved = post[field];
+					if (field === "authorLabel" && (resolved === undefined || resolved === "")) {
+						resolved = post["author"] || "Artefact Team";
+					}
+					if (resolved === undefined) {
+						resolved = "Artefact Team";
+					}
+					if (resolved !== undefined) {
+						resolvedValue = resolved;
+					}
+				}
+			}
+
+			if (typeof resolvedValue === "string") {
+				let nextStr = resolvedValue;
+				if (item) {
+					nextStr = nextStr.replace(/\{\{item\.(\w+)\}\}/g, (_, g1) => {
+						const resolved = item[g1];
+						return resolved !== undefined ? String(resolved) : "";
+					});
+				}
+				if (post) {
+					nextStr = nextStr.replace(/\{\{post\.(\w+)\}\}/g, (_, g1) => {
+						let resolved = post[g1];
+						if (g1 === "authorLabel" && (resolved === undefined || resolved === "")) {
+							resolved = post["author"] || "Artefact Team";
+						}
+						return resolved !== undefined ? String(resolved) : "";
+					});
+				}
+				resolvedValue = nextStr;
+			}
+			next[key] = resolvedValue;
+			continue;
 		}
 		next[key] = value;
 	}
@@ -106,7 +149,7 @@ async function resolveBlockDataSources(
 					: [];
 				next.children = items.flatMap((item) =>
 					template.map((tpl) =>
-						interpolateBlock(tpl, item as unknown as Record<string, unknown>),
+						interpolateBlock(tpl, item as unknown as Record<string, unknown>, ctx.post),
 					),
 				);
 				delete next.dataSource;
@@ -142,12 +185,34 @@ export async function loadPage(
 		(locale !== "en" ? pageModules[pagePath(slug, "en")] : undefined);
 	if (!loader) return undefined;
 	const data = (await loader()) as PageData;
+
+	let content = await resolveBlockDataSources(data.content, ctx);
+	let headerBrand = await resolveBlockDataSources(data.headerBrand, ctx);
+	let headerNav = await resolveBlockDataSources(data.headerNav, ctx);
+	let headerActions = await resolveBlockDataSources(data.headerActions, ctx);
+
+	if (ctx.post) {
+		const postRecord = ctx.post as Record<string, unknown>;
+		if (content) {
+			content = content.map(block => interpolateBlock(block, undefined, postRecord));
+		}
+		if (headerBrand) {
+			headerBrand = headerBrand.map(block => interpolateBlock(block, undefined, postRecord));
+		}
+		if (headerNav) {
+			headerNav = headerNav.map(block => interpolateBlock(block, undefined, postRecord));
+		}
+		if (headerActions) {
+			headerActions = headerActions.map(block => interpolateBlock(block, undefined, postRecord));
+		}
+	}
+
 	return {
 		...data,
-		content: await resolveBlockDataSources(data.content, ctx),
-		headerBrand: await resolveBlockDataSources(data.headerBrand, ctx),
-		headerNav: await resolveBlockDataSources(data.headerNav, ctx),
-		headerActions: await resolveBlockDataSources(data.headerActions, ctx),
+		content,
+		headerBrand,
+		headerNav,
+		headerActions,
 	};
 }
 
