@@ -1,0 +1,37 @@
+{
+  "title": "Blog Post Detail Template",
+  "tags": {
+    "blockType": "stack",
+    "gap": "2",
+    "wrap": true,
+    "style": "margin-bottom: 1rem"
+  },
+  "meta": {
+    "blockType": "stack",
+    "gap": "6",
+    "align": "center",
+    "wrap": true,
+    "style": "padding-bottom: 1.5rem; border-bottom: 1px solid var(--colors-border)"
+  },
+  "author": {
+    "blockType": "stack",
+    "gap": "3",
+    "align": "center"
+  },
+  "date": {
+    "blockType": "stack",
+    "gap": "2",
+    "align": "center"
+  },
+  "readTime": {
+    "blockType": "stack",
+    "gap": "2",
+    "align": "center"
+  },
+  "share": {
+    "blockType": "stack",
+    "gap": "0",
+    "justify": "flex-end",
+    "style": "margin-bottom: 2rem"
+  }
+}
