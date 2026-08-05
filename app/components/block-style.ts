@@ -79,8 +79,28 @@ const layoutStyleClass = css({
 	minWidth: "var(--cms-min-width, initial)",
 	rowGap: "var(--cms-row-gap, initial)",
 	width: "var(--cms-width, initial)",
-	fontSize: "var(--cms-font-size, initial)",
+	// NOTE: `font-size` is deliberately NOT bridged here, even though
+	// CONTINUOUS_VALIDATORS supports it. Unlike margin/padding/width/..., the
+	// declaration `font-size: var(--cms-font-size, initial)` collides with
+	// every recipe that sets its own font-size via textStyle (heading/text/
+	// badge/...): a block whose style string sets some OTHER continuous prop
+	// (e.g. the hero h1's `max-width: 48rem`) but not `font-size` would get
+	// `font-size: var(--cms-font-size, initial)` = `initial` (16px) from the
+	// fallback, and since this class is emitted after the recipes in the
+	// stylesheet at equal specificity, it silently overrides the recipe size —
+	// the hero h1 rendered at 16px instead of 5xl. The bridge is applied
+	// conditionally instead, via `fontSizeClass` below, only on blocks that
+	// actually set `--cms-font-size` themselves. The `--cms-font-size: initial`
+	// reset above stays: it blocks inheritance of an ancestor's var, and a
+	// block's own inline `style` (higher specificity) still wins over it.
 });
+
+// The `font-size` half of the bridge (see the NOTE on `layoutStyleClass`
+// above): only added to a block's class list when that block's own style
+// string sets `--cms-font-size`, so recipe textStyles (heading/text/badge
+// sizes) are never overridden by the `initial` fallback. Same literal-shaped
+// `css()` pattern as `layoutStyleClass`, so it's a real pre-generated class.
+const fontSizeClass = css({ fontSize: "var(--cms-font-size, initial)" });
 
 const SPACING =
 	/^(-?\d+(\.\d+)?(px|rem|em|%)|0|auto)(\s+(-?\d+(\.\d+)?(px|rem|em|%)|0|auto)){0,3}$/;
@@ -430,11 +450,19 @@ export function extractLayoutStyle(
 
 	const varsStyle = vars.join("; ");
 
+	// `font-size` only bridges when this block sets it itself — see the NOTE
+	// on `layoutStyleClass`/`fontSizeClass` above. Structured layout fields
+	// never set `--cms-font-size`, so only the manual style string can.
+	const classes: Array<string | undefined> = [
+		varsStyle ? layoutStyleClass : undefined,
+		categoricalClass,
+	];
+	if (resolved.vars.some((v) => v.startsWith("--cms-font-size"))) {
+		classes.push(fontSizeClass);
+	}
+
 	return {
-		class:
-			[varsStyle ? layoutStyleClass : undefined, categoricalClass]
-				.filter(Boolean)
-				.join(" ") || undefined,
+		class: classes.filter(Boolean).join(" ") || undefined,
 		style: varsStyle || undefined,
 	};
 }
@@ -456,11 +484,18 @@ export function extractCmsStyle(
 	const categoricalClass = cmsCategoricalClass(resolved.categorical);
 	const varsStyle = resolved.vars.join("; ");
 
+	// Same conditional `font-size` bridge as `extractLayoutStyle` — see the
+	// NOTE on `layoutStyleClass`/`fontSizeClass` above.
+	const classes: Array<string | undefined> = [
+		varsStyle ? layoutStyleClass : undefined,
+		categoricalClass,
+	];
+	if (resolved.vars.some((v) => v.startsWith("--cms-font-size"))) {
+		classes.push(fontSizeClass);
+	}
+
 	return {
-		class:
-			[varsStyle ? layoutStyleClass : undefined, categoricalClass]
-				.filter(Boolean)
-				.join(" ") || undefined,
+		class: classes.filter(Boolean).join(" ") || undefined,
 		style: varsStyle || undefined,
 	};
 }
