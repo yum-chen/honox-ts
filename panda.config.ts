@@ -61,6 +61,8 @@ export default defineConfig({
 			// what's actually pre-generated.
 			{
 				properties: {
+					display: ["inline-flex"],
+					alignItems: ["center"],
 					textAlign: ["left", "center", "right", "justify", "start", "end"],
 					// Kept as strings (not numbers) — `resolveStyleString` always
 					// produces string values, parsed straight out of CSS text, and
