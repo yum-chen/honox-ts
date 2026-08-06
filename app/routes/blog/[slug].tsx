@@ -1,16 +1,15 @@
 import { css } from "design-system/css";
 import { ssgParams } from "hono/ssg";
 import { createRoute } from "honox/factory";
-import { renderBlocks } from "../../components/page-registry";
+import { registry, renderBlocks } from "../../components/page-registry";
 import {
 	Anchor,
-	Avatar,
 	Badge,
 	Button,
 	Heading,
-	Stack,
 	Text,
 } from "../../components/ui";
+import { loadPage } from "../../lib/pages";
 import { ArrowLeftIcon } from "../../icons/arrow-left";
 import { CalendarIcon } from "../../icons/calendar";
 import { ChevronRightIcon } from "../../icons/chevron-right";
@@ -21,6 +20,10 @@ import { loadDocsConfig } from "../../lib/configs";
 import { detectLocale, isLocale, localiseHref } from "../../lib/i18n";
 import { loadPostBySlug, loadPosts } from "../../lib/posts";
 import { markdownContentClass } from "../../utils/markdown-content-style";
+
+// Register custom local blocks for this route's page template
+registry.calendarIcon = () => <CalendarIcon width="18" height="18" />;
+registry.clockIcon = () => <ClockIcon width="18" height="18" />;
 
 export default createRoute(
 	// Use ssgParams middleware to tell SSG which params to generate
@@ -44,9 +47,10 @@ export default createRoute(
 		const currentPath = c.req.path;
 		const currentLocale = detectLocale(currentPath);
 
-		const [post, config] = await Promise.all([
+		const [post, config, pageData] = await Promise.all([
 			loadPostBySlug(slug, currentLocale),
 			loadDocsConfig(currentLocale),
+			loadPage("blog/[slug]", currentLocale),
 		]);
 
 		if (!post) {
@@ -228,23 +232,19 @@ export default createRoute(
 								})}
 							>
 								{/* Tags */}
-								{Array.isArray(post.tags) && post.tags.length > 0 && (
-									<Stack gap="2" wrap="wrap" class={css({ mb: "4" })}>
-										{post.tags.map((tag: string) => (
-											<Badge
-												key={tag}
-												variant="subtle"
-												class={css({
-													borderRadius: "full",
-													fontSize: "sm",
-													fontWeight: "medium",
-												})}
-											>
-												{tag}
-											</Badge>
-										))}
-									</Stack>
-								)}
+								{(() => {
+									if (!Array.isArray(post.tags) || post.tags.length === 0) return null;
+									const tagsBlock = pageData?.tags ? {
+										...pageData.tags,
+										children: post.tags.map((tag: string) => ({
+											blockType: "badge",
+											text: tag,
+											variant: "subtle",
+											style: "border-radius: 9999px; font-size: 14px; font-weight: 500"
+										}))
+									} : undefined;
+									return tagsBlock ? renderBlocks([tagsBlock]) : null;
+								})()}
 
 								{/* Title */}
 								<Heading
@@ -290,98 +290,83 @@ export default createRoute(
 								)}
 
 								{/* Meta Information */}
-								<Stack
-									gap="6"
-									align="center"
-									wrap="wrap"
-									class={css({
-										pb: "6",
-										borderBottomWidth: "1px",
-										borderColor: "border.subtle",
-									})}
-								>
-									{/* Author */}
-									{config.blog?.showAuthor !== false && (
-										<Stack gap="3" align="center">
-											<Anchor
-												href={localiseLink(
-													`/blog/by-author/${post.author || "Artefact Team"}`,
-												)}
-												class={css({
-													display: "inline-flex",
-													alignItems: "center",
-													textDecoration: "none",
-												})}
-											>
-												<Avatar
-													size="md"
-													variant="solid"
-													name={post.author || "Artefact Team"}
-												/>
-											</Anchor>
-											<div>
-												<Anchor
-													href={localiseLink(
-														`/blog/by-author/${post.author || "Artefact Team"}`,
-													)}
-													class={css({
-														textDecoration: "none",
-														color: "fg",
-														_hover: { color: "blue.10" },
-													})}
-												>
-													<Text
-														size="sm"
-														class={css({
-															color: "inherit",
-															fontWeight: "semibold",
-															display: "block",
-														})}
-													>
-														{post.author || "Artefact Team"}
-													</Text>
-												</Anchor>
-											</div>
-										</Stack>
-									)}
+								{(() => {
+									const authorBlock = pageData?.author ? {
+										...pageData.author,
+										children: [
+											{
+												blockType: "anchor",
+												href: localiseLink(`/blog/by-author/${post.author || "Artefact Team"}`),
+												style: "text-decoration: none",
+												children: [
+													{
+														blockType: "avatar",
+														size: "md",
+														variant: "solid",
+														name: post.author || "Artefact Team"
+													}
+												]
+											},
+											{
+												blockType: "anchor",
+												href: localiseLink(`/blog/by-author/${post.author || "Artefact Team"}`),
+												style: "text-decoration: none",
+												children: [
+													{
+														blockType: "text",
+														size: "sm",
+														style: "font-weight: 600",
+														content: post.author || "Artefact Team"
+													}
+												]
+											}
+										]
+									} : undefined;
 
-									{/* Date */}
-									{post.date && (
-										<Stack gap="2" align="center">
-											<CalendarIcon width="18" height="18" />
-											<Text
-												size="sm"
-												class={css({
-													color: "fg.muted",
-												})}
-											>
-												{new Date(post.date).toLocaleDateString(
+									const dateBlock = pageData?.date ? {
+										...pageData.date,
+										children: [
+											{ blockType: "calendarIcon" },
+											{
+												blockType: "text",
+												size: "sm",
+												style: "color: var(--colors-fg-muted)",
+												content: new Date(post.date).toLocaleDateString(
 													currentLocale === "zh" ? "zh-CN" : "en-US",
 													{
 														year: "numeric",
 														month: "long",
 														day: "numeric",
 													},
-												)}
-											</Text>
-										</Stack>
-									)}
+												)
+											}
+										]
+									} : undefined;
 
-									{/* Read Time */}
-									{config.blog?.showReadTime !== false && post.readTime ? (
-										<Stack gap="2" align="center">
-											<ClockIcon width="18" height="18" />
-											<Text
-												size="sm"
-												class={css({
-													color: "fg.muted",
-												})}
-											>
-												{post.readTime}
-											</Text>
-										</Stack>
-									) : null}
-								</Stack>
+									const readTimeBlock = pageData?.readTime ? {
+										...pageData.readTime,
+										children: [
+											{ blockType: "clockIcon" },
+											{
+												blockType: "text",
+												size: "sm",
+												style: "color: var(--colors-fg-muted)",
+												content: post.readTime
+											}
+										]
+									} : undefined;
+
+									const metaBlock = pageData?.meta ? {
+										...pageData.meta,
+										children: [
+											config.blog?.showAuthor !== false && authorBlock,
+											post.date && dateBlock,
+											config.blog?.showReadTime !== false && post.readTime && readTimeBlock
+										].filter((b): b is Exclude<typeof b, boolean | "" | undefined | null> => !!b)
+									} : undefined;
+
+									return metaBlock ? renderBlocks([metaBlock]) : null;
+								})()}
 							</div>
 
 							{/* Share & Markdown Content */}
@@ -392,30 +377,36 @@ export default createRoute(
 								})}
 							>
 								{/* Share Button */}
-								<Stack gap="0" justify="flex-end" class={css({ mb: "8" })}>
-									<Button
-										variant="outline"
-										size="sm"
-										onClick={() => {
-											if (navigator.share) {
-												navigator.share({
-													title: post.title || "Blog Post",
-													url: postUrl,
-												});
-											} else {
-												navigator.clipboard.writeText(postUrl);
+								{(() => {
+									const shareBlock = pageData?.share ? {
+										...pageData.share,
+										children: [
+											{
+												blockType: "button",
+												variant: "outline",
+												size: "sm",
+												onClick: () => {
+													if (navigator.share) {
+														navigator.share({
+															title: post.title || "Blog Post",
+															url: postUrl,
+														});
+													} else {
+														navigator.clipboard.writeText(postUrl);
+													}
+												},
+												text: (
+													<>
+														<ShareIcon width="16" height="16" />
+														{currentLocale === "zh" ? "分享" : "Share"}
+													</>
+												)
 											}
-										}}
-										class={css({
-											display: "inline-flex",
-											alignItems: "center",
-											gap: "2",
-										})}
-									>
-										<ShareIcon width="16" height="16" />
-										{currentLocale === "zh" ? "分享" : "Share"}
-									</Button>
-								</Stack>
+										]
+									} : undefined;
+
+									return shareBlock ? renderBlocks([shareBlock]) : null;
+								})()}
 
 								{/* Markdown Content */}
 								<div
