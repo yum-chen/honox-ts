@@ -27,6 +27,7 @@ export interface DataSourceContext {
 	 * depend on the current request, e.g. a search query string. Omitted for
 	 * a static build (ssg) context. */
 	currentUrl?: string;
+	post?: Record<string, unknown>;
 }
 
 export interface DataSourceItem {

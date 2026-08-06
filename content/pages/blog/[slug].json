@@ -1,0 +1,18 @@
+{
+  "title": "Blog Post Template",
+  "content": [
+    {
+      "blockType": "anchor",
+      "href": "/blog/by-author/{{post.authorLabel}}",
+      "style": "text-decoration:none",
+      "children": [
+        {
+          "blockType": "avatar",
+          "size": "md",
+          "variant": "solid",
+          "name": "{{post.authorLabel}}"
+        }
+      ]
+    }
+  ]
+}
